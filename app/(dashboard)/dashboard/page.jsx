@@ -2,8 +2,9 @@ import StatsGrid from "@/components/dashboard/StatsGrid";
 import AnalyticsChart from "@/components/dashboard/AnalyticsChart";
 import { HiSparkles, HiArrowTopRightOnSquare } from "react-icons/hi2";
 import Link from "next/link";
-import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
+import { verifyToken } from "@/lib/auth/jwt";
 import connectDB from "@/lib/db/connect";
 import BioPage from "@/lib/db/models/BioPage";
 import LinkModel from "@/lib/db/models/Link";
@@ -11,24 +12,19 @@ import User from "@/lib/db/models/User";
 import { formatNumber } from "@/lib/utils";
 
 export default async function DashboardPage() {
-    const { userId } = await auth();
-    const clerkUser = await currentUser();
+    const cookieStore = await cookies();
+    const token = cookieStore.get("auth_token")?.value;
 
-    if (!userId) redirect("/");
+    if (!token) redirect("/login");
+
+    const payload = await verifyToken(token);
+    if (!payload) redirect("/login");
+    console.log('payload ', payload.userId);
+    const userId = payload.userId;
 
     await connectDB();
-
-    // Proactive Sync: Ensure user record stays updated with Clerk profile
-    if (clerkUser) {
-        await User.findOneAndUpdate(
-            { clerkId: userId },
-            {
-                email: clerkUser.emailAddresses[0]?.emailAddress,
-                imageUrl: clerkUser.imageUrl
-            },
-            { upsert: true }
-        );
-    }
+    const user = await User.findById(userId);
+    if (!user) redirect("/login");
 
     const page = await BioPage.findOne({ ownerId: userId });
 

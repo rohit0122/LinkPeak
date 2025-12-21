@@ -2,19 +2,27 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { UserButton } from "@clerk/nextjs";
+import { useAuth } from "@/context/AuthContext";
 import {
-    HiHome,
     HiLink,
-    HiPresentationChartBar,
-    HiCog8Tooth,
-    HiChevronRight
+    HiChevronRight,
+    HiArrowRightOnRectangle,
+    HiUserCircle
 } from "react-icons/hi2";
 import { Toaster } from 'sonner';
 import { sidebarLinks } from "@/lib/global";
 
 export default function DashboardLayout({ children }) {
     const pathname = usePathname();
+    const { user, logout, loading } = useAuth();
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-base-200/50 flex items-center justify-center">
+                <span className="loading loading-spinner loading-lg text-primary" />
+            </div>
+        );
+    }
 
     return (
         <div className="flex min-h-screen bg-base-200/50">
@@ -52,12 +60,23 @@ export default function DashboardLayout({ children }) {
                 </nav>
 
                 <div className="p-6 border-t border-base-200">
-                    <div className="flex items-center justify-between p-4 bg-base-200/50 rounded-2xl">
-                        <UserButton afterSignOutUrl="/" />
-                        <div className="flex flex-col text-right">
-                            <span className="text-[10px] font-black uppercase tracking-widest opacity-40">Account</span>
-                            <span className="text-[11px] font-bold">Manage Profile</span>
+                    <div className="flex items-center justify-between p-4 bg-base-200/50 rounded-2xl group relative">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-base-300 flex items-center justify-center overflow-hidden">
+                                {user?.imageUrl ? <img src={user.imageUrl} alt={user.name} /> : <HiUserCircle className="text-2xl opacity-40" />}
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-[11px] font-black truncate max-w-[100px]">{user?.name || 'User'}</span>
+                                <span className="text-[10px] opacity-40 uppercase font-black tracking-widest">{user?.role?.replace('_USER', '') || 'FREE'}</span>
+                            </div>
                         </div>
+                        <button
+                            onClick={logout}
+                            className="btn btn-ghost btn-circle btn-sm hover:text-error transition-colors"
+                            title="Sign Out"
+                        >
+                            <HiArrowRightOnRectangle className="text-lg" />
+                        </button>
                     </div>
                 </div>
             </aside>
@@ -67,7 +86,6 @@ export default function DashboardLayout({ children }) {
                 <div className="p-4 md:p-8 lg:p-12 max-w-7xl mx-auto">
                     {children}
                 </div>
-                <Toaster richColors position="bottom-right" />
             </main>
         </div>
     );

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { cookies } from "next/headers";
+import { verifyToken } from "@/lib/auth/jwt";
 import connectDB from "@/lib/db/connect";
 import Link from "@/lib/db/models/Link";
 import BioPage from "@/lib/db/models/BioPage";
@@ -7,8 +8,14 @@ import BioPage from "@/lib/db/models/BioPage";
 // GET all links for a user's page
 export async function GET(req) {
     try {
-        const { userId } = await auth();
-        if (!userId) return new NextResponse("Unauthorized", { status: 401 });
+        const cookieStore = await cookies();
+        const token = cookieStore.get("auth_token")?.value;
+        if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+        const payload = await verifyToken(token);
+        if (!payload) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+        const userId = payload.userId;
 
         await connectDB();
         const page = await BioPage.findOne({ ownerId: userId });
@@ -24,8 +31,14 @@ export async function GET(req) {
 // POST new link
 export async function POST(req) {
     try {
-        const { userId } = await auth();
-        if (!userId) return new NextResponse("Unauthorized", { status: 401 });
+        const cookieStore = await cookies();
+        const token = cookieStore.get("auth_token")?.value;
+        if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+        const payload = await verifyToken(token);
+        if (!payload) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+        const userId = payload.userId;
 
         const { title, url, pageId } = await req.json();
 
@@ -52,8 +65,14 @@ export async function POST(req) {
 // PATCH update link
 export async function PATCH(req) {
     try {
-        const { userId } = await auth();
-        if (!userId) return new NextResponse("Unauthorized", { status: 401 });
+        const cookieStore = await cookies();
+        const token = cookieStore.get("auth_token")?.value;
+        if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+        const payload = await verifyToken(token);
+        if (!payload) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+        const userId = payload.userId;
 
         const { id, ...updates } = await req.json();
 
@@ -73,8 +92,14 @@ export async function PATCH(req) {
 // DELETE link
 export async function DELETE(req) {
     try {
-        const { userId } = await auth();
-        if (!userId) return new NextResponse("Unauthorized", { status: 401 });
+        const cookieStore = await cookies();
+        const token = cookieStore.get("auth_token")?.value;
+        if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+        const payload = await verifyToken(token);
+        if (!payload) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+        const userId = payload.userId;
 
         const { searchParams } = new URL(req.url);
         const id = searchParams.get("id");

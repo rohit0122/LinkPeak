@@ -8,15 +8,8 @@ export const metadata = {
 
 export default function BioLayout({ children }) {
   return (
-
-    <html lang="en">
-      <body
-        className="antialiased"
-      >
-        <><h1>fasfdasfaf</h1>
-          {children}
-        </>
-      </body>
-    </html>
+    <>
+      {children}
+    </>
   );
 }

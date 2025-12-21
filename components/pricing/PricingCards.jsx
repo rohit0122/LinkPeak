@@ -26,7 +26,7 @@ export default function PricingCards() {
                         </ul>
                         <div className="card-actions justify-center">
                             <Link
-                                href={`/sign-up?role=${plan.role}`}
+                                href={`/register?role=${plan.role}`}
                                 className={`btn ${plan.label === 'Pro' ? 'btn-primary' : 'btn-outline'} w-full`}
                             >
                                 Choose {plan.label}

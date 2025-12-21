@@ -1,5 +1,6 @@
-import { ClerkProvider } from "@clerk/nextjs";
+import { AuthProvider } from "@/context/AuthContext";
 import "./globals.css";
+import { Toaster } from "sonner";
 
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -12,7 +13,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <ClerkProvider>
+    <AuthProvider>
       <html lang="en">
         <body
           className="antialiased"
@@ -20,8 +21,9 @@ export default function RootLayout({ children }) {
           <Navbar />
           {children}
           <Footer />
+          <Toaster richColors position="bottom-right" />
         </body>
       </html>
-    </ClerkProvider>
+    </AuthProvider>
   );
 }

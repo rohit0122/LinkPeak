@@ -1,39 +1,37 @@
 import RoleGate from "@/components/dashboard/RoleGate";
 import { PERMISSIONS } from "@/lib/roles";
 import { HiPlus, HiArrowRight } from "react-icons/hi2";
+import BioCreationForm from "@/components/dashboard/BioCreationForm";
 
-import { auth } from "@clerk/nextjs/server";
 import connectDB from "@/lib/db/connect";
 import BioPage from "@/lib/db/models/BioPage";
 import User from "@/lib/db/models/User";
 import LinkModel from "@/lib/db/models/Link";
 import LinkEditor from "@/components/dashboard/LinkEditor";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
+import { verifyToken } from "@/lib/auth/jwt";
 
 export default async function LinksPage() {
-    const { userId } = await auth();
-    if (!userId) {
-        redirect("/");
+    const cookieStore = await cookies();
+    const token = cookieStore.get("auth_token")?.value;
+
+    if (!token) {
+        redirect("/login");
     }
 
+    const payload = await verifyToken(token);
+    if (!payload) {
+        redirect("/login");
+    }
+
+    const userId = payload.userId;
+
     try {
-        console.log("LinksPage: Connecting DB...");
         await connectDB();
-        console.log("LinksPage: DB Connected.");
+        const user = await User.findById(userId);
+        if (!user) redirect("/login");
 
-        // Ensure user exists in local DB
-        console.log("LinksPage: Finding User...");
-        let mongoUser = await User.findOne({ clerkId: userId });
-        if (!mongoUser) {
-            console.log("LinksPage: Creating User...");
-            mongoUser = await User.create({
-                clerkId: userId,
-                email: "user@example.com",
-                subscriptionTier: "Free",
-            });
-        }
-
-        console.log("LinksPage: Finding BioPage...");
         let page = await BioPage.findOne({ ownerId: userId });
 
         // If no bio page exists, show create page screen
@@ -57,54 +55,7 @@ export default async function LinksPage() {
                                 </p>
                             </div>
 
-                            <form action="/api/bio/create" method="POST" className="w-full space-y-6 text-left max-w-md">
-                                <div className="form-control w-full">
-                                    <label className="label">
-                                        <span className="label-text-alt font-black uppercase tracking-widest opacity-40 text-[10px]">Handle (Slug)</span>
-                                    </label>
-                                    <div className="join w-full">
-                                        <span className="join-item bg-base-200 flex items-center px-4 font-black text-sm opacity-50 border border-base-300 border-r-0">linkpeak.com/</span>
-                                        <input
-                                            type="text"
-                                            name="slug"
-                                            required
-                                            placeholder="identity"
-                                            className="input input-bordered join-item w-full outline-none focus:border-primary font-black transition-all"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="form-control w-full">
-                                    <label className="label">
-                                        <span className="label-text-alt font-black uppercase tracking-widest opacity-40 text-[10px]">Display Name</span>
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="title"
-                                        required
-                                        placeholder="The Peak Professional"
-                                        className="input input-bordered w-full outline-none focus:border-primary font-black transition-all"
-                                    />
-                                </div>
-
-                                <div className="form-control w-full">
-                                    <label className="label">
-                                        <span className="label-text-alt font-black uppercase tracking-widest opacity-40 text-[10px]">Bio Narrative</span>
-                                    </label>
-                                    <textarea
-                                        name="bio"
-                                        required
-                                        placeholder="Briefly describe your current peaks..."
-                                        rows={3}
-                                        className="textarea textarea-bordered w-full outline-none focus:border-primary font-medium resize-none transition-all"
-                                    />
-                                </div>
-
-                                <button type="submit" className="btn btn-primary w-full rounded-2xl h-16 text-lg font-black shadow-xl shadow-primary/20 gap-3 group">
-                                    Activate My Bio Page
-                                    <HiArrowRight className="text-xl group-hover:translate-x-1 transition-transform" />
-                                </button>
-                            </form>
+                            <BioCreationForm />
                         </div>
                     </div>
                 </div>
@@ -118,6 +69,7 @@ export default async function LinksPage() {
                 <LinkEditor
                     initialLinks={JSON.parse(JSON.stringify(initialLinksList))}
                     pageId={page._id.toString()}
+                    initialTheme={page.themeConfig?.name || "creator"}
                 />
             </div>
         );

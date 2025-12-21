@@ -1,17 +1,30 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { cookies } from "next/headers";
+import { verifyToken } from "@/lib/auth/jwt";
 import connectDB from "@/lib/db/connect";
 import BioPage from "@/lib/db/models/BioPage";
 
 export async function POST(req) {
     try {
-        const { userId } = await auth();
-        if (!userId) return new NextResponse("Unauthorized", { status: 401 });
+        const cookieStore = await cookies();
+        const token = cookieStore.get("auth_token")?.value;
+        if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+        const payload = await verifyToken(token);
+        if (!payload) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+        const userId = payload.userId;
 
         console.log("API_BIO_CREATE: Connecting DB...");
         await connectDB();
         console.log("API_BIO_CREATE: DB Connected.");
-        const { slug, title, bio } = await req.json();
+        console.log("API_BIO_CREATE: DB Connected.");
+
+        const formData = await req.formData();
+        const slug = formData.get("slug");
+        const title = formData.get("title");
+        const bio = formData.get("bio");
+
         console.log("API_BIO_CREATE: Body received:", { slug });
 
         // Check if slug is taken

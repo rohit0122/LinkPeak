@@ -1,5 +1,6 @@
-import { auth } from "@clerk/nextjs/server";
 import { redirect, notFound } from "next/navigation";
+import { cookies } from "next/headers";
+import { verifyToken } from "@/lib/auth/jwt";
 import connectDB from "@/lib/db/connect";
 import BioPage from "@/lib/db/models/BioPage";
 import LinkModel from "@/lib/db/models/Link";
@@ -17,27 +18,42 @@ import {
 export const dynamic = 'force-dynamic';
 
 export default async function AnalyticsPage() {
-    const { userId } = await auth();
-    if (!userId) redirect("/");
+    const cookieStore = await cookies();
+    const token = cookieStore.get("auth_token")?.value;
+
+    if (!token) redirect("/login");
+
+    const payload = await verifyToken(token);
+    if (!payload) redirect("/login");
+
+    const userId = payload.userId;
 
     try {
         await connectDB();
 
         const page = await BioPage.findOne({ ownerId: userId });
-        if (!page) return notFound();
+        if (!page) redirect("/dashboard");
 
         const links = await LinkModel.find({ pageId: page._id }).sort({ clicks: -1 });
         const totalClicks = links.reduce((acc, curr) => acc + (curr.clicks || 0), 0);
         const avgCtr = page.views ? ((totalClicks / page.views) * 100).toFixed(1) : "0.0";
 
-        // Realistic historical distribution
-        const days = ['12/14', '12/15', '12/16', '12/17', '12/18', '12/19', 'Today'];
+        // Generate last 7 days dynamically
+        const days = Array.from({ length: 7 }, (_, i) => {
+            const d = new Date();
+            d.setDate(d.getDate() - (6 - i));
+            if (i === 6) return 'Today';
+            return `${d.getMonth() + 1}/${d.getDate()}`;
+        });
+
         const history = days.map((date, i) => {
+            // Distribute total views/clicks across 7 days using weighted factors
+            // to ensure they sum up roughly correctly and are whole integers.
             const factor = (i + 1) / 28;
             return {
                 date,
-                views: (page.views || 0) * factor,
-                clicks: (totalClicks || 0) * factor,
+                views: Math.floor((page.views || 0) * factor),
+                clicks: Math.floor((totalClicks || 0) * factor),
             };
         });
 
@@ -182,6 +198,9 @@ export default async function AnalyticsPage() {
             </div>
         );
     } catch (error) {
+        if (error.message.includes("NEXT_REDIRECT")) {
+            throw error;
+        }
         console.error("AnalyticsPage Error:", error);
         return (
             <div className="alert alert-error font-black rounded-3xl shadow-2xl p-8">

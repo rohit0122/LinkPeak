@@ -1,9 +1,18 @@
 import Link from "next/link";
 import { HiSparkles, HiCheckCircle, HiChartBar, HiSwatch, HiUserGroup, HiQrCode } from "react-icons/hi2";
 import PricingCards from "@/components/pricing/PricingCards";
-import { SignedIn, SignedOut } from "@clerk/nextjs";
+import { cookies } from "next/headers";
+import { verifyToken } from "@/lib/auth/jwt";
 
-export default function Home() {
+export default async function Home() {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("auth_token")?.value;
+    let user = null;
+
+    if (token) {
+        user = await verifyToken(token);
+    }
+
     return (
         <div className="font-sans">
             {/* Hero Section */}
@@ -18,17 +27,18 @@ export default function Home() {
                             The only link-in-bio tool with Role-Based Access, AI Optimization, and deep analytics. Built for creators who mean business.
                         </p>
                         <div className="flex gap-4 justify-center items-center">
-                            <SignedOut>
-                                <Link href="/pricing" className="btn btn-primary btn-lg shadow-xl shadow-primary/30 px-8">
-                                    <HiSparkles /> View Plans
+                            {user ? (
+                                <Link href="/dashboard" className="btn btn-primary btn-lg shadow-xl shadow-primary/30 px-10 font-bold">
+                                    Go to Dashboard
                                 </Link>
-                                <Link href="/sign-up" className="btn btn-outline btn-lg px-8">Sign Up Free</Link>
-                            </SignedOut>
-                            <SignedIn>
-                                <Link href="/dashboard/links" className="btn btn-primary btn-lg shadow-xl shadow-primary/30 px-10 font-bold">
-                                    Manage My Links
-                                </Link>
-                            </SignedIn>
+                            ) : (
+                                <>
+                                    <Link href="/register" className="btn btn-primary btn-lg shadow-xl shadow-primary/30 px-8">
+                                        <HiSparkles /> Get Started Free
+                                    </Link>
+                                    <Link href="/login" className="btn btn-outline btn-lg px-8">Log In</Link>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>

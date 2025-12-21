@@ -11,12 +11,86 @@ import {
     HiSparkles,
     HiArrowTopRightOnSquare
 } from "react-icons/hi2";
-import { UserButton, useUser } from "@clerk/nextjs";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 import Link from "next/link";
 
 export default function SettingsPage() {
-    const { user } = useUser();
+    const { user, loading, checkUser } = useAuth();
+    const [name, setName] = useState(user?.name || "");
+    const [email, setEmail] = useState(user?.email || "");
+    const [isUpdating, setIsUpdating] = useState(false);
+
+    useEffect(() => {
+        if (user) {
+            setName(user.name || "");
+            setEmail(user.email || "");
+        }
+    }, [user]);
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-base-200/50 flex items-center justify-center">
+                <span className="loading loading-spinner loading-lg text-primary" />
+            </div>
+        );
+    }
+
+    const handleUpdateProfile = async (e) => {
+        e.preventDefault();
+        setIsUpdating(true);
+        try {
+            const res = await fetch("/api/user/update", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, email }),
+            });
+            const data = await res.json();
+            if (data.success) {
+                toast.success("Profile updated successfully!");
+                await checkUser(); // Refresh user data in context
+            } else {
+                toast.error(data.error || "Update failed");
+            }
+        } catch (error) {
+            toast.error("Something went wrong");
+        } finally {
+            setIsUpdating(false);
+        }
+    };
+
+    const handleImageUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        // Check file size (e.g., 2MB limit)
+        if (file.size > 2 * 1024 * 1024) {
+            return toast.error("File size must be less than 2MB");
+        }
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        setIsUpdating(true);
+        try {
+            const res = await fetch("/api/user/upload", {
+                method: "POST",
+                body: formData,
+            });
+            const data = await res.json();
+            if (data.success) {
+                toast.success("Profile picture updated!");
+                await checkUser();
+            } else {
+                toast.error(data.error || "Upload failed");
+            }
+        } catch (error) {
+            toast.error("Upload failed");
+        } finally {
+            setIsUpdating(false);
+        }
+    };
 
     const sections = [
         {
@@ -25,17 +99,24 @@ export default function SettingsPage() {
             icon: HiUser,
             color: "text-primary",
             bg: "bg-primary/10",
-            action: { label: "Edit Profile", href: "https://accounts.clerk.com/user" }, // External or Clerk managed
-            isClerk: true
+            isCustom: true
+        },
+        {
+            title: "Protocol Subscription",
+            desc: "Scale your reach with Pro peak performance",
+            icon: HiCreditCard,
+            color: "text-accent",
+            bg: "bg-accent/10",
+            badge: user?.role?.replace('_USER', '') || "FREE",
+            action: { label: "Upgrade Pulse", href: "/pricing" }
         },
         {
             title: "Security Core",
-            desc: "2FA and account access settings",
+            desc: "Password and account access settings",
             icon: HiShieldCheck,
             color: "text-success",
             bg: "bg-success/10",
-            action: { label: "Configure", href: "https://accounts.clerk.com/user/security" },
-            isClerk: true
+            action: { label: "Change Password", href: "/forgot-password" }
         },
         {
             title: "Peak Pulse Alerts",
@@ -44,15 +125,6 @@ export default function SettingsPage() {
             color: "text-secondary",
             bg: "bg-secondary/10",
             toggle: true
-        },
-        {
-            title: "Protocol Subscription",
-            desc: "Scale your reach with Pro peak performance",
-            icon: HiCreditCard,
-            color: "text-accent",
-            bg: "bg-accent/10",
-            badge: "FREE PLAN",
-            action: { label: "Upgrade Pulse", href: "/pricing" }
         }
     ];
 
@@ -86,33 +158,82 @@ export default function SettingsPage() {
                                 {section.action && (
                                     <Link
                                         href={section.action.href}
-                                        target={section.isClerk ? "_blank" : "_self"}
                                         className="btn btn-ghost btn-sm rounded-xl font-black text-[10px] uppercase tracking-widest border-base-300 gap-2 hover:bg-base-200"
                                     >
-                                        {section.action.label} <HiArrowTopRightOnSquare strokeWidth={3} />
+                                        {section.action.label} <HiChevronRight strokeWidth={3} />
                                     </Link>
                                 )}
                             </div>
 
-                            {section.isClerk && (
-                                <div className="p-6 bg-base-200/40 rounded-[2rem] border border-base-300/50 flex items-center justify-between group/clerk">
-                                    <div className="flex items-center gap-4">
-                                        <div className="avatar">
-                                            <div className="w-14 h-14 rounded-2xl ring ring-primary ring-offset-base-100 ring-offset-2 overflow-hidden shadow-xl">
-                                                <img src={user?.imageUrl} alt="Profile" />
+                            {section.isCustom && (
+                                <form onSubmit={handleUpdateProfile} className="space-y-6">
+                                    <div className="p-6 bg-base-200/40 rounded-[2rem] border border-base-300/50 flex flex-col gap-6">
+                                        <div className="flex items-center gap-4">
+                                            <div className="avatar group/avatar relative">
+                                                <div className="w-14 h-14 rounded-2xl ring ring-primary ring-offset-base-100 ring-offset-2 overflow-hidden shadow-xl">
+                                                    {user?.imageUrl ? (
+                                                        <img src={user.imageUrl} alt="Profile" />
+                                                    ) : (
+                                                        <div className="w-full h-full flex items-center justify-center bg-base-300 text-base-content/20">
+                                                            <HiUser className="text-3xl" />
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <label className="absolute inset-0 flex items-center justify-center bg-black/60 text-white opacity-0 group-hover/avatar:opacity-100 transition-opacity cursor-pointer rounded-2xl">
+                                                    <HiPhoto className="text-xl" />
+                                                    <input
+                                                        type="file"
+                                                        className="hidden"
+                                                        accept="image/*"
+                                                        onChange={handleImageUpload}
+                                                        disabled={isUpdating}
+                                                    />
+                                                </label>
+                                            </div>
+                                            <div>
+                                                <div className="text-lg font-black tracking-tight">{user?.name || "Peak User"}</div>
+                                                <div className="text-[10px] font-bold opacity-40 uppercase tracking-widest">{user?.email}</div>
                                             </div>
                                         </div>
-                                        <div>
-                                            <div className="text-lg font-black tracking-tight">{user?.fullName || "Peak User"}</div>
-                                            <div className="text-[10px] font-bold opacity-40 uppercase tracking-widest">{user?.primaryEmailAddress?.emailAddress}</div>
+
+                                        <div className="grid grid-cols-1 gap-4">
+                                            <div className="form-control">
+                                                <label className="label">
+                                                    <span className="label-text-alt font-black uppercase tracking-widest opacity-40 text-[9px]">Full Name</span>
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    className="input input-bordered rounded-xl font-bold"
+                                                    value={name}
+                                                    onChange={(e) => setName(e.target.value)}
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="form-control">
+                                                <label className="label">
+                                                    <span className="label-text-alt font-black uppercase tracking-widest opacity-40 text-[9px]">Email Address</span>
+                                                </label>
+                                                <input
+                                                    type="email"
+                                                    className="input input-bordered rounded-xl font-bold"
+                                                    value={email}
+                                                    onChange={(e) => setEmail(e.target.value)}
+                                                    required
+                                                />
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className="opacity-0 group-hover/clerk:opacity-100 transition-opacity">
-                                        <div className="p-2 bg-primary/20 rounded-xl text-primary">
-                                            <HiSparkles className="text-xl animate-pulse" />
-                                        </div>
+
+                                    <div className="flex justify-end">
+                                        <button
+                                            type="submit"
+                                            disabled={isUpdating}
+                                            className="btn btn-primary rounded-2xl px-10 font-black shadow-xl shadow-primary/20 transition-all"
+                                        >
+                                            {isUpdating ? <span className="loading loading-spinner" /> : "Save Changes"}
+                                        </button>
                                     </div>
-                                </div>
+                                </form>
                             )}
 
                             {section.toggle && (

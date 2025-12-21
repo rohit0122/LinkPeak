@@ -62,7 +62,7 @@ export default async function PublicBioPage({ params }) {
     if (!page) return notFound();
 
     const [user, links] = await Promise.all([
-        UserModel.findOne({ clerkId: page.ownerId }),
+        UserModel.findById(page.ownerId),
         Link.find({ pageId: page._id, isActive: true }).sort({
             priorityScore: -1,
         }),
