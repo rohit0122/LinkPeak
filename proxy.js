@@ -1,17 +1,8 @@
+// middleware.ts
 import { clerkMiddleware } from "@clerk/nextjs/server";
 
-export default clerkMiddleware({
-  publicRoutes: [
-    '/',
-    '/pricing',
-    '/sign-in(.*)',
-    '/sign-up(.*)',
-  ],
-});
+export default clerkMiddleware();
 
 export const config = {
-  matcher: [
-    '/((?!_next|.*\\..*).*)',
-    '/(api|trpc)(.*)',
-  ],
+  matcher: ['/dashboard/:path*'],
 };
