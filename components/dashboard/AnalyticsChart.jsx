@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import {
     XAxis,
     YAxis,
@@ -11,9 +12,19 @@ import {
 } from 'recharts';
 
 export default function AnalyticsChart({ data }) {
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    if (!mounted) {
+        return <div className="w-full h-[300px] mt-8 bg-base-100 rounded-[2rem] border border-base-300 p-6 shadow-sm opacity-0" />;
+    }
+
     return (
         <div className="w-full h-[300px] mt-8 bg-base-100 rounded-[2rem] border border-base-300 p-6 shadow-sm overflow-hidden group">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                 <AreaChart data={data}>
                     <defs>
                         <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">

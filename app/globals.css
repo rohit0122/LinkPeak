@@ -1,6 +1,14 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+@layer base {
+
+  html,
+  body {
+    font-family: Arial, "Segoe UI", Roboto, Helvetica, sans-serif;
+  }
+}
+
 @plugin "daisyui/theme" {
   name: "light";
   default: false;
