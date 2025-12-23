@@ -3,13 +3,13 @@ import dbConnect from "@/lib/db";
 import BioPage from "@/models/BioPage";
 import LinkModel from "@/models/Link";
 import PublicBio from "./PublicBio";
+import BioNotFound from "@/components/bio-templates/BioNotFound";
 
 export async function generateMetadata({ params }) {
     const { slug } = await params;
     await dbConnect();
     const page = await BioPage.findOne({ slug: slug.toLowerCase() }).lean();
-
-    if (!page) return { title: "Page Not Found | LinkPeak" };
+    if (!page) return <BioNotFound />;
 
     return {
         title: page.seo?.title || `${page.title} | LinkPeak Bio`,
@@ -35,9 +35,8 @@ export default async function Page({ params }) {
     // ... rest of component
     await dbConnect();
     const page = await BioPage.findOne({ slug: slug.toLowerCase() }).lean();
-
     if (!page) {
-        return notFound();
+        return <BioNotFound />;
     }
 
     const links = await LinkModel.find({ pageId: page._id, isActive: true })

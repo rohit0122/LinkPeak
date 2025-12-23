@@ -5,9 +5,9 @@ import PreviewPhone from "@/components/shared/PreviewPhone";
 export default function Hero() {
     const demoPage = {
         theme: "light",
-        title: "Sarah Miller",
+        title: "Eliza Miller",
         bio: "Digital Creator & Traveler 🏔️ | Sharing my latest journeys and gear.",
-        profileImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah",
+        profileImage: "https://api.dicebear.com/9.x/avataaars/svg?seed=Eliza&eyebrows[]&eyes=default",
         template: "classic"
     };
 
