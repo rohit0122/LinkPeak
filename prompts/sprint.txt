@@ -1,0 +1,132 @@
+[BRAND_NAME] Production SaaS Master Specification (v16.0)
+1. Project Manifesto & Global Identity
+Objective: Build a commercial-grade, mobile-first, high-conversion Link-in-Bio SaaS. Branding Philosophy: All identity strings, limits, and settings must be imported from the Global Configuration to allow for one-click rebranding. Single Source of Truth: @/constants/config.js
+
+12. Marketing Landing Page Architecture (New)
+The homepage must be built using Semantic HTML and DaisyUI for 100/100 Lighthouse scores.
+
+Hero Section: Catchy headline (using CONFIG.SITE_NAME), sub-headline, and a "Get Started for Free" CTA. Include a floating DaisyUI Mockup-Phone showing a demo bio page.
+
+Social Proof Bar: "Join 10,000+ creators" text with clean brand icons.
+
+Feature Grid: 3-column layout highlighting:
+
+Live Analytics: Real-time tracking of views/clicks.
+
+Engagement: The "Fan Love" Like system.
+
+Custom Branding: 30+ Themes and 5 Templates.
+
+Live Preview Demo: An interactive (non-saved) version of the template switcher so users can "play" with the UI before registering.
+
+Pricing Table: A 3-card DaisyUI toggle (Monthly/Yearly) showing Free, Pro, and Agency tiers with feature checkmarks.
+
+FAQ Section: DaisyUI collapse (accordion) components for common questions.
+
+Newsletter/CTA: Bottom section to capture emails or drive signups.
+
+2. Technical Stack
+Framework: Next.js 16.0.0 (App Router)
+
+Styling: Tailwind CSS 4.0 + DaisyUI 5.0 (Latest)
+
+Icons: react-icons exclusively
+
+Database: MongoDB Atlas (Mongoose Singleton)
+
+Auth: In-House JWT (jose) + HttpOnly Cookies
+
+Email: Nodemailer with custom HTML templates
+
+Analytics: Recharts for graphical data
+
+QR Engine: qrcode.react with PNG export
+
+Build Target: Optimized for Vercel
+
+3. Global Configuration (/constants/config.js)
+JavaScript
+
+export const CONFIG = {
+  SITE_NAME: process.env.NEXT_PUBLIC_SITE_NAME || "LinkPeak",
+  SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
+  SUPPORT_EMAIL: process.env.NODEMAILER_USER_SENDER || "support@linkpeak.com",
+  PLAN_LIMITS: {
+    FREE: { links: 5, pages: 1, templates: 1, themes: ["light", "dark"], analyticsDays: 7, customQR: false },
+    PRO: { links: 1000, pages: 1, templates: 3, themes: "ALL", analyticsDays: 90, customQR: true },
+    AGENCY: { links: 1000, pages: 10, templates: 5, themes: "ALL", analyticsDays: 9999, customQR: true }
+  },
+  DAISY_THEMES: ["light", "dark", "cupcake", "luxury", "dracula", "retro", "cyberpunk", "aqua"],
+  SUPPORT_CATEGORIES: ["Billing", "Technical", "Feedback", "General"]
+};
+4. In-House Auth & User Lifecycle
+Verification: Signup -> isVerified: false -> Nodemailer link -> isVerified: true.
+
+Security: JWT session management + HttpOnly cookies.
+
+Profile: Centralized screen to update Name, Password, and Profile Picture.
+
+Proxy Guard: proxy.js middleware validates roles and verification status.
+
+5. The "Live Tracking" & Engagement Engine
+Interaction Logging: Atomic $inc for Views and Clicks.
+
+Fan Love (Likes): Framer Motion heart button with optimistic UI.
+
+QR Bridge: Custom QR codes with logo support and high-res PNG download.
+
+6. Template Engine & Previewer
+The 5 Designs: Classic, Grid, Hero, Social Minimal, and Modern Card.
+
+Live Preview: DaisyUI mockup-phone in dashboard for real-time theme/template editing.
+
+7. Analytics & Reporting
+Counters: Live Total Views, Clicks, and Likes on Dashboard.
+
+Graphs: Tiered Recharts data (7-day/90-day/Lifetime).
+
+8. Support & Retention Automation
+Ticketing: User creation with file upload -> Admin global helpdesk.
+
+Retention: Dashboard banner + Cron Job emails (7, 3, 1 day before expiry).
+
+9. Layout Strategy
+Marketing/App Layout: Sticky Glassmorphism Header + Multi-column Footer.
+
+Public Bio Page (/[slug]): No Global Header/Footer. Clean environment.
+
+10. File Structure
+Plaintext
+
+linkpeak/
+├── constants/
+│   └── config.js                  # Global Constants
+├── app/
+│   ├── (auth)/                    # Verify, Login, Register, Reset
+│   ├── (marketing)/               # Home, Pricing, Contact, Legal
+│   ├── (dashboard)/               # User App (Tracking, QR, Analytics, Tickets)
+│   ├── (admin)/                   # Super Admin Control Panel
+│   ├── [slug]/                    # SEO-Optimized Public Bio Page
+│   ├── layout.jsx                 # Root + Global Axios Loader + Toaster
+│   └── api/                       # Auth, Track, Cron, QR, Tickets, AI
+├── components/
+│   ├── layout/                    # Header, Footer, Sidebar
+│   ├── marketing/                 # Hero, Features, PricingTable, FAQ
+│   ├── bio-templates/             # The 5 Layout Components
+│   ├── shared/                    # Loader, ExpiryAlert, PreviewPhone
+│   └── analytics/                 # Recharts Components
+├── lib/
+│   ├── axios.js                   # Axios Instance + Interceptors
+│   ├── db.js                      # Mongoose Singleton
+│   ├── mailer.js                  # Nodemailer Helper
+│   └── env-check.js               # Env Validation
+├── proxy.js                       # Next.js 16 Middleware logic
+└── next.config.js                 # Image Config
+11. Zero-Failure Build Instructions
+Build: npm run build must have 0 errors.
+
+API: Unified { success, data, error } response structure.
+
+Feedback: Global loading state for all Axios calls.
+
+A11y: WCAG 2.1 compliant.
