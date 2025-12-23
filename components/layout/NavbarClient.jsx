@@ -109,7 +109,7 @@ export default function NavbarClient() {
                 <div className="flex items-center gap-3">
 
                     {/* View Bio Button */}
-                    <div className="hidden md:flex items-center gap-2">
+                    {isLoggedIn && <div className="hidden md:flex items-center gap-2">
                         <button
                             onClick={() => {
                                 if (page?.slug) {
@@ -137,7 +137,7 @@ export default function NavbarClient() {
                                 <RiExternalLinkLine className="text-lg" />
                             </div>
                         </button>
-                    </div>
+                    </div>}
                     {/* Logged-in → profile dropdown */}
                     {isLoggedIn && <ProfileDropdown user={user} page={page} onLogout={handleLogout} />}
 
