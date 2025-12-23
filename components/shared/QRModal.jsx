@@ -4,18 +4,20 @@ import { useState } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 import { RiDownloadLine, RiCloseLine, RiQrCodeLine, RiShareLine } from "react-icons/ri";
 import { toast } from "react-hot-toast";
+import { CONFIG } from "@/constants/config";
 
 export default function QRModal({ slug, isOpen, onClose }) {
-    const [centerIcon, setCenterIcon] = useState("LinkPeak");
+    const [centerIcon, setCenterIcon] = useState("Peak");
     const url = `${typeof window !== "undefined" ? window.location.origin : ""}/${slug}`;
+    /*
+        const icons = [
+            { name: "LinkPeak", url: "https://api.dicebear.com/7.x/shapes/svg?seed=LinkPeak" },
+            { name: "Star", url: "https://api.dicebear.com/7.x/shapes/svg?seed=Star" },
+            { name: "Heart", url: "https://api.dicebear.com/7.x/shapes/svg?seed=Heart" },
+            { name: "Bolt", url: "https://api.dicebear.com/7.x/shapes/svg?seed=Bolt" },
+        ];*/
 
-    const icons = [
-        { name: "LinkPeak", url: "https://api.dicebear.com/7.x/shapes/svg?seed=LinkPeak" },
-        { name: "Star", url: "https://api.dicebear.com/7.x/shapes/svg?seed=Star" },
-        { name: "Heart", url: "https://api.dicebear.com/7.x/shapes/svg?seed=Heart" },
-        { name: "Bolt", url: "https://api.dicebear.com/7.x/shapes/svg?seed=Bolt" },
-    ];
-
+    const icons = CONFIG.QR_LOGOS;
     const downloadQR = () => {
         const canvas = document.getElementById("share-qr-canvas");
         if (!canvas) return;
@@ -23,7 +25,7 @@ export default function QRModal({ slug, isOpen, onClose }) {
         const pngUrl = canvas.toDataURL("image/png");
         const downloadLink = document.createElement("a");
         downloadLink.href = pngUrl;
-        downloadLink.download = `qr-${slug || 'profile'}.png`;
+        downloadLink.download = `${CONFIG.SITE_NAME.replace(" ", "-").toLowerCase()}-qr-${slug || 'profile'}.png`;
         document.body.appendChild(downloadLink);
         downloadLink.click();
         document.body.removeChild(downloadLink);
@@ -49,7 +51,7 @@ export default function QRModal({ slug, isOpen, onClose }) {
                     </div>
 
                     {/* QR Code Canvas Container */}
-                    <div className="bg-white p-6  shadow-inner mb-8 border-4 border-primary/5">
+                    <div className="bg-white p-2 shadow-inner mb-8 border-4 border-primary/5">
                         <QRCodeCanvas
                             id="share-qr-canvas"
                             value={url}
@@ -76,10 +78,10 @@ export default function QRModal({ slug, isOpen, onClose }) {
                                 <button
                                     key={icon.name}
                                     onClick={() => setCenterIcon(icon.name)}
-                                    className={`aspect-square  flex items-center justify-center border-2 transition-all overflow-hidden ${centerIcon === icon.name ? "border-primary bg-primary/5 p-1" : "border-base-200 hover:border-primary/30 p-2"
+                                    className={`w-10 h-10 flex items-center justify-center border-2 transition-all overflow-hidden ${centerIcon === icon.name ? "border-primary bg-primary/5 p-1" : "border-base-200 hover:border-primary/30 p-2"
                                         }`}
                                 >
-                                    <img src={icon.url} alt={icon.name} className="w-full h-full " />
+                                    {icon.url ? <img src={icon.url} alt={icon.name} className="w-8 h-8" /> : <span className="text-[9px] font-bold tracking-widest uppercase opacity-40">{icon.name}</span>}
                                 </button>
                             ))}
                         </div>

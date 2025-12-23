@@ -32,6 +32,7 @@ import {
     RiShieldStarLine
 } from "react-icons/ri";
 import { CONFIG } from "@/constants/config";
+import SmartPlanAlert from "@/components/dashboard/SmartPlanAlert";
 
 export default function DashboardPage() {
     const [user, setUser] = useState(null);
@@ -272,6 +273,10 @@ export default function DashboardPage() {
             </div>
         );
     }
+    const trialEndDate = new Date(user.createdAt);
+    trialEndDate.setHours(trialEndDate.getHours() + 24);
+    const expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + 8);
 
     return (
         <DashboardLayout
@@ -283,7 +288,8 @@ export default function DashboardPage() {
         >
             <Toaster position="bottom-right" />
             <GlobalLoading />
-
+            <SmartPlanAlert expiryDate={trialEndDate} type="trial" />
+            <SmartPlanAlert expiryDate={expiryDate} type="sub" />
             <div className="flex flex-col lg:flex-row gap-8 min-h-full">
                 <div className="flex-1 w-full max-w-2xl mx-auto">
 
@@ -528,7 +534,25 @@ export default function DashboardPage() {
                                                         <label className="label">
                                                             <span className="label-text">Custom URL <span className="text-error">*</span></span>
                                                         </label>
-                                                        <div className="flex items-center gap-2">
+                                                        <label className="input">
+                                                            {CONFIG.SITE_URL}/
+                                                            <input
+                                                                type="text"
+                                                                className="grow"
+                                                                placeholder="your-slug"
+                                                                value={page?.slug || ""}
+                                                                onChange={(e) => {
+                                                                    setPage({ ...page, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') });
+                                                                    setUnsavedChanges(true);
+                                                                }}
+                                                                // onBlur removed
+                                                                required
+                                                            />
+                                                        </label>
+                                                        {/*<label className="label">
+                                                            <span className="label-text">Custom URL <span className="text-error">*</span></span>
+                                                        </label>
+                                                         <div className="flex items-center gap-2">
                                                             <span className="text-sm opacity-60">linkpeak.com/</span>
                                                             <input
                                                                 type="text"
@@ -542,7 +566,7 @@ export default function DashboardPage() {
                                                                 // onBlur removed
                                                                 required
                                                             />
-                                                        </div>
+                                                        </div>*/}
                                                     </div>
                                                 </div>
 
@@ -739,7 +763,7 @@ group-hover:text-secondary" />
             <div className={`fixed bottom-8 right-8 z-50 transition-all duration-300 transform ${unsavedChanges ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0 pointer-events-none'}`}>
                 <button
                     onClick={handleGlobalSave}
-                    className="btn btn-primary btn-lg rounded-full shadow-2xl gap-3 pl-6 pr-8 border-4 border-base-100 animate-bounce-subtle"
+                    className="btn btn-primary btn-lg shadow-2xl gap-3 pl-6 pr-8 border-4 border-base-100 animate-bounce-subtle"
                 >
                     <div className="w-3 h-3 rounded-full bg-error animate-pulse shadow-[0_0_10px_theme(colors.error)]"></div>
                     Save Changes

@@ -25,7 +25,7 @@ export async function GET(req) {
             message: "Email verified successfully. You can now log in.",
         });
     } catch (error) {
-        console.log(error);
+        //console.log(error);
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }
 }

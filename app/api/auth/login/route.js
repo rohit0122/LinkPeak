@@ -9,7 +9,7 @@ export async function POST(req) {
         const { email, password } = await req.json();
 
         const user = await User.findOne({ email }).select("+password");
-        console.log('user ============= ', user);
+        //console.log('user ============= ', user);
         if (!user) {
             return NextResponse.json({ success: false, error: "Invalid credentials" }, { status: 401 });
         }
@@ -23,7 +23,7 @@ export async function POST(req) {
             return NextResponse.json({ success: false, error: "Invalid credentials" }, { status: 401 });
         }
 
-        console.log('user 222==========', user);
+        //console.log('user 222==========', user);
 
         const token = await createToken({
             id: user._id.toString(),

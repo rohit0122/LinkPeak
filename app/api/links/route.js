@@ -7,7 +7,7 @@ export async function GET(req) {
     try {
         const session = await getAuthUser();
         if (!session) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
-        console.log('session api links,  ', session)
+        //console.log('session api links,  ', session)
         const { searchParams } = new URL(req.url);
         const pageId = searchParams.get("pageId");
         if (!pageId) return NextResponse.json({ success: false, error: "Page ID required" }, { status: 400 });

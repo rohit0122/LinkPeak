@@ -22,6 +22,7 @@ import {
     RiPriceTag3Line,      // Pricing
     RiQuestionLine,       // FAQ
 } from "react-icons/ri";
+import Logo from "./Logo";
 
 // Fetch current user session
 async function getCurrentUser() {
@@ -95,16 +96,15 @@ export default function NavbarClient() {
 
     const isLoggedIn = Boolean(user);
 
-    if (loading) return null; // Optionally add a spinner here
+    //if (loading) return null; // Optionally add a spinner here
     //console.log('page ====== ', page)
     return (
         <nav className="sticky top-0 z-50 bg-base-100/90 backdrop-blur border-b">
+
             <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
                 {/* Logo */}
-                <Link href="/" className="text-xl font-semibold">
-                    {CONFIG.SITE_NAME}
-                    <span className="text-primary">.</span>
-                </Link>
+                <Logo />
+                
 
                 <div className="flex items-center gap-3">
 

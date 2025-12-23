@@ -11,9 +11,9 @@ export async function GET() {
         }
 
         await dbConnect();
-        console.log('session ', session);
+        //console.log('session ', session);
         const user = await User.findById(session.id);
-        console.log('user ', user);
+        // console.log('user ', user);
         if (!user) {
             return NextResponse.json({ success: false, error: "User not found" }, { status: 404 });
         }

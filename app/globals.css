@@ -1,12 +1,11 @@
 @import "tailwindcss";
 
 @plugin "daisyui" {
-  themes: light, dark, cupcake, luxury, dracula, retro, cyberpunk, aqua, synthwave;
-
+  themes: light, dark, cupcake, luxury, dracula, retro, cyberpunk, aqua, valentine, coffee, synthwave, forest;
 }
 
 @plugin "daisyui/theme" {
-  name: "light";
+  name: "linkPeakTheme";
   default: true;
   prefersdark: false;
   color-scheme: "dark";

@@ -55,13 +55,13 @@ export default function Hero() {
                         <div className="flex items-center gap-2">
                             <div className="avatar-group -space-x-4 rtl:space-x-reverse">
                                 <div className="avatar">
-                                    <div className="w-10"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=A" alt="user" /></div>
+                                    <div className="w-10"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=E&eyebrows[]&eyes=default" alt="user" /></div>
                                 </div>
                                 <div className="avatar">
-                                    <div className="w-10"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=B" alt="user" /></div>
+                                    <div className="w-10"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=B&eyebrows[]&eyes=default" alt="user" /></div>
                                 </div>
                                 <div className="avatar">
-                                    <div className="w-10"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=C" alt="user" /></div>
+                                    <div className="w-10"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Eco&eyebrows[]&eyes=default" alt="user" /></div>
                                 </div>
                             </div>
                             <div className="text-left leading-none">

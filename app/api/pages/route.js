@@ -7,7 +7,7 @@ export async function GET() {
     try {
         const session = await getAuthUser();
         if (!session) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
-        console.log('session ===== pages ', session)
+        //console.log('session ===== pages ', session)
         await dbConnect();
         const pages = await BioPage.find({ userId: session.id });
 
@@ -101,7 +101,6 @@ export async function PATCH(req) {
 
         await dbConnect();
         const { id, ...updates } = await req.json();
-        console.log("Processing Page Update:", updates);
 
         // --- RBAC & Security Check ---
         const User = (await import("@/models/User")).default;
@@ -110,6 +109,33 @@ export async function PATCH(req) {
         const plan = user?.plan || "FREE";
         const limits = CONFIG.PLAN_LIMITS[plan];
 
+        if (!plan) {
+            return NextResponse.json({
+                success: false,
+                error: "User not found or plan not specified."
+            }, { status: 404 });
+        }
+        if (!updates.title && updates.title.length < 3) {
+            return NextResponse.json({
+                success: false,
+                error: "Title must be at least 3 characters long. Refer Settings tab."
+            }, { status: 400 });
+        }
+        if (!updates.slug || updates.slug.length < 3) {
+            return NextResponse.json({
+                success: false,
+                error: "Slug must be at least 3 characters long. Refer Settings tab."
+            }, { status: 400 });
+        }
+        // check if slug is not used by other user
+        const existingPage = await BioPage.findOne({ slug: updates.slug.toLowerCase() });
+        //console.log('existingPage ', existingPage)
+        if (existingPage && existingPage._id.toString() !== id) {
+            return NextResponse.json({
+                success: false,
+                error: "This slug already taken. Please try another slug."
+            }, { status: 400 });
+        }
         // 1. Validate Template
         if (updates.template) {
             const allowed = limits.allowedTemplates;
@@ -134,7 +160,7 @@ export async function PATCH(req) {
 
         // 3. Validate SEO (Block for FREE users)
         // We check if 'seo' key exists in updates. Even empty object update is blocked for Free.
-        if (updates.seo && plan === 'FREE') {
+        if (updates.seo && (updates.seo.title || updates.seo.description || updates.seo.keywords) && plan === 'FREE') {
             return NextResponse.json({
                 success: false,
                 error: "SEO Optimization is a PRO feature."

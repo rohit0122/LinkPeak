@@ -17,7 +17,7 @@ const features = [
     },
     {
         title: "Custom Branding",
-        description: "30+ high-end DaisyUI themes and 5 pro templates. Your bio page should look as unique as your content.",
+        description: "8+ high-end color themes and 5 pro templates. Your bio page should look as unique as your content.",
         icon: RiPaletteLine,
         color: "text-purple-500",
         bg: "bg-purple-50"

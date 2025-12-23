@@ -12,8 +12,8 @@ export async function generateMetadata({ params }) {
     if (!page) return <BioNotFound />;
 
     return {
-        title: page.seo?.title || `${page.title} | LinkPeak Bio`,
-        description: page.seo?.description || page.bio || `Check out ${page.title}'s links on LinkPeak.`,
+        title: page.seo?.title || `${page.title} | ${CONFIG.SITE_NAME}`,
+        description: page.seo?.description || page.bio || `Check out ${page.title}'s links on ${CONFIG.SITE_NAME}.`,
         keywords: page.seo?.keywords || "link in bio, creator, social links, linkpeak",
         openGraph: {
             title: page.seo?.title || page.title,

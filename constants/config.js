@@ -3,6 +3,7 @@ export const CONFIG = {
     SITE_NAME: process.env.NEXT_PUBLIC_SITE_NAME || "LinkPeak",
     SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
     SUPPORT_EMAIL: process.env.NODEMAILER_USER_SENDER || "support@linkpeak.com",
+
     // RBAC & Plan Limits
     PLAN_LIMITS: {
         DEMO: { links: 5, pages: 1, allowedTemplates: ["classic"], themes: "ALL", analyticsDays: 7, customQR: false },
@@ -12,8 +13,20 @@ export const CONFIG = {
     },
     // UI Settings
     DAISY_THEMES: [
-        "light", "dark", "cupcake", "luxury", "dracula",
-        "retro", "cyberpunk", "aqua", "synthwave"
+        /* "light", "dark", "cupcake", "luxury", "dracula",
+         "retro", "cyberpunk", "aqua", "synthwave"*/
+        "light",      // Standard
+        "dark",       // Night Mode
+        "cupcake",    // Soft/Creative
+        "luxury",     // High-end/Business
+        "cyberpunk",  // Gaming/Tech
+        "retro",      // Vintage/Indie
+        "aqua",       // Travel/Nature
+        "dracula",    // Developer/Pro
+        "valentine",  // Fashion/Beauty
+        "coffee",     // Warm/Professional
+        "synthwave",  // High-Tech/Analytics
+        "forest"      // Natural/Wellness
     ],
 
     SUPPORT_CATEGORIES: ["Billing", "Technical", "Feedback", "General"],
@@ -37,5 +50,16 @@ export const CONFIG = {
         { id: "gem", name: "Diamond", url: "https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F48E.svg" },
         { id: "crown", name: "Crown", url: "https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F451.svg" },
         { id: "zap", name: "Zap", url: "https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/26A1.svg" }
-    ]
+    ],
+
+    TRIAL_MESSAGES: {
+        TITLE: (hours) => `${hours} Hours of Peak Access Remaining`,
+        SUBTEXT: "Your trial is active! Secure your analytics and keep your bio live beyond the next 24 hours.",
+        CTA: "Secure My Pro Access"
+    },
+    SUBSCRIPTION_MESSAGES: {
+        TITLE: (days) => days > 0 ? `${days} Days Remaining in Plan` : `Last Day of Subscription`,
+        SUBTEXT: "To ensure your bio page stays live for your fans, please renew your plan.",
+        CTA: "Renew Subscription"
+    }
 };

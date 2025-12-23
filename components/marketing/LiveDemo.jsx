@@ -42,7 +42,7 @@ export default function LiveDemo() {
                         </h2>
 
                         <p className="text-xl opacity-60 mb-12 font-medium leading-relaxed">
-                            Why settle for generic? Switch between 30+ DaisyUI themes and watch your bio page transform in real-time. No code, no design skills needed.
+                            Why settle for generic? Switch between 8+ color themes and watch your bio page transform in real-time. No code, no design skills needed.
                         </p>
 
                         <div className="card bg-base-100 shadow-2xl border border-base-300">

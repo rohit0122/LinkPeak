@@ -47,7 +47,7 @@ export default function BrandingEditor({ page, user, onUpdate, onPreviewUpdate }
                             <div>
                                 <span className="label-text font-bold text-sm md:text-lg">Remove "Powered by LinkPeak"</span>
                                 {!isPro && (
-                                    <span className="badge badge-sm badge-neutral ml-2 font-bold text-[10px] uppercase tracking-wider">
+                                    <span className="badge badge-xs badge-neutral ml-2 font-semibold uppercase tracking-wider">
                                         PRO Feature
                                     </span>
                                 )}
