@@ -38,13 +38,39 @@ export default function PublicBio({ page, links }) {
     const [isLiked, setIsLiked] = useState(false);
     const [isQRModalOpen, setIsQRModalOpen] = useState(false);
 
-    useEffect(() => {
-        // Track View
-        axios.post("/track/view", { pageId: page._id }).catch(e => console.error(e));
-
+    /*useEffect(() => {
+        const isViewed = localStorage.getItem(`viewed_${page._id}`);
+        if (!isViewed) {
+            // Track View
+            axios.post("/track/view", { pageId: page._id }).catch(e => console.error(e));
+            localStorage.setItem(`viewed_${page._id}`, "true");
+        }
         const liked = localStorage.getItem(`liked_${page._id}`);
         if (liked) setIsLiked(true);
-    }, [page._id]);
+
+    }, [page._id]);*/
+
+    useEffect(() => {
+        if (!page?._id) return;
+
+        const viewedKey = `viewed_${page._id}`;
+        const isViewed = localStorage.getItem(viewedKey);
+
+        if (!isViewed) {
+            const timer = setTimeout(() => {
+                axios.post("/track/view", { pageId: page._id })
+                    .then(() => localStorage.setItem(viewedKey, "true"))
+                    .catch(console.error);
+            }, 3000); // 3s genuine view
+
+            return () => clearTimeout(timer);
+        }
+
+        if (localStorage.getItem(`liked_${page._id}`)) {
+            setIsLiked(true);
+        }
+    }, [page?._id]);
+
 
     const handleLike = async () => {
         if (isLiked) return;
