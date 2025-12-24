@@ -75,10 +75,11 @@ export default function PublicBio({ page, links }) {
                         className="artboard artboard-demo phone-1 overflow-y-auto no-scrollbar pt-15 pb-8 px-4 flex flex-col items-center w-full h-full relative"
                         data-theme={page.theme || "light"}
                     >
-                        {/* Share Button */}
+                        {/* Share Button with accesssible name */}
                         <button
                             onClick={() => setIsQRModalOpen(true)}
                             className="absolute top-6 right-6 btn btn-circle btn-ghost btn-sm bg-base-100/50 backdrop-blur shadow-sm"
+                            aria-label={`Share QR Code for ${page.title}`}
                         >
                             <RiQrCodeLine className="text-lg" />
                         </button>

@@ -4,6 +4,7 @@ import BioPage from "@/models/BioPage";
 import LinkModel from "@/models/Link";
 import PublicBio from "./PublicBio";
 import BioNotFound from "@/components/bio-templates/BioNotFound";
+import { CONFIG } from "@/constants/config";
 
 export async function generateMetadata({ params }) {
     const { slug } = await params;
@@ -18,13 +19,13 @@ export async function generateMetadata({ params }) {
         openGraph: {
             title: page.seo?.title || page.title,
             description: page.seo?.description || page.bio,
-            images: [page.profileImage || "https://linkpeak.io/og-image.jpg"],
+            images: [page.profileImage || CONFIG.SITE_URL + "/og-image.jpg"],
         },
         twitter: {
             card: "summary_large_image",
             title: page.seo?.title || page.title,
             description: page.seo?.description || page.bio,
-            images: [page.profileImage || "https://linkpeak.io/og-image.jpg"],
+            images: [page.profileImage || CONFIG.SITE_URL + "/og-image.jpg"],
         }
     };
 }
