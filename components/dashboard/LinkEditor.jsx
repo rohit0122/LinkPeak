@@ -7,6 +7,7 @@ import {
     closestCenter,
     KeyboardSensor,
     PointerSensor,
+    TouchSensor,
     useSensor,
     useSensors
 } from "@dnd-kit/core";
@@ -52,20 +53,26 @@ function SortableItem({ link, onEdit, onDelete, onToggle }) {
         <div
             ref={setNodeRef}
             style={style}
-            className={`card bg-base-100 border-2 ${link.isActive ? 'border-base-300' : 'border-dashed border-base-200 opacity-60'} mb-4  transition-all hover:shadow-lg`}
+            className={`card bg-base-100 border-2 ${link.isActive ? 'border-base-300' : 'border-dashed border-base-200 opacity-60'} mb-4 transition-all hover:shadow-lg`}
         >
             <div className="card-body p-5 flex-row items-center gap-4">
-                <div {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing p-2 text-primary/30 hover:text-primary transition-all">
+                {/* Drag Handle */}
+                <div
+                    {...attributes}
+                    {...listeners}
+                    className="cursor-grab active:cursor-grabbing p-2 text-primary/30 hover:text-primary transition-all touch-none"
+                    style={{ touchAction: "none" }}
+                >
                     <RiDragMove2Fill className="text-2xl" />
                 </div>
 
                 <div className="flex-1 min-w-0 flex items-center gap-3">
                     {link.icon ? (
-                        <div className="text-2xl w-12 h-12 flex items-center justify-center bg-base-200  shadow-inner group-hover:scale-110 transition-transform">
+                        <div className="text-2xl w-12 h-12 flex items-center justify-center bg-base-200 shadow-inner group-hover:scale-110 transition-transform">
                             {link.icon}
                         </div>
                     ) : (
-                        <div className="w-12 h-12 flex items-center justify-center bg-base-200  opacity-20 group-hover:opacity-40 transition-opacity">
+                        <div className="w-12 h-12 flex items-center justify-center bg-base-200 opacity-20 group-hover:opacity-40 transition-opacity">
                             <RiLink className="text-xl" />
                         </div>
                     )}
@@ -110,38 +117,23 @@ export default function LinkEditor({ links, plan, onReorder, onAdd, onUpdate, on
     const [editingLink, setEditingLink] = useState(null);
     const [formData, setFormData] = useState({ title: "", url: "", icon: "" });
     const [activeEmojiTab, setActiveEmojiTab] = useState(CONFIG.COMMON_EMOJIS[0].name);
-
     const [isAiLoading, setIsAiLoading] = useState(false);
-
-    const handleAiTitle = async () => {
-        if (!formData.url) return;
-        setIsAiLoading(true);
-        try {
-            const { data } = await axios.post("/ai/generate-title", { url: formData.url });
-            if (data.success) {
-                setFormData(prev => ({ ...prev, title: data.data.title }));
-                toast.success("AI generated a catchy title!", { icon: "🪄" });
-            }
-        } catch (error) {
-            toast.error(error.response?.data?.error || "AI generation failed. Please try again.");
-        } finally {
-            setIsAiLoading(false);
-        }
-    };
 
     const limit = CONFIG.PLAN_LIMITS[plan || "FREE"].links;
     const isLimitReached = links.length >= limit;
 
+    // Mobile + Desktop friendly sensors
     const sensors = useSensors(
+        useSensor(TouchSensor, {
+            activationConstraint: { delay: 150, tolerance: 5 },
+        }),
         useSensor(PointerSensor),
-        useSensor(KeyboardSensor, {
-            coordinateGetter: sortableKeyboardCoordinates,
-        })
+        useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
     );
 
     const handleDragEnd = (event) => {
         const { active, over } = event;
-        if (active.id !== over.id) {
+        if (active.id !== over?.id) {
             const oldIndex = links.findIndex((l) => l._id === active.id);
             const newIndex = links.findIndex((l) => l._id === over.id);
             const newLinks = arrayMove(links, oldIndex, newIndex);
@@ -173,29 +165,33 @@ export default function LinkEditor({ links, plan, onReorder, onAdd, onUpdate, on
 
     return (
         <div className="w-full">
+            {/* Header */}
             <div className="flex justify-between items-center mb-8">
                 <h2 className="text-xl font-medium tracking-tight flex items-center gap-3">
-                    <div className="p-2 bg-primary/10  text-primary">
+                    <div className="p-2 bg-primary/10 text-primary">
                         <RiLink className="text-xl" />
                     </div>
                     Dynamic Links
                 </h2>
                 <div className="flex items-center gap-4">
                     {isLimitReached && (
-                        <div className="badge badge-error badge-outline gap-2 font-medium py-4 px-4  animate-pulse">
+                        <div className="badge badge-error badge-outline gap-2 font-medium py-4 px-4 animate-pulse">
                             Limit Reached ({links.length}/{limit})
                         </div>
                     )}
-                    <button
-                        onClick={handleAddClick}
-                        disabled={isLimitReached}
-                        className={`btn btn-primary btn-sm ${isLimitReached ? 'grayscale opacity-50 cursor-not-allowed' : ''}`}
-                    >
-                        <RiAddLine className="text-lg" /> Add New Link
-                    </button>
+                    {!isLimitReached && (
+                        <button
+                            onClick={handleAddClick}
+                            disabled={isLimitReached}
+                            className={`btn btn-primary btn-sm ${isLimitReached ? 'grayscale opacity-50 cursor-not-allowed' : ''}`}
+                        >
+                            <RiAddLine className="text-lg" /> Add New Link
+                        </button>
+                    )}
                 </div>
             </div>
 
+            {/* DnD Sortable */}
             <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
@@ -217,12 +213,14 @@ export default function LinkEditor({ links, plan, onReorder, onAdd, onUpdate, on
                                 />
                             ))
                         ) : (
-                            <div className="bg-base-100  border-2 border-dashed border-base-300 p-16 text-center animate-pulse">
-                                <div className="w-20 h-20  bg-base-200 flex items-center justify-center mx-auto mb-6">
+                            <div className="bg-base-100 border-2 border-dashed border-base-300 p-16 text-center animate-pulse">
+                                <div className="w-20 h-20 bg-base-200 flex items-center justify-center mx-auto mb-6">
                                     <RiLink className="text-4xl opacity-10" />
                                 </div>
                                 <h3 className="font-medium text-xl mb-2">No Links Yet</h3>
-                                <p className="text-base-content/40 max-w-xs mx-auto text-sm">Create your first link and watch it appear on your bio page instantly!</p>
+                                <p className="text-base-content/40 max-w-xs mx-auto text-sm">
+                                    Create your first link and watch it appear on your bio page instantly!
+                                </p>
                             </div>
                         )}
                     </div>
