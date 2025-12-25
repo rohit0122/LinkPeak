@@ -4,6 +4,13 @@ export const CONFIG = {
     SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
     SUPPORT_EMAIL: process.env.NODEMAILER_USER_SENDER || "support@linkpeak.com",
 
+    // Pricing Configuration (Monthly)
+    PRICING: {
+        FREE: { price: 0, currency: "$", label: "Free" },
+        PRO: { price: 9, currency: "$", label: "Pro" },
+        AGENCY: { price: 49, currency: "$", label: "Agency" }
+    },
+
     // RBAC & Plan Limits
     PLAN_LIMITS: {
         DEMO: { links: 5, pages: 1, allowedTemplates: ["classic"], themes: "ALL", analyticsDays: 7, customQR: false },

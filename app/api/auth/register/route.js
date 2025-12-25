@@ -7,7 +7,11 @@ import { v4 as uuidv4 } from "uuid";
 export async function POST(req) {
     try {
         await dbConnect();
-        const { name, email, password } = await req.json();
+        const { name, email, password, plan } = await req.json();
+
+        // Validate plan if provided
+        const validPlans = ["FREE", "PRO", "AGENCY"];
+        const userPlan = plan && validPlans.includes(plan.toUpperCase()) ? plan.toUpperCase() : "FREE";
 
         const userExists = await User.findOne({ email });
         if (userExists) {
@@ -20,6 +24,7 @@ export async function POST(req) {
             name,
             email,
             password,
+            plan: userPlan,
             verificationToken,
         });
 

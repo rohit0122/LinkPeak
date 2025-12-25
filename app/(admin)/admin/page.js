@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import axios from "@/lib/axios";
 import DashboardLayout from "@/components/layout/DashboardLayout";
+import SupportView from "@/components/dashboard/SupportView";
 import {
     RiUserFollowLine,
     RiEyeLine,
@@ -55,6 +56,7 @@ export default function AdminDashboard() {
     const [tickets, setTickets] = useState([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState("");
+    const [currentUser, setCurrentUser] = useState(null);
 
     // Revenue Logic (Estimated)
     const calculateMRR = (distribution) => {
@@ -70,14 +72,16 @@ export default function AdminDashboard() {
     const fetchData = async () => {
         setLoading(true);
         try {
-            const [statsRes, usersRes, ticketsRes] = await Promise.all([
+            const [statsRes, usersRes, ticketsRes, userRes] = await Promise.all([
                 axios.get("/admin/stats"),
                 axios.get("/admin/users"),
-                axios.get("/admin/tickets")
+                axios.get("/admin/tickets"),
+                axios.get("/auth/me")
             ]);
             if (statsRes.data.success) setStats(statsRes.data.data);
             if (usersRes.data.success) setUsers(usersRes.data.success ? usersRes.data.data : []);
             if (ticketsRes.data.success) setTickets(ticketsRes.data.data);
+            if (userRes.data.success) setCurrentUser(userRes.data.data);
         } catch (error) {
             toast.error("Could not load admin dashboard data.");
         } finally {
@@ -116,7 +120,7 @@ export default function AdminDashboard() {
     const mrr = calculateMRR(stats?.planDistribution);
 
     return (
-        <DashboardLayout user={{ name: "System Admin", role: "admin", plan: "AGENCY" }}>
+        <DashboardLayout user={currentUser || { name: "System Admin", role: "admin", plan: "AGENCY" }}>
             <div className="max-w-[1400px] mx-auto py-10 px-4 space-y-8">
                 {/* Minimal Global Header */}
                 <div className="flex items-center justify-between bg-base-100 p-6  border border-base-200 shadow-sm">
@@ -309,69 +313,9 @@ export default function AdminDashboard() {
                             </div>
                         </div>
 
-                        <div className="bg-base-100  border border-base-200 shadow-sm overflow-hidden">
-                            <table className="table w-full">
-                                <thead>
-                                    <tr className="bg-base-200/30">
-                                        <th className="font-medium uppercase text-[10px] tracking-widest opacity-40 py-6">User / Category</th>
-                                        <th className="font-medium uppercase text-[10px] tracking-widest opacity-40">Issue</th>
-                                        <th className="font-medium uppercase text-[10px] tracking-widest opacity-40">Status</th>
-                                        <th className="font-medium uppercase text-[10px] tracking-widest opacity-40 text-right">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {tickets.map(ticket => (
-                                        <tr key={ticket._id} className="hover:bg-base-200/20 transition-colors">
-                                            <td>
-                                                <div className="flex items-center gap-3">
-                                                    <div className="w-10 h-10 bg-primary/10 text-primary flex items-center justify-center font-medium">
-                                                        <RiCustomerService2Line />
-                                                    </div>
-                                                    <div>
-                                                        <div className="font-medium text-sm">{ticket.userId?.name || "Deleted User"}</div>
-                                                        <div className="badge badge-outline badge-xs opacity-60 font-medium tracking-widest text-[8px]">{ticket.category}</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div className="max-w-md">
-                                                    <div className="font-medium text-sm truncate">{ticket.subject}</div>
-                                                    <div className="text-[10px] opacity-40 font-medium truncate">{ticket.message}</div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div className={`badge badge-sm font-medium py-3 px-4 ${ticket.status === 'OPEN' ? 'badge-success' : ticket.status === 'PENDING' ? 'badge-warning' : 'badge-ghost'}`}>
-                                                    {ticket.status}
-                                                </div>
-                                            </td>
-                                            <td className="text-right">
-                                                <div className="flex justify-end gap-1">
-                                                    {ticket.status !== 'CLOSED' ? (
-                                                        <button
-                                                            onClick={() => handleTicketStatus(ticket._id, 'CLOSED')}
-                                                            className="btn btn-xs  btn-success font-medium"
-                                                        >
-                                                            Resolve
-                                                        </button>
-                                                    ) : (
-                                                        <button
-                                                            onClick={() => handleTicketStatus(ticket._id, 'OPEN')}
-                                                            className="btn btn-xs  btn-outline font-medium"
-                                                        >
-                                                            Reopen
-                                                        </button>
-                                                    )}
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                    {tickets.length === 0 && (
-                                        <tr>
-                                            <td colSpan="4" className="text-center py-20 opacity-30 font-medium">No tickets in the queue</td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
+                        <div className="bg-base-100 border border-base-200 shadow-sm overflow-hidden rounded-xl">
+                            {/* Integrating the shared SupportView for full interactivity */}
+                            <SupportView user={currentUser} />
                         </div>
                     </div>
                 )}

@@ -66,4 +66,7 @@ const BioPageSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
+// Indexes
+BioPageSchema.index({ userId: 1 });
+
 export default mongoose.models.BioPage || mongoose.model("BioPage", BioPageSchema);

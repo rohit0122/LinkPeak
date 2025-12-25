@@ -31,6 +31,32 @@ const SupportTicketSchema = new mongoose.Schema(
             required: true,
             trim: true,
         },
+        replies: [
+            {
+                senderId: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: "User",
+                    required: true,
+                },
+                senderName: {
+                    type: String,
+                    required: true,
+                },
+                role: {
+                    type: String,
+                    enum: ["user", "admin", "User", "Admin"],
+                    required: true,
+                },
+                message: {
+                    type: String,
+                    required: true,
+                },
+                createdAt: {
+                    type: Date,
+                    default: Date.now,
+                },
+            },
+        ],
     },
     { timestamps: true }
 );

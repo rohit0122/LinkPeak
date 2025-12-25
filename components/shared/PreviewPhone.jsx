@@ -2,11 +2,11 @@
 
 import { CONFIG } from "@/constants/config";
 
-import ClassicTemplate from "@/components/templates/ClassicTemplate";
-import GridTemplate from "@/components/templates/GridTemplate";
-import HeroTemplate from "@/components/templates/HeroTemplate";
-import SocialTemplate from "@/components/templates/SocialTemplate";
-import ModernTemplate from "@/components/templates/ModernTemplate";
+import ClassicTemplate from "@/components/templates/upgradedTemplates/ClassicTemplate";
+import GridTemplate from "@/components/templates/upgradedTemplates/GridTemplate";
+import HeroTemplate from "@/components/templates/upgradedTemplates/HeroTemplate";
+import SocialTemplate from "@/components/templates/upgradedTemplates/SocialTemplate";
+import ModernTemplate from "@/components/templates/upgradedTemplates/ModernTemplate";
 
 export default function PreviewPhone({ pageData, links = [] }) {
     const { theme, title, bio, profileImage, template } = pageData || {};

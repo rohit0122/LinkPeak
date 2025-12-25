@@ -11,40 +11,62 @@ export default function ThemeSelector({ currentTheme, plan, onSelect }) {
     //console.log(' allowedThemes', allowedThemes);
 
     return (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-base-100 p-2 border border-base-300 shadow-sm rounded-xl overflow-hidden">
             {CONFIG.DAISY_THEMES.map((theme) => {
                 const isLocked = !isAllUnlocked && !allowedThemes.includes(theme);
+                const isActive = currentTheme === theme;
 
                 return (
                     <button
                         key={theme}
                         disabled={isLocked}
                         onClick={() => !isLocked && onSelect(theme)}
-                        className={`group flex flex-col items-center gap-2 p-3  border-2 transition-all relative ${currentTheme === theme
-                            ? "border-primary bg-primary/10"
-                            : isLocked ? "border-base-200 opacity-50 grayscale cursor-not-allowed" : "border-base-200 hover:border-base-content/30"
-                            }`}
+                        className={`
+                            relative group flex flex-col items-center gap-3 p-4 
+                            border-2 transition-all duration-300 rounded-xl
+                            hover:scale-105 active:scale-95 bg-base-100
+                            ${isActive
+                                ? "border-primary bg-base-100 shadow-inner ring-2 ring-primary ring-offset-2"
+                                : isLocked
+                                    ? "border-base-200 opacity-50 grayscale cursor-not-allowed"
+                                    : "border-base-200 hover:border-primary/30 hover:shadow-lg"
+                            }
+                        `}
                         data-theme={theme}
+                        suppressHydrationWarning={true}
                     >
+                        {/* Lock Badge */}
                         {isLocked && (
-                            <div className="absolute top-2 right-2 p-1 bg-base-100  shadow-sm text-primary">
-                                <RiLockLine className="text-xs" />
+                            <div className="absolute top-2 right-2 z-10">
+                                <div className="p-1.5 bg-base-100 rounded-full shadow-md text-primary ring-1 ring-base-200">
+                                    <RiLockLine className="text-xs" />
+                                </div>
                             </div>
                         )}
-                        <div className="w-full flex gap-1 h-8  overflow-hidden border border-base-content/10">
+
+                        {/* Color Swatch Preview */}
+                        <div className="w-full h-10 flex overflow-hidden rounded-lg shadow-sm ring-1 ring-base-content/5">
                             <div className="flex-1 bg-primary"></div>
                             <div className="flex-1 bg-secondary"></div>
                             <div className="flex-1 bg-accent"></div>
                             <div className="flex-1 bg-neutral"></div>
                         </div>
+
+                        {/* Theme Name */}
                         <div className="flex flex-col items-center">
-                            <span className="text-[10px] font-medium uppercase tracking-wider opacity-60">
+                            <span className="text-[10px] font-bold uppercase tracking-widest opacity-80 group-hover:opacity-100 transition-opacity">
                                 {theme}
                             </span>
-                            {isLocked && (
-                                <span className="text-[8px] font-medium text-primary uppercase pt-0.5">PRO Plan</span>
-                            )}
                         </div>
+
+                        {/* Plan Badge for Locked Items */}
+                        {isLocked && (
+                            <div className="absolute inset-x-0 bottom-3 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                <span className="badge badge-xs badge-neutral font-bold uppercase tracking-widest px-2 py-2">
+                                    PRO
+                                </span>
+                            </div>
+                        )}
                     </button>
                 );
             })}

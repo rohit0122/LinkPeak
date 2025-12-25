@@ -10,20 +10,26 @@ export default function DashboardLayout({ children, user, page, pages = [], onSe
     return (
         <div className="min-h-screen bg-base-200 flex flex-col">
             {/* Unified Navbar */}
-            <NavbarClient />
+            <NavbarClient user={user} page={page} />
 
             {/* Main Content Area */}
             <main className="flex-1 w-full max-w-7xl mx-auto p-4 md:p-8">
-                {/* Page Switcher (Authenticated + Non-FREE only) */}
-                {user && user?.plan === 'AGENCY' && (
-                    <div className="max-w-2xl ml-14">
-                        <div className="dropdown">
-                            <div tabIndex={0} role="button" className="btn btn-primary btn-soft btn-lg gap-2 font-bold normal-case mb-2">
-                                <RiLayoutMasonryLine className="text-primary" />
-                                <span className="max-w-[120px] truncate">{page?.slug ? `/${page.slug}` : "Select Page"}</span>
-                                <RiArrowDownSLine className="opacity-40" />
+                {/* Page Switcher (Authenticated + Non-FREE only + Non-Admin) */}
+                {user && user?.plan === 'AGENCY' && user?.role !== 'admin' && (
+                    <div className="w-full md:w-auto md:max-w-2xl md:ml-0 mb-6">
+                        <div className="dropdown w-full md:w-auto">
+                            <div
+                                tabIndex={0}
+                                role="button"
+                                className="btn btn-primary btn-soft w-full md:w-auto btn-md md:btn-lg gap-2 font-bold normal-case justify-between md:justify-start"
+                            >
+                                <div className="flex items-center gap-2 truncate">
+                                    <RiLayoutMasonryLine className="text-primary flex-shrink-0" />
+                                    <span className="truncate max-w-[200px]">{page?.slug ? `/${page.slug}` : "Select Page"}</span>
+                                </div>
+                                <RiArrowDownSLine className="opacity-40 flex-shrink-0" />
                             </div>
-                            <ul tabIndex={0} className="dropdown-content z-[60] menu p-2 shadow-2xl bg-base-100 w-64 mt-2 border border-base-200">
+                            <ul tabIndex={0} className="dropdown-content z-[60] menu p-2 shadow-2xl bg-base-100 w-full md:w-72 mt-2 border border-base-200 rounded-box">
                                 <li className="menu-title px-4 py-2 my-1">
                                     <span className="text-[10px] font-black uppercase tracking-widest opacity-40">My Bio Pages</span>
                                 </li>
@@ -34,7 +40,7 @@ export default function DashboardLayout({ children, user, page, pages = [], onSe
                                             className={`flex items-center justify-between py-3 px-4 ${page?._id === p._id ? 'bg-primary/10 text-primary font-bold my-1' : ''}`}
                                         >
                                             <span className="truncate">/{p.slug}</span>
-                                            {page?._id === p._id && <RiCheckLine />}
+                                            {page?._id === p._id && <RiCheckLine className="flex-shrink-0" />}
                                         </button>
                                     </li>
                                 ))}
@@ -46,7 +52,7 @@ export default function DashboardLayout({ children, user, page, pages = [], onSe
                                                 onClick={onCreatePage}
                                                 className="flex items-center gap-3 py-3 px-4 text-primary font-bold hover:bg-primary/5"
                                             >
-                                                <RiAddCircleLine className="text-lg" />
+                                                <RiAddCircleLine className="text-lg flex-shrink-0" />
                                                 Add New Page
                                             </button>
                                         </li>

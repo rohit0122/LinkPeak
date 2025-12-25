@@ -163,6 +163,35 @@ export default function LinkEditor({ links, plan, onReorder, onAdd, onUpdate, on
         setFormData({ title: "", url: "", icon: "" });
     };
 
+    const handleAiTitle = async () => {
+        if (!formData.url) {
+            toast.error("Please enter a URL first");
+            return;
+        }
+
+        setIsAiLoading(true);
+        try {
+            const { data } = await axios.post("/ai/generate-title", { url: formData.url });
+
+            if (data.success && data.data?.title) {
+                setFormData(prev => ({
+                    ...prev,
+                    title: data.data.title,
+                }));
+                toast.success("AI generated a title!");
+            } else {
+                toast.error(data.error || "Failed to generate title");
+            }
+        } catch (error) {
+            console.error("AI Title Error:", error);
+            // Handle axios error response structure
+            const msg = error.response?.data?.error || "AI Service unavailable";
+            toast.error(msg);
+        } finally {
+            setIsAiLoading(false);
+        }
+    };
+
     return (
         <div className="w-full">
             {/* Header */}

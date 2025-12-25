@@ -28,8 +28,12 @@ import Logo from "./Logo";
 async function getCurrentUser() {
     try {
         const res = await axios.get("/auth/me");
-        return res.data || null;
+        return res.data?.data || null;
     } catch (error) {
+        // User not logged in (401) is expected on public pages
+        if (error.response?.status === 401) {
+            return null;
+        }
         console.error("Failed to fetch user:", error);
         return null;
     }
@@ -43,44 +47,54 @@ const publicLinks = [
     { name: "FAQ", href: "/#faq", icon: <RiQuestionLine size={24} />, color: "text-success" },
 ];
 
-export default function NavbarClient() {
+export default function NavbarClient({ user: propUser, page: propPage }) {
     const router = useRouter();
-    const [user, setUser] = useState(null);
-    const [page, setPage] = useState(null); // profile image & slug
+    const [user, setUser] = useState(propUser || null);
+    const [page, setPage] = useState(propPage || null);
     const [mobileOpen, setMobileOpen] = useState(false);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(!propUser);
 
-    // Fetch user session
+    // Sync state with props when they change
     useEffect(() => {
+        if (propUser !== undefined) setUser(propUser);
+        if (propPage !== undefined) setPage(propPage);
+    }, [propUser, propPage]);
+
+    // Fetch user session only if props are not provided
+    useEffect(() => {
+        if (propUser) return; // Skip fetch if user prop is provided
+
         async function fetchUser() {
             setLoading(true);
             const response = await getCurrentUser();
             //console.log('API response ====== ', response);
 
-            if (response && response.data) {
-                setUser(response.data);
+            if (response) {
+                setUser(response);
 
-                // Fetch user's biopage for profileImage and slug
-                try {
-                    const bioPageRes = await axios.get("/pages");
-                    //console.log('BioPage response ====== ', bioPageRes.data);
+                // Fetch user's biopage for profileImage and slug (only if page prop missing)
+                if (!propPage) {
+                    try {
+                        const bioPageRes = await axios.get("/pages");
+                        //console.log('BioPage response ====== ', bioPageRes.data);
 
-                    if (bioPageRes.data && bioPageRes.data.data && bioPageRes.data.data.length > 0) {
-                        const firstPage = bioPageRes.data.data[0];
-                        setPage({
-                            profileImage: firstPage.profileImage || null,
-                            slug: firstPage.slug || null,
-                        });
+                        if (bioPageRes.data && bioPageRes.data.data && bioPageRes.data.data.length > 0) {
+                            const firstPage = bioPageRes.data.data[0];
+                            setPage({
+                                profileImage: firstPage.profileImage || null,
+                                slug: firstPage.slug || null,
+                            });
+                        }
+                    } catch (error) {
+                        console.error("Failed to fetch biopage:", error);
+                        setPage({ profileImage: null, slug: null });
                     }
-                } catch (error) {
-                    console.error("Failed to fetch biopage:", error);
-                    setPage({ profileImage: null, slug: null });
                 }
             }
             setLoading(false);
         }
         fetchUser();
-    }, []);
+    }, [propUser, propPage]);
 
     const handleLogout = async () => {
         try {
@@ -104,12 +118,12 @@ export default function NavbarClient() {
             <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
                 {/* Logo */}
                 <Logo />
-                
+
 
                 <div className="flex items-center gap-3">
 
-                    {/* View Bio Button */}
-                    {isLoggedIn && <div className="hidden md:flex items-center gap-2">
+                    {/* View Bio Button (Non-Admin) */}
+                    {isLoggedIn && user?.role !== 'admin' && <div className="hidden md:flex items-center gap-2">
                         <button
                             onClick={() => {
                                 if (page?.slug) {
@@ -251,7 +265,7 @@ function ProfileDropdown({ user, page, onLogout }) {
                 className="transition-transform hover:scale-105 focus:outline-none p-0 bg-transparent border-0 cursor-pointer"
                 onClick={() => setOpen(!open)}
             >
-                <div className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full ring-2 ring-primary overflow-hidden shadow-sm">
+                <div className="w-8 h-8 min-w-[25px] min-h-[25px] rounded-full ring-2 ring-primary overflow-hidden shadow-sm">
                     {page?.profileImage ? (
                         <img
                             src={page.profileImage}
@@ -309,22 +323,24 @@ function ProfileDropdown({ user, page, onLogout }) {
                             </Link>
                         </li>
 
-                        <li className="flex items-center gap-2 md:hidden">
-                            <span
-                                className={`ml-4 text-lg text-secondary opacity-70 group-hover:opacity-100 transition-opacity`}
-                            >
-                                <RiExternalLinkLine size={20} />
-                            </span>
-                            <button
-                                onClick={() =>
-                                    page?.slug
-                                        ? window.open(`/${page.slug}`, "_blank")
-                                        : toast.error("Slug not set")
-                                }
-                                className="px-4 py-2 hover:bg-primary/10 transition-colors"
-                            >Public Profile ({`/${page.slug ? page.slug : "Not Set"}`})</button>
+                        {user?.role !== 'admin' && (
+                            <li className="flex items-center gap-2 md:hidden">
+                                <span
+                                    className={`ml-4 text-lg text-secondary opacity-70 group-hover:opacity-100 transition-opacity`}
+                                >
+                                    <RiExternalLinkLine size={20} />
+                                </span>
+                                <button
+                                    onClick={() =>
+                                        page?.slug
+                                            ? window.open(`/${page.slug}`, "_blank")
+                                            : toast.error("Slug not set")
+                                    }
+                                    className="px-4 py-2 hover:bg-primary/10 transition-colors"
+                                >Public Profile ({`/${page?.slug ? page.slug : "Not Set"}`})</button>
 
-                        </li>
+                            </li>
+                        )}
                         {/* Public links */}
                         {publicLinks.map((l) => (
                             <li key={l.name} className="flex items-center gap-2">

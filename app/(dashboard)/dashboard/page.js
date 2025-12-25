@@ -12,8 +12,8 @@ import ProfileUpload from "@/components/dashboard/ProfileUpload";
 import AnalyticsView from "@/components/dashboard/AnalyticsView";
 import QRGenerator from "@/components/dashboard/QRGenerator";
 import SupportView from "@/components/dashboard/SupportView";
-import GlobalLoading from "@/components/shared/GlobalLoading";
-import { toast, Toaster } from "react-hot-toast";
+import SubscriptionStatus from "@/components/dashboard/SubscriptionStatus";
+import { toast } from "react-hot-toast";
 import {
     RiLayoutLine,
     RiPaletteLine,
@@ -29,10 +29,12 @@ import {
     RiSearchEyeLine,
     RiSparklingLine,
     RiMagicLine,
-    RiShieldStarLine
+    RiShieldStarLine,
+    RiAdminLine
 } from "react-icons/ri";
 import { CONFIG } from "@/constants/config";
 import SmartPlanAlert from "@/components/dashboard/SmartPlanAlert";
+import UnsavedChangesModal from "@/components/dashboard/UnsavedChangesModal";
 
 export default function DashboardPage() {
     const [user, setUser] = useState(null);
@@ -48,38 +50,54 @@ export default function DashboardPage() {
         fetchData();
     }, []);
 
+    const [subscriptionStatus, setSubscriptionStatus] = useState(null);
+
     const fetchData = async () => {
         try {
             setLoading(true);
-            const [userRes, pagesRes] = await Promise.all([
-                axios.get("/auth/me"),
-                axios.get("/pages")
-            ]);
+            const { data } = await axios.get("/dashboard/init");
 
-            if (userRes.data.success) setUser(userRes.data.data);
+            if (data.success) {
+                const { user, pages, activePage, links: initLinks, analytics: initAnalytics, subscriptionStatus: subStatus } = data.data;
 
-            if (pagesRes.data.success && pagesRes.data.data.length > 0) {
-                const fetchedPages = pagesRes.data.data;
-                setAllPages(fetchedPages);
+                setUser(user);
+                setAllPages(pages);
+                setSubscriptionStatus(subStatus);
 
-                // If we don't have a page set, pick the first one
-                const activePage = page ? fetchedPages.find(p => p._id === page._id) || fetchedPages[0] : fetchedPages[0];
-                setPage(activePage);
+                if (pages.length > 0) {
+                    // Use the active page returned by API (logic is: first page) or keep existing if switching
+                    const selectedPage = page ? pages.find(p => p._id === page._id) || activePage : activePage;
+                    setPage(selectedPage);
 
-                await fetchPageData(activePage._id);
-            } else {
-                const createRes = await axios.post("/pages", {
-                    slug: userRes.data.data.name.toLowerCase().replace(/\s+/g, '-'),
-                    title: `${userRes.data.data.name}'s Bio`,
-                    bio: "Welcome to my link-in-bio page!"
-                });
-                if (createRes.data.success) {
-                    setPage(createRes.data.data);
-                    setLinks([]);
+                    // If the API returned links/analytics for the active page, use them
+                    // Otherwise fetch them (e.g. if we switched page locally but API init is just default)
+                    if (selectedPage._id === activePage._id) {
+                        setLinks(initLinks);
+                        setAnalytics(initAnalytics);
+                    } else {
+                        // Fallback if we somehow have a different page selected in state (unlikely on init)
+                        await fetchPageData(selectedPage._id);
+                    }
+                } else if (user) {
+                    // No pages found - Create default
+                    // We keep this client-side creation logic for now to ensure robustness
+                    const createRes = await axios.post("/pages", {
+                        slug: user.name.toLowerCase().replace(/\s+/g, '-') + "-" + Math.floor(Math.random() * 1000),
+                        title: `${user.name}'s Bio`,
+                        bio: "Welcome to my link-in-bio page!"
+                    });
+                    if (createRes.data.success) {
+                        setPage(createRes.data.data);
+                        setLinks([]);
+                        setAllPages([createRes.data.data]);
+                    }
                 }
             }
         } catch (error) {
             console.error("Fetch error:", error);
+            // Fallback to legacy flow if aggregated fails? 
+            // "Backward Compatibility Guarantee ... Existing APIs remain available as fallback"
+            // For now, let's trust the new API but log error.
             toast.error("Failed to load dashboard data");
         } finally {
             setLoading(false);
@@ -99,11 +117,57 @@ export default function DashboardPage() {
         }
     };
 
-    const handleSelectPage = (pageId) => {
-        const selected = allPages.find(p => p._id === pageId);
-        if (selected) {
-            setPage(selected);
-            fetchPageData(pageId);
+    const [showUnsavedModal, setShowUnsavedModal] = useState(false);
+    const [pendingPageId, setPendingPageId] = useState(null);
+
+    const handleSwitchRequest = (pageId) => {
+        if (pageId === page._id) return; // Same page
+
+        if (unsavedChanges) {
+            setPendingPageId(pageId);
+            setShowUnsavedModal(true);
+        } else {
+            performPageSwitch(pageId);
+        }
+    };
+
+    const performPageSwitch = async (pageId) => {
+        try {
+            // Fetch fresh pages list to ensure local state is distinct and up-to-date
+            const { data } = await axios.get("/pages");
+            if (data.success) {
+                const freshPages = data.data;
+                setAllPages(freshPages);
+
+                const selected = freshPages.find(p => p._id === pageId);
+                if (selected) {
+                    setPage(selected);
+                    setUnsavedChanges(false);
+                    setDirtySections(new Set());
+                    // Fetch links & analytics for the new page
+                    fetchPageData(pageId);
+                }
+            }
+        } catch (error) {
+            console.error("Failed to switch page:", error);
+            toast.error("Failed to load page data");
+        }
+        setShowUnsavedModal(false);
+        setPendingPageId(null);
+    };
+
+    const handleDiscardAndSwitch = () => {
+        if (pendingPageId) {
+            performPageSwitch(pendingPageId);
+        }
+    };
+
+    const handleSaveAndSwitch = async () => {
+        await handleGlobalSave();
+        // After save, handleGlobalSave sets unsavedChanges to false
+        // We can then switch
+        if (pendingPageId) {
+            performPageSwitch(pendingPageId);
         }
     };
 
@@ -267,15 +331,11 @@ export default function DashboardPage() {
     };
 
     if (loading) {
-        return (
-            <div className="flex items-center justify-center min-h-screen bg-base-200">
-                <span className="loading loading-spinner loading-lg text-primary"></span>
-            </div>
-        );
+        return null;
     }
     const trialEndDate = new Date(user.createdAt);
     trialEndDate.setHours(trialEndDate.getHours() + 24);
-    const expiryDate = new Date();
+    const expiryDate = new Date(user.createdAt);
     expiryDate.setDate(expiryDate.getDate() + 8);
 
     return (
@@ -283,15 +343,36 @@ export default function DashboardPage() {
             user={user}
             page={page}
             pages={allPages}
-            onSelectPage={handleSelectPage}
+            onSelectPage={handleSwitchRequest}
             onCreatePage={handleCreatePage}
         >
-            <Toaster position="bottom-right" />
-            <GlobalLoading />
-            <SmartPlanAlert expiryDate={trialEndDate} type="trial" />
-            <SmartPlanAlert expiryDate={expiryDate} type="sub" />
+            <UnsavedChangesModal
+                isOpen={showUnsavedModal}
+                onCancel={() => setShowUnsavedModal(false)}
+                onDiscard={handleDiscardAndSwitch}
+                onSave={handleSaveAndSwitch}
+            />
+
+
+            {/* Subscription Status - Handles Trial & Renewal Alerts */}
+            <SubscriptionStatus user={user} initialData={subscriptionStatus} />
+
             <div className="flex flex-col lg:flex-row gap-8 min-h-full">
                 <div className="flex-1 w-full max-w-2xl mx-auto">
+
+                    {/* Admin Indicator */}
+                    {user?.role === 'admin' && (
+                        <div className="alert bg-base-100 border-l-4 border-primary shadow-sm mb-6 rounded-r-xl rounded-l-none">
+                            <RiAdminLine className="text-2xl text-primary" />
+                            <div>
+                                <h3 className="font-bold flex items-center gap-2">
+                                    Admin Dashboard
+                                    <span className="badge badge-xs badge-neutral">SU</span>
+                                </h3>
+                                <div className="text-xs opacity-60">You have full system access. Manage tickets in the Support tab.</div>
+                            </div>
+                        </div>
+                    )}
 
                     {/* Responsive Tabs Grid */}
                     <div className="grid grid-cols-3 md:grid-cols-6 gap-2 bg-base-100 p-2 mb-8 shadow-sm">
@@ -332,6 +413,8 @@ export default function DashboardPage() {
                             </button>
                         ))}
                     </div>
+
+
 
 
                     {/* Stats Overview */}
@@ -377,7 +460,7 @@ export default function DashboardPage() {
                         )}
 
                         {activeTab === "support" && (
-                            <SupportView />
+                            <SupportView user={user} />
                         )}
 
                         {activeTab === "theme" && (
@@ -405,45 +488,11 @@ export default function DashboardPage() {
                                         </div>
                                         1. Choose Template
                                     </h2>
-                                    <div className="grid grid-cols-2 md:grid-cols-5 gap-4 bg-base-100 p-2 border border-base-300 shadow-sm overflow-hidden">
-                                        {["classic", "grid", "hero", "social", "modern"].map((t) => {
-                                            const allowedTemplates = CONFIG.PLAN_LIMITS[user?.plan || 'FREE'].allowedTemplates;
-                                            const isAllUnlocked = allowedTemplates === "ALL";
-                                            const isLocked = !isAllUnlocked && !allowedTemplates.includes(t);
-
-                                            return (
-                                                <button
-                                                    key={t}
-                                                    onClick={() => !isLocked && handleLocalUpdate({ template: t })}
-                                                    className={`btn btn-ghost h-auto flex flex-col p-4 border-2 transition-all gap-2 relative group ${page?.template === t
-                                                        ? "border-primary bg-primary/5 shadow-inner"
-                                                        : isLocked ? "border-base-200 opacity-50 grayscale cursor-not-allowed" : "border-base-200 hover:border-primary/30"
-                                                        }`}
-                                                >
-                                                    {isLocked && (
-                                                        <div className="absolute top-2 right-2 p-1 bg-base-100 shadow-sm text-primary z-10">
-                                                            <RiLockLine className="text-xs" />
-                                                        </div>
-                                                    )}
-                                                    <span className="text-3xl filter drop-shadow-sm group-hover:scale-110 transition-transform">
-                                                        {t === 'classic' && '📄'}
-                                                        {t === 'grid' && '🔳'}
-                                                        {t === 'hero' && '⭐'}
-                                                        {t === 'social' && '📱'}
-                                                        {t === 'modern' && '✨'}
-                                                    </span>
-                                                    <span className="text-[10px] font-medium uppercase tracking-widest opacity-60">
-                                                        {t}
-                                                    </span>
-                                                    {isLocked && (
-                                                        <span className="text-[8px] font-medium text-primary uppercase pt-0.5">
-                                                            {user?.plan === 'FREE' ? 'PRO' : 'AGENCY'} Plan
-                                                        </span>
-                                                    )}
-                                                </button>
-                                            );
-                                        })}
-                                    </div>
+                                    <TemplateSelector
+                                        currentTemplate={page?.template}
+                                        plan={user?.plan}
+                                        onSelect={(t) => handleLocalUpdate({ template: t })}
+                                    />
                                 </section>
 
                                 {/* Theme Selection */}

@@ -41,4 +41,8 @@ const LinkSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
+// Indexes for fast lookups (Optimization)
+LinkSchema.index({ pageId: 1, order: 1 });
+LinkSchema.index({ userId: 1 });
+
 export default mongoose.models.Link || mongoose.model("Link", LinkSchema);

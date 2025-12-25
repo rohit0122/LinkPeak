@@ -59,15 +59,35 @@ export default function Pricing({ billingCycle }) {
     const [loadingPlan, setLoadingPlan] = useState(null);
 
     const handleUpgrade = async (planName) => {
-        if (planName === 'Free') return;
+        if (planName === 'Free') {
+            // Free plan - redirect to signup with FREE parameter
+            window.location.href = '/register?plan=FREE';
+            return;
+        }
+
         setLoadingPlan(planName);
+
         try {
-            const { data } = await axios.post("/checkout", { planId: planName.toUpperCase() });
+            // Check if user is logged in by trying to get subscription status
+            const { data: statusData } = await axios.get("/subscriptions");
+
+            // User is logged in - create payment link
+            const { data } = await axios.post("/subscriptions/create-payment-link", {
+                planId: planName.toUpperCase()
+            });
+
             if (data.success) {
-                window.location.href = data.url;
+                // Open payment link in new tab
+                window.open(data.data.url, "_blank");
+                toast.success("Payment link created! Check the new tab.");
             }
         } catch (error) {
-            toast.error("Checkout failed. Please ensure you are logged in.");
+            // User not logged in or error - redirect to signup with plan
+            if (error.response?.status === 401) {
+                window.location.href = `/register?plan=${planName.toUpperCase()}`;
+            } else {
+                toast.error(error.response?.data?.error || "Failed to create payment link");
+            }
         } finally {
             setLoadingPlan(null);
         }
@@ -118,6 +138,7 @@ export default function Pricing({ billingCycle }) {
                                     onClick={() => handleUpgrade(plan.name)}
                                     className={`btn btn-block ${plan.popular ? 'btn-primary shadow-lg shadow-primary/20' : 'btn-outline'}`}
                                     disabled={loadingPlan === plan.name}
+                                    suppressHydrationWarning={true}
                                 >
                                     {loadingPlan === plan.name ? <span className="loading loading-spinner"></span> : (plan.name === 'Free' ? 'Get Started' : 'Upgrade Now')}
                                 </button>

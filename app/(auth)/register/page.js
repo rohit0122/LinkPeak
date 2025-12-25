@@ -3,7 +3,7 @@
 import { useState } from "react";
 import axios from "@/lib/axios";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { CONFIG } from "@/constants/config";
 
 export default function RegisterPage() {
@@ -17,6 +17,8 @@ export default function RegisterPage() {
     const [success, setSuccess] = useState("");
     const [loading, setLoading] = useState(false);
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const selectedPlan = searchParams.get('plan'); // PRO, AGENCY, or null
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -38,6 +40,7 @@ export default function RegisterPage() {
                 name: formData.name,
                 email: formData.email,
                 password: formData.password,
+                plan: selectedPlan, // Pass selected plan from URL
             });
 
             if (data.success) {
@@ -58,6 +61,15 @@ export default function RegisterPage() {
                     <h2 className="card-title text-2xl font-bold justify-center mb-4">
                         Join {CONFIG.SITE_NAME}
                     </h2>
+
+                    {selectedPlan && (
+                        <div className="alert alert-info text-sm py-3 mb-4">
+                            <div>
+                                <div className="font-bold">Selected Plan: {selectedPlan}</div>
+                                <div className="text-xs opacity-70">Create your account to continue with {selectedPlan} plan</div>
+                            </div>
+                        </div>
+                    )}
 
                     {error && (
                         <div className="alert alert-error text-sm py-2">
