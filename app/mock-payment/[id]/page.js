@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { useParams } from "next/navigation";
 import axios from "@/lib/axios";
 import { RiSecurePaymentLine, RiCheckLine, RiCloseLine, RiTimeLine } from "react-icons/ri";
 
-export default function MockPaymentPage({ params }) {
-    const { id } = params;
+export default function MockPaymentPage() {
+    const params = useParams();
+    const id = params?.id;
     const [status, setStatus] = useState("pending"); // pending, success, failed
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
@@ -89,6 +91,12 @@ export default function MockPaymentPage({ params }) {
                 <p className="text-sm text-gray-600 mb-8 text-center">
                     Select an outcome to simulate the payment process.
                 </p>
+
+                {message && (
+                    <div className={`p-3 rounded-lg text-sm text-center mb-4 ${status === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                        {message}
+                    </div>
+                )}
 
                 <div className="space-y-3">
                     <button
