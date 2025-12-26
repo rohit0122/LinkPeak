@@ -317,7 +317,7 @@ function ProfileDropdown({ user, page, onLogout }) {
                                 <RiLinksLine size={20} />
                             </span>
                             <Link
-                                href="/dashboard"
+                                href={user?.role === 'admin' ? "/admin" : "/dashboard"}
                                 className="px-4 py-2 hover:bg-primary/10 transition-colors"
                             >  Dashboard
                             </Link>

@@ -26,6 +26,7 @@ export async function POST(req) {
             password,
             plan: userPlan,
             verificationToken,
+            isActive: false,
         });
 
         await sendVerificationEmail(email, verificationToken);

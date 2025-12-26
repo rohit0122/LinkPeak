@@ -19,6 +19,7 @@ export async function GET(req) {
 
         user.isVerified = true;
         user.verificationToken = null;
+        user.isActive = true;
         await user.save();
         return NextResponse.json({
             success: true,

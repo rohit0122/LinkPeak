@@ -21,10 +21,14 @@ export default function LoginPage() {
 
         try {
             const response = await axios.post("/auth/login", { email, password });
-            console.log('response =========== ', response.data.success);
             if (response.data.success) {
+                localStorage.setItem("site_user", JSON.stringify(response.data.data));
+                //localStorage.setItem("site_token", response.data.data.token);
                 toast.success("Login successful!");
-                router.push("/dashboard");
+                if (response.data.data.role === 'ADMIN')
+                    router.push("/admin");
+                else
+                    router.push("/dashboard");
                 router.refresh();
             }
         } catch (err) {

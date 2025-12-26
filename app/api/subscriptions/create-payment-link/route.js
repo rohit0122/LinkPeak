@@ -91,8 +91,8 @@ export async function POST(req) {
         // Define plan amounts (in paise for USD)
         const planAmounts = {
             FREE: 0,
-            PRO: 49900, // ₹499
-            AGENCY: 99900, // ₹999
+            PRO: 900, // $10
+            AGENCY: 4900, // $49
         };
 
         const amount = planAmounts[planId];
@@ -101,8 +101,10 @@ export async function POST(req) {
         const provider = getPaymentProvider();
 
         // Create payment link
+        console.log('api call ', session)
         const paymentLinkData = await provider.createPaymentLink({
             userId: session.id,
+            userEmail: session.email,
             planId,
             amount,
             currency: "USD",

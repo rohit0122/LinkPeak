@@ -26,9 +26,9 @@ export async function middleware(req) {
                 return NextResponse.redirect(new URL("/suspended", req.url));
             }
 
-            if (payload.isActive !== false && pathname === "/suspended") {
+            /*if (payload.isActive !== false && pathname === "/suspended") {
                 return NextResponse.redirect(new URL("/dashboard", req.url));
-            }
+            }*/
 
             return NextResponse.next();
         } catch (error) {

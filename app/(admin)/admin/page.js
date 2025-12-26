@@ -24,6 +24,7 @@ import {
 } from "react-icons/ri";
 import { toast } from "react-hot-toast";
 import { format } from "date-fns";
+import { useRouter } from "next/navigation";
 
 function StatCard({ title, value, icon: Icon, colorClass, trend }) {
     return (
@@ -57,6 +58,7 @@ export default function AdminDashboard() {
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState("");
     const [currentUser, setCurrentUser] = useState(null);
+    const router = useRouter();
 
     // Revenue Logic (Estimated)
     const calculateMRR = (distribution) => {
@@ -66,7 +68,12 @@ export default function AdminDashboard() {
     };
 
     useEffect(() => {
-        fetchData();
+        const siteUser = localStorage.getItem("site_user") ? JSON.parse(localStorage.getItem("site_user")) : null;
+        if (siteUser?.role === 'admin') {
+            fetchData();
+        } else {
+            router.push('/dashboard');
+        }
     }, []);
 
     const fetchData = async () => {
@@ -123,13 +130,13 @@ export default function AdminDashboard() {
         <DashboardLayout user={currentUser || { name: "System Admin", role: "admin", plan: "AGENCY" }}>
             <div className="max-w-[1400px] mx-auto py-10 px-4 space-y-8">
                 {/* Minimal Global Header */}
-                <div className="flex items-center justify-between bg-base-100 p-6  border border-base-200 shadow-sm">
+                <div className="flex flex-col md:flex-row items-center justify-between bg-base-100 p-6  border border-base-200 shadow-sm gap-2">
                     <div className="flex items-center gap-4">
-                        <div className="w-14 h-14  bg-primary flex items-center justify-center text-primary-content shadow-lg shadow-primary/20">
-                            <RiShieldUserLine className="text-3xl" />
+                        <div className="w-10 h-10 md:w-14 md:h-14 bg-primary flex items-center justify-center text-primary-content shadow-lg shadow-primary/20">
+                            <RiShieldUserLine className="text-xl md:text-2xl" />
                         </div>
                         <div>
-                            <h1 className="text-2xl font-medium tracking-tighter">Control Center</h1>
+                            <h1 className="md:text-2xl text-xl font-medium tracking-tighter">Control Center</h1>
                             <p className="text-[10px] font-bold uppercase tracking-widest opacity-40">Elite Platform Management</p>
                         </div>
                     </div>
@@ -236,10 +243,10 @@ export default function AdminDashboard() {
                             <table className="table w-full">
                                 <thead>
                                     <tr className="bg-base-200/30">
-                                        <th className="font-medium uppercase text-[10px] tracking-widest opacity-40 py-6">User</th>
-                                        <th className="font-medium uppercase text-[10px] tracking-widest opacity-40">Plan</th>
-                                        <th className="font-medium uppercase text-[10px] tracking-widest opacity-40">Status</th>
-                                        <th className="font-medium uppercase text-[10px] tracking-widest opacity-40 text-right">Actions</th>
+                                        <th className="font-medium uppercase text-[10px] tracking-widest py-6">User</th>
+                                        <th className="font-medium uppercase text-[10px] tracking-widest">Plan</th>
+                                        <th className="font-medium uppercase text-[10px] tracking-widest">Status</th>
+                                        <th className="font-medium uppercase text-[10px] tracking-widest text-right">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -257,7 +264,8 @@ export default function AdminDashboard() {
                                                 </div>
                                             </td>
                                             <td>
-                                                <select
+                                                {user.role !== 'admin' ? <select
+                                                    disabled={user.role === 'admin'}
                                                     className={`select select-xs select-bordered  font-medium text-[10px] ${user.plan === 'AGENCY' ? 'border-primary text-primary' : ''}`}
                                                     value={user.plan}
                                                     onChange={(e) => handleUserUpdate(user._id, { plan: e.target.value })}
@@ -265,7 +273,9 @@ export default function AdminDashboard() {
                                                     <option value="FREE">FREE</option>
                                                     <option value="PRO">PRO</option>
                                                     <option value="AGENCY">AGENCY</option>
-                                                </select>
+                                                    <option value="ADMIN">ADMIN</option>
+
+                                                </select> : <div className="font-medium text-[10px]">{user.plan}</div>}
                                             </td>
                                             <td>
                                                 <div className={`badge badge-sm font-medium gap-1 py-3 px-4 ${user.isActive ? 'badge-success text-success-content' : 'badge-error text-error-content'}`}>
@@ -273,16 +283,17 @@ export default function AdminDashboard() {
                                                 </div>
                                             </td>
                                             <td className="text-right flex justify-end gap-2">
-                                                <button
+                                                {user.role !== 'admin' ? <button
+                                                    disabled={user.role === 'admin'}
                                                     onClick={() => handleUserUpdate(user._id, { isActive: !user.isActive })}
                                                     className={`btn btn-xs  font-medium ${user.isActive ? 'btn-error' : 'btn-success'}`}
                                                 >
                                                     {user.isActive ? 'Deactivate' : 'Activate'}
-                                                </button>
+                                                </button> : <span className="badge badge-success badge-sm text-success-content font-medium py-3 px-4">Active</span>}
                                                 {user.role !== 'admin' && (
                                                     <button
                                                         onClick={() => handleUserUpdate(user._id, { role: 'admin' })}
-                                                        className="btn btn-xs btn-outline  font-medium"
+                                                        className="btn btn-xs btn-outline  font-medium hidden"
                                                     >
                                                         Make Admin
                                                     </button>

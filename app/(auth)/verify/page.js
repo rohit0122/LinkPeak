@@ -77,7 +77,7 @@ function VerifyContent() {
 
 export default function VerifyPage() {
     return (
-        <div className="min-h-screen flex items-center justify-center bg-base-200 px-4">
+        <div className="mt-20 flex items-center justify-center bg-base-200 px-4">
             <Suspense fallback={
                 <div className="card w-full max-w-sm bg-base-100 shadow-xl p-8 items-center">
                     <span className="loading loading-spinner loading-lg text-primary"></span>

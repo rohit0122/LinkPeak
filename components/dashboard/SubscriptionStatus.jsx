@@ -5,7 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import axios from "@/lib/axios";
 import toast from "react-hot-toast";
 import { CONFIG } from "@/constants/config";
-import { RiTimeLine, RiCheckboxCircleLine, RiAlertLine, RiExternalLinkLine } from "react-icons/ri";
+import { RiTimeLine, RiCheckboxCircleLine, RiAlertLine, RiExternalLinkLine, RiErrorWarningLine } from "react-icons/ri";
 
 export default function SubscriptionStatus({ user, initialData, redirectOnExpire = false }) {
     const router = useRouter();
@@ -33,25 +33,28 @@ export default function SubscriptionStatus({ user, initialData, redirectOnExpire
 
         // Check if trial expired AND no active subscription
         // Note: subscription object exists even if cancelled/expired, so check status
-        const isExpired = !trial?.active && (!subscription || subscription.status !== 'active');
+        //const isExpired = !trial?.active && (!subscription || subscription.status !== 'active');
+        const isExpired = !trial?.active && (!subscription || subscription.status !== "active");
+
 
         if (isExpired) {
             // First, protectively suspend the user in the backend
             // strict: true used to prevent loops or race conditions, but simple post is fine
             axios.post("/user/suspend").catch(err => console.error("Suspension error:", err));
-
-            const toastId = toast.error("Trial expired! Redirecting to suspended page in few seconds...", {
+            toast.error("Trial expired! Redirecting to suspended page in few seconds...", {
                 duration: 3000,
                 icon: "⏳"
             });
-
+            console.log('I am here dfdfdfdf')
             const timer = setTimeout(() => {
+                console.log('I am here')
                 router.replace("/suspended");
             }, 3000);
 
-            return () => {/*clearTimeout(timer);*/ }
+
+            return () => clearTimeout(timer);
         }
-    }, [subscriptionData, loading, redirectOnExpire, router]);
+    }, [subscriptionData, loading, redirectOnExpire, router, pathname]);
 
     const fetchSubscriptionStatus = async () => {
         try {
@@ -93,7 +96,9 @@ export default function SubscriptionStatus({ user, initialData, redirectOnExpire
     const { trial, subscription, renewalWindow, pendingPaymentLink } = subscriptionData;
 
     // Determine what to show
-    const showSubscribeButton = trial.active && !subscription;
+    //const showSubscribeButton = trial.active && !subscription;
+    const showSubscribeButton = !subscription || subscription.status !== "active";
+
     const showRenewButton = renewalWindow.active && subscription;
 
     return (
@@ -203,6 +208,20 @@ export default function SubscriptionStatus({ user, initialData, redirectOnExpire
                         </div>
                     </div>
                 )}
+
+                {/* Suspended / Expired */}
+                {!trial.active && (!subscription || subscription.status !== "active") && (
+                    <div className="alert alert-error">
+                        <RiErrorWarningLine className="text-lg" />
+                        <div className="flex-1">
+                            <div className="font-medium text-sm">Account Suspended</div>
+                            <div className="text-xs opacity-80">
+                                Your trial has expired and no active subscription was found.
+                            </div>
+                        </div>
+                    </div>
+                )}
+
 
                 {/* Help Text */}
                 {!trial.active && !subscription && (

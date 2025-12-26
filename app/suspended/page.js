@@ -9,8 +9,8 @@ export default function SuspendedPage() {
     // For simplicity, we just render the structure
 
     return (
-        <div className="min-h-screen bg-base-200 flex items-center justify-center p-4">
-            <div className="card w-full max-w-lg bg-base-100 shadow-xl border-t-8 border-error">
+        <div className="min-h-screen max-w-5xl mx-auto bg-base-200 flex items-center justify-center p-4">
+            <div className="card w-full bg-base-100 shadow-xl border-t-8 border-error">
                 <div className="card-body items-center text-center">
                     <div className="w-16 h-16 bg-error/10 rounded-full flex items-center justify-center mb-4 text-error">
                         <RiErrorWarningLine className="text-4xl" />
@@ -22,7 +22,7 @@ export default function SuspendedPage() {
                         To continue using your bio page and dashboard, please select a plan below.
                     </p>
 
-                    <div className="w-full text-left mb-6">
+                    <div className="w-full mb-6">
                         {/* We use SubscriptionStatus but disable redirect to prevent loop */}
                         <SubscriptionStatus redirectOnExpire={false} />
                     </div>

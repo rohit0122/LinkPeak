@@ -28,15 +28,17 @@ export async function POST(req) {
         // Create payment link via provider
         const paymentLinkData = await provider.createPaymentLink({
             userId: session.id,
+            userEmail: session.email,
             planId,
             amount,
-            currency: "INR",
+            currency: "USD",
             description: description || `Subscription to ${planId} plan`,
         });
 
         // Store payment link in database
         const paymentLink = await PaymentLink.create({
             userId: session.id,
+            userEmail: session.email,
             planId,
             provider: process.env.PAYMENT_PROVIDER || "mock",
             providerPaymentLinkId: paymentLinkData.id,

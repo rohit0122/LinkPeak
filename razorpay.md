@@ -149,7 +149,7 @@ PaymentLink
   provider: "mock" | "razorpay",
   providerPaymentLinkId,
   amount,
-  currency: "INR",
+  currency: "USD",
   expiresAt,
   status: "created" | "paid" | "expired" | "failed",
   metadata,

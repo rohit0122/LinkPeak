@@ -44,9 +44,12 @@ import { CONFIG } from "@/constants/config";
 import SmartPlanAlert from "@/components/dashboard/SmartPlanAlert";
 import UnsavedChangesModal from "@/components/dashboard/UnsavedChangesModal";
 import DangerZone from "@/components/dashboard/DangerZone"; // ADDED import
+import { useRouter } from "next/navigation";
 
 export default function DashboardPage() {
     const [user, setUser] = useState(null);
+    const [subscriptionStatus, setSubscriptionStatus] = useState(null);
+
     const [page, setPage] = useState(null);
     const [allPages, setAllPages] = useState([]);
     const [links, setLinks] = useState([]);
@@ -54,12 +57,18 @@ export default function DashboardPage() {
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState("links");
     const [unsavedChanges, setUnsavedChanges] = useState(false);
+    const router = useRouter();
 
     useEffect(() => {
+        const siteUser = localStorage.getItem("site_user") ? JSON.parse(localStorage.getItem("site_user")) : null;
+        if (siteUser?.role === 'admin') {
+            router.push('/admin')
+            router.refresh();
+            return;
+        }
         fetchData();
     }, []);
 
-    const [subscriptionStatus, setSubscriptionStatus] = useState(null);
 
     const fetchData = async () => {
         try {

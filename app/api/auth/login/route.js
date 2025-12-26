@@ -45,10 +45,12 @@ export async function POST(req) {
         const response = NextResponse.json({
             success: true,
             data: {
-                name: user.name,
+                id: user._id.toString(),
                 email: user.email,
                 role: user.role,
+                name: user.name,
                 plan: user.plan,
+                isActive: user.isActive,
             },
         });
 
