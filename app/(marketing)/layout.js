@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import NavbarClient from "@/components/layout/NavbarClient";
 import { getAuthUser } from "@/lib/auth";
 import dbConnect from "@/lib/db";
