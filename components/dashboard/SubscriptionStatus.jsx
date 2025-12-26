@@ -69,7 +69,7 @@ export default function SubscriptionStatus({ user, initialData }) {
                 <h3 className="card-title text-sm font-semibold">Subscription Status</h3>
 
                 {/* Trial Status */}
-                {trial.active && (
+                {trial.active && subscription?.status !== "active" && (
                     <div className="alert alert-info">
                         <RiTimeLine className="text-lg" />
                         <div className="flex-1">
@@ -83,11 +83,11 @@ export default function SubscriptionStatus({ user, initialData }) {
 
                 {/* Active Subscription */}
                 {subscription && subscription.status === "active" && (
-                    <div className="alert alert-success">
+                    <div className="alert alert-info alert-outline">
                         <RiCheckboxCircleLine className="text-lg" />
                         <div className="flex-1">
                             <div className="font-medium text-sm">{subscription.planId} Plan Active</div>
-                            <div className="text-xs opacity-70">
+                            <div className="text-xs">
                                 Renews: {new Date(subscription.endDate).toLocaleDateString()}
                             </div>
                         </div>

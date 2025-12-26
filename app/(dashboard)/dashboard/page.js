@@ -30,7 +30,15 @@ import {
     RiSparklingLine,
     RiMagicLine,
     RiShieldStarLine,
-    RiAdminLine
+    RiAdminLine,
+    RiLinksLine,
+    RiInstagramLine,
+    RiTwitterLine,
+    RiFacebookLine,
+    RiLinkedinLine,
+    RiGithubLine,
+    RiYoutubeLine,
+    RiTiktokLine
 } from "react-icons/ri";
 import { CONFIG } from "@/constants/config";
 import SmartPlanAlert from "@/components/dashboard/SmartPlanAlert";
@@ -258,7 +266,9 @@ export default function DashboardPage() {
                 template: page.template,
                 branding: page.branding,
                 profileImage: page.profileImage,
-                seo: page.seo
+                profileImageHash: page.profileImageHash,
+                seo: page.seo,
+                socialLinks: page.socialLinks
             });
 
             if (data.success) {
@@ -542,8 +552,12 @@ export default function DashboardPage() {
                                                 <div className="relative group">
                                                     <ProfileUpload
                                                         currentImage={page?.profileImage}
-                                                        onUploadSuccess={(url) => {
-                                                            handleLocalUpdate({ profileImage: url });
+                                                        userId={user?._id}
+                                                        onUploadSuccess={(url, hash) => {
+                                                            handleLocalUpdate({
+                                                                profileImage: url,
+                                                                profileImageHash: hash
+                                                            });
                                                             toast.success("Image set! Click 'Save Changes' to persist.", { icon: "💾" });
                                                         }}
                                                     />
@@ -633,6 +647,180 @@ export default function DashboardPage() {
                                                         }}
                                                     // onBlur removed
                                                     />
+                                                </div>
+
+                                                {/* Social Links Section */}
+                                                <div className="form-control">
+                                                    <label className="label">
+                                                        <span className="label-text font-medium flex items-center gap-2">
+                                                            <RiLinksLine className="text-primary" />
+                                                            Social Media Links
+                                                        </span>
+                                                    </label>
+                                                    <p className="text-xs opacity-50 mb-4">Add your social profiles. They'll appear at the bottom of your bio page.</p>
+
+                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                        {/* Instagram */}
+                                                        <div className="form-control">
+                                                            <label className="input input-bordered flex items-center gap-2">
+                                                                <RiInstagramLine className="text-lg opacity-60" />
+                                                                <input
+                                                                    type="text"
+                                                                    className="grow"
+                                                                    placeholder="instagram.com/username"
+                                                                    value={page?.socialLinks?.instagram || ""}
+                                                                    onChange={(e) => {
+                                                                        setPage({
+                                                                            ...page,
+                                                                            socialLinks: {
+                                                                                ...page.socialLinks,
+                                                                                instagram: e.target.value
+                                                                            }
+                                                                        });
+                                                                        setUnsavedChanges(true);
+                                                                    }}
+                                                                />
+                                                            </label>
+                                                        </div>
+
+                                                        {/* Twitter */}
+                                                        <div className="form-control">
+                                                            <label className="input input-bordered flex items-center gap-2">
+                                                                <RiTwitterLine className="text-lg opacity-60" />
+                                                                <input
+                                                                    type="text"
+                                                                    className="grow"
+                                                                    placeholder="twitter.com/username"
+                                                                    value={page?.socialLinks?.twitter || ""}
+                                                                    onChange={(e) => {
+                                                                        setPage({
+                                                                            ...page,
+                                                                            socialLinks: {
+                                                                                ...page.socialLinks,
+                                                                                twitter: e.target.value
+                                                                            }
+                                                                        });
+                                                                        setUnsavedChanges(true);
+                                                                    }}
+                                                                />
+                                                            </label>
+                                                        </div>
+
+                                                        {/* Facebook */}
+                                                        <div className="form-control">
+                                                            <label className="input input-bordered flex items-center gap-2">
+                                                                <RiFacebookLine className="text-lg opacity-60" />
+                                                                <input
+                                                                    type="text"
+                                                                    className="grow"
+                                                                    placeholder="facebook.com/username"
+                                                                    value={page?.socialLinks?.facebook || ""}
+                                                                    onChange={(e) => {
+                                                                        setPage({
+                                                                            ...page,
+                                                                            socialLinks: {
+                                                                                ...page.socialLinks,
+                                                                                facebook: e.target.value
+                                                                            }
+                                                                        });
+                                                                        setUnsavedChanges(true);
+                                                                    }}
+                                                                />
+                                                            </label>
+                                                        </div>
+
+                                                        {/* LinkedIn */}
+                                                        <div className="form-control">
+                                                            <label className="input input-bordered flex items-center gap-2">
+                                                                <RiLinkedinLine className="text-lg opacity-60" />
+                                                                <input
+                                                                    type="text"
+                                                                    className="grow"
+                                                                    placeholder="linkedin.com/in/username"
+                                                                    value={page?.socialLinks?.linkedin || ""}
+                                                                    onChange={(e) => {
+                                                                        setPage({
+                                                                            ...page,
+                                                                            socialLinks: {
+                                                                                ...page.socialLinks,
+                                                                                linkedin: e.target.value
+                                                                            }
+                                                                        });
+                                                                        setUnsavedChanges(true);
+                                                                    }}
+                                                                />
+                                                            </label>
+                                                        </div>
+
+                                                        {/* GitHub */}
+                                                        <div className="form-control">
+                                                            <label className="input input-bordered flex items-center gap-2">
+                                                                <RiGithubLine className="text-lg opacity-60" />
+                                                                <input
+                                                                    type="text"
+                                                                    className="grow"
+                                                                    placeholder="github.com/username"
+                                                                    value={page?.socialLinks?.github || ""}
+                                                                    onChange={(e) => {
+                                                                        setPage({
+                                                                            ...page,
+                                                                            socialLinks: {
+                                                                                ...page.socialLinks,
+                                                                                github: e.target.value
+                                                                            }
+                                                                        });
+                                                                        setUnsavedChanges(true);
+                                                                    }}
+                                                                />
+                                                            </label>
+                                                        </div>
+
+                                                        {/* YouTube */}
+                                                        <div className="form-control">
+                                                            <label className="input input-bordered flex items-center gap-2">
+                                                                <RiYoutubeLine className="text-lg opacity-60" />
+                                                                <input
+                                                                    type="text"
+                                                                    className="grow"
+                                                                    placeholder="youtube.com/@username"
+                                                                    value={page?.socialLinks?.youtube || ""}
+                                                                    onChange={(e) => {
+                                                                        setPage({
+                                                                            ...page,
+                                                                            socialLinks: {
+                                                                                ...page.socialLinks,
+                                                                                youtube: e.target.value
+                                                                            }
+                                                                        });
+                                                                        setUnsavedChanges(true);
+                                                                    }}
+                                                                />
+                                                            </label>
+                                                        </div>
+
+                                                        {/* TikTok */}
+                                                        <div className="form-control">
+                                                            <label className="input input-bordered flex items-center gap-2">
+                                                                <RiTiktokLine className="text-lg opacity-60" />
+                                                                <input
+                                                                    type="text"
+                                                                    className="grow"
+                                                                    placeholder="tiktok.com/@username"
+                                                                    value={page?.socialLinks?.tiktok || ""}
+                                                                    onChange={(e) => {
+                                                                        setPage({
+                                                                            ...page,
+                                                                            socialLinks: {
+                                                                                ...page.socialLinks,
+                                                                                tiktok: e.target.value
+                                                                            }
+                                                                        });
+                                                                        setUnsavedChanges(true);
+                                                                    }}
+                                                                />
+                                                            </label>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

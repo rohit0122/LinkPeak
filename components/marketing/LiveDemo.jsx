@@ -4,6 +4,7 @@ import { useState } from "react";
 import PreviewPhone from "@/components/shared/PreviewPhone";
 import ThemeSelector from "@/components/dashboard/ThemeSelector";
 import { RiPaletteLine, RiMagicLine, RiArrowRightUpLine } from "react-icons/ri";
+import { CONFIG } from "@/constants/config";
 
 export default function LiveDemo() {
     const [theme, setTheme] = useState("light");
@@ -17,9 +18,9 @@ export default function LiveDemo() {
     };
 
     const demoLinks = [
-        { id: 1, title: "Zero Waste Guide 🌍", url: "#", isActive: true },
-        { id: 2, title: "My Ethical Kit 👜", url: "#", isActive: true },
-        { id: 3, title: "Eco-stays in Bali 🛖", url: "#", isActive: true },
+        { id: 1, title: "Zero Waste Guide 🌍", url: `${CONFIG.SITE_URL}/demo/eco-wanderer/zero-waste-guide`, isActive: true },
+        { id: 2, title: "My Ethical Kit 👜", url: `${CONFIG.SITE_URL}/demo/eco-wanderer/my-ethical-kit`, isActive: true },
+        { id: 3, title: "Eco-stays in Bali 🛖", url: `${CONFIG.SITE_URL}/demo/eco-wanderer/eco-stays-in-bali`, isActive: true },
     ];
 
     return (

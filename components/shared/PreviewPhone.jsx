@@ -1,6 +1,15 @@
 "use client";
 
 import { CONFIG } from "@/constants/config";
+import {
+    RiInstagramLine,
+    RiTwitterLine,
+    RiFacebookLine,
+    RiLinkedinLine,
+    RiGithubLine,
+    RiYoutubeLine,
+    RiTiktokLine
+} from "react-icons/ri";
 
 import ClassicTemplate from "@/components/templates/upgradedTemplates/ClassicTemplate";
 import GridTemplate from "@/components/templates/upgradedTemplates/GridTemplate";
@@ -43,9 +52,43 @@ export default function PreviewPhone({ pageData, links = [] }) {
                         {!template && <ClassicTemplate page={pageData} links={links} />}
                     </div>
 
-                    {/* Social Links Placeholder */}
-                    <div className="flex gap-4 mt-auto pt-8 opacity-60">
-                        {/* Icons would go here */}
+                    {/* Social Links */}
+                    <div className="flex flex-wrap justify-center gap-4 mt-auto pt-8 opacity-60">
+                        {pageData?.socialLinks?.instagram && (
+                            <a href={pageData.socialLinks.instagram.startsWith('http') ? pageData.socialLinks.instagram : `https://${pageData.socialLinks.instagram}`} target="_blank" rel="noopener noreferrer" className="text-2xl hover:text-primary transition-colors">
+                                <RiInstagramLine />
+                            </a>
+                        )}
+                        {pageData?.socialLinks?.twitter && (
+                            <a href={pageData.socialLinks.twitter.startsWith('http') ? pageData.socialLinks.twitter : `https://${pageData.socialLinks.twitter}`} target="_blank" rel="noopener noreferrer" className="text-2xl hover:text-primary transition-colors">
+                                <RiTwitterLine />
+                            </a>
+                        )}
+                        {pageData?.socialLinks?.facebook && (
+                            <a href={pageData.socialLinks.facebook.startsWith('http') ? pageData.socialLinks.facebook : `https://${pageData.socialLinks.facebook}`} target="_blank" rel="noopener noreferrer" className="text-2xl hover:text-primary transition-colors">
+                                <RiFacebookLine />
+                            </a>
+                        )}
+                        {pageData?.socialLinks?.linkedin && (
+                            <a href={pageData.socialLinks.linkedin.startsWith('http') ? pageData.socialLinks.linkedin : `https://${pageData.socialLinks.linkedin}`} target="_blank" rel="noopener noreferrer" className="text-2xl hover:text-primary transition-colors">
+                                <RiLinkedinLine />
+                            </a>
+                        )}
+                        {pageData?.socialLinks?.github && (
+                            <a href={pageData.socialLinks.github.startsWith('http') ? pageData.socialLinks.github : `https://${pageData.socialLinks.github}`} target="_blank" rel="noopener noreferrer" className="text-2xl hover:text-primary transition-colors">
+                                <RiGithubLine />
+                            </a>
+                        )}
+                        {pageData?.socialLinks?.youtube && (
+                            <a href={pageData.socialLinks.youtube.startsWith('http') ? pageData.socialLinks.youtube : `https://${pageData.socialLinks.youtube}`} target="_blank" rel="noopener noreferrer" className="text-2xl hover:text-primary transition-colors">
+                                <RiYoutubeLine />
+                            </a>
+                        )}
+                        {pageData?.socialLinks?.tiktok && (
+                            <a href={pageData.socialLinks.tiktok.startsWith('http') ? pageData.socialLinks.tiktok : `https://${pageData.socialLinks.tiktok}`} target="_blank" rel="noopener noreferrer" className="text-2xl hover:text-primary transition-colors">
+                                <RiTiktokLine />
+                            </a>
+                        )}
                     </div>
 
                     {/* Footer / Branding */}

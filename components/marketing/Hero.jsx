@@ -12,9 +12,9 @@ export default function Hero() {
     };
 
     const demoLinks = [
-        { id: 1, title: "My Travel Guide 🌍", url: "#", isActive: true },
-        { id: 2, title: "Latest Vlog 📹", url: "#", isActive: true },
-        { id: 3, title: "Photography Gear 📸", url: "#", isActive: true },
+        { id: 1, title: "My Travel Guide 🌍", url: `${CONFIG.SITE_URL}/demo/eliza-miller/my-travel-guide`, isActive: true },
+        { id: 2, title: "Latest Vlog 📹", url: `${CONFIG.SITE_URL}/demo/eliza-miller/latest-vlog`, isActive: true },
+        { id: 3, title: "Photography Gear 📸", url: `${CONFIG.SITE_URL}/demo/eliza-miller/photography-gear`, isActive: true },
     ];
 
     return (

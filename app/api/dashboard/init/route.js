@@ -38,7 +38,7 @@ export async function GET(req) {
         // We fetching all pages to populate the selector
         const allPages = await Page.find({ userId: session.id })
             .sort({ createdAt: -1 })
-            .select("title slug bio profileImage theme template branding seo stats views likes")
+            .select("title slug bio profileImage profileImageHash theme template branding seo socialLinks stats views likes")
             .lean();
 
         // Determine active page (first one or default)

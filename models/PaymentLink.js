@@ -62,7 +62,6 @@ const PaymentLinkSchema = new mongoose.Schema(
 
 // Indexes for fast lookups
 PaymentLinkSchema.index({ userId: 1, status: 1 });
-PaymentLinkSchema.index({ providerPaymentLinkId: 1 });
 PaymentLinkSchema.index({ expiresAt: 1 }); // For cleanup jobs
 
 export default mongoose.models.PaymentLink || mongoose.model("PaymentLink", PaymentLinkSchema);

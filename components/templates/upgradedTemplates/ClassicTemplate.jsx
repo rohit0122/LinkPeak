@@ -32,7 +32,6 @@ export default function ClassicTemplate({ page, links, handleLinkClick }) {
             {safeLinks.map((link, i) => (
                 <motion.a
                     key={link._id || i}
-                    layout // specific for framer-motion lists
                     variants={item}
                     href={link.url}
                     target="_blank"
@@ -84,7 +83,8 @@ export default function ClassicTemplate({ page, links, handleLinkClick }) {
                     {/* Arrow Icon */}
                     <div className="
                         flex-shrink-0
-                        opacity-0 group-hover:opacity-100
+                        w-6
+                        invisible group-hover:visible
                         transform translate-x-2 group-hover:translate-x-0
                         transition-all duration-300
                     ">

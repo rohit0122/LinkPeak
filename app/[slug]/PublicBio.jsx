@@ -17,11 +17,11 @@ import QRModal from "@/components/shared/QRModal";
 import axios from "@/lib/axios";
 import { CONFIG } from "@/constants/config";
 
-import ClassicTemplate from "@/components/templates/ClassicTemplate";
-import GridTemplate from "@/components/templates/GridTemplate";
-import HeroTemplate from "@/components/templates/HeroTemplate";
-import SocialTemplate from "@/components/templates/SocialTemplate";
-import ModernTemplate from "@/components/templates/ModernTemplate";
+import ClassicTemplate from "@/components/templates/upgradedTemplates/ClassicTemplate";
+import GridTemplate from "@/components/templates/upgradedTemplates/GridTemplate";
+import HeroTemplate from "@/components/templates/upgradedTemplates/HeroTemplate";
+import SocialTemplate from "@/components/templates/upgradedTemplates/SocialTemplate";
+import ModernTemplate from "@/components/templates/upgradedTemplates/ModernTemplate";
 
 const iconMap = {
     instagram: RiInstagramLine,
@@ -33,7 +33,7 @@ const iconMap = {
     tiktok: RiTiktokLine,
 };
 
-export default function PublicBio({ page, links }) {
+export default function PublicBio({ page, links, isDemo = false }) {
     const [likes, setLikes] = useState(page.likes || 0);
     const [isLiked, setIsLiked] = useState(false);
     const [isQRModalOpen, setIsQRModalOpen] = useState(false);
@@ -51,7 +51,8 @@ export default function PublicBio({ page, links }) {
     }, [page._id]);*/
 
     useEffect(() => {
-        if (!page?._id) return;
+        // Skip tracking effects in demo mode or if no page ID
+        if (isDemo || !page?._id) return;
 
         const viewedKey = `viewed_${page._id}`;
         const isViewed = localStorage.getItem(viewedKey);
@@ -69,14 +70,20 @@ export default function PublicBio({ page, links }) {
         if (localStorage.getItem(`liked_${page._id}`)) {
             setIsLiked(true);
         }
-    }, [page?._id]);
+    }, [page?._id, isDemo]);
 
 
     const handleLike = async () => {
         if (isLiked) return;
+
+        // Optimistic update
+        setLikes(prev => prev + 1);
+        setIsLiked(true);
+
+        // Skip API call in demo mode
+        if (isDemo) return;
+
         try {
-            setLikes(prev => prev + 1);
-            setIsLiked(true);
             localStorage.setItem(`liked_${page._id}`, "true");
             await axios.post("/track/like", { pageId: page._id });
         } catch (error) {
@@ -85,6 +92,9 @@ export default function PublicBio({ page, links }) {
     };
 
     const handleLinkClick = async (linkId) => {
+        // Skip API call in demo mode
+        if (isDemo) return;
+
         try {
             await axios.post("/track/click", { linkId, pageId: page._id });
         } catch (error) {

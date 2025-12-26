@@ -25,6 +25,9 @@ const BioPageSchema = new mongoose.Schema(
         profileImage: {
             type: String,
         },
+        profileImageHash: {
+            type: String,
+        },
         theme: {
             type: String,
             default: "light",
