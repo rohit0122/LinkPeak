@@ -41,9 +41,9 @@ export default async function DemoBioPage({ params }) {
     };
 
     const elizaLinks = [
-        { _id: "1", title: "My Travel Guide 🌍", url: `${CONFIG.SITE_URL}/demo/eliza-miller/my-travel-guide`, icon: "🌍" },
-        { _id: "2", title: "Latest Vlog 📹", url: `${CONFIG.SITE_URL}/demo/eliza-miller/latest-vlog`, icon: "📹" },
-        { _id: "3", title: "Photography Gear 📸", url: `${CONFIG.SITE_URL}/demo/eliza-miller/photography-gear`, icon: "📸" },
+        { _id: "1", title: "My Travel Guide 🌍", url: `${CONFIG.SITE_URL}/demo/eliza-miller/my-travel-guide`, isActive: true },
+        { _id: "2", title: "Latest Vlog 📹", url: `${CONFIG.SITE_URL}/demo/eliza-miller/latest-vlog`, isActive: true },
+        { _id: "3", title: "Photography Gear 📸", url: `${CONFIG.SITE_URL}/demo/eliza-miller/photography-gear`, isActive: true },
     ];
 
     // Static Data for "Eco Wanderer"
@@ -65,9 +65,9 @@ export default async function DemoBioPage({ params }) {
     };
 
     const ecoLinks = [
-        { _id: "1", title: "Zero Waste Guide 🌍", url: `${CONFIG.SITE_URL}/demo/eco-wanderer/zero-waste-guide`, icon: "🌍" },
-        { _id: "2", title: "My Ethical Kit 👜", url: `${CONFIG.SITE_URL}/demo/eco-wanderer/my-ethical-kit`, icon: "👜" },
-        { _id: "3", title: "Eco-stays in Bali 🛖", url: `${CONFIG.SITE_URL}/demo/eco-wanderer/eco-stays-in-bali`, icon: "🛖" },
+        { _id: "1", title: "Zero Waste Guide 🌍", url: `${CONFIG.SITE_URL}/demo/eco-wanderer/zero-waste-guide`, isActive: true },
+        { _id: "2", title: "My Ethical Kit 👜", url: `${CONFIG.SITE_URL}/demo/eco-wanderer/my-ethical-kit`, isActive: true },
+        { _id: "3", title: "Eco-stays in Bali 🛖", url: `${CONFIG.SITE_URL}/demo/eco-wanderer/eco-stays-in-bali`, isActive: true },
     ];
 
     // Select Data
