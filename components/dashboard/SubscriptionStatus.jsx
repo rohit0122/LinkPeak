@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import axios from "@/lib/axios";
 import toast from "react-hot-toast";
 import { CONFIG } from "@/constants/config";
@@ -22,8 +22,11 @@ export default function SubscriptionStatus({ user, initialData, redirectOnExpire
         }
     }, [initialData]);
 
+    const pathname = usePathname();
     // Handle Trial Expiry Redirect
     useEffect(() => {
+        if (pathname === "/suspended") return; // ✅ STOP HERE
+
         if (loading || !subscriptionData || !redirectOnExpire) return;
 
         const { trial, subscription } = subscriptionData;
@@ -37,16 +40,16 @@ export default function SubscriptionStatus({ user, initialData, redirectOnExpire
             // strict: true used to prevent loops or race conditions, but simple post is fine
             axios.post("/user/suspend").catch(err => console.error("Suspension error:", err));
 
-            const toastId = toast.error("Trial expired! Redirecting to suspended page in 10s...", {
-                duration: 9000,
+            const toastId = toast.error("Trial expired! Redirecting to suspended page in few seconds...", {
+                duration: 3000,
                 icon: "⏳"
             });
 
             const timer = setTimeout(() => {
-                router.push("/suspended");
-            }, 10000);
+                router.replace("/suspended");
+            }, 3000);
 
-            return () => clearTimeout(timer);
+            return () => {/*clearTimeout(timer);*/ }
         }
     }, [subscriptionData, loading, redirectOnExpire, router]);
 
