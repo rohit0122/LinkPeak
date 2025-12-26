@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import axios from "@/lib/axios";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CONFIG } from "@/constants/config";
 import { RiCheckLine, RiErrorWarningLine } from "react-icons/ri";
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
@@ -156,5 +156,17 @@ export default function ResetPasswordPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function ResetPasswordPage() {
+    return (
+        <Suspense fallback={
+            <div className="flex justify-center items-center min-h-screen bg-base-200">
+                <span className="loading loading-spinner loading-lg"></span>
+            </div>
+        }>
+            <ResetPasswordForm />
+        </Suspense>
     );
 }

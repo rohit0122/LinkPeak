@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import axios from "@/lib/axios";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CONFIG } from "@/constants/config";
 
-export default function RegisterPage() {
+function RegisterForm() {
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -162,5 +162,17 @@ export default function RegisterPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function RegisterPage() {
+    return (
+        <Suspense fallback={
+            <div className="flex justify-center items-center min-h-screen bg-base-200">
+                <span className="loading loading-spinner loading-lg"></span>
+            </div>
+        }>
+            <RegisterForm />
+        </Suspense>
     );
 }
