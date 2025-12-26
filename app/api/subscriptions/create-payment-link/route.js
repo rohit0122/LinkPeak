@@ -88,7 +88,7 @@ export async function POST(req) {
             );
         }
 
-        // Define plan amounts (in paise for INR)
+        // Define plan amounts (in paise for USD)
         const planAmounts = {
             FREE: 0,
             PRO: 49900, // ₹499
@@ -105,7 +105,7 @@ export async function POST(req) {
             userId: session.id,
             planId,
             amount,
-            currency: "INR",
+            currency: "USD",
             description: `${planId} Plan - Monthly Subscription`,
         });
 
@@ -117,7 +117,7 @@ export async function POST(req) {
             providerPaymentLinkId: paymentLinkData.id,
             url: paymentLinkData.short_url,
             amount,
-            currency: "INR",
+            currency: "USD",
             expiresAt: new Date(paymentLinkData.expire_by * 1000),
             status: "created",
             metadata: {

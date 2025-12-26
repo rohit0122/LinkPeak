@@ -41,7 +41,7 @@ export async function POST(req) {
             provider: process.env.PAYMENT_PROVIDER || "mock",
             providerPaymentLinkId: paymentLinkData.id,
             amount,
-            currency: "INR",
+            currency: "USD",
             expiresAt: new Date(paymentLinkData.expire_by * 1000),
             status: "created",
             metadata: {
