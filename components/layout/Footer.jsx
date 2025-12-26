@@ -1,9 +1,34 @@
+"use client";
+
+import { useState } from "react";
 import { CONFIG } from "@/constants/config";
-import { RiGithubFill, RiInstagramFill, RiTwitterFill } from "react-icons/ri";
+import { RiGithubFill, RiInstagramFill, RiTwitterFill, RiLoader4Line } from "react-icons/ri";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function Footer() {
-    return (
+    const [email, setEmail] = useState("");
+    const [loading, setLoading] = useState(false);
 
+    const handleSubscribe = async () => {
+        if (!email || !email.includes("@")) {
+            toast.error("Please enter a valid email address.");
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const { data } = await axios.post("/api/newsletter/subscribe", { email });
+            toast.success(data.message);
+            setEmail("");
+        } catch (error) {
+            toast.error(error.response?.data?.error || "Subscription failed. Please try again.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
         <footer className="bg-base-100 py-20 border-t border-base-200">
             <div className="divider"></div>
             <div className="max-w-7xl mx-auto px-6">
@@ -35,9 +60,9 @@ export default function Footer() {
                     <div>
                         <h4 className="font-medium uppercase tracking-widest text-xs opacity-60 mb-6">Legal</h4>
                         <ul className="space-y-4 font-bold">
-                            <li><a href="#" className="hover:text-primary transition-colors">Terms of Service</a></li>
-                            <li><a href="#" className="hover:text-primary transition-colors">Privacy Policy</a></li>
-                            <li><a href="#" className="hover:text-primary transition-colors">Cookie Policy</a></li>
+                            <li><a href="/terms" className="hover:text-primary transition-colors">Terms of Service</a></li>
+                            <li><a href="/privacy" className="hover:text-primary transition-colors">Privacy Policy</a></li>
+                            <li><a href="/cookies" className="hover:text-primary transition-colors">Cookie Policy</a></li>
                         </ul>
                     </div>
 
@@ -45,8 +70,21 @@ export default function Footer() {
                         <h4 className="font-medium uppercase tracking-widest text-xs opacity-60 mb-6">Newsletter</h4>
                         <p className="text-sm opacity-70 mb-6 font-medium">Get the latest tips on growing your digital presence.</p>
                         <div className="join w-full">
-                            <input className="input input-bordered join-item flex-1 bg-base-200" placeholder="your@email.com" />
-                            <button className="btn btn-primary join-item">Join</button>
+                            <input
+                                className="input input-bordered join-item flex-1 bg-base-200"
+                                placeholder="your@email.com"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                disabled={loading}
+                                onKeyDown={(e) => e.key === "Enter" && handleSubscribe()}
+                            />
+                            <button
+                                className="btn btn-primary join-item"
+                                onClick={handleSubscribe}
+                                disabled={loading}
+                            >
+                                {loading ? <RiLoader4Line className="animate-spin text-xl" /> : "Join"}
+                            </button>
                         </div>
                     </div>
                 </div>

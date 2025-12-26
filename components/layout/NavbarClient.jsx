@@ -52,33 +52,33 @@ export default function NavbarClient({ user: propUser, page: propPage }) {
     const [user, setUser] = useState(propUser || null);
     const [page, setPage] = useState(propPage || null);
     const [mobileOpen, setMobileOpen] = useState(false);
-    const [loading, setLoading] = useState(!propUser);
 
-    // Sync state with props when they change
+    // Only set loading to true if props are UNDEFINED (not passed).
+    // If null/object is passed, we know the state immediately.
+    const [loading, setLoading] = useState(propUser === undefined);
+
+    // Sync state with props when they change (e.g. navigation)
     useEffect(() => {
         if (propUser !== undefined) setUser(propUser);
         if (propPage !== undefined) setPage(propPage);
     }, [propUser, propPage]);
 
-    // Fetch user session only if props are not provided
+    // Fetch user session only if props are NOT provided (undefined)
     useEffect(() => {
-        if (propUser) return; // Skip fetch if user prop is provided
+        if (propUser !== undefined) return;
 
         async function fetchUser() {
             setLoading(true);
             const response = await getCurrentUser();
-            //console.log('API response ====== ', response);
 
             if (response) {
                 setUser(response);
 
-                // Fetch user's biopage for profileImage and slug (only if page prop missing)
-                if (!propPage) {
+                // Fetch user's biopage if page prop is also missing
+                if (propPage === undefined) {
                     try {
                         const bioPageRes = await axios.get("/pages");
-                        //console.log('BioPage response ====== ', bioPageRes.data);
-
-                        if (bioPageRes.data && bioPageRes.data.data && bioPageRes.data.data.length > 0) {
+                        if (bioPageRes.data?.data?.length > 0) {
                             const firstPage = bioPageRes.data.data[0];
                             setPage({
                                 profileImage: firstPage.profileImage || null,

@@ -1,4 +1,5 @@
 import NavbarClient from "@/components/layout/NavbarClient";
+import Footer from "@/components/layout/Footer";
 import { getAuthUser } from "@/lib/auth";
 import dbConnect from "@/lib/db";
 import User from "@/models/User";
@@ -31,18 +32,20 @@ async function getUserData() {
 
         return { user, page: page || null };
     } catch (error) {
-        console.error("Layout server-side auth error:", error);
+        console.error("LegalLayout layout auth error:", error);
         return { user: null, page: null };
     }
 }
 
-export default async function MarketingLayout({ children }) {
+export default async function LegalLayout({ children }) {
     const { user, page } = await getUserData();
-
     return (
-        <>
+        <div className="flex flex-col min-h-screen">
             <NavbarClient user={user} page={page} />
-            {children}
-        </>
+            <main className="flex-grow pt-20">
+                {children}
+            </main>
+            <Footer />
+        </div>
     );
 }

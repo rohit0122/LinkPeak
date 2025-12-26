@@ -5,6 +5,7 @@ import axios from "@/lib/axios";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CONFIG } from "@/constants/config";
+import { RiFileListLine, RiUserLine, RiMoneyDollarCircleLine, RiShieldCheckLine, RiForbidLine, RiCheckLine, RiCloseLine, RiFileTextFill } from "react-icons/ri";
 
 function RegisterForm() {
     const [formData, setFormData] = useState({
@@ -13,6 +14,8 @@ function RegisterForm() {
         password: "",
         confirmPassword: "",
     });
+    const [agreed, setAgreed] = useState(false);
+    const [showTerms, setShowTerms] = useState(false);
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
     const [loading, setLoading] = useState(false);
@@ -33,6 +36,10 @@ function RegisterForm() {
             return setError("Passwords do not match");
         }
 
+        if (!agreed) {
+            return setError("You must agree to the Terms of Service and Privacy Policy to register.");
+        }
+
         setLoading(true);
 
         try {
@@ -46,6 +53,7 @@ function RegisterForm() {
             if (data.success) {
                 setSuccess(data.message);
                 setFormData({ name: "", email: "", password: "", confirmPassword: "" });
+                setAgreed(false);
             }
         } catch (err) {
             setError(err.response?.data?.error || "Registration failed. Please try again.");
@@ -145,7 +153,21 @@ function RegisterForm() {
                                 />
                             </div>
 
-                            <div className="form-control mt-6">
+                            <div className="form-control mt-4">
+                                <label className="label cursor-pointer justify-start gap-3">
+                                    <input
+                                        type="checkbox"
+                                        className="checkbox checkbox-primary checkbox-sm"
+                                        checked={agreed}
+                                        onChange={(e) => setAgreed(e.target.checked)}
+                                    />
+                                    <span className="label-text text-left">
+                                        I agree to the <button type="button" onClick={() => setShowTerms(true)} className="link link-primary">Terms of Service</button> and <button type="button" onClick={() => setShowTerms(true)} className="link link-primary">Privacy Policy</button>
+                                    </span>
+                                </label>
+                            </div>
+
+                            <div className="form-control mt-4">
                                 <button className={`btn btn-primary ${loading ? "loading" : ""}`} disabled={loading}>
                                     {loading ? "Registering..." : "Register"}
                                 </button>
@@ -161,6 +183,85 @@ function RegisterForm() {
                     </p>
                 </div>
             </div>
+
+            {/* Terms Modal */}
+            {showTerms && (
+                <dialog id="terms_modal" className="modal modal-open" open>
+                    <div className="modal-box w-11/12 max-w-4xl max-h-[80vh] overflow-y-auto">
+                        <div className="flex flex-col items-center mb-6">
+                            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-3">
+                                <RiFileTextFill className="text-2xl text-primary" />
+                            </div>
+                            <h3 className="font-bold text-2xl text-center">Terms of Service & Privacy Policy</h3>
+                        </div>
+
+                        <div className="prose prose-sm max-w-none space-y-4">
+                            <div className="bg-base-200 p-5 rounded-xl border border-base-300">
+                                <h4 className="mt-0 font-bold text-base text-base-content mb-2 flex items-center gap-2">
+                                    <RiFileListLine className="text-xl text-primary shrink-0" />
+                                    1. Acceptance of Terms
+                                </h4>
+                                <p className="mb-0 text-base-content/80 pl-7">By registering, you agree to comply with <strong>{CONFIG.SITE_NAME}'s</strong> Terms of Service. You are responsible for maintaining the confidentiality of your account credentials.</p>
+                            </div>
+
+                            <div className="bg-base-200 p-5 rounded-xl border border-base-300">
+                                <h4 className="mt-0 font-bold text-base text-base-content mb-2 flex items-center gap-2">
+                                    <RiUserLine className="text-xl text-primary shrink-0" />
+                                    2. User Responsibilities
+                                </h4>
+                                <p className="mb-0 text-base-content/80 pl-7">You agree not to use the service for any illegal or unauthorized purpose. You retain ownership of your content but grant us a license to host and display it.</p>
+                            </div>
+
+                            <div className="bg-base-200 p-5 rounded-xl border border-base-300">
+                                <h4 className="mt-0 font-bold text-base text-base-content mb-2 flex items-center gap-2">
+                                    <RiMoneyDollarCircleLine className="text-xl text-primary shrink-0" />
+                                    3. Subscription & Billing
+                                </h4>
+                                <p className="mb-0 text-base-content/80 pl-7">Paid subscriptions (PRO, AGENCY) are billed monthly in advance. You can cancel anytime. We do not offer refunds for partial months or unused features.</p>
+                            </div>
+
+                            <div className="bg-base-200 p-5 rounded-xl border border-base-300">
+                                <h4 className="mt-0 font-bold text-base text-base-content mb-2 flex items-center gap-2">
+                                    <RiShieldCheckLine className="text-xl text-primary shrink-0" />
+                                    4. Privacy & Data
+                                </h4>
+                                <p className="mb-0 text-base-content/80 pl-7">We collect your information to provide the service. We do <strong>not</strong> sell your personal data to third parties. We use localStorage for performance, caching, and session management.</p>
+                            </div>
+
+                            <div className="bg-base-200 p-5 rounded-xl border border-base-300">
+                                <h4 className="mt-0 font-bold text-base text-base-content mb-2 flex items-center gap-2">
+                                    <RiForbidLine className="text-xl text-primary shrink-0" />
+                                    5. Prohibited Content
+                                </h4>
+                                <p className="mb-0 text-base-content/80 pl-7">We reserve the right to remove content that is illegal, harmful, hateful, or violates our policies at our sole discretion.</p>
+                            </div>
+
+                            <div className="divider"></div>
+
+                            <p className="text-center text-sm opacity-70 italic">
+                                This is a summary. For full details, please visit our <a href="/terms" target="_blank" className="link link-primary">Terms of Service</a> and <a href="/privacy" target="_blank" className="link link-primary">Privacy Policy</a> pages.
+                            </p>
+                        </div>
+
+                        <div className="modal-action">
+                            <button className="btn btn-primary gap-2" onClick={() => {
+                                setAgreed(true);
+                                setShowTerms(false);
+                            }}>
+                                <RiCheckLine className="text-lg" />
+                                I Agree
+                            </button>
+                            <button className="btn gap-2" onClick={() => setShowTerms(false)}>
+                                <RiCloseLine className="text-lg" />
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                    <form method="dialog" className="modal-backdrop">
+                        <button onClick={() => setShowTerms(false)}>close</button>
+                    </form>
+                </dialog>
+            )}
         </div>
     );
 }
