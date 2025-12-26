@@ -6,8 +6,23 @@
 }
 
 /* Apply Heading Font Globally */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-heading);
+}
+
+/* Override Browser Autofill Styling */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px var(--color-base-200) inset !important;
+  -webkit-text-fill-color: var(--color-base-content) !important;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
 @plugin "daisyui" {

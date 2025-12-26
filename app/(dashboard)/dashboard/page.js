@@ -43,6 +43,7 @@ import {
 import { CONFIG } from "@/constants/config";
 import SmartPlanAlert from "@/components/dashboard/SmartPlanAlert";
 import UnsavedChangesModal from "@/components/dashboard/UnsavedChangesModal";
+import DangerZone from "@/components/dashboard/DangerZone"; // ADDED import
 
 export default function DashboardPage() {
     const [user, setUser] = useState(null);
@@ -984,6 +985,7 @@ group-hover:text-secondary" />
                                         </div>
                                     </div>
                                 </div>
+                                <DangerZone />
                             </div>
                         )}
                     </div>
@@ -1006,6 +1008,6 @@ group-hover:text-secondary" />
                     Save Changes
                 </button>
             </div>
-        </DashboardLayout>
+        </DashboardLayout >
     );
 }
