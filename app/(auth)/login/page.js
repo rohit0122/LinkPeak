@@ -19,13 +19,26 @@ export default function LoginPage() {
         setLoading(true);
 
         try {
-            const { data } = await axios.post("/auth/login", { email, password });
-            if (data.success) {
+            const response = await axios.post("/auth/login", { email, password });
+            if (response.data.success) {
+                toast.success("Login successful!");
                 router.push("/dashboard");
                 router.refresh();
             }
         } catch (err) {
-            setError(err.response?.data?.error || "Login failed. Please try again.");
+            const errorMsg = err.response?.data?.error || "Invalid credentials";
+            setError(errorMsg);
+
+            // Check specifically for suspension
+            if (errorMsg.includes("Account suspended")) {
+                toast.error((t) => (
+                    <div>
+                        Account suspended. <a href="/contact" className="underline font-bold">Contact Support</a>
+                    </div>
+                ), { duration: 6000 });
+            } else {
+                toast.error(errorMsg);
+            }
         } finally {
             setLoading(false);
         }

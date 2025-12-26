@@ -112,7 +112,10 @@ async function handlePaymentSuccess(paymentLinkId, webhookData) {
     }
 
     // Update user's plan field (for backward compatibility with existing features)
+    // Update user's plan field (for backward compatibility with existing features)
+    // Also REACTIVATE user if they were suspended
     await User.findByIdAndUpdate(paymentLink.userId, {
+        isActive: true,
         plan: paymentLink.planId,
         planExpiresAt: endDate,
     });

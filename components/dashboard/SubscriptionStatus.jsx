@@ -1,12 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import axios from "@/lib/axios";
 import toast from "react-hot-toast";
 import { CONFIG } from "@/constants/config";
 import { RiTimeLine, RiCheckboxCircleLine, RiAlertLine, RiExternalLinkLine } from "react-icons/ri";
 
-export default function SubscriptionStatus({ user, initialData }) {
+export default function SubscriptionStatus({ user, initialData, redirectOnExpire = false }) {
+    const router = useRouter();
     const [subscriptionData, setSubscriptionData] = useState(initialData || null);
     const [loading, setLoading] = useState(!initialData);
     const [creatingLink, setCreatingLink] = useState(false);
@@ -19,6 +21,34 @@ export default function SubscriptionStatus({ user, initialData }) {
             setLoading(false);
         }
     }, [initialData]);
+
+    // Handle Trial Expiry Redirect
+    useEffect(() => {
+        if (loading || !subscriptionData || !redirectOnExpire) return;
+
+        const { trial, subscription } = subscriptionData;
+
+        // Check if trial expired AND no active subscription
+        // Note: subscription object exists even if cancelled/expired, so check status
+        const isExpired = !trial?.active && (!subscription || subscription.status !== 'active');
+
+        if (isExpired) {
+            // First, protectively suspend the user in the backend
+            // strict: true used to prevent loops or race conditions, but simple post is fine
+            axios.post("/user/suspend").catch(err => console.error("Suspension error:", err));
+
+            const toastId = toast.error("Trial expired! Redirecting to suspended page in 10s...", {
+                duration: 9000,
+                icon: "⏳"
+            });
+
+            const timer = setTimeout(() => {
+                router.push("/suspended");
+            }, 10000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [subscriptionData, loading, redirectOnExpire, router]);
 
     const fetchSubscriptionStatus = async () => {
         try {

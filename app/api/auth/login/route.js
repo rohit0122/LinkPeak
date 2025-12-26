@@ -18,6 +18,14 @@ export async function POST(req) {
             return NextResponse.json({ success: false, error: "Please verify your email first" }, { status: 403 });
         }
 
+        // Check if account is active (suspended)
+        if (user.isActive === false) {
+            return NextResponse.json({
+                success: false,
+                error: "Account suspended. Please contact support to reactivate."
+            }, { status: 403 });
+        }
+
         const isMatch = await user.matchPassword(password);
         if (!isMatch) {
             return NextResponse.json({ success: false, error: "Invalid credentials" }, { status: 401 });

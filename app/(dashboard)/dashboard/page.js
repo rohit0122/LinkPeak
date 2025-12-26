@@ -366,7 +366,7 @@ export default function DashboardPage() {
 
 
             {/* Subscription Status - Handles Trial & Renewal Alerts */}
-            <SubscriptionStatus user={user} initialData={subscriptionStatus} />
+            <SubscriptionStatus user={user} initialData={subscriptionStatus} redirectOnExpire={true} />
 
             <div className="flex flex-col lg:flex-row gap-8 min-h-full">
                 <div className="flex-1 w-full max-w-2xl mx-auto">

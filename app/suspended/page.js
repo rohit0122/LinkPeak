@@ -1,38 +1,42 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { RiErrorWarningLine, RiCustomerService2Line } from "react-icons/ri";
+import SubscriptionStatus from "@/components/dashboard/SubscriptionStatus";
+import axios from "@/lib/axios";
+import { getAuthUser } from "@/lib/auth";
 
 export default function SuspendedPage() {
+    // We fetch user client-side here or just rely on SubscriptionStatus to fetch its own data
+    // For simplicity, we just render the structure
+
     return (
         <div className="min-h-screen bg-base-200 flex items-center justify-center p-4">
-            <div className="max-w-md w-full text-center space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                <div className="flex justify-center">
-                    <div className="w-24 h-24 bg-error/10 flex items-center justify-center text-error border-4 border-error/5">
-                        <RiErrorWarningLine className="text-5xl" />
+            <div className="card w-full max-w-lg bg-base-100 shadow-xl border-t-8 border-error">
+                <div className="card-body items-center text-center">
+                    <div className="w-16 h-16 bg-error/10 rounded-full flex items-center justify-center mb-4 text-error">
+                        <RiErrorWarningLine className="text-4xl" />
                     </div>
-                </div>
 
-                <div className="space-y-2">
-                    <h1 className="text-4xl font-medium tracking-tighter uppercase">Account Suspended</h1>
-                    <p className="text-base-content/40 font-medium leading-relaxed">
-                        Your account has been temporarily deactivated by the platform administration.
-                        Please contact support if you believe this is an error.
+                    <h1 className="text-2xl font-bold mb-2">Access Suspended</h1>
+                    <p className="text-base-content/70 mb-6">
+                        Your free trial has expired and we haven't received a subscription payment.
+                        To continue using your bio page and dashboard, please select a plan below.
                     </p>
-                </div>
 
-                <div className="flex flex-col gap-3">
-                    <Link
-                        href="mailto:support@linkpeak.com"
-                        className="btn btn-error btn-lg  gap-3 font-medium text-white shadow-xl shadow-error/20"
-                    >
-                        <RiCustomerService2Line className="text-xl" />
+                    <div className="w-full text-left mb-6">
+                        {/* We use SubscriptionStatus but disable redirect to prevent loop */}
+                        <SubscriptionStatus redirectOnExpire={false} />
+                    </div>
+
+                    <div className="divider">Need Help?</div>
+
+                    <Link href="/contact" className="btn btn-ghost gap-2">
+                        <RiCustomerService2Line className="text-lg" />
                         Contact Support
                     </Link>
-                    <Link href="/login" className="btn btn-ghost  opacity-40 hover:opacity-100 font-bold tracking-widest text-[10px] uppercase">
-                        Back to Login
-                    </Link>
                 </div>
-
-                <p className="text-[10px] font-medium uppercase tracking-[0.3em] opacity-20">LinkPeak Security System</p>
             </div>
         </div>
     );

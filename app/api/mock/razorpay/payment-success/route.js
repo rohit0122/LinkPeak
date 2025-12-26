@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import PaymentLink from "@/models/PaymentLink";
 import Subscription from "@/models/Subscription";
+import User from "@/models/User";
 
 /**
  * Mock endpoint to simulate successful payment
@@ -64,6 +65,14 @@ export async function POST(req) {
                 billingCycle: "monthly",
             });
         }
+
+        // Update User model (Reactivate & Set Plan)
+        // Crucial for reactivating suspended accounts
+        await User.findByIdAndUpdate(paymentLink.userId, {
+            isActive: true,
+            plan: paymentLink.planId,
+            planExpiresAt: endDate,
+        });
 
         // Trigger mock webhook event
         const webhookPayload = {
