@@ -58,7 +58,9 @@ export default async function DemoBioPage({ params }) {
         views: 890,
         likes: 124,
         socialLinks: {
-            instagram: "instagram.com"
+            instagram: "instagram.com",
+            facebook: "facebook.com",
+            linkedin: "linkedin.com"
         }
     };
 

@@ -8,7 +8,12 @@ export default function Hero() {
         title: "Eliza Miller",
         bio: "Digital Creator & Traveler 🏔️ | Sharing my latest journeys and gear.",
         profileImage: "https://api.dicebear.com/9.x/avataaars/svg?seed=Eliza&eyebrows[]&eyes=default",
-        template: "classic"
+        template: "classic",
+        socialLinks: {
+            instagram: "instagram.com",
+            twitter: "twitter.com",
+            tiktok: "tiktok.com"
+        }
     };
 
     const demoLinks = [

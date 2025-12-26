@@ -14,7 +14,12 @@ export default function LiveDemo() {
         title: "Eco Wanderer 🌿",
         bio: "Sustainable living & ethical travel tips for the modern soul.",
         profileImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=Eco",
-        template: "classic"
+        template: "classic",
+        socialLinks: {
+            instagram: "instagram.com",
+            facebook: "facebook.com",
+            linkedin: "linkedin.com"
+        }
     };
 
     const demoLinks = [
