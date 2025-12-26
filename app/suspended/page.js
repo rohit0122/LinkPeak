@@ -1,11 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { RiErrorWarningLine, RiCustomerService2Line } from "react-icons/ri";
 import SubscriptionStatus from "@/components/dashboard/SubscriptionStatus";
-import axios from "@/lib/axios";
-import { getAuthUser } from "@/lib/auth";
 
 export default function SuspendedPage() {
     // We fetch user client-side here or just rely on SubscriptionStatus to fetch its own data

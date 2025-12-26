@@ -5,6 +5,7 @@ import axios from "@/lib/axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CONFIG } from "@/constants/config";
+import toast from "react-hot-toast";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -20,6 +21,7 @@ export default function LoginPage() {
 
         try {
             const response = await axios.post("/auth/login", { email, password });
+            console.log('response =========== ', response.data.success);
             if (response.data.success) {
                 toast.success("Login successful!");
                 router.push("/dashboard");

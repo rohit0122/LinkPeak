@@ -60,9 +60,9 @@ export default function Footer() {
                     <div>
                         <h4 className="font-medium uppercase tracking-widest text-xs opacity-60 mb-6">Legal</h4>
                         <ul className="space-y-4 font-bold">
-                            <li><a href="/terms" className="hover:text-primary transition-colors">Terms of Service</a></li>
-                            <li><a href="/privacy" className="hover:text-primary transition-colors">Privacy Policy</a></li>
-                            <li><a href="/cookies" className="hover:text-primary transition-colors">Cookie Policy</a></li>
+                            <li><a href="/terms-and-conditions" className="hover:text-primary transition-colors">Terms of Service</a></li>
+                            <li><a href="/privacy-policy" className="hover:text-primary transition-colors">Privacy Policy</a></li>
+                            <li><a href="/cookies-policy" className="hover:text-primary transition-colors">Cookie Policy</a></li>
                         </ul>
                     </div>
 

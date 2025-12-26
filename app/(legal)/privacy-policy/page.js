@@ -141,7 +141,7 @@ export default function PrivacyPage() {
                         </ul>
                         <p className="mt-4">
                             You can clear localStorage through your browser settings. See our{" "}
-                            <Link href="/cookies" className="text-primary hover:underline">Cookie Policy</Link> for details.
+                            <Link href="/cookies-policy" className="text-primary hover:underline">Cookie Policy</Link> for details.
                         </p>
                     </section>
 
