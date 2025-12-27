@@ -7,6 +7,7 @@ import Analytics from "@/models/Analytics";
 import Subscription from "@/models/Subscription";
 import PaymentLink from "@/models/PaymentLink";
 import { getAuthUser } from "@/lib/auth";
+import { activateScheduledSubscriptions } from "@/lib/subscriptionHelper";
 
 /**
  * GET /api/dashboard/init
@@ -24,6 +25,9 @@ export async function GET(req) {
         }
 
         await dbConnect();
+
+        // Activate any scheduled subscriptions that are due
+        await activateScheduledSubscriptions(session.id);
 
         // 1. Fetch User (Optimized fields)
         const user = await User.findById(session.id)
@@ -49,28 +53,43 @@ export async function GET(req) {
         // 3. Fetch Active Page Data (Links & Analytics)
         let links = [];
         let analytics = []; // Using array format as per current UI
+        let lifetime = { totalViews: 0, totalClicks: 0, totalLikes: 0 };
 
         if (activePage) {
             links = await Link.find({ pageId: activePage._id })
                 .sort({ order: 1, createdAt: -1 })
                 .lean();
 
-            // Simplified analytics fetch (matching current /api/analytics logic roughly)
-            // Assuming the UI expects an array of data points. 
-            // If the current /api/analytics does complex aggregation, we might need to replicate or call it.
-            // For now, let's defer heavy analytics aggregation to the dedicated endpoint if it's complex,
-            // OR if it's simple day-by-day stats, we can do it here.
-            // Checking current UI: it uses `analytics` state.
-            // Let's stick to essential data first. If analytics is heavy, UI can fetch it lazily.
-            // BUT user goal is "1 API call".
+            // --- Optimized Analytics Strategy (Matching /api/analytics) ---
+            const { CONFIG } = await import("@/constants/config");
+            const { subDays, startOfDay } = await import("date-fns");
+            const mongoose = (await import("mongoose")).default;
 
-            // Let's assume standard Analytics model has date/views/clicks/etc.
-            // We'll fetch the last 7 days summary if possible.
-            // Replicating basic fetch:
-            analytics = await Analytics.find({ pageId: activePage._id })
-                .sort({ date: 1 })
-                .limit(30)
-                .lean();
+            let maxDays = CONFIG.PLAN_LIMITS[user.plan || "FREE"].analyticsDays;
+            if (user.plan === "PRO") maxDays = CONFIG.PLAN_LIMITS.PRO.analyticsDays;
+            if (user.plan === "AGENCY") maxDays = 36500;
+
+            const startDate = startOfDay(subDays(new Date(), maxDays));
+
+            // Fetch time-series data
+            analytics = await Analytics.find({
+                pageId: activePage._id,
+                date: { $gte: startDate }
+            }).sort({ date: 1 }).lean();
+
+            // Fetch Lifetime Sum
+            const lifetimeSum = await Analytics.aggregate([
+                { $match: { pageId: new mongoose.Types.ObjectId(activePage._id) } },
+                {
+                    $group: {
+                        _id: null,
+                        totalViews: { $sum: "$views" },
+                        totalClicks: { $sum: "$clicks" },
+                        totalLikes: { $sum: "$likes" }
+                    }
+                }
+            ]);
+            lifetime = lifetimeSum[0] || { totalViews: 0, totalClicks: 0, totalLikes: 0 };
         }
 
         // 4. Fetch Subscription Status (Replicating logic from /api/subscriptions)
@@ -140,6 +159,7 @@ export async function GET(req) {
                 activePage,
                 links,
                 analytics,
+                lifetime,
                 subscriptionStatus
             }
         });

@@ -3,6 +3,7 @@ import dbConnect from "@/lib/db";
 import User from "@/models/User";
 import BioPage from "@/models/BioPage";
 import Link from "@/models/Link";
+import Subscription from "@/models/Subscription";
 import { jwtVerify } from "jose";
 
 const secret = new TextEncoder().encode(process.env.JWT_SECRET);
@@ -11,7 +12,7 @@ export async function GET(req) {
     try {
         await dbConnect();
 
-        // Admin check (Double defense in addition to middleware)
+        // Admin check
         const token = req.cookies.get("token")?.value;
         if (!token) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
 
@@ -20,22 +21,112 @@ export async function GET(req) {
             return NextResponse.json({ success: false, error: "Forbidden" }, { status: 403 });
         }
 
-        const [totalUsers, totalViews, totalLinks, totalLikes, planDistribution] = await Promise.all([
+        // Plan pricing (update these to match your actual prices)
+        const PLAN_PRICES = { FREE: 0, PRO: 9, AGENCY: 49 };
+
+        // Get date ranges
+        const now = new Date();
+        const last30Days = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+        const last7Days = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+        const [
+            totalUsers,
+            totalViews,
+            totalLinks,
+            totalLikes,
+            planDistribution,
+            activeSubscriptions,
+            recentUsers,
+            userGrowth,
+            subscriptionTrends
+        ] = await Promise.all([
+            // Basic stats
             User.countDocuments(),
             BioPage.aggregate([{ $group: { _id: null, total: { $sum: "$views" } } }]),
             Link.countDocuments(),
             BioPage.aggregate([{ $group: { _id: null, total: { $sum: "$likes" } } }]),
-            User.aggregate([{ $group: { _id: "$plan", count: { $sum: 1 } } }])
+
+            // Plan distribution
+            User.aggregate([
+                { $group: { _id: "$plan", count: { $sum: 1 } } }
+            ]),
+
+            // Active subscriptions
+            Subscription.aggregate([
+                {
+                    $match: {
+                        status: "active",
+                        endDate: { $gt: now }
+                    }
+                },
+                { $group: { _id: "$planId", count: { $sum: 1 } } }
+            ]),
+
+            // Recent users (last 30 days)
+            User.countDocuments({ createdAt: { $gte: last30Days } }),
+
+            // User growth (last 7 days)
+            User.countDocuments({ createdAt: { $gte: last7Days } }),
+
+            // Subscription trends
+            Subscription.aggregate([
+                {
+                    $match: {
+                        createdAt: { $gte: last30Days }
+                    }
+                },
+                {
+                    $group: {
+                        _id: "$planId",
+                        count: { $sum: 1 }
+                    }
+                }
+            ])
         ]);
+
+        // Calculate MRR (Monthly Recurring Revenue)
+        const mrr = activeSubscriptions.reduce((acc, curr) => {
+            return acc + (PLAN_PRICES[curr._id] || 0) * curr.count;
+        }, 0);
+
+        // Calculate ARR (Annual Recurring Revenue)
+        const arr = mrr * 12;
+
+        // Calculate conversion rate
+        const paidUsers = planDistribution
+            .filter(p => p._id !== 'FREE')
+            .reduce((acc, curr) => acc + curr.count, 0);
+        const conversionRate = totalUsers > 0 ? ((paidUsers / totalUsers) * 100).toFixed(2) : 0;
+
+        // Calculate growth rate
+        const growthRate = totalUsers > 0 ? ((recentUsers / totalUsers) * 100).toFixed(2) : 0;
 
         return NextResponse.json({
             success: true,
             data: {
+                // Basic metrics
                 totalUsers,
                 totalViews: totalViews[0]?.total || 0,
                 totalLinks,
                 totalLikes: totalLikes[0]?.total || 0,
-                planDistribution
+
+                // Revenue metrics
+                mrr,
+                arr,
+
+                // Growth metrics
+                recentUsers,
+                userGrowth,
+                growthRate,
+
+                // Conversion metrics
+                paidUsers,
+                conversionRate,
+
+                // Distribution
+                planDistribution,
+                activeSubscriptions,
+                subscriptionTrends
             }
         });
     } catch (error) {

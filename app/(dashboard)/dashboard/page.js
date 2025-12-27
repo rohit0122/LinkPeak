@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import axios from "@/lib/axios";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import LinkEditor from "@/components/dashboard/LinkEditor";
@@ -9,10 +10,11 @@ import ThemeSelector from "@/components/dashboard/ThemeSelector";
 import TemplateSelector from "@/components/dashboard/TemplateSelector";
 import BrandingEditor from "@/components/dashboard/BrandingEditor";
 import ProfileUpload from "@/components/dashboard/ProfileUpload";
-import AnalyticsView from "@/components/dashboard/AnalyticsView";
-import QRGenerator from "@/components/dashboard/QRGenerator";
-import SupportView from "@/components/dashboard/SupportView";
 import SubscriptionStatus from "@/components/dashboard/SubscriptionStatus";
+import SmartPlanAlert from "@/components/dashboard/SmartPlanAlert";
+import UnsavedChangesModal from "@/components/dashboard/UnsavedChangesModal";
+import DangerZone from "@/components/dashboard/DangerZone";
+import { SkeletonChart, SkeletonTable, SkeletonDashboard } from "@/components/shared/SkeletonLoaders";
 import { toast } from "react-hot-toast";
 import {
     RiLayoutLine,
@@ -41,10 +43,23 @@ import {
     RiTiktokLine
 } from "react-icons/ri";
 import { CONFIG } from "@/constants/config";
-import SmartPlanAlert from "@/components/dashboard/SmartPlanAlert";
-import UnsavedChangesModal from "@/components/dashboard/UnsavedChangesModal";
-import DangerZone from "@/components/dashboard/DangerZone"; // ADDED import
 import { useRouter } from "next/navigation";
+
+// Lazy load heavy components
+const AnalyticsView = dynamic(() => import("@/components/dashboard/AnalyticsView"), {
+    loading: () => <SkeletonDashboard />,
+    ssr: false
+});
+
+const QRGenerator = dynamic(() => import("@/components/dashboard/QRGenerator"), {
+    loading: () => <SkeletonChart />,
+    ssr: false
+});
+
+const SupportView = dynamic(() => import("@/components/dashboard/SupportView"), {
+    loading: () => <SkeletonTable />,
+    ssr: false
+});
 
 export default function DashboardPage() {
     const [user, setUser] = useState(null);
@@ -54,6 +69,7 @@ export default function DashboardPage() {
     const [allPages, setAllPages] = useState([]);
     const [links, setLinks] = useState([]);
     const [analytics, setAnalytics] = useState([]);
+    const [lifetimeStats, setLifetimeStats] = useState({ totalViews: 0, totalClicks: 0, totalLikes: 0 });
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState("links");
     const [unsavedChanges, setUnsavedChanges] = useState(false);
@@ -76,11 +92,12 @@ export default function DashboardPage() {
             const { data } = await axios.get("/dashboard/init");
 
             if (data.success) {
-                const { user, pages, activePage, links: initLinks, analytics: initAnalytics, subscriptionStatus: subStatus } = data.data;
+                const { user, pages, activePage, links: initLinks, analytics: initAnalytics, lifetime: initLifetime, subscriptionStatus: subStatus } = data.data;
 
                 setUser(user);
                 setAllPages(pages);
                 setSubscriptionStatus(subStatus);
+                setLifetimeStats(initLifetime || { totalViews: 0, totalClicks: 0, totalLikes: 0 });
 
                 if (pages.length > 0) {
                     // Use the active page returned by API (logic is: first page) or keep existing if switching
@@ -129,7 +146,10 @@ export default function DashboardPage() {
                 axios.get(`/analytics?pageId=${pageId}`)
             ]);
             if (linksRes.data.success) setLinks(linksRes.data.data);
-            if (analyticsRes.data.success) setAnalytics(analyticsRes.data.data);
+            if (analyticsRes.data.success) {
+                setAnalytics(analyticsRes.data.data);
+                setLifetimeStats(analyticsRes.data.lifetime || { totalViews: 0, totalClicks: 0, totalLikes: 0 });
+            }
         } catch (error) {
             toast.error("Failed to load page data");
         }
@@ -472,7 +492,13 @@ export default function DashboardPage() {
                         )}
 
                         {activeTab === "analytics" && (
-                            <AnalyticsView data={analytics} plan={user?.plan} />
+                            <AnalyticsView
+                                data={analytics}
+                                plan={user?.plan}
+                                links={links}
+                                page={page}
+                                lifetime={lifetimeStats}
+                            />
                         )}
 
                         {activeTab === "qr" && (

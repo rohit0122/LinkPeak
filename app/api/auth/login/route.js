@@ -2,14 +2,30 @@ import { NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import User from "@/models/User";
 import { createToken } from "@/lib/auth";
+import { authRateLimit } from "@/lib/rateLimit";
 
 export async function POST(req) {
     try {
+        // Rate limiting
+        const rateLimitResult = await authRateLimit(req);
+        if (!rateLimitResult.success) {
+            return NextResponse.json(
+                { success: false, error: "Too many login attempts. Please try again later." },
+                {
+                    status: 429,
+                    headers: {
+                        'X-RateLimit-Limit': rateLimitResult.limit.toString(),
+                        'X-RateLimit-Remaining': '0',
+                        'X-RateLimit-Reset': new Date(rateLimitResult.reset).toISOString()
+                    }
+                }
+            );
+        }
+
         await dbConnect();
         const { email, password } = await req.json();
 
         const user = await User.findOne({ email }).select("+password");
-        //console.log('user ============= ', user);
         if (!user) {
             return NextResponse.json({ success: false, error: "Invalid credentials" }, { status: 401 });
         }
@@ -31,8 +47,6 @@ export async function POST(req) {
             return NextResponse.json({ success: false, error: "Invalid credentials" }, { status: 401 });
         }
 
-        //console.log('user 222==========', user);
-
         const token = await createToken({
             id: user._id.toString(),
             email: user.email,
@@ -53,14 +67,6 @@ export async function POST(req) {
                 isActive: user.isActive,
             },
         });
-
-        /* response.cookies.set("token", token, {
-             httpOnly: true,
-             secure: process.env.NODE_ENV === "production",
-             sameSite: "strict",
-             maxAge: 30 * 24 * 60 * 60, // 30 days
-             path: "/",
-         });*/
 
         response.cookies.set("token", token, {
             httpOnly: true,

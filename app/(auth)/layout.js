@@ -1,5 +1,4 @@
 import NavbarClient from "@/components/layout/NavbarClient";
-import UnifiedNavbar from "@/components/layout/UnifiedNavbar";
 import Footer from "@/components/layout/Footer";
 
 export default function AuthLayout({ children }) {

@@ -44,5 +44,7 @@ const LinkSchema = new mongoose.Schema(
 // Indexes for fast lookups (Optimization)
 LinkSchema.index({ pageId: 1, order: 1 });
 LinkSchema.index({ userId: 1 });
+LinkSchema.index({ pageId: 1, isActive: 1, order: 1 }); // For fetching active links
 
 export default mongoose.models.Link || mongoose.model("Link", LinkSchema);
+

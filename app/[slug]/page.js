@@ -1,4 +1,3 @@
-import { notFound } from "next/navigation";
 import dbConnect from "@/lib/db";
 import BioPage from "@/models/BioPage";
 import LinkModel from "@/models/Link";
@@ -19,13 +18,13 @@ export async function generateMetadata({ params }) {
         openGraph: {
             title: page.seo?.title || page.title,
             description: page.seo?.description || page.bio,
-            images: [page.profileImage || CONFIG.SITE_URL + "/og-image.jpg"],
+            images: [page.profileImage || CONFIG.SITE_URL + "/logo.png"],
         },
         twitter: {
             card: "summary_large_image",
             title: page.seo?.title || page.title,
             description: page.seo?.description || page.bio,
-            images: [page.profileImage || CONFIG.SITE_URL + "/og-image.jpg"],
+            images: [page.profileImage || CONFIG.SITE_URL + "/logo.png"],
         }
     };
 }

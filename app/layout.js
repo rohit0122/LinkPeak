@@ -2,6 +2,7 @@ import { Outfit, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import GlobalLoading from "@/components/shared/GlobalLoading";
 import { Toaster } from "react-hot-toast";
+import { AuthProvider } from "@/context/AuthContext";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -31,9 +32,11 @@ export default function RootLayout({ children }) {
       <body
         className={`${outfit.variable} ${jakarta.variable} antialiased`}
       >
-        <GlobalLoading />
-        <Toaster position="top-center" />
-        {children}
+        <AuthProvider>
+          <GlobalLoading />
+          <Toaster position="top-center" />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

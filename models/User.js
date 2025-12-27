@@ -62,4 +62,8 @@ UserSchema.methods.matchPassword = async function (enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 };
 
+// Index for admin stats queries
+UserSchema.index({ plan: 1, isActive: 1 });
+
 export default mongoose.models.User || mongoose.model("User", UserSchema);
+

@@ -18,9 +18,26 @@ export async function POST(req) {
         // Atomic increment for daily Analytics record
         await Analytics.findOneAndUpdate(
             { pageId, date: today },
-            { $inc: { clicks: 1 } },
+            {
+                $inc: { clicks: 1 },
+                $set: { updatedAt: new Date() } // Ensure timestamp update
+            },
             { upsert: true, new: true }
         );
+
+        // Update or Push link-specific clicks in Analytics
+        const analyticsUpdate = await Analytics.findOneAndUpdate(
+            { pageId, date: today, "linkStats.linkId": linkId },
+            { $inc: { "linkStats.$.clicks": 1 } },
+            { new: true }
+        );
+
+        if (!analyticsUpdate) {
+            await Analytics.findOneAndUpdate(
+                { pageId, date: today },
+                { $push: { linkStats: { linkId, clicks: 1 } } }
+            );
+        }
 
         return NextResponse.json({ success: true });
     } catch (error) {

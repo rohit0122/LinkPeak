@@ -124,8 +124,6 @@ export default function AdminDashboard() {
         return <div className="flex items-center justify-center min-h-screen"><span className="loading loading-spinner loading-lg text-primary"></span></div>;
     }
 
-    const mrr = calculateMRR(stats?.planDistribution);
-
     return (
         <DashboardLayout user={currentUser || { name: "System Admin", role: "admin", plan: "AGENCY" }}>
             <div className="max-w-[1400px] mx-auto py-10 px-4 space-y-8">
@@ -157,20 +155,71 @@ export default function AdminDashboard() {
                 {/* Tab Content */}
                 {activeTab === "OVERVIEW" && (
                     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        {/* Revenue Metrics */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                            <StatCard title="Total Users" value={stats?.totalUsers} icon={RiGroupLine} colorClass="bg-blue-500/10 text-blue-600" />
-                            <StatCard title="Est. MRR" value={`$${mrr}`} icon={RiMoneyDollarCircleLine} colorClass="bg-green-500/10 text-green-600" />
-                            <StatCard title="Bio Views" value={stats?.totalViews?.toLocaleString()} icon={RiEyeLine} colorClass="bg-purple-500/10 text-purple-600" />
-                            <StatCard title="Global Links" value={stats?.totalLinks} icon={RiLinksLine} colorClass="bg-orange-500/10 text-orange-600" />
+                            <StatCard
+                                title="Monthly Revenue"
+                                value={`$${stats?.mrr || 0}`}
+                                icon={RiMoneyDollarCircleLine}
+                                colorClass="bg-green-500/10 text-green-600"
+                                trend={stats?.growthRate}
+                            />
+                            <StatCard
+                                title="Annual Revenue"
+                                value={`$${stats?.arr || 0}`}
+                                icon={RiBarChartGroupedLine}
+                                colorClass="bg-blue-500/10 text-blue-600"
+                            />
+                            <StatCard
+                                title="Conversion Rate"
+                                value={`${stats?.conversionRate || 0}%`}
+                                icon={RiArrowUpSLine}
+                                colorClass="bg-purple-500/10 text-purple-600"
+                            />
+                            <StatCard
+                                title="Paid Users"
+                                value={stats?.paidUsers || 0}
+                                icon={RiUserFollowLine}
+                                colorClass="bg-orange-500/10 text-orange-600"
+                            />
+                        </div>
+
+                        {/* Platform Metrics */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <StatCard
+                                title="Total Users"
+                                value={stats?.totalUsers}
+                                icon={RiGroupLine}
+                                colorClass="bg-blue-500/10 text-blue-600"
+                                trend={stats?.growthRate}
+                            />
+                            <StatCard
+                                title="New Users (30d)"
+                                value={stats?.recentUsers || 0}
+                                icon={RiHistoryLine}
+                                colorClass="bg-green-500/10 text-green-600"
+                            />
+                            <StatCard
+                                title="Bio Views"
+                                value={stats?.totalViews?.toLocaleString()}
+                                icon={RiEyeLine}
+                                colorClass="bg-purple-500/10 text-purple-600"
+                            />
+                            <StatCard
+                                title="Global Links"
+                                value={stats?.totalLinks}
+                                icon={RiLinksLine}
+                                colorClass="bg-orange-500/10 text-orange-600"
+                            />
                         </div>
 
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                            {/* Revenue Distribution */}
+                            {/* Plan Distribution */}
                             <div className="lg:col-span-1 card bg-base-100 shadow-sm border border-base-200 ">
                                 <div className="card-body p-8">
                                     <h2 className="text-sm font-medium uppercase tracking-widest opacity-40 mb-6 flex items-center gap-2">
                                         <RiMoneyDollarCircleLine className="text-primary text-lg" />
-                                        Plan Revenue
+                                        Plan Distribution
                                     </h2>
                                     <div className="space-y-6">
                                         {stats?.planDistribution?.map((p) => (
@@ -181,7 +230,7 @@ export default function AdminDashboard() {
                                                         <span className="text-lg font-medium">{p.count} Users</span>
                                                     </div>
                                                     <span className="text-sm font-bold opacity-60">
-                                                        ${p._id === 'AGENCY' ? p.count * 29 : p._id === 'PRO' ? p.count * 9 : 0}/mo
+                                                        {((p.count / stats.totalUsers) * 100).toFixed(1)}%
                                                     </span>
                                                 </div>
                                                 <div className="h-2 w-full bg-base-200 rounded-full overflow-hidden">
@@ -193,7 +242,7 @@ export default function AdminDashboard() {
                                 </div>
                             </div>
 
-                            {/* Recent Signups or System Health */}
+                            {/* Active Subscriptions */}
                             <div className="lg:col-span-2 card bg-base-100 shadow-sm border border-base-200 ">
                                 <div className="card-body p-8">
                                     <h2 className="text-sm font-medium uppercase tracking-widest opacity-40 mb-6 flex items-center gap-2">

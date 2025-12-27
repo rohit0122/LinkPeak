@@ -25,6 +25,13 @@ const AnalyticsSchema = new mongoose.Schema(
             type: Number,
             default: 0,
         },
+        linkStats: [
+            {
+                linkId: { type: mongoose.Schema.Types.ObjectId, ref: "Link" },
+                clicks: { type: Number, default: 0 },
+                views: { type: Number, default: 0 }
+            }
+        ]
     },
     { timestamps: true }
 );
@@ -32,4 +39,8 @@ const AnalyticsSchema = new mongoose.Schema(
 // Unique index on pageId and date (without time)
 AnalyticsSchema.index({ pageId: 1, date: 1 }, { unique: true });
 
+// Index for per-link analytics queries
+AnalyticsSchema.index({ "linkStats.linkId": 1 });
+
 export default mongoose.models.Analytics || mongoose.model("Analytics", AnalyticsSchema);
+

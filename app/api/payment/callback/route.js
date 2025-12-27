@@ -17,49 +17,77 @@ export async function POST(req) {
         } = body;
 
         if (!razorpay_payment_id || !razorpay_payment_link_id || !razorpay_signature) {
-            return NextResponse.json({ success: false }, { status: 400 });
+            return NextResponse.json({ success: false, error: "Missing required payment fields" }, { status: 400 });
         }
 
-        /* const provider = new RazorpayProvider();
- 
-         const isValid = provider.verifyCallbackSignature({
-             paymentId: razorpay_payment_id,
-             paymentLinkId: razorpay_payment_link_id,
-             signature: razorpay_signature,
-         });
- 
-         if (!isValid) {
-             return NextResponse.json({ success: false }, { status: 401 });
-         }*/
+        const provider = new RazorpayProvider();
+
+        // 1. Verify Signature (Security)
+        const isValid = provider.verifyCallbackSignature({
+            paymentId: razorpay_payment_id,
+            paymentLinkId: razorpay_payment_link_id,
+            signature: razorpay_signature,
+        });
+
+        if (!isValid) {
+            console.error("Invalid payment signature for:", razorpay_payment_link_id);
+            return NextResponse.json({ success: false, error: "Invalid payment signature" }, { status: 401 });
+        }
+
+        // 2. Extra Validation: Fetch real status from Razorpay
+        const statusData = await provider.getPaymentLinkStatus(razorpay_payment_link_id);
+        if (statusData.status !== "paid") {
+            return NextResponse.json({
+                success: false,
+                error: `Payment link is ${statusData.status}. Status must be 'paid' to activate.`
+            });
+        }
 
         await dbConnect();
 
-        // 🛑 Idempotency check
-        const existing = await Subscription.findOne({
+        // 🛑 Idempotency & Overlap Check
+        const activeSub = await Subscription.findOne({
             userId,
             status: "active",
-            planId,
-        });
+            endDate: { $gt: new Date() }
+        }).sort({ endDate: -1 });
 
-        if (existing) {
-            return NextResponse.json({ success: true });
+        let startDate = new Date();
+        let endDate = new Date();
+        endDate.setMonth(endDate.getMonth() + 1);
+        let status = "active";
+
+        if (activeSub) {
+            // If renewing SAME plan
+            if (activeSub.planId === planId) {
+                activeSub.endDate = new Date(activeSub.endDate.getTime() + (30 * 24 * 60 * 60 * 1000));
+                activeSub.updatedAt = new Date();
+                await activeSub.save();
+
+                return NextResponse.json({ success: true, message: "Subscription extended" });
+            } else {
+                // Different plan (Upgrade/Downgrade scheduled after current)
+                startDate = activeSub.endDate;
+                endDate = new Date(startDate.getTime());
+                endDate.setMonth(endDate.getMonth() + 1);
+                status = "scheduled";
+            }
         }
 
-        // Activate plan
-        await User.findByIdAndUpdate(userId, {
-            plan: planId,
-            updatedAt: new Date(),
-            isActive: true,
-        });
+        // 3. Activate plan on User (Immediate if no active sub or if it matches active sub plan)
+        if (status === "active") {
+            await User.findByIdAndUpdate(userId, {
+                plan: planId,
+                updatedAt: new Date(),
+                isActive: true,
+            });
+        }
 
-        const startDate = new Date();
-        const endDate = new Date();
-        endDate.setMonth(endDate.getMonth() + 1);
-
+        // 4. Create Subscription record
         await Subscription.create({
             userId,
             planId,
-            status: "active",
+            status: status,
             billingCycle: "monthly",
             startDate,
             endDate,
@@ -71,6 +99,6 @@ export async function POST(req) {
 
     } catch (err) {
         console.error("Payment callback error:", err);
-        return NextResponse.json({ success: false }, { status: 500 });
+        return NextResponse.json({ success: false, error: "Failed to process payment callback" }, { status: 500 });
     }
 }

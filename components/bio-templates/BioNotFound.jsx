@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { RiUserUnfollowLine } from "react-icons/ri";
-import Navbar from "../layout/Navbar";
 import NavbarClient from "../layout/NavbarClient";
 import Footer from "../layout/Footer";
 

@@ -19,11 +19,22 @@ export default function LoginPage() {
         setError("");
         setLoading(true);
 
+        // Validate input with Zod
+        const { loginSchema, validateData } = await import("@/lib/validations");
+        const validation = validateData(loginSchema, { email, password });
+
+        if (!validation.success) {
+            const firstError = Object.values(validation.errors)[0];
+            setError(firstError);
+            toast.error(firstError);
+            setLoading(false);
+            return;
+        }
+
         try {
-            const response = await axios.post("/auth/login", { email, password });
+            const response = await axios.post("/auth/login", validation.data);
             if (response.data.success) {
                 localStorage.setItem("site_user", JSON.stringify(response.data.data));
-                //localStorage.setItem("site_token", response.data.data.token);
                 toast.success("Login successful!");
                 if (response.data.data.role === 'ADMIN')
                     router.push("/admin");
