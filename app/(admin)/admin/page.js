@@ -68,12 +68,7 @@ export default function AdminDashboard() {
     };
 
     useEffect(() => {
-        const siteUser = localStorage.getItem("site_user") ? JSON.parse(localStorage.getItem("site_user")) : null;
-        if (siteUser?.role === 'admin') {
-            fetchData();
-        } else {
-            router.push('/dashboard');
-        }
+        fetchData();
     }, []);
 
     const fetchData = async () => {

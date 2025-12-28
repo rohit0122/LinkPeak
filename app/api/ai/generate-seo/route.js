@@ -18,52 +18,33 @@ export async function POST(req) {
 
         const { title, bio, slug } = await req.json();
 
-        // Check for OpenAI Key
-        if (process.env.OPENAI_API_KEY) {
-            try {
-                const OpenAI = (await import("openai")).default;
-                const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+        const { aiEngine } = await import("@/lib/ai");
+        const prompt = `Generate catchy SEO metadata for a "Link in Bio" page.
+        User Name: ${title}
+        User Bio: ${bio}
+        Slug: ${slug}
+        
+        Respond ONLY with a JSON object in this format:
+        {
+            "title": "Meta Title (max 60 chars)",
+            "description": "Meta Description (max 160 chars)",
+            "keywords": "comma, separated, keywords (max 10)"
+        }`;
 
-                const prompt = `Generate catchy SEO metadata for a "Link in Bio" page.
-                User Name: ${title}
-                User Bio: ${bio}
-                Slug: ${slug}
-                
-                Respond ONLY with a JSON object in this format:
-                {
-                    "title": "Meta Title (max 60 chars)",
-                    "description": "Meta Description (max 160 chars)",
-                    "keywords": "comma, separated, keywords (max 10)"
-                }`;
+        const aiData = await aiEngine.generateContent(prompt, { json: true });
 
-                const completion = await openai.chat.completions.create({
-                    messages: [{ role: "user", content: prompt }],
-                    model: "gpt-3.5-turbo",
-                    response_format: { type: "json_object" },
-                });
-
-                const aiData = JSON.parse(completion.choices[0].message.content);
-
-                return NextResponse.json({
-                    success: true,
-                    data: aiData
-                });
-
-            } catch (aiError) {
-                console.error("OpenAI Error, falling back to mock:", aiError);
-                // Fallthrough to mock logic on error
-            }
+        if (aiData) {
+            return NextResponse.json({
+                success: true,
+                data: aiData
+            });
         }
 
         // --- MOCK FALLBACK LOGIC ---
-        // Simulate AI processing delay
-        await new Promise(resolve => setTimeout(resolve, 2000));
-
-        // Deterministic mock AI suggestions based on profile data
         const suggestions = {
             title: `${title} | Professional Bio & Links`,
-            description: `Connect with ${title} on LinkPeak. ${bio.slice(0, 100)}... Check out all my official links and social media profiles in one place!`,
-            keywords: `linkpeak, ${title.toLowerCase()}, link in bio, ${slug}, social links, creator toolkit`
+            description: `Connect with ${title} on LinkPeak. ${bio?.slice(0, 100)}... Check out all my official links and social media profiles in one place!`,
+            keywords: `linkpeak, ${title?.toLowerCase()}, link in bio, ${slug}, social links, creator toolkit`
         };
 
         return NextResponse.json({

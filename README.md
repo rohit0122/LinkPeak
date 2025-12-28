@@ -70,6 +70,12 @@ NODEMAILER_USER_SENDER=your_email@domain.com
 RAZORPAY_KEY_ID=your_key_id
 RAZORPAY_KEY_SECRET=your_key_secret
 
+# AI (Waterfall Engine)
+# Get Gemini Key: https://aistudio.google.com/app/apikey
+GEMINI_API_KEY=your_google_gemini_key
+# Get Mistral Key: https://console.mistral.ai/
+MISTRAL_API_KEY=your_mistral_ai_key
+
 # Analytics / Public
 NEXT_PUBLIC_SITE_NAME="LinkPeakK."
 NEXT_PUBLIC_SITE_URL="http://localhost:3000"

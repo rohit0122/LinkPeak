@@ -27,7 +27,7 @@ export function AuthProvider({ children }) {
 
         try {
             setLoading(true);
-            const res = await axios.get("/auth/me");
+            const res = await axios.get("/auth/me", { skipLoader: true });
 
             if (res.data?.success) {
                 const userData = res.data.data;

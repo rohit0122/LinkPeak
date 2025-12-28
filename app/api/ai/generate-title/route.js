@@ -21,39 +21,21 @@ export async function POST(req) {
             return NextResponse.json({ success: false, error: "URL is required" }, { status: 400 });
         }
 
-        // Check for OpenAI Key
-        if (process.env.OPENAI_API_KEY) {
-            try {
-                const OpenAI = (await import("openai")).default;
-                const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+        const { aiEngine } = await import("@/lib/ai");
+        const prompt = `Generate a short, catchy, and professional link title (max 4-5 words) for this URL: ${url}. 
+        Identify the brand or content type. Add one relevant emoji at the end.
+        Example Output: "My Instagram 📸" or "Latest Tech Blog 💻"`;
 
-                const prompt = `Generate a short, catchy, and professional link title (max 4-5 words) for this URL: ${url}. 
-                Identify the brand or content type. Add one relevant emoji at the end.
-                Example Output: "My Instagram 📸" or "Latest Tech Blog 💻"`;
+        const aiTitle = await aiEngine.generateContent(prompt);
 
-                const completion = await openai.chat.completions.create({
-                    messages: [{ role: "user", content: prompt }],
-                    model: "gpt-3.5-turbo",
-                });
-
-                const aiTitle = completion.choices[0].message.content.replace(/"/g, '').trim();
-
-                return NextResponse.json({
-                    success: true,
-                    data: { title: aiTitle }
-                });
-
-            } catch (aiError) {
-                console.error("OpenAI Error, falling back to mock:", aiError);
-                // Fallthrough to mock
-            }
+        if (aiTitle) {
+            return NextResponse.json({
+                success: true,
+                data: { title: aiTitle.replace(/"/g, '').trim() }
+            });
         }
 
         // --- MOCK FALLBACK LOGIC ---
-        // Simulate AI processing delay
-        await new Promise(resolve => setTimeout(resolve, 1500));
-
-        // Deterministic mock responses based on URL keywords
         let title = "Check out this link!";
         const lowerUrl = url.toLowerCase();
 

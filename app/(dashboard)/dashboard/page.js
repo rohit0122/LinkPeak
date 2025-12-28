@@ -76,12 +76,6 @@ export default function DashboardPage() {
     const router = useRouter();
 
     useEffect(() => {
-        const siteUser = localStorage.getItem("site_user") ? JSON.parse(localStorage.getItem("site_user")) : null;
-        if (siteUser?.role === 'admin') {
-            router.push('/admin')
-            router.refresh();
-            return;
-        }
         fetchData();
     }, []);
 

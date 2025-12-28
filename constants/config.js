@@ -76,5 +76,11 @@ export const CONFIG = {
         TITLE: (days) => days > 0 ? `${days} Days Remaining in Plan` : `Last Day of Subscription`,
         SUBTEXT: "To ensure your bio page stays live for your fans, please renew your plan.",
         CTA: "Renew Subscription"
+    },
+
+    // AI API Endpoints
+    AI_ENDPOINTS: {
+        GEMINI: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
+        MISTRAL: "https://api.mistral.ai/v1/chat/completions"
     }
 };
