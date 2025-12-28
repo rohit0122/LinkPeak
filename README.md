@@ -1,36 +1,108 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🏔️ LinkPeakK.
+### Premium Link-in-Bio Platform for Creators, Brands & Professionals
 
-## Getting Started
+**LinkPeakK.** is a high-performance, fully customizable "Link in Bio" platform designed to help creators, entrepreneurs, and brands consolidate their online presence into one powerful, high-converting landing page.
 
-First, run the development server:
+![Banner](https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=1000&auto=format&fit=crop)
 
+---
+
+## ✨ Key Features
+
+- **🎨 Multi-Template System**: Choose between **Classic**, **Grid**, and **Hero** templates to match your personal brand or business style.
+- **🌈 Dynamic Themes**: Full integration with **DaisyUI** themes (Light, Dark, Luxury, Cyberpunk, and more) for instant aesthetic transformations.
+- **📊 Advanced Analytics**: Track your traffic in real-time with comprehensive visitor stats, top links, and engagement metrics powered by **Recharts**.
+- **🔗 Drag-and-Drop Editor**: Organize your links effortlessly with our intuitive drag-and-drop interface.
+- **💳 Monetization & Billing**: Integrated **Razorpay** payment gateway for seamless subscription management (Free, Pro, and Agency tiers).
+- **📱 Custom QR Codes**: Generate branded QR codes for your bio pages with custom logos and styling.
+- **🔐 Secure Authentication**: Robust JWT-based authentication with email verification and password recovery.
+- **📧 Automated Notifications**: Branded email notification system for welcomes, password resets, and account status updates.
+- **⚖️ Legal Ready**: Built-in pages for Privacy Policy, Terms of Service, and Cookie Policy.
+- **🖥️ Admin Dashboard**: Powerful administrative tools for user management and platform-wide analytics.
+
+---
+
+## 🛠 Tech Stack
+
+- **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
+- **Database**: [MongoDB](https://www.mongodb.com/) with [Mongoose](https://mongoosejs.com/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) & [DaisyUI](https://daisyui.com/)
+- **Animations**: [Framer Motion](https://www.framer.com/motion/)
+- **Authentication**: JWT & `bcryptjs`
+- **Email**: [Nodemailer](https://nodemailer.com/) (Zoho SMTP Optimized)
+- **Payments**: [Razorpay](https://razorpay.com/)
+- **Analytics**: [Recharts](https://recharts.org/)
+- **QR Generation**: `qrcode.react`
+
+---
+
+## 🚀 Getting Started
+
+### 1. Prerequisites
+- Node.js (Latest LTS)
+- MongoDB Connection URI
+
+### 2. Installation
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/rohit0122/LinkPeak.git
+cd LinkPeak
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 3. Environment Variables
+Create a `.env.local` file in the root directory and add the following:
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+```env
+# Database
+MONGODB_URI=your_mongodb_uri
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Auth
+JWT_SECRET=your_jwt_secret
 
-## Learn More
+# SMTP (Zoho Recommended)
+NODEMAILER_HOST=smtp.zoho.in
+NODEMAILER_PORT=587
+NODEMAILER_USER=your_email@domain.com
+NODEMAILER_PASS=your_app_password
+NODEMAILER_USER_SENDER=your_email@domain.com
 
-To learn more about Next.js, take a look at the following resources:
+# Razorpay
+RAZORPAY_KEY_ID=your_key_id
+RAZORPAY_KEY_SECRET=your_key_secret
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Analytics / Public
+NEXT_PUBLIC_SITE_NAME="LinkPeakK."
+NEXT_PUBLIC_SITE_URL="http://localhost:3000"
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 4. Running the App
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) to see the result.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📦 Project Structure
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```text
+├── app/               # Next.js App Router (Pages & APIs)
+├── components/        # Reusable UI Components
+├── constants/         # Global Config & Constants
+├── lib/               # Utility functions (db connection, mailer)
+├── models/            # Mongoose Schemas
+├── public/            # Static Assets
+└── styles/            # Global CSS
+```
+
+---
+
+## 📄 License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
+
+## 🤝 Support
+For any questions or support, please contact us at **connect@linkpeakk.com**.
+
+Built with ❤️ for Creators.
