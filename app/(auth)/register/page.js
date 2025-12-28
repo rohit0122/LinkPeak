@@ -63,8 +63,8 @@ function RegisterForm() {
     };
 
     return (
-        <div className="flex justify-center bg-base-200 px-4">
-            <div className="card w-full max-w-sm bg-base-100 shadow-xl">
+        <div className="flex justify-center items-center min-h-screen px-4">
+            <div className="card w-full max-w-sm bg-base-200">
                 <div className="h-2 bg-primary w-full"></div>
                 <div className="card-body">
                     <h2 className="card-title text-2xl font-bold justify-center mb-4">
@@ -155,14 +155,14 @@ function RegisterForm() {
                             </div>
 
                             <div className="form-control mt-4">
-                                <label className="label cursor-pointer justify-start gap-3">
+                                <label className="label cursor-pointer justify-start items-start gap-3">
                                     <input
                                         type="checkbox"
-                                        className="checkbox checkbox-primary checkbox-sm"
+                                        className="checkbox checkbox-primary checkbox-xs shrink-0 mt-0.5"
                                         checked={agreed}
                                         onChange={(e) => setAgreed(e.target.checked)}
                                     />
-                                    <span className="label-text text-left">
+                                    <span className="label-text text-left leading-tight text-xs md:text-sm">
                                         I agree to the <button type="button" onClick={() => setShowTerms(true)} className="link link-primary">Terms of Service</button> and <button type="button" onClick={() => setShowTerms(true)} className="link link-primary">Privacy Policy</button>
                                     </span>
                                 </label>

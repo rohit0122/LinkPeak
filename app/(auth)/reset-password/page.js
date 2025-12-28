@@ -60,8 +60,8 @@ function ResetPasswordForm() {
 
     if (!tokenValid) {
         return (
-            <div className="flex justify-center bg-base-200 px-4">
-                <div className="card w-full max-w-md bg-base-100 shadow-xl">
+            <div className="flex justify-center items-center min-h-screen bg-base-200 px-4 py-12">
+                <div className="card w-full max-w-sm bg-base-100 shadow-xl">
                     <div className="card-body text-center">
                         <div className="flex justify-center mb-4">
                             <div className="w-16 h-16 bg-error/10 rounded-full flex items-center justify-center">
@@ -82,8 +82,8 @@ function ResetPasswordForm() {
     }
 
     return (
-        <div className="flex justify-center bg-base-200 px-4">
-            <div className="card w-full max-w-md bg-base-100 shadow-xl">
+        <div className="flex justify-center items-center min-h-screen px-4">
+            <div className="card w-full max-w-sm bg-base-200">
                 <div className="h-2 bg-primary w-full"></div>
                 <div className="card-body">
                     <h2 className="card-title text-2xl font-bold justify-center mb-2">
@@ -146,9 +146,10 @@ function ResetPasswordForm() {
 
                             <div className="form-control mt-6">
                                 <button
-                                    className={`btn btn-primary ${loading ? "loading" : ""} w-full`}
+                                    className="btn btn-primary w-full"
                                     disabled={loading}
                                 >
+                                    {loading && <span className="loading loading-spinner"></span>}
                                     {loading ? "Resetting..." : "Reset Password"}
                                 </button>
                             </div>

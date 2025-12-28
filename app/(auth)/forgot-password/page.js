@@ -30,8 +30,8 @@ export default function ForgotPasswordPage() {
     };
 
     return (
-        <div className="flex justify-center bg-base-200 px-4">
-            <div className="card w-full max-w-md bg-base-100 shadow-xl">
+        <div className="flex justify-center items-center min-h-screen px-4">
+            <div className="card w-full max-w-sm bg-base-200">
                 <div className="h-2 bg-primary w-full"></div>
                 <div className="card-body">
                     <h2 className="card-title text-2xl font-bold justify-center mb-2">
@@ -89,9 +89,10 @@ export default function ForgotPasswordPage() {
 
                             <div className="form-control mt-6">
                                 <button
-                                    className={`btn btn-primary ${loading ? "loading" : ""} w-full`}
+                                    className="btn btn-primary w-full"
                                     disabled={loading}
                                 >
+                                    {loading && <span className="loading loading-spinner"></span>}
                                     {loading ? "Sending..." : "Send Reset Link"}
                                 </button>
                             </div>

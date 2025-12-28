@@ -36,7 +36,7 @@ function VerifyContent() {
     }, [token]);
 
     return (
-        <div className="card w-full max-w-sm bg-base-100 shadow-xl">
+        <div className="card w-full max-w-sm bg-base-200">
             <div className="card-body items-center text-center">
                 <h2 className="card-title text-2xl font-bold mb-4">Email Verification</h2>
 
@@ -77,7 +77,7 @@ function VerifyContent() {
 
 export default function VerifyPage() {
     return (
-        <div className="mt-20 flex items-center justify-center bg-base-200 px-4">
+        <div className="flex items-center justify-center min-h-screen bg-base-200 px-4 py-12">
             <Suspense fallback={
                 <div className="card w-full max-w-sm bg-base-100 shadow-xl p-8 items-center">
                     <span className="loading loading-spinner loading-lg text-primary"></span>
