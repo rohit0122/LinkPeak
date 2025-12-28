@@ -84,6 +84,7 @@ function ResetPasswordForm() {
     return (
         <div className="flex justify-center bg-base-200 px-4">
             <div className="card w-full max-w-md bg-base-100 shadow-xl">
+                <div className="h-2 bg-primary w-full"></div>
                 <div className="card-body">
                     <h2 className="card-title text-2xl font-bold justify-center mb-2">
                         Set New Password
@@ -145,7 +146,7 @@ function ResetPasswordForm() {
 
                             <div className="form-control mt-6">
                                 <button
-                                    className={`btn btn-primary ${loading ? "loading" : ""}`}
+                                    className={`btn btn-primary ${loading ? "loading" : ""} w-full`}
                                     disabled={loading}
                                 >
                                     {loading ? "Resetting..." : "Reset Password"}

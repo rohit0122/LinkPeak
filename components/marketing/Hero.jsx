@@ -23,7 +23,7 @@ export default function Hero() {
     ];
 
     return (
-        <header className="relative min-h-screen pt-32 pb-20 overflow-hidden bg-base-100">
+        <header className="relative min-h-screen pt-12 md:pt-12 pb-20 overflow-hidden bg-base-100">
             {/* Background Decor */}
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] -mr-40 -mt-40"></div>
             <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-secondary/10 rounded-full blur-[100px] -ml-40 -mb-40"></div>
@@ -31,12 +31,12 @@ export default function Hero() {
             <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
                 {/* Text Content */}
                 <div className="relative z-10 flex flex-col items-center lg:items-start text-center lg:text-left">
-                    <div className="badge badge-primary badge-outline gap-2 p-4 font-bold tracking-widest uppercase mb-8">
-                        <span className="relative flex h-2 w-2">
+                    <div className="badge badge-primary badge-outline gap-2 p-4 font-bold tracking-widest uppercase mb-8 text-[10px] sm:text-xs h-auto py-2 text-center">
+                        <span className="relative flex h-2 w-2 flex-shrink-0">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
                         </span>
-                        Next-Gen Bio Links.
+                        Optimize with AI Intelligence.
                     </div>
 
                     <h1 className="text-6xl md:text-8xl font-medium tracking-tighter leading-[0.9] text-base-content mb-8">
@@ -70,7 +70,7 @@ export default function Hero() {
                                 </div>
                             </div>
                             <div className="text-left leading-none">
-                                <p className="font-bold text-lg">10,000+</p>
+                                <p className="font-bold text-lg">500+</p>
                                 <p className="text-xs opacity-50 font-bold uppercase tracking-widest">Creators</p>
                             </div>
                         </div>

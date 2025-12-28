@@ -32,6 +32,7 @@ export default function ForgotPasswordPage() {
     return (
         <div className="flex justify-center bg-base-200 px-4">
             <div className="card w-full max-w-md bg-base-100 shadow-xl">
+                <div className="h-2 bg-primary w-full"></div>
                 <div className="card-body">
                     <h2 className="card-title text-2xl font-bold justify-center mb-2">
                         Reset Password
@@ -88,7 +89,7 @@ export default function ForgotPasswordPage() {
 
                             <div className="form-control mt-6">
                                 <button
-                                    className={`btn btn-primary ${loading ? "loading" : ""}`}
+                                    className={`btn btn-primary ${loading ? "loading" : ""} w-full`}
                                     disabled={loading}
                                 >
                                     {loading ? "Sending..." : "Send Reset Link"}
@@ -99,7 +100,7 @@ export default function ForgotPasswordPage() {
 
                     <div className="divider text-xs opacity-40">OR</div>
 
-                    <Link href="/login" className="btn btn-ghost btn-sm gap-2">
+                    <Link href="/login" className="btn btn-neutral btn-outline btn-sm gap-2">
                         <RiArrowLeftLine />
                         Back to Login
                     </Link>

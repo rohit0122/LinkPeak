@@ -79,7 +79,7 @@ export default function ContactUsPage() {
                     <div className="space-y-12">
                         <div className="space-y-6">
                             <span className="badge badge-primary badge-outline font-bold tracking-widest px-4 py-3 uppercase text-xs">Contact Us</span>
-                            <h1 className="text-5xl md:text-6xl font-bold tracking-tighter leading-none">
+                            <h1 className="text-4xl md:text-6xl font-bold tracking-tighter leading-none">
                                 Let's build something <br />
                                 <span className="text-primary italic">extraordinary</span> together.
                             </h1>

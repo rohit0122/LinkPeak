@@ -1026,8 +1026,8 @@ group-hover:text-secondary" />
                     </div>
                 </div>
 
-                <div className="hidden lg:block lg:w-[400px]">
-                    <div className="sticky top-8 transform-gpu scale-90 translate-x-4 origin-top">
+                <div className="w-full lg:w-[400px] mt-20 lg:mt-0">
+                    <div className="lg:sticky top-8 transform-gpu scale-[0.8] sm:scale-95 lg:scale-90 lg:translate-x-4 origin-top flex justify-center lg:block">
                         <PreviewPhone pageData={page} links={links} />
                     </div>
                 </div>

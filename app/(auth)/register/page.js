@@ -65,6 +65,7 @@ function RegisterForm() {
     return (
         <div className="flex justify-center bg-base-200 px-4">
             <div className="card w-full max-w-sm bg-base-100 shadow-xl">
+                <div className="h-2 bg-primary w-full"></div>
                 <div className="card-body">
                     <h2 className="card-title text-2xl font-bold justify-center mb-4">
                         Join {CONFIG.SITE_NAME}
@@ -167,8 +168,8 @@ function RegisterForm() {
                                 </label>
                             </div>
 
-                            <div className="form-control mt-4">
-                                <button className={`btn btn-primary ${loading ? "loading" : ""}`} disabled={loading}>
+                            <div className="form-control mt-4 ">
+                                <button className={`btn btn-primary ${loading ? "loading" : ""} w-full`} disabled={loading}>
                                     {loading ? "Registering..." : "Register"}
                                 </button>
                             </div>
