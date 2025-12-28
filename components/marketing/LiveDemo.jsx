@@ -23,9 +23,9 @@ export default function LiveDemo() {
     };
 
     const demoLinks = [
-        { id: 1, title: "Zero Waste Guide 🌍", url: `${CONFIG.SITE_URL}/demo/eco-wanderer/zero-waste-guide`, isActive: true },
-        { id: 2, title: "My Ethical Kit 👜", url: `${CONFIG.SITE_URL}/demo/eco-wanderer/my-ethical-kit`, isActive: true },
-        { id: 3, title: "Eco-stays in Bali 🛖", url: `${CONFIG.SITE_URL}/demo/eco-wanderer/eco-stays-in-bali`, isActive: true },
+        { id: 1, title: "Zero Waste Guide 🌍", url: `${CONFIG.SITE_URL}/demo/eco-wanderer?theme=${theme}`, isActive: true },
+        { id: 2, title: "My Ethical Kit 👜", url: `${CONFIG.SITE_URL}/demo/eco-wanderer?theme=${theme}`, isActive: true },
+        { id: 3, title: "Eco-stays in Bali 🛖", url: `${CONFIG.SITE_URL}/demo/eco-wanderer?theme=${theme}`, isActive: true },
     ];
 
     return (

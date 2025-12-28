@@ -17,13 +17,13 @@ export default function Hero() {
     };
 
     const demoLinks = [
-        { id: 1, title: "My Travel Guide 🌍", url: `${CONFIG.SITE_URL}/demo/eliza-miller/my-travel-guide`, isActive: true },
-        { id: 2, title: "Latest Vlog 📹", url: `${CONFIG.SITE_URL}/demo/eliza-miller/latest-vlog`, isActive: true },
-        { id: 3, title: "Photography Gear 📸", url: `${CONFIG.SITE_URL}/demo/eliza-miller/photography-gear`, isActive: true },
+        { id: 1, title: "My Travel Guide 🌍", url: `${CONFIG.SITE_URL}/demo/eliza-miller`, isActive: true },
+        { id: 2, title: "Latest Vlog 📹", url: `${CONFIG.SITE_URL}/demo/eliza-miller`, isActive: true },
+        { id: 3, title: "Photography Gear 📸", url: `${CONFIG.SITE_URL}/demo/eliza-miller`, isActive: true },
     ];
 
     return (
-        <header className="relative min-h-screen pt-12 md:pt-12 pb-20 overflow-hidden bg-base-100">
+        <header className="relative min-h-screen pt-16 md:pt-12 pb-20 overflow-hidden bg-base-100">
             {/* Background Decor */}
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] -mr-40 -mt-40"></div>
             <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-secondary/10 rounded-full blur-[100px] -ml-40 -mb-40"></div>

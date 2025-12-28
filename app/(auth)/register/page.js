@@ -169,7 +169,8 @@ function RegisterForm() {
                             </div>
 
                             <div className="form-control mt-4 ">
-                                <button className={`btn btn-primary ${loading ? "loading" : ""} w-full`} disabled={loading}>
+                                <button className="btn btn-primary w-full" disabled={loading}>
+                                    {loading && <span className="loading loading-spinner"></span>}
                                     {loading ? "Registering..." : "Register"}
                                 </button>
                             </div>

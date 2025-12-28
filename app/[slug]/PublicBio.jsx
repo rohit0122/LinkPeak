@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import {
     RiInstagramLine,
     RiTwitterLine,
@@ -37,6 +38,12 @@ export default function PublicBio({ page, links, isDemo = false }) {
     const [likes, setLikes] = useState(page.likes || 0);
     const [isLiked, setIsLiked] = useState(false);
     const [isQRModalOpen, setIsQRModalOpen] = useState(false);
+
+    const searchParams = useSearchParams();
+    const themeParam = searchParams.get("theme");
+
+    // In demo mode, prioritize URL theme param. Otherwise use page theme or default to light.
+    const activeTheme = (isDemo && themeParam) ? themeParam : (page.theme || "light");
 
     useEffect(() => {
         // Skip tracking effects in demo mode or if no page ID
@@ -111,7 +118,7 @@ export default function PublicBio({ page, links, isDemo = false }) {
                 <div className="mockup-phone-display">
                     <div
                         className="artboard artboard-demo phone-1 overflow-y-auto no-scrollbar pt-15 pb-8 px-4 flex flex-col items-center w-full h-full relative"
-                        data-theme={page.theme || "light"}
+                        data-theme={activeTheme}
                     >
                         {/* Share Button with accesssible name */}
                         <button

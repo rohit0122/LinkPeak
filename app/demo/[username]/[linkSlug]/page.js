@@ -55,8 +55,8 @@ export default async function DemoContentPage({ params }) {
                     </Link>
                 </div>
                 <div className="flex-none">
-                    <Link href="/" className="btn btn-primary btn-sm md:btn-md">
-                        Create Your LinkPeak
+                    <Link href="/register" className="btn btn-primary btn-sm md:btn-md">
+                        Get your {CONFIG.SITE_NAME} today!
                     </Link>
                 </div>
             </nav>

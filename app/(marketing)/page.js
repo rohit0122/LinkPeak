@@ -11,7 +11,7 @@ import { CONFIG } from "@/constants/config";
 
 export default function MarketingPage() {
     return (
-        <main>
+        <>
             <Hero />
             <Features />
             <LiveDemo />
@@ -40,6 +40,6 @@ export default function MarketingPage() {
                     </div>
                 </div>
             </section>
-        </main>
+        </>
     );
 }
