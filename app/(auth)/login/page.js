@@ -45,7 +45,7 @@ export default function LoginPage() {
                     // Show custom toast with contact support link
                     toast.error((t) => (
                         <div>
-                            Account suspended. <a href="/contact" className="underline font-bold">Contact Support</a>
+                            Account suspended. <a href="/contact-us" className="underline font-bold">Contact Support</a>
                         </div>
                     ), { duration: 6000 });
                 }

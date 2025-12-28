@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import NavbarClient from "@/components/layout/NavbarClient";
+import Footer from "@/components/layout/Footer";
 import { getAuthUser } from "@/lib/auth";
 import dbConnect from "@/lib/db";
 import User from "@/models/User";
@@ -42,9 +43,12 @@ export default async function MarketingLayout({ children }) {
     const { user, page } = await getUserData();
 
     return (
-        <>
+        <div className="flex flex-col min-h-screen">
             <NavbarClient user={user} page={page} />
-            {children}
-        </>
+            <main className="flex-grow">
+                {children}
+            </main>
+            <Footer />
+        </div>
     );
 }

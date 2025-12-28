@@ -5,6 +5,7 @@ import { CONFIG } from "@/constants/config";
 import { RiGithubFill, RiInstagramFill, RiTwitterFill, RiLoader4Line } from "react-icons/ri";
 import axios from "axios";
 import toast from "react-hot-toast";
+import Logo from "./Logo";
 
 export default function Footer() {
     const [email, setEmail] = useState("");
@@ -35,7 +36,7 @@ export default function Footer() {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
                     <div className="md:col-span-1">
                         <h3 className="text-3xl font-medium tracking-tighter mb-6">
-                            {CONFIG.SITE_NAME}<span className="text-primary italic">.</span>
+                            <Logo />
                         </h3>
                         <p className="opacity-70 font-medium leading-relaxed mb-8">
                             Empowering creators with the world's most beautiful and data-driven bio pages.
@@ -63,6 +64,7 @@ export default function Footer() {
                             <li><a href="/terms-and-conditions" className="hover:text-primary transition-colors">Terms of Service</a></li>
                             <li><a href="/privacy-policy" className="hover:text-primary transition-colors">Privacy Policy</a></li>
                             <li><a href="/cookies-policy" className="hover:text-primary transition-colors">Cookie Policy</a></li>
+                            <li><a href="/contact-us" className="hover:text-primary transition-colors">Contact Us</a></li>
                         </ul>
                     </div>
 
@@ -95,7 +97,7 @@ export default function Footer() {
                 </div>
 
                 <div className="pt-8 border-t border-base-300 text-center text-sm font-bold opacity-70">
-                    <div className="">© 2025 {CONFIG.SITE_NAME}. All rights reserved.</div>
+                    <div className="">© 2025 {CONFIG.SITE_NAME} All rights reserved.</div>
                 </div>
             </div>
         </footer>

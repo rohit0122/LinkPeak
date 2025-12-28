@@ -29,7 +29,7 @@ export default function SuspendedPage() {
 
                     <div className="divider">Need Help?</div>
 
-                    <Link href="/contact" className="btn btn-ghost gap-2">
+                    <Link href="/contact-us" className="btn btn-ghost gap-2">
                         <RiCustomerService2Line className="text-lg" />
                         Contact Support
                     </Link>
