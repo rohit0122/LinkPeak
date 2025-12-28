@@ -9,13 +9,6 @@ import { CONFIG } from "@/constants/config";
 export default function QRModal({ slug, isOpen, onClose }) {
     const [centerIcon, setCenterIcon] = useState("Peak");
     const url = `${typeof window !== "undefined" ? window.location.origin : ""}/${slug}`;
-    /*
-        const icons = [
-            { name: "LinkPeak", url: "https://api.dicebear.com/7.x/shapes/svg?seed=LinkPeak" },
-            { name: "Star", url: "https://api.dicebear.com/7.x/shapes/svg?seed=Star" },
-            { name: "Heart", url: "https://api.dicebear.com/7.x/shapes/svg?seed=Heart" },
-            { name: "Bolt", url: "https://api.dicebear.com/7.x/shapes/svg?seed=Bolt" },
-        ];*/
 
     const icons = CONFIG.QR_LOGOS;
     const downloadQR = () => {
