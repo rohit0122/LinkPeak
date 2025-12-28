@@ -28,7 +28,7 @@ export default async function DemoBioPage({ params }) {
         slug: "eliza-miller",
         title: "Eliza Miller",
         bio: "Digital Creator & Traveler 🏔️ | Sharing my latest journeys and gear.",
-        profileImage: "https://api.dicebear.com/9.x/avataaars/svg?seed=Eliza&eyebrows[]&eyes=default",
+        profileImage: "/avatars/avatar-female-eliza.svg",
         template: "classic",
         theme: "light",
         views: 12450,
@@ -52,7 +52,7 @@ export default async function DemoBioPage({ params }) {
         slug: "eco-wanderer",
         title: "Eco Wanderer 🌿",
         bio: "Sustainable living & ethical travel tips for the modern soul.",
-        profileImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=Eco",
+        profileImage: "/avatars/avatar-generic-eco.svg",
         template: "classic",
         theme: "light", // Note: The LiveDemo component has dynamic theme switching, here we default to light
         views: 890,

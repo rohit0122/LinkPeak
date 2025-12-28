@@ -8,9 +8,8 @@ export default function Logo() {
     return (
         <Link href="/" className="text-xl font-semibold flex items-center gap-2">
             <PiGraphDuotone className="w-6 h-6 text-nuetral" />
-            <span className="text-primary">
+            <span className="text-primary text-2xl font-semibold">
                 {CONFIG.SITE_NAME}
-                .
             </span>
         </Link>
     );

@@ -33,7 +33,7 @@ export default function PreviewPhone({ pageData, links = [] }) {
                         <div className="avatar mb-4">
                             <div className="w-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
                                 <img
-                                    src={profileImage || "https://api.dicebear.com/7.x/avataaars/svg?seed=LinkPeak"}
+                                    src={profileImage || "/avatars/avatar-placeholder.svg"}
                                     alt="Profile"
                                 />
                             </div>

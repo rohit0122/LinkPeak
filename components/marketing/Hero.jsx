@@ -7,7 +7,7 @@ export default function Hero() {
         theme: "light",
         title: "Eliza Miller",
         bio: "Digital Creator & Traveler 🏔️ | Sharing my latest journeys and gear.",
-        profileImage: "https://api.dicebear.com/9.x/avataaars/svg?seed=Eliza&eyebrows[]&eyes=default",
+        profileImage: "/avatars/avatar-female-eliza.svg",
         template: "classic",
         socialLinks: {
             instagram: "instagram.com",
@@ -60,13 +60,13 @@ export default function Hero() {
                         <div className="flex items-center gap-2">
                             <div className="avatar-group -space-x-4 rtl:space-x-reverse">
                                 <div className="avatar">
-                                    <div className="w-10"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=E&eyebrows[]&eyes=default" alt="user" /></div>
+                                    <div className="w-10"><img src="/avatars/avatar-female.svg" alt="user" /></div>
                                 </div>
                                 <div className="avatar">
-                                    <div className="w-10"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=B&eyebrows[]&eyes=default" alt="user" /></div>
+                                    <div className="w-10"><img src="/avatars/avatar-male.svg" alt="user" /></div>
                                 </div>
                                 <div className="avatar">
-                                    <div className="w-10"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Eco&eyebrows[]&eyes=default" alt="user" /></div>
+                                    <div className="w-10"><img src="/avatars/avatar-generic-eco.svg" alt="user" /></div>
                                 </div>
                             </div>
                             <div className="text-left leading-none">

@@ -13,7 +13,7 @@ export default function LiveDemo() {
         theme: theme,
         title: "Eco Wanderer 🌿",
         bio: "Sustainable living & ethical travel tips for the modern soul.",
-        profileImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=Eco",
+        profileImage: "/avatars/avatar-generic-eco.svg",
         template: "classic",
         socialLinks: {
             instagram: "instagram.com",

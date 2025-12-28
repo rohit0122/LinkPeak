@@ -49,14 +49,14 @@ export const CONFIG = {
     // QR Logo Choices (Premium SVGs)
     QR_LOGOS: [
         { id: "none", name: "None", url: "" },
-        { id: "shape", name: "Peak", url: "https://api.dicebear.com/7.x/shapes/svg?seed=LinkPeak" },
-        { id: "fire", name: "Fire", url: "https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F525.svg" },
-        { id: "rocket", name: "Rocket", url: "https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F680.svg" },
-        { id: "star", name: "Star", url: "https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/2B50.svg" },
-        { id: "heart", name: "Heart", url: "https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/2764.svg" },
-        { id: "gem", name: "Diamond", url: "https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F48E.svg" },
-        { id: "crown", name: "Crown", url: "https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F451.svg" },
-        { id: "zap", name: "Zap", url: "https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/26A1.svg" }
+        { id: "shape", name: "Peak", url: "/qr-logos/linkpeak-qr-logo.svg" },
+        { id: "fire", name: "Fire", url: "/qr-logos/fire-emoji.svg" },
+        { id: "rocket", name: "Rocket", url: "/qr-logos/rocket-emoji.svg" },
+        { id: "star", name: "Star", url: "/qr-logos/star-qr-icon.svg" },
+        { id: "heart", name: "Heart", url: "/qr-logos/heart-qr-icon.svg" },
+        { id: "gem", name: "Diamond", url: "/qr-logos/diamond-emoji.svg" },
+        { id: "crown", name: "Crown", url: "/qr-logos/crown-emoji.svg" },
+        { id: "zap", name: "Zap", url: "/qr-logos/bolt-qr-icon.svg" }
     ],
 
     TRIAL_MESSAGES: {

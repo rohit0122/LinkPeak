@@ -1,18 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import axios from "@/lib/axios";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { CONFIG } from "@/constants/config";
 import toast from "react-hot-toast";
+import { useAuth } from "@/context/AuthContext";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
-    const router = useRouter();
+    const { login } = useAuth();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -32,30 +31,28 @@ export default function LoginPage() {
         }
 
         try {
-            const response = await axios.post("/auth/login", validation.data);
-            if (response.data.success) {
-                localStorage.setItem("site_user", JSON.stringify(response.data.data));
-                toast.success("Login successful!");
-                if (response.data.data.role === 'ADMIN')
-                    router.push("/admin");
-                else
-                    router.push("/dashboard");
-                router.refresh();
+            // Use AuthContext's login function
+            const result = await login(validation.data.email, validation.data.password);
+
+            if (!result.success) {
+                const errorMsg = result.error || "Invalid credentials";
+                setError(errorMsg);
+
+                // Override default toast for suspension with custom one
+                if (errorMsg.includes("Account suspended") || errorMsg.includes("suspended")) {
+                    // Dismiss the default toast from AuthContext
+                    toast.dismiss();
+                    // Show custom toast with contact support link
+                    toast.error((t) => (
+                        <div>
+                            Account suspended. <a href="/contact" className="underline font-bold">Contact Support</a>
+                        </div>
+                    ), { duration: 6000 });
+                }
             }
         } catch (err) {
-            const errorMsg = err.response?.data?.error || "Invalid credentials";
+            const errorMsg = err.message || "An unexpected error occurred";
             setError(errorMsg);
-
-            // Check specifically for suspension
-            if (errorMsg.includes("Account suspended")) {
-                toast.error((t) => (
-                    <div>
-                        Account suspended. <a href="/contact" className="underline font-bold">Contact Support</a>
-                    </div>
-                ), { duration: 6000 });
-            } else {
-                toast.error(errorMsg);
-            }
         } finally {
             setLoading(false);
         }

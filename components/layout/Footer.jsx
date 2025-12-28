@@ -69,8 +69,12 @@ export default function Footer() {
                     <div>
                         <h4 className="font-medium uppercase tracking-widest text-xs opacity-60 mb-6">Newsletter</h4>
                         <p className="text-sm opacity-70 mb-6 font-medium">Get the latest tips on growing your digital presence.</p>
-                        <div className="join w-full">
+                        <div className="join w-full max-w-sm">
                             <input
+                                type="email"
+                                name="newsletter-email"
+                                id="newsletter-email"
+                                suppressHydrationWarning
                                 className="input input-bordered join-item flex-1 bg-base-200"
                                 placeholder="your@email.com"
                                 value={email}
@@ -79,7 +83,8 @@ export default function Footer() {
                                 onKeyDown={(e) => e.key === "Enter" && handleSubscribe()}
                             />
                             <button
-                                className="btn btn-primary join-item"
+                                type="button"
+                                className="btn btn-primary join-item px-6"
                                 onClick={handleSubscribe}
                                 disabled={loading}
                             >
