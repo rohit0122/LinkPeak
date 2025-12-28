@@ -27,6 +27,7 @@ input:-webkit-autofill:active {
 
 @plugin "daisyui" {
   themes: light, dark, cupcake, luxury, dracula, retro, cyberpunk, aqua, valentine, coffee, synthwave, forest;
+  /*themes: all;*/
 }
 
 @plugin "daisyui/theme" {
