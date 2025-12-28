@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { CONFIG } from "@/constants/config";
-import { RiGithubFill, RiInstagramFill, RiTwitterFill, RiLoader4Line } from "react-icons/ri";
+import { RiGithubFill, RiInstagramFill, RiTwitterFill, RiLoader4Line, RiFacebookBoxFill, RiXboxFill, RiTwitterXFill, RiFacebookBoxLine } from "react-icons/ri";
 import axios from "axios";
 import toast from "react-hot-toast";
 import Logo from "./Logo";
@@ -42,9 +42,9 @@ export default function Footer() {
                             Empowering creators with the world's most beautiful and data-driven bio pages.
                         </p>
                         <div className="flex gap-4">
-                            <a href="#" className="btn btn-square btn-ghost text-2xl hover:text-primary"><RiTwitterFill /></a>
-                            <a href="#" className="btn btn-square btn-ghost text-2xl hover:text-primary"><RiInstagramFill /></a>
-                            <a href="#" className="btn btn-square btn-ghost text-2xl hover:text-primary"><RiGithubFill /></a>
+                            <a href="https://www.facebook.com/LinkPeakK" className="btn btn-square btn-ghost text-2xl hover:text-primary"><RiTwitterXFill /></a>
+                            <a href="https://www.facebook.com/LinkPeakK" className="btn btn-square btn-ghost text-2xl hover:text-primary"><RiInstagramFill /></a>
+                            <a href="https://www.facebook.com/LinkPeakK" className="btn btn-square btn-ghost text-2xl hover:text-primary"><RiFacebookBoxFill /></a>
                         </div>
                     </div>
 
