@@ -32,14 +32,33 @@ export async function GET(req) {
             return { $gte: start, $lte: end };
         };
 
-        const expiring7d = await User.find({ planExpiresAt: checkWindow(7) });
-        const expiring3d = await User.find({ planExpiresAt: checkWindow(3) });
-        const expiring1d = await User.find({ planExpiresAt: checkWindow(1) });
+        const expiring7d = await User.find({ planExpiresAt: checkWindow(7), isActive: true });
+        const expiring3d = await User.find({ planExpiresAt: checkWindow(3), isActive: true });
+        const expiring1d = await User.find({ planExpiresAt: checkWindow(1), isActive: true });
 
         console.log(`[Cron] Found ${unverifiedUsers.length} unverified, ${expiring7d.length} exp in 7d, ${expiring3d.length} exp in 3d, ${expiring1d.length} exp in 1d.`);
 
-        // Real app would loop and send specialized emails here
-        // for (const u of expiring7d) await sendExpiryEmail(u.email, 7);
+        // 3. Send Emails
+        const results = {
+            verificationSent: 0,
+            remindersSent: 0
+        };
+
+        // Resend Verification (Only once after 24h if still not verified)
+        // We could track "verificationReminded" to avoid spam, but here we just do a simple check.
+
+        for (const u of expiring7d) {
+            await sendExpiryReminderEmail(u.email, u.name || "Creator", 7);
+            results.remindersSent++;
+        }
+        for (const u of expiring3d) {
+            await sendExpiryReminderEmail(u.email, u.name || "Creator", 3);
+            results.remindersSent++;
+        }
+        for (const u of expiring1d) {
+            await sendExpiryReminderEmail(u.email, u.name || "Creator", 1);
+            results.remindersSent++;
+        }
 
         return NextResponse.json({
             success: true,
@@ -47,7 +66,8 @@ export async function GET(req) {
                 unverified: unverifiedUsers.length,
                 expiring7d: expiring7d.length,
                 expiring3d: expiring3d.length,
-                expiring1d: expiring1d.length
+                expiring1d: expiring1d.length,
+                emailsSent: results
             }
         });
     } catch (error) {

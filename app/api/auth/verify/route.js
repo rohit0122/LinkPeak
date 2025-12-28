@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import User from "@/models/User";
+import { sendWelcomeEmail } from "@/lib/mailer";
 
 export async function GET(req) {
     try {
@@ -21,6 +22,14 @@ export async function GET(req) {
         user.verificationToken = null;
         user.isActive = true;
         await user.save();
+
+        // Send Welcome Email
+        try {
+            await sendWelcomeEmail(user.email, user.name || "Creator");
+        } catch (mailError) {
+            console.error("Welcome email failed but verification succeeded:", mailError);
+        }
+
         return NextResponse.json({
             success: true,
             message: "Email verified successfully. You can now log in.",

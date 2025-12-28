@@ -1,9 +1,17 @@
 // constants/config.js
+const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "LinkPeakK.";
 export const CONFIG = {
-    SITE_NAME: process.env.NEXT_PUBLIC_SITE_NAME || "LinkPeak",
+    SITE_NAME: siteName,
     SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
     SUPPORT_EMAIL: process.env.NODEMAILER_USER_SENDER || "support@linkpeak.com",
 
+    METATAGS: {
+        title: `${siteName} | Premium Link in Bio Platform for Creators, Brands & Professionals`,
+        description: `Create a high-converting, fully customizable link-in-bio page with ${siteName} Designed for creators, entrepreneurs, and brands to showcase links, products, and profiles with one powerful link.`,
+        keywords: [
+            "Link in bio", "Link in bio tool", "Link in bio platform", "Link in bio for creators", "Link in bio for brands", "Link in bio for professionals", "Link in bio for entrepreneurs", "Link in bio for influencers", "Link in bio for businesses", "Link in bio for marketing",
+        ],
+    },
     // Pricing Configuration (Monthly)
     PRICING: {
         FREE: { price: 0, currency: "$", label: "Free" },

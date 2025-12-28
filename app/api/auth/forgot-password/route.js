@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import User from "@/models/User";
 import crypto from "crypto";
+import { sendResetPasswordEmail } from "@/lib/mailer";
 
 /**
  * POST /api/auth/forgot-password
@@ -40,21 +41,12 @@ export async function POST(req) {
         user.resetPasswordExpire = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
         await user.save();
 
-        // Create reset URL
-        const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${resetToken}`;
-
-        // TODO: Send email with reset link
-        // For now, just log it (in production, use email service)
-        console.log("Password Reset Link:", resetUrl);
-        console.log("User:", user.email);
-
-        // In development, you can return the link for testing
-        if (process.env.NODE_ENV === "development") {
-            return NextResponse.json({
-                success: true,
-                message: "Password reset link generated",
-                resetUrl, // Remove this in production
-            });
+        // Send Reset Email
+        try {
+            await sendResetPasswordEmail(user.email, resetToken);
+        } catch (mailError) {
+            console.error("Reset password email failed:", mailError);
+            // Optionally we could return an error here, but standard practice is to not confirm account existence
         }
 
         return NextResponse.json({
