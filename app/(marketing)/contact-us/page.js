@@ -5,17 +5,11 @@ import {
     RiSendPlaneFill,
     RiLoader4Line,
     RiCheckboxCircleLine,
-    RiMailFill,
-    RiMapPin2Fill,
-    RiTimeFill,
-    RiTwitterFill,
-    RiInstagramFill,
-    RiLinkedinBoxFill,
-    RiTwitterXFill,
-    RiFacebookBoxFill,
-    RiYoutubeFill
+    RiMailLine,
+    RiTimeLine,
+    RiChat4Line,
+    RiGlobalLine
 } from "react-icons/ri";
-import { Mail, MessageSquare, Clock, Globe } from "lucide-react";
 import axios from "@/lib/axios";
 import { toast } from "react-hot-toast";
 import { CONFIG } from "@/constants/config";
@@ -95,7 +89,7 @@ export default function ContactUsPage() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div className="flex gap-4 items-start">
                                 <div className="w-12 h-12 bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
-                                    <Mail className="w-6 h-6" />
+                                    <RiMailLine className="w-6 h-6" />
                                 </div>
                                 <div>
                                     <h4 className="font-bold text-lg mb-1">Email Us</h4>
@@ -104,7 +98,7 @@ export default function ContactUsPage() {
                             </div>
                             <div className="flex gap-4 items-start">
                                 <div className="w-12 h-12 bg-secondary/10 flex items-center justify-center text-secondary flex-shrink-0">
-                                    <Clock className="w-6 h-6" />
+                                    <RiTimeLine className="w-6 h-6" />
                                 </div>
                                 <div>
                                     <h4 className="font-bold text-lg mb-1">Support Hours</h4>
@@ -113,7 +107,7 @@ export default function ContactUsPage() {
                             </div>
                             <div className="flex gap-4 items-start">
                                 <div className="w-12 h-12 bg-accent/10 flex items-center justify-center text-accent flex-shrink-0">
-                                    <MessageSquare className="w-6 h-6" />
+                                    <RiChat4Line className="w-6 h-6" />
                                 </div>
                                 <div>
                                     <h4 className="font-bold text-lg mb-1">Live Chat</h4>
@@ -122,7 +116,7 @@ export default function ContactUsPage() {
                             </div>
                             <div className="flex gap-4 items-start">
                                 <div className="w-12 h-12 bg-success/10 flex items-center justify-center text-success flex-shrink-0">
-                                    <Globe className="w-6 h-6" />
+                                    <RiGlobalLine className="w-6 h-6" />
                                 </div>
                                 <div>
                                     <h4 className="font-bold text-lg mb-1">HQ Location</h4>

@@ -8,23 +8,27 @@ import {
     RiUserFollowLine,
     RiEyeLine,
     RiLinksLine,
-    RiHeartLine,
     RiBarChartGroupedLine,
     RiShieldUserLine,
     RiArrowUpSLine,
     RiGroupLine,
-    RiCustomerService2Line,
     RiMoneyDollarCircleLine,
     RiHistoryLine,
-    RiSearchLine,
-    RiCheckLine,
-    RiCloseLine,
-    RiLockPasswordLine,
-    RiGlobalLine
+    RiSearchLine
 } from "react-icons/ri";
 import { toast } from "react-hot-toast";
-import { format } from "date-fns";
 import { useRouter } from "next/navigation";
+import { debounce } from "lodash";
+import {
+    BarChart,
+    Bar,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    Legend,
+    ResponsiveContainer
+} from 'recharts';
 
 function StatCard({ title, value, icon: Icon, colorClass, trend }) {
     return (
@@ -54,18 +58,21 @@ export default function AdminDashboard() {
     const [activeTab, setActiveTab] = useState("OVERVIEW");
     const [stats, setStats] = useState(null);
     const [users, setUsers] = useState([]);
+    const [pagination, setPagination] = useState({
+        total: 0,
+        page: 1,
+        limit: 10,
+        totalPages: 1
+    });
     const [tickets, setTickets] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [usersLoading, setUsersLoading] = useState(false);
     const [search, setSearch] = useState("");
     const [currentUser, setCurrentUser] = useState(null);
     const router = useRouter();
 
-    // Revenue Logic (Estimated)
-    const calculateMRR = (distribution) => {
-        if (!distribution) return 0;
-        const prices = { FREE: 0, PRO: 9, AGENCY: 29 }; // Hypothetical prices
-        return distribution.reduce((acc, curr) => acc + (prices[curr._id] || 0) * curr.count, 0);
-    };
+    // Plan prices for reference (matching backend)
+    const PLAN_PRICES = { FREE: 0, PRO: 9, AGENCY: 49 };
 
     useEffect(() => {
         fetchData();
@@ -74,21 +81,52 @@ export default function AdminDashboard() {
     const fetchData = async () => {
         setLoading(true);
         try {
-            const [statsRes, usersRes, ticketsRes, userRes] = await Promise.all([
+            const [statsRes, ticketsRes, userRes] = await Promise.all([
                 axios.get("/admin/stats"),
-                axios.get("/admin/users"),
                 axios.get("/admin/tickets"),
                 axios.get("/auth/me")
             ]);
             if (statsRes.data.success) setStats(statsRes.data.data);
-            if (usersRes.data.success) setUsers(usersRes.data.success ? usersRes.data.data : []);
             if (ticketsRes.data.success) setTickets(ticketsRes.data.data);
             if (userRes.data.success) setCurrentUser(userRes.data.data);
+
+            // Initial fetch for users
+            await fetchUsers(1, "");
         } catch (error) {
             toast.error("Could not load admin dashboard data.");
         } finally {
             setLoading(false);
         }
+    };
+
+    const fetchUsers = async (page = 1, searchQuery = "") => {
+        setUsersLoading(true);
+        try {
+            const { data } = await axios.get(`/admin/users?page=${page}&limit=10&search=${searchQuery}`);
+            if (data.success) {
+                setUsers(data.data.users);
+                setPagination(data.data.pagination);
+            }
+        } catch (error) {
+            toast.error("Could not load users.");
+        } finally {
+            setUsersLoading(false);
+        }
+    };
+
+    // Debounced search
+    const debouncedSearch = debounce((val) => {
+        fetchUsers(1, val);
+    }, 500);
+
+    const handleSearchChange = (e) => {
+        const val = e.target.value;
+        setSearch(val);
+        debouncedSearch(val);
+    };
+
+    const handlePageChange = (newPage) => {
+        fetchUsers(newPage, search);
     };
 
     const handleUserUpdate = async (userId, updates) => {
@@ -222,14 +260,14 @@ export default function AdminDashboard() {
                                                 <div className="flex justify-between items-end">
                                                     <div>
                                                         <span className="text-xs font-medium opacity-40 uppercase tracking-widest block">{p._id}</span>
-                                                        <span className="text-lg font-medium">{p.count} Users</span>
+                                                        <span className="text-lg font-medium">{p.total} Users</span>
                                                     </div>
                                                     <span className="text-sm font-bold opacity-60">
-                                                        {((p.count / stats.totalUsers) * 100).toFixed(1)}%
+                                                        {((p.total / stats.totalUsers) * 100).toFixed(1)}%
                                                     </span>
                                                 </div>
                                                 <div className="h-2 w-full bg-base-200 rounded-full overflow-hidden">
-                                                    <div className={`h-full bg-primary/20`} style={{ width: `${(p.count / stats.totalUsers) * 100}%` }}></div>
+                                                    <div className={`h-full bg-primary/20`} style={{ width: `${(p.total / stats.totalUsers) * 100}%` }}></div>
                                                 </div>
                                             </div>
                                         ))}
@@ -241,21 +279,52 @@ export default function AdminDashboard() {
                             <div className="lg:col-span-2 card bg-base-100 shadow-sm border border-base-200 ">
                                 <div className="card-body p-8">
                                     <h2 className="text-sm font-medium uppercase tracking-widest opacity-40 mb-6 flex items-center gap-2">
-                                        <RiGlobalLine className="text-primary text-lg" />
-                                        Platform Health
+                                        <RiGroupLine className="text-primary text-lg" />
+                                        User Distribution (Active vs Inactive)
                                     </h2>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div className="p-6  bg-base-200/50 border border-base-300">
-                                            <p className="text-xs font-medium opacity-40 uppercase mb-2">DB Status</p>
-                                            <div className="flex items-center gap-2 text-success font-medium">
-                                                <div className="w-2 h-2 rounded-full bg-success animate-pulse"></div>
-                                                CONNECTED
-                                            </div>
-                                        </div>
-                                        <div className="p-6  bg-base-200/50 border border-base-300">
-                                            <p className="text-xs font-medium opacity-40 uppercase mb-2">API Latency</p>
-                                            <div className="text-xl font-medium">24ms</div>
-                                        </div>
+                                    <div className="h-[300px] w-full mt-4">
+                                        <ResponsiveContainer width="100%" height="100%">
+                                            <BarChart
+                                                data={stats?.planDistribution || []}
+                                                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                                            >
+                                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+                                                <XAxis
+                                                    dataKey="_id"
+                                                    axisLine={false}
+                                                    tickLine={false}
+                                                    tick={{ fontSize: 10, fontWeight: 500 }}
+                                                />
+                                                <YAxis
+                                                    axisLine={false}
+                                                    tickLine={false}
+                                                    tick={{ fontSize: 10 }}
+                                                />
+                                                <Tooltip
+                                                    contentStyle={{
+                                                        backgroundColor: '#1a1a1a',
+                                                        border: '1px solid #333',
+                                                        borderRadius: '8px',
+                                                        fontSize: '12px'
+                                                    }}
+                                                />
+                                                <Legend iconType="circle" wrapperStyle={{ fontSize: '10px', paddingTop: '20px' }} />
+                                                <Bar
+                                                    name="Active"
+                                                    dataKey="active"
+                                                    fill="#10b981"
+                                                    radius={[4, 4, 0, 0]}
+                                                    barSize={30}
+                                                />
+                                                <Bar
+                                                    name="Inactive"
+                                                    dataKey="inactive"
+                                                    fill="#ef4444"
+                                                    radius={[4, 4, 0, 0]}
+                                                    barSize={30}
+                                                />
+                                            </BarChart>
+                                        </ResponsiveContainer>
                                     </div>
                                 </div>
                             </div>
@@ -274,16 +343,21 @@ export default function AdminDashboard() {
                                     placeholder="Search users by name or email..."
                                     className="input input-bordered w-full pl-12  bg-base-200/50 border-none"
                                     value={search}
-                                    onChange={(e) => setSearch(e.target.value)}
+                                    onChange={handleSearchChange}
                                 />
                             </div>
                             <div className="flex items-center gap-2 px-4 py-2 bg-primary/5  border border-primary/10">
-                                <span className="text-xs font-medium text-primary uppercase tracking-widest">{users.length} Active Users</span>
+                                <span className="text-xs font-medium text-primary uppercase tracking-widest">{pagination.total} Total Users</span>
                             </div>
                         </div>
 
                         {/* Users Table */}
-                        <div className="bg-base-100  border border-base-200 shadow-sm overflow-hidden">
+                        <div className="bg-base-100  border border-base-200 shadow-sm overflow-hidden relative">
+                            {usersLoading && (
+                                <div className="absolute inset-0 bg-base-100/50 backdrop-blur-[1px] flex items-center justify-center z-10">
+                                    <span className="loading loading-spinner loading-md text-primary"></span>
+                                </div>
+                            )}
                             <table className="table w-full">
                                 <thead>
                                     <tr className="bg-base-200/30">
@@ -294,7 +368,7 @@ export default function AdminDashboard() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {users.filter(u => u.email.toLowerCase().includes(search.toLowerCase()) || u.name.toLowerCase().includes(search.toLowerCase())).map(user => (
+                                    {users.map(user => (
                                         <tr key={user._id} className="hover:bg-base-200/20 transition-colors">
                                             <td>
                                                 <div className="flex items-center gap-3">
@@ -348,6 +422,52 @@ export default function AdminDashboard() {
                                 </tbody>
                             </table>
                         </div>
+
+                        {/* Pagination Controls */}
+                        {pagination.totalPages > 1 && (
+                            <div className="flex items-center justify-center gap-4 mt-8 pb-10">
+                                <button
+                                    onClick={() => handlePageChange(pagination.page - 1)}
+                                    disabled={pagination.page === 1 || usersLoading}
+                                    className="btn btn-sm btn-outline px-6"
+                                >
+                                    Previous
+                                </button>
+                                <div className="flex items-center gap-2">
+                                    {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map((p) => {
+                                        if (
+                                            p === 1 ||
+                                            p === pagination.totalPages ||
+                                            (p >= pagination.page - 1 && p <= pagination.page + 1)
+                                        ) {
+                                            return (
+                                                <button
+                                                    key={p}
+                                                    onClick={() => handlePageChange(p)}
+                                                    className={`btn btn-sm btn-square ${pagination.page === p ? 'btn-primary' : 'btn-ghost'}`}
+                                                    disabled={usersLoading}
+                                                >
+                                                    {p}
+                                                </button>
+                                            );
+                                        } else if (
+                                            p === pagination.page - 2 ||
+                                            p === pagination.page + 2
+                                        ) {
+                                            return <span key={p} className="opacity-40">...</span>;
+                                        }
+                                        return null;
+                                    })}
+                                </div>
+                                <button
+                                    onClick={() => handlePageChange(pagination.page + 1)}
+                                    disabled={pagination.page === pagination.totalPages || usersLoading}
+                                    className="btn btn-sm btn-outline px-6"
+                                >
+                                    Next
+                                </button>
+                            </div>
+                        )}
                     </div>
                 )}
 

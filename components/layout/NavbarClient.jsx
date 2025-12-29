@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
     RiMenuLine,
     RiCloseLine,
@@ -127,9 +127,30 @@ export default function NavbarClient({ page: propPage }) {
 
 function ProfileDropdown({ user, page, onLogout }) {
     const [open, setOpen] = useState(false);
+    const dropdownRef = useRef(null);
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setOpen(false);
+            }
+        }
+
+        if (open) {
+            document.addEventListener("mousedown", handleClickOutside);
+        } else {
+            document.removeEventListener("mousedown", handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [open]);
+
+    const closeDropdown = () => setOpen(false);
 
     return (
-        <div className="relative">
+        <div className="relative" ref={dropdownRef}>
             <button
                 className="transition-transform hover:scale-105 focus:outline-none"
                 onClick={() => setOpen(!open)}
@@ -171,6 +192,7 @@ function ProfileDropdown({ user, page, onLogout }) {
                             <Link
                                 href={user?.role === 'admin' ? "/admin" : "/dashboard"}
                                 className="flex items-center gap-2 px-4 py-2 hover:bg-primary/10"
+                                onClick={closeDropdown}
                             >
                                 <RiLinksLine size={20} className="text-primary" />
                                 Dashboard
@@ -180,7 +202,14 @@ function ProfileDropdown({ user, page, onLogout }) {
                         {user?.role !== 'admin' && (
                             <li className="md:hidden">
                                 <button
-                                    onClick={() => page?.slug ? window.open(`/${page.slug}`, "_blank") : toast.error("Slug not set")}
+                                    onClick={() => {
+                                        if (page?.slug) {
+                                            window.open(`/${page.slug}`, "_blank");
+                                        } else {
+                                            toast.error("Slug not set");
+                                        }
+                                        closeDropdown();
+                                    }}
                                     className="flex items-center gap-2 px-4 py-2 hover:bg-primary/10 w-full text-left"
                                 >
                                     <RiExternalLinkLine size={20} className="text-secondary" />
@@ -191,7 +220,11 @@ function ProfileDropdown({ user, page, onLogout }) {
 
                         {publicLinks.map((l) => (
                             <li key={l.name}>
-                                <Link href={l.href} className="flex items-center gap-2 px-4 py-2 hover:bg-primary/10">
+                                <Link
+                                    href={l.href}
+                                    className="flex items-center gap-2 px-4 py-2 hover:bg-primary/10"
+                                    onClick={closeDropdown}
+                                >
                                     <span className={l.color}>{l.icon}</span>
                                     {l.name}
                                 </Link>
@@ -200,7 +233,10 @@ function ProfileDropdown({ user, page, onLogout }) {
 
                         <li className="mt-2 border-t">
                             <button
-                                onClick={onLogout}
+                                onClick={() => {
+                                    onLogout();
+                                    closeDropdown();
+                                }}
                                 className="flex items-center gap-2 px-4 py-2 text-error hover:bg-error/10 w-full text-left"
                             >
                                 <RiLogoutBoxRLine size={20} />

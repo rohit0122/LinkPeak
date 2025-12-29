@@ -40,19 +40,83 @@ export async function GET(req) {
             userGrowth,
             subscriptionTrends
         ] = await Promise.all([
-            // Basic stats
-            User.countDocuments(),
-            BioPage.aggregate([{ $group: { _id: null, total: { $sum: "$views" } } }]),
-            Link.countDocuments(),
-            BioPage.aggregate([{ $group: { _id: null, total: { $sum: "$likes" } } }]),
-
-            // Plan distribution
-            User.aggregate([
-                { $group: { _id: "$plan", count: { $sum: 1 } } }
+            // Basic stats (Excluding admins)
+            User.countDocuments({ role: { $ne: "admin" } }),
+            BioPage.aggregate([
+                {
+                    $lookup: {
+                        from: "users",
+                        localField: "userId",
+                        foreignField: "_id",
+                        as: "user"
+                    }
+                },
+                { $unwind: "$user" },
+                { $match: { "user.role": { $ne: "admin" } } },
+                { $group: { _id: null, total: { $sum: "$views" } } }
+            ]),
+            Link.aggregate([
+                {
+                    $lookup: {
+                        from: "users",
+                        localField: "userId",
+                        foreignField: "_id",
+                        as: "user"
+                    }
+                },
+                { $unwind: "$user" },
+                { $match: { "user.role": { $ne: "admin" } } },
+                { $count: "total" }
+            ]),
+            BioPage.aggregate([
+                {
+                    $lookup: {
+                        from: "users",
+                        localField: "userId",
+                        foreignField: "_id",
+                        as: "user"
+                    }
+                },
+                { $unwind: "$user" },
+                { $match: { "user.role": { $ne: "admin" } } },
+                { $group: { _id: null, total: { $sum: "$likes" } } }
             ]),
 
-            // Active subscriptions
+            // Plan distribution (Excluding admins) with status
+            User.aggregate([
+                { $match: { role: { $ne: "admin" } } },
+                {
+                    $group: {
+                        _id: { plan: "$plan", isActive: "$isActive" },
+                        count: { $sum: 1 }
+                    }
+                },
+                {
+                    $group: {
+                        _id: "$_id.plan",
+                        active: {
+                            $sum: { $cond: [{ $eq: ["$_id.isActive", true] }, "$count", 0] }
+                        },
+                        inactive: {
+                            $sum: { $cond: [{ $eq: ["$_id.isActive", false] }, "$count", 0] }
+                        },
+                        total: { $sum: "$count" }
+                    }
+                }
+            ]),
+
+            // Active subscriptions (Excluding admins)
             Subscription.aggregate([
+                {
+                    $lookup: {
+                        from: "users",
+                        localField: "userId",
+                        foreignField: "_id",
+                        as: "user"
+                    }
+                },
+                { $unwind: "$user" },
+                { $match: { "user.role": { $ne: "admin" } } },
                 {
                     $match: {
                         status: "active",
@@ -62,14 +126,24 @@ export async function GET(req) {
                 { $group: { _id: "$planId", count: { $sum: 1 } } }
             ]),
 
-            // Recent users (last 30 days)
-            User.countDocuments({ createdAt: { $gte: last30Days } }),
+            // Recent users (last 30 days) (Excluding admins)
+            User.countDocuments({ role: { $ne: "admin" }, createdAt: { $gte: last30Days } }),
 
-            // User growth (last 7 days)
-            User.countDocuments({ createdAt: { $gte: last7Days } }),
+            // User growth (last 7 days) (Excluding admins)
+            User.countDocuments({ role: { $ne: "admin" }, createdAt: { $gte: last7Days } }),
 
-            // Subscription trends
+            // Subscription trends (Excluding admins)
             Subscription.aggregate([
+                {
+                    $lookup: {
+                        from: "users",
+                        localField: "userId",
+                        foreignField: "_id",
+                        as: "user"
+                    }
+                },
+                { $unwind: "$user" },
+                { $match: { "user.role": { $ne: "admin" } } },
                 {
                     $match: {
                         createdAt: { $gte: last30Days }
@@ -107,7 +181,7 @@ export async function GET(req) {
                 // Basic metrics
                 totalUsers,
                 totalViews: totalViews[0]?.total || 0,
-                totalLinks,
+                totalLinks: totalLinks[0]?.total || 0,
                 totalLikes: totalLikes[0]?.total || 0,
 
                 // Revenue metrics
