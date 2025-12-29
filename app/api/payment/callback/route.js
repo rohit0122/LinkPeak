@@ -11,6 +11,8 @@ export async function POST(req) {
         const {
             razorpay_payment_id,
             razorpay_payment_link_id,
+            razorpay_payment_link_status,
+            razorpay_payment_link_reference_id,
             razorpay_signature,
             userId,
             planId,
@@ -26,6 +28,8 @@ export async function POST(req) {
         const isValid = provider.verifyCallbackSignature({
             paymentId: razorpay_payment_id,
             paymentLinkId: razorpay_payment_link_id,
+            paymentLinkStatus: razorpay_payment_link_status,
+            paymentLinkReferenceId: razorpay_payment_link_reference_id,
             signature: razorpay_signature,
         });
 

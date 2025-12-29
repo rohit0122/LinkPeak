@@ -32,6 +32,8 @@ export default function PaymentCallbackClient() {
                 const res = await axios.post("/api/payment/callback", {
                     razorpay_payment_id: paymentId,
                     razorpay_payment_link_id: linkId,
+                    razorpay_payment_link_status: payStatus,
+                    razorpay_payment_link_reference_id: params.get("razorpay_payment_link_reference_id") || "",
                     razorpay_signature: signature,
                     userId:
                         JSON.parse(localStorage.getItem("site_user") || "{}")?.id ||

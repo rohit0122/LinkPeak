@@ -132,26 +132,26 @@ export default function SubscriptionStatusDiv({
             <div className="card-body p-4 md:p-5">
 
                 {/* ───────── Header ───────── */}
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center justify-between">
                     <h3 className="text-xs font-bold uppercase tracking-widest opacity-60">
                         Subscription Status
                     </h3>
 
-                    {user.plan !== "FREE" && subscription?.status === "active" && (
+                    {/* {user.plan !== "FREE" && subscription?.status === "active" && (
                         <span className="badge badge-success badge-sm gap-1">
                             <RiCheckboxCircleLine /> {subscription.planId} ACTIVE
                         </span>
-                    )}
+                    )} */}
 
                     <span className={`badge badge-${user.plan !== "FREE" && subscription?.status === "active" ? "success" : "warning"} badge-sm gap-1`}>
-                        <RiCheckboxCircleLine /> {user.plan} PLAN
+                        <RiCheckboxCircleLine /> {subscription?.planId || user.plan} PLAN
                     </span>
 
                 </div>
 
                 {/* ───────── Trial Info ───────── */}
                 {user.plan !== "FREE" && trial.active && subscription?.status !== "active" && (
-                    <div className="alert alert-info shadow-sm mb-3 text-info-content">
+                    <div className="alert alert-info shadow-sm my-1 text-info-content">
                         <RiTimeLine className="text-lg" />
                         <div>
                             <div className="font-bold text-sm">
@@ -167,7 +167,7 @@ export default function SubscriptionStatusDiv({
 
                 {/* ───────── Suspended ───────── */}
                 {isExpired && (
-                    <div className="alert alert-error shadow-sm mb-3">
+                    <div className="alert alert-error shadow-sm my-1">
                         <RiErrorWarningLine className="text-lg" />
                         <div>
                             <div className="font-bold text-sm">
@@ -182,7 +182,7 @@ export default function SubscriptionStatusDiv({
 
                 {/* ───────── Renewal Window ───────── */}
                 {renewalWindow.active && (
-                    <div className="alert alert-warning shadow-sm mb-3">
+                    <div className="alert alert-warning shadow-sm my-1">
                         <RiAlertLine className="text-lg" />
                         <div>
                             <div className="font-bold text-sm">
@@ -197,7 +197,7 @@ export default function SubscriptionStatusDiv({
 
                 {/* ───────── Pending Payment ───────── */}
                 {pendingPaymentLink && (
-                    <div className="alert bg-base-200 border-base-300 mb-4">
+                    <div className="alert bg-base-200 border-base-300 my-1">
                         <RiExternalLinkLine className="text-lg" />
                         <div className="flex-1">
                             <div className="font-bold text-sm">
@@ -219,8 +219,8 @@ export default function SubscriptionStatusDiv({
                 )}
 
                 {/* ───────── Accordion: Plans ───────── */}
-                {!pendingPaymentLink && (
-                    <div className="collapse collapse-arrow border border-base-200 rounded-lg">
+                {!pendingPaymentLink && (currentPlan === "FREE" || subscription?.status !== "active" || renewalWindow.active) && (
+                    <div className="collapse collapse-arrow border border-base-200 rounded-lg my-1">
                         <input type="checkbox" />
                         <div className="collapse-title text-sm font-bold">
                             Upgrade / Renew Subscription
@@ -251,12 +251,14 @@ export default function SubscriptionStatusDiv({
                 )}
 
                 {/* ───────── Footer ───────── */}
-                <div className="mt-4 pt-3 border-t border-base-200 flex items-center justify-between text-[10px] opacity-60">
-                    <div className="flex items-center gap-1 font-bold uppercase">
-                        <RiSecurePaymentLine /> SSL Secure
+                {!pendingPaymentLink && (currentPlan === "FREE" || subscription?.status !== "active" || renewalWindow.active) && (
+                    <div className="mt-4 pt-3 border-t border-base-200 flex items-center justify-between text-[10px] opacity-60">
+                        <div className="flex items-center gap-1 font-bold uppercase">
+                            <RiSecurePaymentLine /> SSL Secure
+                        </div>
+                        <span>Renew on time for uninterrupted service.</span>
                     </div>
-                    <span>Renew on time for uninterrupted service.</span>
-                </div>
+                )}
             </div>
         </div>
     );
