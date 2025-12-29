@@ -1,9 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { RiExternalLinkLine, RiFlashlightLine } from "react-icons/ri";
+import { trackLinkClick } from "@/components/shared/AnalyticsTracker";
 
-export default function ModernTemplate({ links, handleLinkClick }) {
+export default function ModernTemplate({ page, links, handleLinkClick }) {
     const container = {
         hidden: { opacity: 0 },
         show: {
@@ -14,7 +15,13 @@ export default function ModernTemplate({ links, handleLinkClick }) {
 
     const item = {
         hidden: { opacity: 0, x: -20 },
-        show: { opacity: 1, x: 0 }
+        show: { opacity: 1, x: 0 },
+        exit: { opacity: 0, scale: 0.9, transition: { duration: 0.2 } }
+    };
+
+    const onLinkClick = (linkId) => {
+        trackLinkClick(linkId, page._id);
+        if (handleLinkClick) handleLinkClick(linkId);
     };
 
     return (
@@ -24,15 +31,16 @@ export default function ModernTemplate({ links, handleLinkClick }) {
             animate="show"
             className="w-full space-y-3 pb-10"
         >
-            {links.map((link) => (
-                <motion.a
-                    key={link._id}
-                    variants={item}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => handleLinkClick?.(link._id)}
-                    className="
+            <AnimatePresence mode="popLayout">
+                {links.map((link) => (
+                    <motion.a
+                        key={link._id}
+                        variants={item}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => onLinkClick(link._id)}
+                        className="
                         relative
                         block w-full
                         p-1
@@ -43,8 +51,8 @@ export default function ModernTemplate({ links, handleLinkClick }) {
                         group
                         shadow-sm hover:shadow-lg
                     "
-                >
-                    <div className="
+                    >
+                        <div className="
                         flex items-center justify-between
                         w-full px-4 py-3
                         bg-base-100
@@ -53,26 +61,27 @@ export default function ModernTemplate({ links, handleLinkClick }) {
                         transition-colors
                         h-full
                     ">
-                        <div className="flex items-center gap-3 overflow-hidden">
-                            {link.icon && (
-                                <span className="text-2xl opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300">
-                                    {link.icon}
+                            <div className="flex items-center gap-3 overflow-hidden">
+                                {link.icon && (
+                                    <span className="text-2xl opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300">
+                                        {link.icon}
+                                    </span>
+                                )}
+                                <span className="font-semibold text-base-content group-hover:text-primary transition-colors truncate">
+                                    {link.title}
                                 </span>
-                            )}
-                            <span className="font-semibold text-base-content group-hover:text-primary transition-colors truncate">
-                                {link.title}
-                            </span>
-                        </div>
+                            </div>
 
-                        <RiExternalLinkLine className="
+                            <RiExternalLinkLine className="
                             text-base-content/40 
                             group-hover:text-primary 
                             transform group-hover:rotate-45 
                             transition-all duration-300
                         " />
-                    </div>
-                </motion.a>
-            ))}
+                        </div>
+                    </motion.a>
+                ))}
+            </AnimatePresence>
 
             {links.length === 0 && (
                 <div className="text-center p-6 opacity-50">

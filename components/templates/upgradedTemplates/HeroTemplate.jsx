@@ -1,9 +1,14 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { RiStarFill, RiArrowRightLine } from "react-icons/ri";
+import { trackLinkClick } from "@/components/shared/AnalyticsTracker";
 
-export default function HeroTemplate({ links, handleLinkClick }) {
+export default function HeroTemplate({ page, links, handleLinkClick }) {
+    const onLinkClick = (linkId) => {
+        trackLinkClick(linkId, page._id);
+        if (handleLinkClick) handleLinkClick(linkId);
+    };
     if (!links || links.length === 0) {
         return (
             <div className="text-center p-8 border-2 border-dashed border-base-300 rounded-3xl bg-base-100/50">
@@ -25,7 +30,7 @@ export default function HeroTemplate({ links, handleLinkClick }) {
                 href={heroLink.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => handleLinkClick?.(heroLink._id)}
+                onClick={() => onLinkClick(heroLink._id)}
                 className="
                     block w-full
                     relative overflow-hidden
@@ -77,17 +82,18 @@ export default function HeroTemplate({ links, handleLinkClick }) {
 
             {/* Other Links */}
             <div className="space-y-3">
-                {otherLinks.map((link, idx) => (
-                    <motion.a
-                        key={link._id}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: idx * 0.1 + 0.2 }}
-                        href={link.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={() => handleLinkClick?.(link._id)}
-                        className="
+                <AnimatePresence mode="popLayout">
+                    {otherLinks.map((link, idx) => (
+                        <motion.a
+                            key={link._id}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: idx * 0.1 + 0.2 }}
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={() => onLinkClick(link._id)}
+                            className="
                             group
                             flex items-center gap-4
                             w-full p-4
@@ -98,16 +104,17 @@ export default function HeroTemplate({ links, handleLinkClick }) {
                             shadow-sm hover:shadow-md
                             transition-all duration-200
                         "
-                    >
-                        <span className="text-2xl opacity-70 group-hover:scale-110 transition-transform">
-                            {link.icon || "📄"}
-                        </span>
-                        <span className="font-semibold text-base-content flex-1 text-left">
-                            {link.title}
-                        </span>
-                        <RiArrowRightLine className="opacity-0 group-hover:opacity-50 -translate-x-2 group-hover:translate-x-0 transition-all" />
-                    </motion.a>
-                ))}
+                        >
+                            <span className="text-2xl opacity-70 group-hover:scale-110 transition-transform">
+                                {link.icon || "📄"}
+                            </span>
+                            <span className="font-semibold text-base-content flex-1 text-left">
+                                {link.title}
+                            </span>
+                            <RiArrowRightLine className="opacity-0 group-hover:opacity-50 -translate-x-2 group-hover:translate-x-0 transition-all" />
+                        </motion.a>
+                    ))}
+                </AnimatePresence>
             </div>
         </section>
     );

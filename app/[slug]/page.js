@@ -1,15 +1,13 @@
-import dbConnect from "@/lib/db";
-import BioPage from "@/models/BioPage";
-import LinkModel from "@/models/Link";
-import PublicBio from "./PublicBio";
+import BioPageRepository from "@/lib/repositories/BioPageRepository";
+import LinkRepository from "@/lib/repositories/LinkRepository";
+import PublicBioView from "@/components/shared/PublicBioView";
 import BioNotFound from "@/components/bio-templates/BioNotFound";
 import { CONFIG } from "@/constants/config";
 
 export async function generateMetadata({ params }) {
     const { slug } = await params;
-    await dbConnect();
-    const page = await BioPage.findOne({ slug: slug.toLowerCase() }).lean();
-    if (!page) return <BioNotFound />;
+    const page = await BioPageRepository.findBySlugLean(slug);
+    if (!page) return { title: "Page Not Found" };
 
     // Use user's profile image if available, otherwise use site banner
     const ogImage = page.profileImage || `${CONFIG.SITE_URL}/linkpeakk-home.webp`;
@@ -45,22 +43,18 @@ export async function generateMetadata({ params }) {
 export default async function Page({ params }) {
     const { slug } = await params;
 
-    // ... rest of component
-    await dbConnect();
-    const page = await BioPage.findOne({ slug: slug.toLowerCase() })
-        .populate("userId", "plan")
-        .lean();
+    const page = await BioPageRepository.findBySlugLean(slug);
     if (!page) {
         return <BioNotFound />;
     }
 
-    const links = await LinkModel.find({ pageId: page._id, isActive: true })
-        .sort({ order: 1 })
-        .lean();
+    // Fetch active links using pageId
+    const links = await LinkRepository.findByPageId(page._id);
+    const activeLinks = (links || []).filter(l => l.isActive);
 
-    // Convert ObjectIds to strings for serialization
+    // Convert ObjectIds to strings for serialization safely
     const serializedPage = JSON.parse(JSON.stringify(page));
-    const serializedLinks = JSON.parse(JSON.stringify(links));
+    const serializedLinks = JSON.parse(JSON.stringify(activeLinks));
 
-    return <PublicBio page={serializedPage} links={serializedLinks} />;
+    return <PublicBioView page={serializedPage} links={serializedLinks} />;
 }

@@ -4,6 +4,7 @@ export const analyticsApi = api.injectEndpoints({
     endpoints: (builder) => ({
         getAnalytics: builder.query({
             query: ({ pageId, range }) => `/analytics?pageId=${pageId}${range ? `&range=${range}` : ''}`,
+            transformResponse: (res) => ({ data: res.data, lifetime: res.lifetime }),
             providesTags: (result, error, { pageId }) => [{ type: 'Analytics', id: pageId }],
         }),
     }),

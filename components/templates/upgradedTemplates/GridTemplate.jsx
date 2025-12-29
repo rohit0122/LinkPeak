@@ -1,9 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { RiArrowRightUpLine } from "react-icons/ri";
+import { trackLinkClick } from "@/components/shared/AnalyticsTracker";
 
-export default function GridTemplate({ links, handleLinkClick }) {
+export default function GridTemplate({ page, links, handleLinkClick }) {
     const container = {
         hidden: { opacity: 0 },
         show: {
@@ -14,7 +15,13 @@ export default function GridTemplate({ links, handleLinkClick }) {
 
     const item = {
         hidden: { opacity: 0, scale: 0.9 },
-        show: { opacity: 1, scale: 1 }
+        show: { opacity: 1, scale: 1 },
+        exit: { opacity: 0, scale: 0.8, transition: { duration: 0.2 } }
+    };
+
+    const onLinkClick = (linkId) => {
+        trackLinkClick(linkId, page._id);
+        if (handleLinkClick) handleLinkClick(linkId);
     };
 
     return (
@@ -25,15 +32,16 @@ export default function GridTemplate({ links, handleLinkClick }) {
             className="w-full pb-10"
         >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {links.map((link, index) => (
-                    <motion.a
-                        key={link._id}
-                        variants={item}
-                        href={link.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={() => handleLinkClick?.(link._id)}
-                        className={`
+                <AnimatePresence mode="popLayout">
+                    {links.map((link, index) => (
+                        <motion.a
+                            key={link._id}
+                            variants={item}
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={() => onLinkClick(link._id)}
+                            className={`
                             group
                             relative
                             flex flex-col items-center justify-center
@@ -46,36 +54,37 @@ export default function GridTemplate({ links, handleLinkClick }) {
                             text-center
                             min-h-[140px]
                             ${index === 0 && links.length % 2 !== 0
-                                ? "md:col-span-2 md:aspect-[2/1] aspect-[2/1]"
-                                : "md:col-span-1 md:aspect-square aspect-[2/1]"}
+                                    ? "md:col-span-2 md:aspect-[2/1] aspect-[2/1]"
+                                    : "md:col-span-1 md:aspect-square aspect-[2/1]"}
                         `}
-                    >
-                        <div className="
+                        >
+                            <div className="
                             text-4xl 
                             mb-2 
                             opacity-80 group-hover:opacity-100 group-hover:scale-110 
                             transition-all duration-300
                         ">
-                            {link.icon || "🔗"}
-                        </div>
+                                {link.icon || "🔗"}
+                            </div>
 
-                        <h3 className="
+                            <h3 className="
                             font-bold text-sm leading-tight 
                             line-clamp-2
                             group-hover:text-neutral-content
                         ">
-                            {link.title}
-                        </h3>
+                                {link.title}
+                            </h3>
 
-                        <div className="
+                            <div className="
                             absolute top-3 right-3
                             opacity-0 group-hover:opacity-100
                             transition-opacity duration-300
                         ">
-                            <RiArrowRightUpLine />
-                        </div>
-                    </motion.a>
-                ))}
+                                <RiArrowRightUpLine />
+                            </div>
+                        </motion.a>
+                    ))}
+                </AnimatePresence>
             </div>
 
             {links.length === 0 && (

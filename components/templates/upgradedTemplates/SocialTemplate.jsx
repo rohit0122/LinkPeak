@@ -1,9 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { RiArrowRightLine, RiShareLine } from "react-icons/ri";
+import { trackLinkClick } from "@/components/shared/AnalyticsTracker";
 
-export default function SocialTemplate({ links, handleLinkClick }) {
+export default function SocialTemplate({ page, links, handleLinkClick }) {
     const container = {
         hidden: { opacity: 0 },
         show: {
@@ -14,7 +15,13 @@ export default function SocialTemplate({ links, handleLinkClick }) {
 
     const item = {
         hidden: { opacity: 0, y: 10 },
-        show: { opacity: 1, y: 0 }
+        show: { opacity: 1, y: 0 },
+        exit: { opacity: 0, scale: 0.9, transition: { duration: 0.2 } }
+    };
+
+    const onLinkClick = (linkId) => {
+        trackLinkClick(linkId, page._id);
+        if (handleLinkClick) handleLinkClick(linkId);
     };
 
     return (
@@ -24,15 +31,16 @@ export default function SocialTemplate({ links, handleLinkClick }) {
             animate="show"
             className="w-full space-y-3 pb-10"
         >
-            {links.map((link) => (
-                <motion.a
-                    key={link._id}
-                    variants={item}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => handleLinkClick?.(link._id)}
-                    className="
+            <AnimatePresence mode="popLayout">
+                {links.map((link) => (
+                    <motion.a
+                        key={link._id}
+                        variants={item}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => onLinkClick(link._id)}
+                        className="
                         group
                         flex items-center justify-between
                         w-full p-1 pl-2 pr-4
@@ -43,9 +51,9 @@ export default function SocialTemplate({ links, handleLinkClick }) {
                         transition-all duration-300
                         hover:scale-[1.02]
                     "
-                >
-                    <div className="flex items-center gap-3 overflow-hidden">
-                        <div className="
+                    >
+                        <div className="flex items-center gap-3 overflow-hidden">
+                            <div className="
                             flex items-center justify-center
                             w-10 h-10
                             rounded-full
@@ -53,27 +61,28 @@ export default function SocialTemplate({ links, handleLinkClick }) {
                             text-xl
                             transition-colors
                         ">
-                            {link.icon || "🔗"}
+                                {link.icon || "🔗"}
+                            </div>
+
+                            <div className="flex flex-col min-w-0">
+                                <span className="font-bold text-sm truncate">
+                                    {link.title}
+                                </span>
+                            </div>
                         </div>
 
-                        <div className="flex flex-col min-w-0">
-                            <span className="font-bold text-sm truncate">
-                                {link.title}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div className="
+                        <div className="
                         w-8 h-8
                         rounded-full
                         flex items-center justify-center
                         bg-transparent group-hover:bg-white/20
                         transition-all duration-300
                     ">
-                        <RiArrowRightLine className="text-lg opacity-50 group-hover:opacity-100" />
-                    </div>
-                </motion.a>
-            ))}
+                            <RiArrowRightLine className="text-lg opacity-50 group-hover:opacity-100" />
+                        </div>
+                    </motion.a>
+                ))}
+            </AnimatePresence>
 
             {links.length === 0 && (
                 <div className="flex flex-col items-center justify-center p-8 border border-base-200 rounded-3xl bg-base-100/80 text-center space-y-2">

@@ -9,7 +9,6 @@ import ThemeSelector from "@/components/dashboard/ThemeSelector";
 import TemplateSelector from "@/components/dashboard/TemplateSelector";
 import BrandingEditor from "@/components/dashboard/BrandingEditor";
 import ProfileUpload from "@/components/dashboard/ProfileUpload";
-import SubscriptionStatus from "@/components/dashboard/SubscriptionStatus";
 import SmartPlanAlert from "@/components/dashboard/SmartPlanAlert";
 import UnsavedChangesModal from "@/components/dashboard/UnsavedChangesModal";
 import DangerZone from "@/components/dashboard/DangerZone";
@@ -101,21 +100,23 @@ export default function DashboardPage() {
     const [dirtySections, setDirtySections] = useState(new Set());
     const [showUnsavedModal, setShowUnsavedModal] = useState(false);
     const [pendingPageId, setPendingPageId] = useState(null);
+    const [pendingTabId, setPendingTabId] = useState(null);
     const [selectedPageId, setSelectedPageId] = useState(null);
     const [localPageData, setLocalPageData] = useState(null);
+    const [isSwitching, setIsSwitching] = useState(false);
 
     // Derived State
-    const user = initData?.data?.user || authUser;
-    const allPages = initData?.data?.pages || [];
-    const subscriptionStatus = initData?.data?.subscriptionStatus || null;
+    const user = initData?.user || authUser;
+    const allPages = initData?.pages || [];
+    const subscriptionStatus = initData?.subscriptionStatus || null;
 
     useEffect(() => {
-        if (initData?.data?.activePage && !selectedPageId) {
-            setSelectedPageId(initData.data.activePage._id);
+        if (initData?.activePage && !selectedPageId) {
+            setSelectedPageId(initData.activePage._id);
         }
     }, [initData, selectedPageId]);
 
-    const page = allPages.find(p => p._id === selectedPageId) || initData?.data?.activePage;
+    const page = allPages.find(p => p._id === selectedPageId) || initData?.activePage;
 
     // Sync localPageData when page changes
     useEffect(() => {
@@ -128,39 +129,51 @@ export default function DashboardPage() {
     const { data: linksData } = useGetLinksQuery(selectedPageId, { skip: !selectedPageId });
     const { data: analyticsData } = useGetAnalyticsQuery({ pageId: selectedPageId }, { skip: !selectedPageId });
 
-    const links = linksData?.data || (selectedPageId === initData?.data?.activePage?._id ? initData?.data?.links : []) || [];
-    const analytics = analyticsData?.data || (selectedPageId === initData?.data?.activePage?._id ? initData?.data?.analytics : []) || [];
-    const lifetimeStats = analyticsData?.lifetime || (selectedPageId === initData?.data?.activePage?._id ? initData?.data?.lifetime : { totalViews: 0, totalClicks: 0, totalLikes: 0 });
+    const links = linksData || (selectedPageId === initData?.activePage?._id ? initData?.links : []) || [];
+    const analytics = analyticsData?.data || (selectedPageId === initData?.activePage?._id ? initData?.analytics : []) || [];
+    const lifetimeStats = analyticsData?.lifetime || (selectedPageId === initData?.activePage?._id ? initData?.lifetime : { totalViews: 0, totalClicks: 0, totalLikes: 0 });
 
-
-    const handleSwitchRequest = (pageId) => {
-        if (pageId === selectedPageId) return;
+    const handleSwitchRequest = (pageId = null, tabId = null) => {
+        if (pageId && pageId === selectedPageId) return;
+        if (tabId && tabId === activeTab) return;
 
         if (unsavedChanges) {
             setPendingPageId(pageId);
+            setPendingTabId(tabId);
             setShowUnsavedModal(true);
         } else {
-            setSelectedPageId(pageId);
+            if (pageId) setSelectedPageId(pageId);
+            if (tabId) setActiveTab(tabId);
         }
     };
 
     const handleDiscardAndSwitch = () => {
-        if (pendingPageId) {
-            setSelectedPageId(pendingPageId);
-            setUnsavedChanges(false);
-            setDirtySections(new Set());
-        }
+        if (pendingPageId) setSelectedPageId(pendingPageId);
+        if (pendingTabId) setActiveTab(pendingTabId);
+
+        setUnsavedChanges(false);
+        setDirtySections(new Set());
         setShowUnsavedModal(false);
         setPendingPageId(null);
+        setPendingTabId(null);
     };
 
     const handleSaveAndSwitch = async () => {
-        await handleGlobalSave();
-        if (pendingPageId) {
-            setSelectedPageId(pendingPageId);
+        setIsSwitching(true);
+        if (window.setGlobalLoading) window.setGlobalLoading(true);
+
+        try {
+            await handleGlobalSave();
+            if (pendingPageId) setSelectedPageId(pendingPageId);
+            if (pendingTabId) setActiveTab(pendingTabId);
+
+            setShowUnsavedModal(false);
+            setPendingPageId(null);
+            setPendingTabId(null);
+        } finally {
+            setIsSwitching(false);
+            if (window.setGlobalLoading) window.setGlobalLoading(false);
         }
-        setShowUnsavedModal(false);
-        setPendingPageId(null);
     };
 
     const handleCreatePage = async () => {
@@ -172,25 +185,27 @@ export default function DashboardPage() {
                 bio: "Welcome to my new page!"
             }).unwrap();
 
-            if (res.success) {
+            if (res) {
                 toast.success("New bio page created successfully! 🚀");
-                setSelectedPageId(res.data._id);
+                setSelectedPageId(res._id);
             }
         } catch (error) {
             toast.error(error.data?.error || "Could not create page");
         }
     };
 
-    const handleReorder = async (newLinks) => {
+    const handleReorder = useCallback(async (newLinks) => {
+        console.log("DEBUG: handleReorder called with", newLinks.length, "links");
         try {
             const reorderPayload = newLinks.map((l, index) => ({ id: l._id, order: index }));
             await reorderLinks(reorderPayload).unwrap();
         } catch (error) {
             toast.error("Could not save link order. Please try again.");
         }
-    };
+    }, [reorderLinks]);
 
-    const handleAddLink = async (newLinkData) => {
+    const handleAddLink = useCallback(async (newLinkData) => {
+        console.log("DEBUG: handleAddLink called");
         try {
             await createLink({
                 ...newLinkData,
@@ -200,9 +215,10 @@ export default function DashboardPage() {
         } catch (error) {
             toast.error("Could not add link. Please try again.");
         }
-    };
+    }, [createLink, selectedPageId]);
 
-    const handleUpdateLink = async (updatedLink) => {
+    const handleUpdateLink = useCallback(async (updatedLink) => {
+        console.log("DEBUG: handleUpdateLink called for", updatedLink._id);
         try {
             const { _id, ...updates } = updatedLink;
             await updateLink({ id: _id, ...updates }).unwrap();
@@ -210,16 +226,18 @@ export default function DashboardPage() {
         } catch (error) {
             toast.error("Could not update link. Please try again.");
         }
-    };
+    }, [updateLink]);
 
-    const handleDeleteLink = async (id) => {
+    const handleDeleteLink = useCallback(async (id) => {
+        console.log("DEBUG: handleDeleteLink called for", id);
         try {
             await deleteLink(id).unwrap();
             toast.success("Link removed from your bio");
         } catch (error) {
             toast.error("Could not remove link. Please try again.");
         }
-    };
+    }, [deleteLink]);
+
 
     const handleGlobalSave = async () => {
         if (!localPageData) return;
@@ -238,7 +256,7 @@ export default function DashboardPage() {
                 socialLinks: localPageData.socialLinks
             }).unwrap();
 
-            if (res.success) {
+            if (res) {
                 setUnsavedChanges(false);
                 const sections = Array.from(dirtySections);
                 let message = "Global changes saved!";
@@ -264,10 +282,11 @@ export default function DashboardPage() {
         setDirtySections(prev => {
             const newSet = new Set(prev);
             keys.forEach(key => {
-                if (['title', 'slug', 'bio', 'profileImage'].includes(key)) newSet.add('Identity');
+                if (['title', 'slug', 'bio', 'socialLinks'].includes(key)) newSet.add('Identity');
                 if (['seo'].includes(key)) newSet.add('SEO');
                 if (['branding'].includes(key)) newSet.add('Branding');
                 if (['theme', 'template'].includes(key)) newSet.add('Style');
+                if (['profileImage'].includes(key)) newSet.add('Profile Image');
             });
             return newSet;
         });
@@ -299,10 +318,9 @@ export default function DashboardPage() {
 
     if (isInitLoading) return <SkeletonDashboard />;
     if (isInitError) return <div>Error loading dashboard. Please refresh.</div>;
+
     const trialEndDate = new Date(user.createdAt);
     trialEndDate.setHours(trialEndDate.getHours() + 24);
-    const expiryDate = new Date(user.createdAt);
-    expiryDate.setDate(expiryDate.getDate() + 8);
 
     return (
         <DashboardLayout
@@ -317,13 +335,11 @@ export default function DashboardPage() {
                 onCancel={() => setShowUnsavedModal(false)}
                 onDiscard={handleDiscardAndSwitch}
                 onSave={handleSaveAndSwitch}
+                isLoading={isSwitching}
             />
 
-
-
             {/* Subscription Status - Handles Trial & Renewal Alerts */}
-            <SubscriptionStatusDiv user={user} initialData={subscriptionStatus} redirectOnExpire={false} />
-            {user?.plan !== 'FREE' && <SubscriptionStatus user={user} initialData={subscriptionStatus} redirectOnExpire={true} />}
+            <SubscriptionStatusDiv user={user} initialData={subscriptionStatus} redirectOnExpire={true} />
 
             <div className="flex flex-col lg:flex-row gap-8 min-h-full">
                 <div className="flex-1 w-full max-w-2xl mx-auto">
@@ -354,7 +370,7 @@ export default function DashboardPage() {
                         ].map(({ key, label, icon: Icon }) => (
                             <button
                                 key={key}
-                                onClick={() => setActiveTab(key)}
+                                onClick={() => handleSwitchRequest(null, key)}
                                 className={`
                 btn btn-ghost
                 h-14 md:h-10
@@ -365,7 +381,6 @@ export default function DashboardPage() {
                 ${activeTab === key ? "btn-active !bg-primary !text-primary-content" : ""}
             `}
                             >
-                                {/* Icon */}
                                 <Icon
                                     className="
                     text-2xl md:text-lg
@@ -373,38 +388,11 @@ export default function DashboardPage() {
                     group-hover:scale-110
                 "
                                 />
-
-                                {/* Label */}
                                 <span className="text-[10px] md:text-sm font-medium md:font-normal">
                                     {label}
                                 </span>
                             </button>
                         ))}
-                    </div>
-
-
-
-
-                    {/* Stats Overview */}
-                    <div className="grid grid-cols-2 gap-4 mb-8">
-                        <div className="hidden bg-base-100 p-6 shadow-sm border border-base-200 flex items-center gap-4">
-                            <div className="w-12 h-12 bg-primary/10 flex items-center justify-center text-primary">
-                                <RiEyeLine className="text-2xl" />
-                            </div>
-                            <div>
-                                <p className="text-[10px] font-bold uppercase tracking-widest opacity-40">Total Views</p>
-                                <p className="text-2xl font-medium">{page?.views || 0}</p>
-                            </div>
-                        </div>
-                        <div className="hidden bg-base-100 p-6 shadow-sm border border-base-200 flex items-center gap-4">
-                            <div className="w-12 h-12 bg-pink-500/10 flex items-center justify-center text-pink-500">
-                                <RiHeartLine className="text-2xl" />
-                            </div>
-                            <div>
-                                <p className="text-[10px] font-bold uppercase tracking-widest opacity-40">Fan Love</p>
-                                <p className="text-2xl font-medium">{page?.likes || 0}</p>
-                            </div>
-                        </div>
                     </div>
 
                     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -453,9 +441,7 @@ export default function DashboardPage() {
                                         </div>
                                     </div>
                                 </div>
-                                {/* Template Selection */}
                                 <section>
-
                                     <h2 className="text-xl font-bold tracking-tight flex items-center gap-3 mb-6">
                                         <div className="p-2 bg-primary/10 text-primary">
                                             <RiLayoutMasonryLine className="text-xl" />
@@ -469,7 +455,6 @@ export default function DashboardPage() {
                                     />
                                 </section>
 
-                                {/* Theme Selection */}
                                 <section>
                                     <h2 className="text-xl font-bold tracking-tight flex items-center gap-3 mb-6">
                                         <div className="p-2 bg-primary/10  text-primary">
@@ -486,8 +471,6 @@ export default function DashboardPage() {
                                     </div>
                                 </section>
 
-
-                                {/* Branding / White Labeling (Moved from Settings) */}
                                 <section>
                                     <h2 className="text-xl font-bold tracking-tight flex items-center gap-3 mb-6">
                                         <div className="p-2 bg-primary/10 text-primary">
@@ -499,7 +482,6 @@ export default function DashboardPage() {
                                         page={page}
                                         user={user}
                                         onUpdate={handleLocalUpdate}
-                                    // onPreviewUpdate removed as onUpdate now handles it via parent state
                                     />
                                 </section>
                             </div>
@@ -507,11 +489,9 @@ export default function DashboardPage() {
 
                         {activeTab === "settings" && (
                             <div className="flex flex-col gap-8">
-                                {/* Identity Section (Profile + Details) */}
                                 <div className="card bg-base-100 shadow-sm border border-base-300 lg:col-span-2">
                                     <div className="card-body p-8 lg:p-10">
                                         <div className="flex flex-col md:flex-row gap-10">
-                                            {/* Left: Profile Image */}
                                             <div className="flex-none flex flex-col items-center gap-4">
                                                 <div className="relative group">
                                                     <ProfileUpload
@@ -528,7 +508,6 @@ export default function DashboardPage() {
                                                 </div>
                                             </div>
 
-                                            {/* Right: Inputs */}
                                             <div className="flex-1 space-y-6">
                                                 <div>
                                                     <h2 className="text-xl font-medium tracking-tight flex items-center gap-2 mb-1">
@@ -549,7 +528,6 @@ export default function DashboardPage() {
                                                             placeholder="e.g. your name or brand"
                                                             value={activePageData?.title || ""}
                                                             onChange={(e) => handleLocalUpdate({ title: e.target.value })}
-                                                            // onBlur removed
                                                             required
                                                         />
                                                     </div>
@@ -568,28 +546,9 @@ export default function DashboardPage() {
                                                                 onChange={(e) => {
                                                                     handleLocalUpdate({ slug: e.target.value.toLowerCase().replace(/\s+/g, '-') });
                                                                 }}
-                                                                // onBlur removed
                                                                 required
                                                             />
                                                         </label>
-                                                        {/*<label className="label">
-                                                            <span className="label-text">Custom URL <span className="text-error">*</span></span>
-                                                        </label>
-                                                         <div className="flex items-center gap-2">
-                                                            <span className="text-sm opacity-60">linkpeak.com/</span>
-                                                            <input
-                                                                type="text"
-                                                                className="input input-bordered flex-1"
-                                                                placeholder="your-slug"
-                                                                value={page?.slug || ""}
-                                                                onChange={(e) => {
-                                                                    setPage({ ...page, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') });
-                                                                    setUnsavedChanges(true);
-                                                                }}
-                                                                // onBlur removed
-                                                                required
-                                                            />
-                                                        </div>*/}
                                                     </div>
                                                 </div>
 
@@ -604,11 +563,9 @@ export default function DashboardPage() {
                                                         onChange={(e) => {
                                                             handleLocalUpdate({ bio: e.target.value });
                                                         }}
-                                                    // onBlur removed
                                                     />
                                                 </div>
 
-                                                {/* Social Links Section */}
                                                 <div className="form-control">
                                                     <label className="label">
                                                         <span className="label-text font-medium flex items-center gap-2">
@@ -772,15 +729,11 @@ export default function DashboardPage() {
                                     </div>
                                 </div>
 
-                                {/* Bottom Row: AI SEO Engine (USP Feature) */}
                                 <div key={page?._id} className="card relative overflow-hidden bg-slate-900 text-white shadow-xl shadow-slate-900/20 border border-slate-700/50 lg:col-span-2 group">
-                                    {/* Ambient Background Glow */}
                                     <div className="absolute top-0 right-0 w-96 h-96 bg-primary/20 blur-[120px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2"></div>
                                     <div className="absolute bottom-0 left-0 w-64 h-64 bg-secondary/20 blur-[100px] rounded-full pointer-events-none translate-y-1/2 -translate-x-1/2"></div>
 
                                     <div className="card-body p-6 relative z-10 space-y-6">
-
-                                        {/* Header Section */}
                                         <div className="badge badge-info badge-sm uppercase font-medium">
                                             Optimizing: {page?.title}
                                         </div>
@@ -797,7 +750,6 @@ export default function DashboardPage() {
                                                         <h2 className="text-lg font-medium tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70">
                                                             AI Optimization Engine
                                                         </h2>
-
                                                     </div>
                                                     <p className="text-sm font-medium text-white/50 mt-1 max-w-sm">
                                                         Supercharge your discoverability with GPT-4 powered metadata.
@@ -823,8 +775,8 @@ export default function DashboardPage() {
                                                         ) : (
                                                             <>
                                                                 <RiMagicLine className="text-2xl text-primary transition 
-group-hover:scale-110 
-group-hover:text-secondary" />
+ group-hover:scale-110 
+ group-hover:text-secondary" />
                                                                 Run AI Magic
                                                             </>
                                                         )}
@@ -838,7 +790,6 @@ group-hover:text-secondary" />
                                             )}
                                         </div>
 
-                                        {/* Inputs Section */}
                                         <div className={`grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/5 p-4 border border-white/5 backdrop-blur-sm relative ${user?.plan === 'FREE' ? 'opacity-50 grayscale cursor-not-allowed' : ''}`}>
                                             <div className="space-y-6">
                                                 <div className="form-control">
@@ -889,7 +840,6 @@ group-hover:text-secondary" />
                                                     readOnly={user?.plan === 'FREE'}
                                                 />
 
-                                                {/* SEO Lock Badge (Theme Selector Style) */}
                                                 {user?.plan === 'FREE' && (
                                                     <div className="absolute top-2 right-2 z-20 flex flex-col items-end gap-1 pointer-events-none">
                                                         <div className="p-1 bg-base-100 shadow-sm text-primary">
@@ -904,7 +854,6 @@ group-hover:text-secondary" />
                                             </div>
                                         </div>
 
-                                        {/* Footer / Validation */}
                                         <div className="flex items-center justify-between px-2">
                                             <div className="flex items-center gap-2 text-xs font-bold text-white/30 uppercase tracking-wider">
                                                 {page?.seo?.title && page?.seo?.description ? (
@@ -934,13 +883,15 @@ group-hover:text-secondary" />
 
                 <div className="w-full lg:w-[400px] mt-20 lg:mt-0">
                     <div className="lg:sticky top-8 transform-gpu scale-[0.8] sm:scale-95 lg:scale-90 lg:translate-x-4 origin-top flex justify-center lg:block">
-                        <PreviewPhone key={links.map(l => l._id).join("-")}
-                            pageData={page} links={links} />
+                        <PreviewPhone
+                            key={`${selectedPageId}-${links.map(l => l._id + l.isActive).join('|')}-${unsavedChanges}`}
+                            pageData={activePageData}
+                            links={links}
+                        />
                     </div>
                 </div>
             </div>
 
-            {/* Global Save Button (Floating) */}
             <div className={`fixed bottom-8 right-8 z-50 transition-all duration-300 transform ${unsavedChanges ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0 pointer-events-none'}`}>
                 <button
                     onClick={handleGlobalSave}

@@ -4,7 +4,8 @@ export const linkApi = api.injectEndpoints({
     endpoints: (builder) => ({
         getLinks: builder.query({
             query: (pageId) => `/links?pageId=${pageId}`,
-            providesTags: (result, error, pageId) =>
+            transformResponse: (response) => response.data,
+            providesTags: (result) =>
                 result
                     ? [...result.map(({ _id }) => ({ type: 'Link', id: _id })), { type: 'Link', id: 'LIST' }]
                     : [{ type: 'Link', id: 'LIST' }],
@@ -15,6 +16,7 @@ export const linkApi = api.injectEndpoints({
                 method: 'POST',
                 body: data,
             }),
+            transformResponse: (response) => response.data,
             invalidatesTags: [{ type: 'Link', id: 'LIST' }],
         }),
         updateLink: builder.mutation({
@@ -23,6 +25,7 @@ export const linkApi = api.injectEndpoints({
                 method: 'PATCH',
                 body: data,
             }),
+            transformResponse: (response) => response.data,
             invalidatesTags: (result, error, { id }) => [{ type: 'Link', id }],
         }),
         deleteLink: builder.mutation({

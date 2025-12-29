@@ -19,6 +19,7 @@ import ModernTemplate from "@/components/templates/upgradedTemplates/ModernTempl
 
 export default function PreviewPhone({ pageData, links = [] }) {
     const { theme, title, bio, profileImage, template } = pageData || {};
+    const activeLinks = (links || []).filter(link => link.isActive);
 
     return (
         <div className="mockup-phone border-primary shadow-2xl sticky top-10 transform-gpu origin-top will-change-transform overflow-hidden min-w-[322px] min-h-[660px]">
@@ -44,12 +45,12 @@ export default function PreviewPhone({ pageData, links = [] }) {
 
                     {/* Templates Switcher */}
                     <div className="w-full">
-                        {template === "classic" && <ClassicTemplate page={pageData} links={links} />}
-                        {template === "grid" && <GridTemplate page={pageData} links={links} />}
-                        {template === "hero" && <HeroTemplate page={pageData} links={links} />}
-                        {template === "social" && <SocialTemplate page={pageData} links={links} />}
-                        {template === "modern" && <ModernTemplate page={pageData} links={links} />}
-                        {!template && <ClassicTemplate page={pageData} links={links} />}
+                        {template === "classic" && <ClassicTemplate page={pageData} links={activeLinks} />}
+                        {template === "grid" && <GridTemplate page={pageData} links={activeLinks} />}
+                        {template === "hero" && <HeroTemplate page={pageData} links={activeLinks} />}
+                        {template === "social" && <SocialTemplate page={pageData} links={activeLinks} />}
+                        {template === "modern" && <ModernTemplate page={pageData} links={activeLinks} />}
+                        {!template && <ClassicTemplate page={pageData} links={activeLinks} />}
                     </div>
 
                     {/* Social Links */}

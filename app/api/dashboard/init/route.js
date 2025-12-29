@@ -36,7 +36,7 @@ export async function GET(req) {
         let lifetime = { totalViews: 0, totalClicks: 0, totalLikes: 0 };
 
         if (activePage) {
-            links = await LinkRepository.findByPageId(activePage._id);
+            links = await LinkRepository.findByPageId(activePage._id, session.id);
 
             let maxDays = CONFIG.PLAN_LIMITS[user.plan || "FREE"].analyticsDays;
             if (user.plan === "PRO") maxDays = CONFIG.PLAN_LIMITS.PRO.analyticsDays;
@@ -45,10 +45,10 @@ export async function GET(req) {
             const startDate = startOfDay(subDays(new Date(), maxDays));
 
             // Fetch time-series data
-            analytics = await AnalyticsRepository.findByPageIdWithDateRange(activePage._id, startDate);
+            analytics = await AnalyticsRepository.findByPageIdWithDateRange(activePage._id, startDate, session.id);
 
             // Fetch Lifetime Sum
-            lifetime = await AnalyticsRepository.getLifetimeSum(activePage._id);
+            lifetime = await AnalyticsRepository.getLifetimeSum(activePage._id, session.id);
         }
 
         // 4. Fetch Subscription Status

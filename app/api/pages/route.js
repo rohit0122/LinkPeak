@@ -9,6 +9,15 @@ export async function GET() {
         const session = await getAuthUser();
         if (!session) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
 
+        const { searchParams } = new URL(req.url);
+        const slug = searchParams.get("slug");
+
+        if (slug) {
+            const page = await BioPageRepository.findBySlug(slug);
+            if (!page) return NextResponse.json({ success: false, error: "Page not found" }, { status: 404 });
+            return NextResponse.json({ success: true, data: page });
+        }
+
         const pages = await BioPageRepository.findByUserId(session.id);
 
         // --- Plan-Based Data Filtering (Handle Downgrades) ---
@@ -188,6 +197,24 @@ export async function PATCH(req) {
         }
 
         return NextResponse.json({ success: true, data: page });
+    } catch (error) {
+        return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    }
+}
+
+export async function DELETE(req) {
+    try {
+        const session = await getAuthUser();
+        if (!session) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+
+        const { searchParams } = new URL(req.url);
+        const id = searchParams.get("id");
+        if (!id) return NextResponse.json({ success: false, error: "Page ID required" }, { status: 400 });
+
+        const page = await BioPageRepository.deleteWithUserCheck(id, session.id);
+        if (!page) return NextResponse.json({ success: false, error: "Page not found or unauthorized" }, { status: 404 });
+
+        return NextResponse.json({ success: true, message: "Page deleted" });
     } catch (error) {
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }

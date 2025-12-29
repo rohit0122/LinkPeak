@@ -4,6 +4,7 @@ export const subscriptionApi = api.injectEndpoints({
     endpoints: (builder) => ({
         getSubscriptionStatus: builder.query({
             query: () => '/subscriptions',
+            transformResponse: (res) => res.data,
             providesTags: ['Subscription'],
         }),
         createPaymentLink: builder.mutation({
@@ -12,6 +13,7 @@ export const subscriptionApi = api.injectEndpoints({
                 method: 'POST',
                 body: { planId },
             }),
+            transformResponse: (res) => res.data,
             invalidatesTags: ['Subscription'],
         }),
     }),

@@ -1,7 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { RiArrowRightLine, RiLinkM } from "react-icons/ri";
+import { trackLinkClick } from "@/components/shared/AnalyticsTracker";
 
 export default function ClassicTemplate({ page, links, handleLinkClick }) {
     // Animation variants for stagger effect
@@ -17,10 +18,16 @@ export default function ClassicTemplate({ page, links, handleLinkClick }) {
 
     const item = {
         hidden: { opacity: 0, y: 20 },
-        show: { opacity: 1, y: 0 }
+        show: { opacity: 1, y: 0 },
+        exit: { opacity: 0, scale: 0.95, transition: { duration: 0.2 } }
     };
 
     const safeLinks = Array.isArray(links) ? links : [];
+
+    const onLinkClick = (linkId) => {
+        trackLinkClick(linkId, page._id);
+        if (handleLinkClick) handleLinkClick(linkId);
+    };
 
     return (
         <motion.section
@@ -29,15 +36,16 @@ export default function ClassicTemplate({ page, links, handleLinkClick }) {
             animate="show"
             className="w-full space-y-4 pb-10"
         >
-            {safeLinks.map((link, i) => (
-                <motion.a
-                    key={link._id || i}
-                    variants={item}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => handleLinkClick?.(link._id)}
-                    className="
+            <AnimatePresence mode="popLayout">
+                {safeLinks.map((link, i) => (
+                    <motion.a
+                        key={link._id || i}
+                        variants={item}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => onLinkClick(link._id)}
+                        className="
                         group
                         relative
                         flex items-center justify-between
@@ -51,11 +59,11 @@ export default function ClassicTemplate({ page, links, handleLinkClick }) {
                         hover:-translate-y-1
                         overflow-hidden
                     "
-                    aria-label={link.title}
-                >
-                    {/* Icon/Thumbnail Area */}
-                    <div className="flex items-center gap-4 min-w-0">
-                        <div className="
+                        aria-label={link.title}
+                    >
+                        {/* Icon/Thumbnail Area */}
+                        <div className="flex items-center gap-4 min-w-0">
+                            <div className="
                             flex items-center justify-center 
                             w-10 h-10 
                             rounded-lg 
@@ -63,35 +71,36 @@ export default function ClassicTemplate({ page, links, handleLinkClick }) {
                             text-base-content/70 group-hover:text-primary-content
                             transition-colors
                         ">
-                            {link.icon ? (
-                                <span className="text-xl">{link.icon}</span>
-                            ) : (
-                                <RiLinkM className="text-xl" />
-                            )}
+                                {link.icon ? (
+                                    <span className="text-xl">{link.icon}</span>
+                                ) : (
+                                    <RiLinkM className="text-xl" />
+                                )}
+                            </div>
+
+                            <div className="flex flex-col min-w-0">
+                                <span className="font-bold text-base truncate pr-2">
+                                    {link.title}
+                                </span>
+                                <span className="text-xs opacity-60 group-hover:opacity-80 truncate">
+                                    {link.url}
+                                </span>
+                            </div>
                         </div>
 
-                        <div className="flex flex-col min-w-0">
-                            <span className="font-bold text-base truncate pr-2">
-                                {link.title}
-                            </span>
-                            <span className="text-xs opacity-60 group-hover:opacity-80 truncate">
-                                {link.url}
-                            </span>
-                        </div>
-                    </div>
-
-                    {/* Arrow Icon */}
-                    <div className="
+                        {/* Arrow Icon */}
+                        <div className="
                         flex-shrink-0
                         w-6
                         invisible group-hover:visible
                         transform translate-x-2 group-hover:translate-x-0
                         transition-all duration-300
                     ">
-                        <RiArrowRightLine className="text-xl" />
-                    </div>
-                </motion.a>
-            ))}
+                            <RiArrowRightLine className="text-xl" />
+                        </div>
+                    </motion.a>
+                ))}
+            </AnimatePresence>
 
             {safeLinks.length === 0 && (
                 <div className="flex flex-col items-center justify-center p-8 border-2 border-dashed border-base-300 rounded-xl bg-base-100/50 text-center space-y-2">
