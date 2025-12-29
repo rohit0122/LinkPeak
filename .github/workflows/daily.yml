@@ -1,0 +1,18 @@
+name: Daily Plan Expiry Check
+
+on:
+  schedule:
+    # 5:00 AM EST is 10:00 AM UTC (Standard)
+    # 5:00 AM EDT is 9:00 AM UTC (Daylight Savings)
+    # Using 10:00 AM UTC as standard
+    - cron: '0 10 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  check-expiry:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Expiry Check API
+        run: |
+          curl -X GET "${{ secrets.NEXT_PUBLIC_SITE_URL }}/api/cron/expiry-check" \
+          -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"
