@@ -139,7 +139,7 @@ export default function SubscriptionStatus({ user, initialData, redirectOnExpire
     };
 
     return (
-        <div className="card bg-base-100 border border-base-200 shadow-sm mb-2">
+        <div className="hidden card bg-base-100 border border-base-200 shadow-sm mb-2">
             <div className="card-body p-4 md:p-6">
                 <div className="flex items-center justify-between mb-4">
                     <h3 className="text-sm font-bold uppercase tracking-widest opacity-50">Subscription Status</h3>

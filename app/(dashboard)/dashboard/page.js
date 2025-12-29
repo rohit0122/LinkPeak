@@ -44,6 +44,7 @@ import {
 } from "react-icons/ri";
 import { CONFIG } from "@/constants/config";
 import { useRouter } from "next/navigation";
+import SubscriptionStatusDiv from "@/components/dashboard/SubscriptionStatusDiv";
 
 // Lazy load heavy components
 const AnalyticsView = dynamic(() => import("@/components/dashboard/AnalyticsView"), {
@@ -388,7 +389,9 @@ export default function DashboardPage() {
             />
 
 
+
             {/* Subscription Status - Handles Trial & Renewal Alerts */}
+            {user?.plan !== 'FREE' && <SubscriptionStatusDiv user={user} initialData={subscriptionStatus} redirectOnExpire={false} />}
             {user?.plan !== 'FREE' && <SubscriptionStatus user={user} initialData={subscriptionStatus} redirectOnExpire={true} />}
 
             <div className="flex flex-col lg:flex-row gap-8 min-h-full">
@@ -1022,7 +1025,8 @@ group-hover:text-secondary" />
 
                 <div className="w-full lg:w-[400px] mt-20 lg:mt-0">
                     <div className="lg:sticky top-8 transform-gpu scale-[0.8] sm:scale-95 lg:scale-90 lg:translate-x-4 origin-top flex justify-center lg:block">
-                        <PreviewPhone pageData={page} links={links} />
+                        <PreviewPhone key={links.map(l => l._id).join("-")}
+                            pageData={page} links={links} />
                     </div>
                 </div>
             </div>

@@ -92,7 +92,7 @@ export default function Hero() {
                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-primary/20 rounded-full blur-[80px]"></div>
 
                         <div className="relative hover:rotate-3 transition-transform duration-700 transform-gpu scale-75 lg:scale-100 origin-center">
-                            <PreviewPhone pageData={demoPage} links={demoLinks} />
+                            <PreviewPhone pageData={demoPage} links={demoLinks} key={demoLinks.map(l => l.id).join("-")} />
                         </div>
 
                         {/* Float Cards */}

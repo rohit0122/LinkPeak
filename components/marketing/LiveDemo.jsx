@@ -34,7 +34,7 @@ export default function LiveDemo() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
                     <div className="order-2 lg:order-1 flex justify-center">
                         <div className="scale-90 lg:scale-110 transform-gpu origin-center will-change-transform">
-                            <PreviewPhone pageData={demoPage} links={demoLinks} />
+                            <PreviewPhone pageData={demoPage} links={demoLinks} key={demoLinks.map(l => l.id).join("-")} />
                         </div>
                     </div>
 

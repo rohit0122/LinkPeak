@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { RiErrorWarningLine, RiCustomerService2Line } from "react-icons/ri";
 import SubscriptionStatus from "@/components/dashboard/SubscriptionStatus";
+import SubscriptionStatusDiv from "@/components/dashboard/SubscriptionStatusDiv";
 
 export default function SuspendedPage() {
     // We fetch user client-side here or just rely on SubscriptionStatus to fetch its own data
@@ -24,6 +25,7 @@ export default function SuspendedPage() {
 
                     <div className="w-full mb-6">
                         {/* We use SubscriptionStatus but disable redirect to prevent loop */}
+                        <SubscriptionStatusDiv redirectOnExpire={false} />
                         <SubscriptionStatus redirectOnExpire={false} />
                     </div>
 
