@@ -3,7 +3,7 @@ const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "LinkPeakK.";
 export const CONFIG = {
     SITE_NAME: siteName,
     SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
-    SUPPORT_EMAIL: process.env.NODEMAILER_USER_SENDER || "support@linkpeak.com",
+    SUPPORT_EMAIL: "connect@linkpeakk.com",
 
     METATAGS: {
         title: `${siteName} | Premium Link in Bio Platform for Creators, Brands & Professionals`,

@@ -10,12 +10,16 @@ import {
     RiTimeFill,
     RiTwitterFill,
     RiInstagramFill,
-    RiLinkedinBoxFill
+    RiLinkedinBoxFill,
+    RiTwitterXFill,
+    RiFacebookBoxFill,
+    RiYoutubeFill
 } from "react-icons/ri";
 import { Mail, MessageSquare, Clock, Globe } from "lucide-react";
 import axios from "@/lib/axios";
 import { toast } from "react-hot-toast";
 import { CONFIG } from "@/constants/config";
+import { SocialIcons } from "@/components/shared/SocialIcons";
 
 export default function ContactUsPage() {
     const [formData, setFormData] = useState({
@@ -129,11 +133,7 @@ export default function ContactUsPage() {
 
                         <div className="pt-8 border-t border-base-200">
                             <h4 className="font-bold uppercase tracking-widest text-xs opacity-50 mb-6">Connect with us</h4>
-                            <div className="flex gap-4">
-                                <a href="#" className="btn btn-square btn-ghost hover:bg-primary hover:text-white transition-all text-xl"><RiTwitterFill /></a>
-                                <a href="#" className="btn btn-square btn-ghost hover:bg-secondary hover:text-white transition-all text-xl"><RiInstagramFill /></a>
-                                <a href="#" className="btn btn-square btn-ghost hover:bg-accent hover:text-white transition-all text-xl"><RiLinkedinBoxFill /></a>
-                            </div>
+                            <SocialIcons />
                         </div>
                     </div>
 
@@ -141,6 +141,7 @@ export default function ContactUsPage() {
                     <div className="relative">
                         {/* Decorative Background Element */}
                         <div className="absolute -inset-4 bg-gradient-to-tr from-primary/20 via-transparent to-secondary/20 blur-3xl opacity-50 -z-10"></div>
+                        <div className="h-2 bg-primary w-full"></div>
 
                         <div className="card bg-base-100/80 backdrop-blur-xl border border-base-200 shadow-2xl p-8 md:p-10">
                             <form onSubmit={handleSubmit} className="space-y-8">
@@ -172,7 +173,7 @@ export default function ContactUsPage() {
                                     <div className="form-control">
                                         <label className="label uppercase tracking-widest text-[10px] font-bold opacity-50">What can we help with?</label>
                                         <select
-                                            className="select select-lg bg-base-200/50 focus:bg-base-100 border-none w-full transition-all font-medium"
+                                            className="select select-lg bg-base-200 focus:bg-base-100 border-none w-full transition-all font-medium"
                                             value={formData.subject}
                                             onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                                         >

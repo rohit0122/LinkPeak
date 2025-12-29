@@ -6,6 +6,7 @@ import { RiGithubFill, RiInstagramFill, RiTwitterFill, RiLoader4Line, RiFacebook
 import axios from "axios";
 import toast from "react-hot-toast";
 import Logo from "./Logo";
+import { SocialIcons } from "../shared/SocialIcons";
 
 export default function Footer() {
     const [email, setEmail] = useState("");
@@ -41,11 +42,7 @@ export default function Footer() {
                         <p className="opacity-70 font-medium leading-relaxed mb-8">
                             Empowering creators with the world's most beautiful and data-driven bio pages.
                         </p>
-                        <div className="flex gap-4">
-                            <a href="https://www.facebook.com/LinkPeakK" className="btn btn-square btn-ghost text-2xl hover:text-primary"><RiTwitterXFill /></a>
-                            <a href="https://www.facebook.com/LinkPeakK" className="btn btn-square btn-ghost text-2xl hover:text-primary"><RiInstagramFill /></a>
-                            <a href="https://www.facebook.com/LinkPeakK" className="btn btn-square btn-ghost text-2xl hover:text-primary"><RiFacebookBoxFill /></a>
-                        </div>
+                        <SocialIcons />
                     </div>
 
                     <div>
