@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import User from "@/models/User";
+import BioPage from "@/models/BioPage";
 import { sendWelcomeEmail } from "@/lib/mailer";
 
 export async function GET(req) {
@@ -22,6 +23,22 @@ export async function GET(req) {
         user.verificationToken = null;
         user.isActive = true;
         await user.save();
+
+        // Create default BioPage for the user
+        try {
+            const defaultSlug = user.name.toLowerCase().replace(/[^a-z0-9]/g, '-') + "-" + Math.floor(Math.random() * 1000);
+            await BioPage.create({
+                userId: user._id,
+                slug: defaultSlug,
+                title: `${user.name}'s Bio`,
+                bio: "Welcome to my link-in-bio page!",
+                template: "classic",
+                theme: "light"
+            });
+        } catch (pageError) {
+            console.error("Failed to create default bio page:", pageError);
+            // Continue execution, as verification was successful
+        }
 
         // Send Welcome Email
         try {

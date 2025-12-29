@@ -108,20 +108,8 @@ export default function DashboardPage() {
                         // Fallback if we somehow have a different page selected in state (unlikely on init)
                         await fetchPageData(selectedPage._id);
                     }
-                } else if (user) {
-                    // No pages found - Create default
-                    // We keep this client-side creation logic for now to ensure robustness
-                    const createRes = await axios.post("/pages", {
-                        slug: user.name.toLowerCase().replace(/\s+/g, '-') + "-" + Math.floor(Math.random() * 1000),
-                        title: `${user.name}'s Bio`,
-                        bio: "Welcome to my link-in-bio page!"
-                    });
-                    if (createRes.data.success) {
-                        setPage(createRes.data.data);
-                        setLinks([]);
-                        setAllPages([createRes.data.data]);
-                    }
                 }
+                // No need to create default page here anymore - handled by verification API
             }
         } catch (error) {
             console.error("Fetch error:", error);
