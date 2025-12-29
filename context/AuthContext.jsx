@@ -94,6 +94,11 @@ export function AuthProvider({ children }) {
                 localStorage.setItem("site_user", JSON.stringify(userData));
                 toast.success("Welcome back!");
 
+                // Show global loader for smooth transition
+                if (typeof window !== 'undefined' && window.setGlobalLoading) {
+                    window.setGlobalLoading(true);
+                }
+
                 // Redirect based on role
                 if (userData.role === 'admin') {
                     router.push("/admin");
