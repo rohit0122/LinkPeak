@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
-import dbConnect from "@/lib/db";
-import User from "@/models/User";
-import Subscription from "@/models/Subscription";
+import UserRepository from "@/lib/repositories/UserRepository";
+import SubscriptionRepository from "@/lib/repositories/SubscriptionRepository";
 import { RazorpayProvider } from "@/lib/payment";
 
 export async function POST(req) {
@@ -47,14 +46,8 @@ export async function POST(req) {
             });
         }
 
-        await dbConnect();
-
         // 🛑 Idempotency & Overlap Check
-        const activeSub = await Subscription.findOne({
-            userId,
-            status: "active",
-            endDate: { $gt: new Date() }
-        }).sort({ endDate: -1 });
+        const activeSub = await SubscriptionRepository.findActiveByUserId(userId);
 
         let startDate = new Date();
         let endDate = new Date();
@@ -66,7 +59,7 @@ export async function POST(req) {
             if (activeSub.planId === planId) {
                 activeSub.endDate = new Date(activeSub.endDate.getTime() + (30 * 24 * 60 * 60 * 1000));
                 activeSub.updatedAt = new Date();
-                await activeSub.save();
+                await SubscriptionRepository.update(activeSub._id, activeSub);
 
                 return NextResponse.json({ success: true, message: "Subscription extended" });
             } else {
@@ -80,7 +73,7 @@ export async function POST(req) {
 
         // 3. Activate plan on User (Immediate if no active sub or if it matches active sub plan)
         if (status === "active") {
-            await User.findByIdAndUpdate(userId, {
+            await UserRepository.update(userId, {
                 plan: planId,
                 updatedAt: new Date(),
                 isActive: true,
@@ -88,7 +81,7 @@ export async function POST(req) {
         }
 
         // 4. Create Subscription record
-        await Subscription.create({
+        await SubscriptionRepository.create({
             userId,
             planId,
             status: status,

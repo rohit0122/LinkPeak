@@ -2,6 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import {
+    useGetSubscriptionStatusQuery,
+    useCreatePaymentLinkMutation
+} from "@/store/services/subscriptionApi";
 import axios from "@/lib/axios";
 import toast from "react-hot-toast";
 import { CONFIG } from "@/constants/config";
@@ -23,17 +27,14 @@ export default function SubscriptionStatusDiv({
     const router = useRouter();
     const pathname = usePathname();
 
-    const [subscriptionData, setSubscriptionData] = useState(initialData || null);
-    const [loading, setLoading] = useState(!initialData);
-    const [creatingLink, setCreatingLink] = useState(false);
+    const { data: subQueryData, isLoading: isSubLoading } = useGetSubscriptionStatusQuery(undefined, {
+        skip: !!initialData && pathname !== '/suspended' // Use initialData if provided, unless on suspended page where we need fresh
+    });
 
-    useEffect(() => {
-        if (!initialData) fetchSubscriptionStatus();
-        else {
-            setSubscriptionData(initialData);
-            setLoading(false);
-        }
-    }, [initialData]);
+    const [createPaymentLink, { isLoading: creatingLink }] = useCreatePaymentLinkMutation();
+
+    const subscriptionData = subQueryData?.data || initialData;
+    const loading = isSubLoading && !initialData;
 
     /* 🔒 Trial expiry redirect — UNCHANGED */
     useEffect(() => {
@@ -60,35 +61,17 @@ export default function SubscriptionStatusDiv({
         }
     }, [subscriptionData, loading, redirectOnExpire, router, pathname]);
 
-    const fetchSubscriptionStatus = async () => {
-        try {
-            const { data } = await axios.get("/subscriptions");
-            if (data.success) setSubscriptionData(data.data);
-        } catch (err) {
-            console.error(err);
-        } finally {
-            setLoading(false);
-        }
-    };
-
     const handleCreatePaymentLink = async (planId) => {
-        setCreatingLink(true);
         try {
-            const { data } = await axios.post(
-                "/subscriptions/create-payment-link",
-                { planId }
-            );
-            if (data.success) {
+            const res = await createPaymentLink(planId).unwrap();
+            if (res.success) {
                 toast.success("Payment link created");
-                window.open(data.data.url, "_blank");
-                await fetchSubscriptionStatus();
+                window.open(res.data.url, "_blank");
             }
         } catch (err) {
             toast.error(
-                err.response?.data?.error || "Failed to create payment link"
+                err.data?.error || "Failed to create payment link"
             );
-        } finally {
-            setCreatingLink(false);
         }
     };
 

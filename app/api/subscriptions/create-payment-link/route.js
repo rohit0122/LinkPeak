@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
-import dbConnect from "@/lib/db";
-import Subscription from "@/models/Subscription";
-import PaymentLink from "@/models/PaymentLink";
-import User from "@/models/User";
+import SubscriptionRepository from "@/lib/repositories/SubscriptionRepository";
+import PaymentLinkRepository from "@/lib/repositories/PaymentLinkRepository";
+import UserRepository from "@/lib/repositories/UserRepository";
 import { getAuthUser } from "@/lib/auth";
 import { getPaymentProvider } from "@/lib/payment";
 
@@ -17,8 +16,6 @@ export async function POST(req) {
             return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
         }
 
-        await dbConnect();
-
         const { planId } = await req.json();
 
         if (!planId || !["FREE", "PRO", "AGENCY"].includes(planId)) {
@@ -29,17 +26,14 @@ export async function POST(req) {
         }
 
         // Get user for trial calculation
-        const user = await User.findById(session.id);
+        const user = await UserRepository.findById(session.id);
         const trialEndsAt = new Date(user.createdAt);
         trialEndsAt.setHours(trialEndsAt.getHours() + 24);
         const now = new Date();
         const isInTrial = now < trialEndsAt;
 
         // Check for active subscription
-        const activeSubscription = await Subscription.findOne({
-            userId: session.id,
-            status: { $in: ["active", "scheduled"] },
-        });
+        const activeSubscription = await SubscriptionRepository.findRecentByStatus(session.id, ["active", "scheduled"]);
 
         // Determine if user is eligible to create payment link
         let isEligible = false;
@@ -51,7 +45,7 @@ export async function POST(req) {
             reason = "trial_subscription";
         } else if (activeSubscription) {
             // Check renewal window (7 days before expiry)
-            const daysRemaining = Math.ceil((activeSubscription.endDate - now) / (1000 * 60 * 60 * 24));
+            const daysRemaining = Math.ceil((new Date(activeSubscription.endDate) - now) / (1000 * 60 * 60 * 24));
             if (daysRemaining <= 7 && daysRemaining > 0) {
                 isEligible = true;
                 reason = "renewal_window";
@@ -75,11 +69,7 @@ export async function POST(req) {
         }
 
         // Check for existing pending payment link
-        const existingLink = await PaymentLink.findOne({
-            userId: session.id,
-            status: "created",
-            expiresAt: { $gt: now },
-        });
+        const existingLink = await PaymentLinkRepository.findPendingByUserId(session.id);
 
         if (existingLink) {
             return NextResponse.json(
@@ -91,7 +81,7 @@ export async function POST(req) {
         // Define plan amounts (in paise for USD)
         const planAmounts = {
             FREE: 0,
-            PRO: 900, // $10
+            PRO: 900, // $9 but name PRO set as 900 (it's in units used by provider)
             AGENCY: 4900, // $49
         };
 
@@ -101,7 +91,6 @@ export async function POST(req) {
         const provider = getPaymentProvider();
 
         // Create payment link
-        console.log('api call ', session)
         const paymentLinkData = await provider.createPaymentLink({
             userId: session.id,
             userEmail: session.email,
@@ -112,7 +101,7 @@ export async function POST(req) {
         });
 
         // Store in database
-        const paymentLink = await PaymentLink.create({
+        const paymentLink = await PaymentLinkRepository.create({
             userId: session.id,
             planId,
             provider: process.env.PAYMENT_PROVIDER || "mock",

@@ -1,29 +1,24 @@
 import { NextResponse } from "next/server";
-import dbConnect from "@/lib/db";
-import Link from "@/models/Link";
+import LinkRepository from "@/lib/repositories/LinkRepository";
+import UserRepository from "@/lib/repositories/UserRepository";
 import { getAuthUser } from "@/lib/auth";
+import { CONFIG } from "@/constants/config";
 
 export async function GET(req) {
     try {
         const session = await getAuthUser();
         if (!session) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
-        //console.log('session api links,  ', session)
+
         const { searchParams } = new URL(req.url);
         const pageId = searchParams.get("pageId");
         if (!pageId) return NextResponse.json({ success: false, error: "Page ID required" }, { status: 400 });
 
-        await dbConnect();
-        const links = await Link.find({ pageId, userId: session.id }).sort({ order: 1 });
+        const links = await LinkRepository.findByPageId(pageId, session.id);
 
-        // --- Plan-Based Link Filtering (Handle Downgrades) ---
-        const User = (await import("@/models/User")).default;
-        const { CONFIG } = await import("@/constants/config");
-        const user = await User.findById(session.id);
+        // Plan-Based Link Filtering
+        const user = await UserRepository.findById(session.id);
         const planLimit = CONFIG.PLAN_LIMITS[user?.plan || "FREE"].links;
-
-        // Return only allowed number of links (preserves excess in DB)
         const filteredLinks = links.slice(0, planLimit);
-        // -------------------------------------------------------
 
         return NextResponse.json({ success: true, data: filteredLinks });
     } catch (error) {
@@ -36,16 +31,12 @@ export async function POST(req) {
         const session = await getAuthUser();
         if (!session) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
 
-        await dbConnect();
         const { pageId, title, url, icon } = await req.json();
 
         // Plan Limit Check
-        const User = (await import("@/models/User")).default;
-        const { CONFIG } = await import("@/constants/config");
-
-        const user = await User.findById(session.id);
+        const user = await UserRepository.findById(session.id);
         const planLimit = CONFIG.PLAN_LIMITS[user.plan || "FREE"].links;
-        const currentCount = await Link.countDocuments({ pageId, userId: session.id });
+        const currentCount = await LinkRepository.countByPageId(pageId, session.id);
 
         if (currentCount >= planLimit) {
             return NextResponse.json({
@@ -54,7 +45,7 @@ export async function POST(req) {
             }, { status: 403 });
         }
 
-        const link = await Link.create({
+        const link = await LinkRepository.create({
             userId: session.id,
             pageId,
             title,
@@ -74,17 +65,11 @@ export async function PATCH(req) {
         const session = await getAuthUser();
         if (!session) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
 
-        await dbConnect();
         const { id, ...updates } = await req.json();
-
-        const link = await Link.findOneAndUpdate(
-            { _id: id, userId: session.id },
-            updates,
-            { new: true }
-        );
+        const link = await LinkRepository.update(id, session.id, updates);
 
         if (!link) {
-            return NextResponse.json({ success: false, error: "Link not found" }, { status: 404 });
+            return NextResponse.json({ success: false, error: "Link not found or unauthorized" }, { status: 404 });
         }
 
         return NextResponse.json({ success: true, data: link });
@@ -102,11 +87,10 @@ export async function DELETE(req) {
         const id = searchParams.get("id");
         if (!id) return NextResponse.json({ success: false, error: "Link ID required" }, { status: 400 });
 
-        await dbConnect();
-        const link = await Link.findOneAndDelete({ _id: id, userId: session.id });
+        const link = await LinkRepository.delete(id, session.id);
 
         if (!link) {
-            return NextResponse.json({ success: false, error: "Link not found" }, { status: 404 });
+            return NextResponse.json({ success: false, error: "Link not found or unauthorized" }, { status: 404 });
         }
 
         return NextResponse.json({ success: true, message: "Link deleted" });
@@ -120,17 +104,8 @@ export async function PUT(req) {
         const session = await getAuthUser();
         if (!session) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
 
-        await dbConnect();
         const { links } = await req.json(); // Array of { id, order }
-
-        const bulkOps = links.map((link) => ({
-            updateOne: {
-                filter: { _id: link.id, userId: session.id },
-                update: { order: link.order },
-            },
-        }));
-
-        await Link.bulkWrite(bulkOps);
+        await LinkRepository.reorder(links, session.id);
 
         return NextResponse.json({ success: true, message: "Links reordered" });
     } catch (error) {

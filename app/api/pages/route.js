@@ -1,26 +1,24 @@
 import { NextResponse } from "next/server";
-import dbConnect from "@/lib/db";
-import BioPage from "@/models/BioPage";
+import BioPageRepository from "@/lib/repositories/BioPageRepository";
+import UserRepository from "@/lib/repositories/UserRepository";
 import { getAuthUser } from "@/lib/auth";
+import { CONFIG } from "@/constants/config";
 
 export async function GET() {
     try {
         const session = await getAuthUser();
         if (!session) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
-        //console.log('session ===== pages ', session)
-        await dbConnect();
-        const pages = await BioPage.find({ userId: session.id });
+
+        const pages = await BioPageRepository.findByUserId(session.id);
 
         // --- Plan-Based Data Filtering (Handle Downgrades) ---
-        const User = (await import("@/models/User")).default;
-        const { CONFIG } = await import("@/constants/config");
-        const user = await User.findById(session.id);
+        const user = await UserRepository.findById(session.id);
         const plan = user?.plan || "FREE";
         const limits = CONFIG.PLAN_LIMITS[plan];
 
         // Filter each page's data based on current plan
         const filteredPages = pages.map(page => {
-            const pageObj = page.toObject();
+            const pageObj = page.toObject ? page.toObject() : page;
 
             // Reset template if not allowed by current plan
             const allowedTemplates = limits.allowedTemplates;
@@ -59,31 +57,30 @@ export async function POST(req) {
         const session = await getAuthUser();
         if (!session) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
 
-        await dbConnect();
         const { slug, title, bio } = await req.json();
 
         // Page Limit Check
-        const User = (await import("@/models/User")).default;
-        const { CONFIG } = await import("@/constants/config");
-        const user = await User.findById(session.id);
-        const limit = CONFIG.PLAN_LIMITS[user.plan || "FREE"].pages;
-        const count = await BioPage.countDocuments({ userId: session.id });
+        const user = await UserRepository.findById(session.id);
+        const plan = user?.plan || "FREE";
+        const limit = CONFIG.PLAN_LIMITS[plan].pages;
+        const count = await BioPageRepository.countByUserId(session.id);
 
         if (count >= limit) {
             return NextResponse.json({
                 success: false,
-                error: `Limit reached! Your ${user.plan} plan allows up to ${limit} page(s). Please upgrade for more.`
+                error: `Limit reached! Your ${plan} plan allows up to ${limit} page(s). Please upgrade for more.`
             }, { status: 403 });
         }
 
-        const existingPage = await BioPage.findOne({ slug: slug.toLowerCase() });
+        const normalizedSlug = slug.toLowerCase().trim();
+        const existingPage = await BioPageRepository.findBySlug(normalizedSlug);
         if (existingPage) {
             return NextResponse.json({ success: false, error: "Slug already taken" }, { status: 400 });
         }
 
-        const page = await BioPage.create({
+        const page = await BioPageRepository.create({
             userId: session.id,
-            slug: slug.toLowerCase(),
+            slug: normalizedSlug,
             title,
             bio,
         });
@@ -99,13 +96,10 @@ export async function PATCH(req) {
         const session = await getAuthUser();
         if (!session) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
 
-        await dbConnect();
         const { id, ...updates } = await req.json();
 
         // --- RBAC & Security Check ---
-        const User = (await import("@/models/User")).default;
-        const { CONFIG } = await import("@/constants/config");
-        const user = await User.findById(session.id);
+        const user = await UserRepository.findById(session.id);
         const plan = user?.plan || "FREE";
         const limits = CONFIG.PLAN_LIMITS[plan];
 
@@ -115,27 +109,33 @@ export async function PATCH(req) {
                 error: "User not found or plan not specified."
             }, { status: 404 });
         }
-        if (!updates.title && updates.title.length < 3) {
+
+        // Validation logic
+        if (updates.title && updates.title.length < 3) {
             return NextResponse.json({
                 success: false,
-                error: "Title must be at least 3 characters long. Refer Settings tab."
+                error: "Title must be at least 3 characters long."
             }, { status: 400 });
         }
-        if (!updates.slug || updates.slug.length < 3) {
-            return NextResponse.json({
-                success: false,
-                error: "Slug must be at least 3 characters long. Refer Settings tab."
-            }, { status: 400 });
+
+        if (updates.slug) {
+            if (updates.slug.length < 3) {
+                return NextResponse.json({
+                    success: false,
+                    error: "Slug must be at least 3 characters long."
+                }, { status: 400 });
+            }
+            const normalizedSlug = updates.slug.toLowerCase().trim();
+            const existingPage = await BioPageRepository.findBySlug(normalizedSlug);
+            if (existingPage && existingPage._id.toString() !== id) {
+                return NextResponse.json({
+                    success: false,
+                    error: "This slug already taken. Please try another slug."
+                }, { status: 400 });
+            }
+            updates.slug = normalizedSlug;
         }
-        // check if slug is not used by other user
-        const existingPage = await BioPage.findOne({ slug: updates.slug.toLowerCase() });
-        //console.log('existingPage ', existingPage)
-        if (existingPage && existingPage._id.toString() !== id) {
-            return NextResponse.json({
-                success: false,
-                error: "This slug already taken. Please try another slug."
-            }, { status: 400 });
-        }
+
         // 1. Validate Template
         if (updates.template) {
             const allowed = limits.allowedTemplates;
@@ -159,7 +159,6 @@ export async function PATCH(req) {
         }
 
         // 3. Validate SEO (Block for FREE users)
-        // We check if 'seo' key exists in updates. Even empty object update is blocked for Free.
         if (updates.seo && (updates.seo.title || updates.seo.description || updates.seo.keywords) && plan === 'FREE') {
             return NextResponse.json({
                 success: false,
@@ -167,7 +166,7 @@ export async function PATCH(req) {
             }, { status: 403 });
         }
 
-        // 4. Validate Branding removewatermark, edit customText & edit customUrl (Agency Only)
+        // 4. Validate Branding (Agency Only)
         if (updates.branding && plan !== 'AGENCY') {
             if ((updates.branding.customText || updates.branding.customUrl)) {
                 return NextResponse.json({
@@ -181,13 +180,8 @@ export async function PATCH(req) {
                 }, { status: 403 });
             }
         }
-        // -----------------------------
 
-        const page = await BioPage.findOneAndUpdate(
-            { _id: id, userId: session.id },
-            updates,
-            { new: true }
-        );
+        const page = await BioPageRepository.updateWithUserCheck(id, session.id, updates);
 
         if (!page) {
             return NextResponse.json({ success: false, error: "Page not found" }, { status: 404 });

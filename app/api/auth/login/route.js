@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import dbConnect from "@/lib/db";
-import User from "@/models/User";
+import UserRepository from "@/lib/repositories/UserRepository";
 import { createToken } from "@/lib/auth";
 import { authRateLimit } from "@/lib/rateLimit";
 
@@ -22,10 +21,9 @@ export async function POST(req) {
             );
         }
 
-        await dbConnect();
         const { email, password } = await req.json();
 
-        const user = await User.findOne({ email }).select("+password");
+        const user = await UserRepository.findByEmail(email);
         if (!user) {
             return NextResponse.json({ success: false, error: "Invalid credentials" }, { status: 401 });
         }

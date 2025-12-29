@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
-import dbConnect from "@/lib/db";
-import Subscription from "@/models/Subscription";
-import PaymentLink from "@/models/PaymentLink";
-import User from "@/models/User";
+import SubscriptionRepository from "@/lib/repositories/SubscriptionRepository";
+import PaymentLinkRepository from "@/lib/repositories/PaymentLinkRepository";
+import UserRepository from "@/lib/repositories/UserRepository";
 import { getAuthUser } from "@/lib/auth";
 
 /**
@@ -16,11 +15,8 @@ export async function GET(req) {
             return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
         }
 
-        await dbConnect();
-
         // Calculate trial end (createdAt + 24 hours)
-        // Note: We're using existing createdAt field, not adding trialEndsAt
-        const user = await User.findById(session.id);
+        const user = await UserRepository.findById(session.id);
         if (!user) {
             return NextResponse.json({ success: false, error: "User not found" }, { status: 404 });
         }
@@ -32,24 +28,17 @@ export async function GET(req) {
         const isInTrial = now < trialEndsAt;
 
         // Find active or scheduled subscription
-        const subscription = await Subscription.findOne({
-            userId: session.id,
-            status: { $in: ["trial", "active", "scheduled"] },
-        }).sort({ createdAt: -1 });
+        const subscription = await SubscriptionRepository.findRecentByStatus(session.id, ["trial", "active", "scheduled"]);
 
         // Check for pending payment links
-        const pendingPaymentLink = await PaymentLink.findOne({
-            userId: session.id,
-            status: "created",
-            expiresAt: { $gt: now },
-        }).sort({ createdAt: -1 });
+        const pendingPaymentLink = await PaymentLinkRepository.findPendingByUserId(session.id);
 
         // Calculate renewal window (7 days before expiry)
         let inRenewalWindow = false;
         let daysUntilExpiry = null;
 
         if (subscription && subscription.endDate) {
-            const daysRemaining = Math.ceil((subscription.endDate - now) / (1000 * 60 * 60 * 24));
+            const daysRemaining = Math.ceil((new Date(subscription.endDate) - now) / (1000 * 60 * 60 * 24));
             daysUntilExpiry = daysRemaining;
             inRenewalWindow = daysRemaining <= 7 && daysRemaining > 0;
         }
