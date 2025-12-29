@@ -12,15 +12,19 @@ export default function ThemeSelector({ currentTheme, plan, onSelect }) {
 
     return (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-base-100 p-2 border border-base-300 shadow-sm rounded-xl overflow-hidden">
-            {CONFIG.DAISY_THEMES.map((theme) => {
-                const isLocked = !isAllUnlocked && !allowedThemes.includes(theme);
-                const isActive = currentTheme === theme;
+            {CONFIG.DAISY_THEMES.map((themeObj) => {
+                const themeId = themeObj.id;
+                const themeLabel = themeObj.label;
+
+                // Check if plan allows widespread "ALL" or specific list
+                const isLocked = !isAllUnlocked && !allowedThemes.includes(themeId);
+                const isActive = currentTheme === themeId;
 
                 return (
                     <button
-                        key={theme}
+                        key={themeId}
                         disabled={isLocked}
-                        onClick={() => !isLocked && onSelect(theme)}
+                        onClick={() => !isLocked && onSelect(themeId)}
                         className={`
                             relative group flex flex-col items-center gap-3 p-4 
                             border-2 transition-all duration-300 rounded-xl
@@ -32,7 +36,7 @@ export default function ThemeSelector({ currentTheme, plan, onSelect }) {
                                     : "border-base-200 hover:border-primary/30 hover:shadow-lg"
                             }
                         `}
-                        data-theme={theme}
+                        data-theme={themeId}
                         suppressHydrationWarning={true}
                     >
                         {/* Lock Badge */}
@@ -55,7 +59,7 @@ export default function ThemeSelector({ currentTheme, plan, onSelect }) {
                         {/* Theme Name */}
                         <div className="flex flex-col items-center">
                             <span className="text-[10px] font-bold uppercase tracking-widest opacity-80 group-hover:opacity-100 transition-opacity">
-                                {theme}
+                                {themeLabel}
                             </span>
                         </div>
 

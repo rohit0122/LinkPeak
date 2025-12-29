@@ -28,20 +28,18 @@ export const CONFIG = {
     },
     // UI Settings
     DAISY_THEMES: [
-        /* "light", "dark", "cupcake", "luxury", "dracula",
-         "retro", "cyberpunk", "aqua", "synthwave"*/
-        "light",      // Standard
-        "dark",       // Night Mode
-        "cupcake",    // Soft/Creative
-        "luxury",     // High-end/Business
-        "cyberpunk",  // Gaming/Tech
-        "retro",      // Vintage/Indie
-        "aqua",       // Travel/Nature
-        "dracula",    // Developer/Pro
-        "valentine",  // Fashion/Beauty
-        "coffee",     // Warm/Professional
-        "synthwave",  // High-Tech/Analytics
-        "forest"      // Natural/Wellness
+        { id: "light", label: "Classic Light" },
+        { id: "dark", label: "Night Mode" },
+        { id: "cupcake", label: "Soft & Sweet" },
+        { id: "bumblebee", label: "Bold Contrast" },
+        { id: "emerald", label: "Elegant Green" },
+        { id: "corporate", label: "Professional" },
+        { id: "retro", label: "Vintage Warmth" },
+        { id: "cyberpunk", label: "Neon Future" },
+        { id: "valentine", label: "Romance" },
+        { id: "luxury", label: "Premium Gold" },
+        { id: "dracula", label: "Dark Pro" },
+        { id: "coffee", label: "Cozy Roast" }
     ],
 
     SUPPORT_CATEGORIES: ["Billing", "Technical", "Feedback", "General"],
