@@ -6,11 +6,13 @@ import { RiDownloadLine, RiCloseLine, RiQrCodeLine, RiShareLine } from "react-ic
 import { toast } from "react-hot-toast";
 import { CONFIG } from "@/constants/config";
 
-export default function QRModal({ slug, isOpen, onClose }) {
-    const [centerIcon, setCenterIcon] = useState("Peak");
+export default function QRModal({ slug, isOpen, onClose, plan = "FREE" }) {
+    const [centerIcon, setCenterIcon] = useState("LinkPeakk");
     const url = `${typeof window !== "undefined" ? window.location.origin : ""}/${slug}`;
 
+    const canCustomize = CONFIG.PLAN_LIMITS[plan]?.customQR;
     const icons = CONFIG.QR_LOGOS;
+
     const downloadQR = () => {
         const canvas = document.getElementById("share-qr-canvas");
         if (!canvas) return;
@@ -66,18 +68,25 @@ export default function QRModal({ slug, isOpen, onClose }) {
                     {/* Icon Selection */}
                     <div className="w-full mb-8">
                         <p className="text-[10px] font-bold tracking-widest uppercase opacity-40 mb-3 ml-1 text-center">Center Icon</p>
-                        <div className="grid grid-cols-4 gap-2">
-                            {icons.map((icon) => (
-                                <button
-                                    key={icon.name}
-                                    onClick={() => setCenterIcon(icon.name)}
-                                    className={`w-10 h-10 flex items-center justify-center border-2 transition-all overflow-hidden ${centerIcon === icon.name ? "border-primary bg-primary/5 p-1" : "border-base-200 hover:border-primary/30 p-2"
-                                        }`}
-                                >
-                                    {icon.url ? <img src={icon.url} alt={icon.name} className="w-8 h-8" /> : <span className="text-[9px] font-bold tracking-widest uppercase opacity-40">{icon.name}</span>}
-                                </button>
-                            ))}
-                        </div>
+
+                        {canCustomize ? (
+                            <div className="grid grid-cols-4 gap-2">
+                                {icons.map((icon) => (
+                                    <button
+                                        key={icon.name}
+                                        onClick={() => setCenterIcon(icon.name)}
+                                        className={`w-10 h-10 flex items-center justify-center border-2 transition-all overflow-hidden ${centerIcon === icon.name ? "border-primary bg-primary/5 p-1" : "border-base-200 hover:border-primary/30 p-2"
+                                            }`}
+                                    >
+                                        {icon.url ? <img src={icon.url} alt={icon.name} className="w-8 h-8" /> : <span className="text-[9px] font-bold tracking-widest uppercase opacity-40">{icon.name}</span>}
+                                    </button>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="p-3 bg-base-200/50 rounded-lg text-center border border-base-300 border-dashed">
+                                <p className="text-xs opacity-60">Custom icons available on <span className="font-bold text-primary">Pro</span> plan.</p>
+                            </div>
+                        )}
                     </div>
 
                     <div className="flex flex-col gap-3 w-full">

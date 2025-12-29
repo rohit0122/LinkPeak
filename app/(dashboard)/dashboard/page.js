@@ -379,7 +379,7 @@ export default function DashboardPage() {
 
 
             {/* Subscription Status - Handles Trial & Renewal Alerts */}
-            {user?.plan !== 'FREE' && <SubscriptionStatusDiv user={user} initialData={subscriptionStatus} redirectOnExpire={false} />}
+            <SubscriptionStatusDiv user={user} initialData={subscriptionStatus} redirectOnExpire={false} />
             {user?.plan !== 'FREE' && <SubscriptionStatus user={user} initialData={subscriptionStatus} redirectOnExpire={true} />}
 
             <div className="flex flex-col lg:flex-row gap-8 min-h-full">

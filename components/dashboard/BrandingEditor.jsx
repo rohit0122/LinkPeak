@@ -1,5 +1,6 @@
 "use client";
 
+import { CONFIG } from "@/constants/config";
 import { useState, useEffect } from "react";
 
 import { RiShieldStarLine, RiGlobeLine, RiText, RiLinkM } from "react-icons/ri";
@@ -45,7 +46,7 @@ export default function BrandingEditor({ page, user, onUpdate, onPreviewUpdate }
                                 onChange={(e) => handleChange("removeWatermark", e.target.checked)}
                             />
                             <div>
-                                <span className="label-text font-bold text-sm md:text-lg">Remove "Powered by LinkPeak"</span>
+                                <span className="label-text font-bold text-sm md:text-lg">Remove "Powered by {CONFIG.SITE_NAME}"</span>
                                 {!isPro && (
                                     <span className="badge badge-xs badge-neutral ml-2 font-semibold uppercase tracking-wider">
                                         PRO Feature

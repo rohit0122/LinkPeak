@@ -56,6 +56,7 @@ export const CONFIG = {
     QR_LOGOS: [
         { id: "none", name: "None", url: "" },
         { id: "shape", name: "Peak", url: "/qr-logos/linkpeak-qr-logo.svg" },
+        { id: "favicon", name: "LinkPeakk", url: "/qr-logos/linkpeak-favicon.svg" },
         { id: "fire", name: "Fire", url: "/qr-logos/fire-emoji.svg" },
         { id: "rocket", name: "Rocket", url: "/qr-logos/rocket-emoji.svg" },
         { id: "star", name: "Star", url: "/qr-logos/star-qr-icon.svg" },

@@ -47,7 +47,9 @@ export default async function Page({ params }) {
 
     // ... rest of component
     await dbConnect();
-    const page = await BioPage.findOne({ slug: slug.toLowerCase() }).lean();
+    const page = await BioPage.findOne({ slug: slug.toLowerCase() })
+        .populate("userId", "plan")
+        .lean();
     if (!page) {
         return <BioNotFound />;
     }

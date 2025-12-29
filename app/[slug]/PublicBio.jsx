@@ -220,6 +220,7 @@ export default function PublicBio({ page, links, isDemo = false }) {
                 slug={page.slug}
                 isOpen={isQRModalOpen}
                 onClose={() => setIsQRModalOpen(false)}
+                plan={page.userId?.plan || "FREE"}
             />
         </div>
     );

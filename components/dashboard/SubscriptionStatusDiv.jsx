@@ -137,24 +137,29 @@ export default function SubscriptionStatusDiv({
                         Subscription Status
                     </h3>
 
-                    {subscription?.status === "active" && (
+                    {user.plan !== "FREE" && subscription?.status === "active" && (
                         <span className="badge badge-success badge-sm gap-1">
                             <RiCheckboxCircleLine /> {subscription.planId} ACTIVE
                         </span>
                     )}
+
+                    <span className={`badge badge-${user.plan !== "FREE" && subscription?.status === "active" ? "success" : "warning"} badge-sm gap-1`}>
+                        <RiCheckboxCircleLine /> {user.plan} PLAN
+                    </span>
+
                 </div>
 
                 {/* ───────── Trial Info ───────── */}
-                {trial.active && subscription?.status !== "active" && (
-                    <div className="alert alert-info shadow-sm mb-3">
+                {user.plan !== "FREE" && trial.active && subscription?.status !== "active" && (
+                    <div className="alert alert-info shadow-sm mb-3 text-info-content">
                         <RiTimeLine className="text-lg" />
                         <div>
                             <div className="font-bold text-sm">
-                                Trial Access Active
+                                {user.plan} PLAN Trial Access Active
                             </div>
-                            <div className="text-xs opacity-80">
+                            <div className="text-xs ">
                                 Full access until{" "}
-                                {new Date(trial.endsAt).toLocaleDateString()}
+                                {new Date(trial.endsAt).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                             </div>
                         </div>
                     </div>

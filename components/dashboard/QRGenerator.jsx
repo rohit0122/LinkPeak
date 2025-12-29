@@ -9,10 +9,8 @@ import { useState } from "react";
 
 export default function QRGenerator({ slug, plan }) {
     const [fgColor, setFgColor] = useState("#000000");
-    const [logo, setLogo] = useState(CONFIG.QR_LOGOS[1]); // Default to 'Peak' logo
-    const canCustomize = CONFIG.PLAN_LIMITS[plan || 'FREE'].customQR;
-
-    const url = `${typeof window !== "undefined" ? window.location.origin : ""}/${slug}`;
+    const [logo, setLogo] = useState(CONFIG.QR_LOGOS[2]); // Default to 'LinkPeakk' logo
+    const canCustomize = CONFIG.PLAN_LIMITS[plan || 'FREE'].customQR; const url = `${typeof window !== "undefined" ? window.location.origin : ""}/${slug}`;
 
     const downloadQR = () => {
         const canvas = document.getElementById("linkpeak-qr");
