@@ -181,7 +181,9 @@ export default function PublicBio({ page, links, isDemo = false }) {
                         {!page.branding?.removeWatermark ? (
                             <div className="mt-6 flex flex-col items-center gap-1">
                                 <span className="text-[10px] font-bold tracking-widest uppercase opacity-30">Powered by</span>
-                                <span className="text-xs font-medium tracking-tighter opacity-70">{CONFIG.SITE_NAME}</span>
+                                <span className="text-xs font-medium tracking-tighter opacity-70">
+                                    <a href={CONFIG.SITE_URL} target="_blank" rel="noopener noreferrer"> {CONFIG.SITE_NAME}</a>
+                                </span>
                             </div>
                         ) : page.branding?.customText && (
                             <div className="mt-6 flex flex-col items-center gap-1">
