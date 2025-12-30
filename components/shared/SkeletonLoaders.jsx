@@ -52,7 +52,7 @@ export function SkeletonTable() {
 
 export function SkeletonDashboard() {
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 max-w-6xl mx-auto my-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <SkeletonStat />
                 <SkeletonStat />
