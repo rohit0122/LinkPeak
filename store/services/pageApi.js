@@ -29,6 +29,23 @@ export const pageApi = api.injectEndpoints({
             }),
             transformResponse: (response) => response.data,
             invalidatesTags: (result, error, { slug }) => ['Page', { type: 'Page', id: slug }],
+            async onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
+                // Determine how to update cache. Since we list pages (getPages) and get items (getPageBySlug).
+                // Updating LIST cache is easy if we scan for 'getPages'.
+                const patchResult = dispatch(
+                    pageApi.util.updateQueryData('getPages', undefined, (draft) => {
+                        const page = draft.find((p) => p._id === id);
+                        if (page) {
+                            Object.assign(page, patch);
+                        }
+                    })
+                );
+                try {
+                    await queryFulfilled;
+                } catch {
+                    patchResult.undo();
+                }
+            },
         }),
         deletePage: builder.mutation({
             query: (id) => ({

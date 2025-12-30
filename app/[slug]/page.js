@@ -49,8 +49,7 @@ export default async function Page({ params }) {
     }
 
     // Fetch active links using pageId
-    const links = await LinkRepository.findByPageId(page._id);
-    const activeLinks = (links || []).filter(l => l.isActive);
+    const activeLinks = await LinkRepository.findActiveByPageId(page._id);
 
     // Convert ObjectIds to strings for serialization safely
     const serializedPage = JSON.parse(JSON.stringify(page));

@@ -38,16 +38,10 @@ export async function GET(req) {
         if (activePage) {
             links = await LinkRepository.findByPageId(activePage._id, session.id);
 
-            let maxDays = CONFIG.PLAN_LIMITS[user.plan || "FREE"].analyticsDays;
-            if (user.plan === "PRO") maxDays = CONFIG.PLAN_LIMITS.PRO.analyticsDays;
-            if (user.plan === "AGENCY") maxDays = 36500;
+            // Fetch Date Range Analytics (SKIP FOR PERFORMANCE - Fetched on demand)
+            analytics = [];
 
-            const startDate = startOfDay(subDays(new Date(), maxDays));
-
-            // Fetch time-series data
-            analytics = await AnalyticsRepository.findByPageIdWithDateRange(activePage._id, startDate, session.id);
-
-            // Fetch Lifetime Sum
+            // Fetch Lifetime Sum (KEEP THIS for Preview Phone Badge)
             lifetime = await AnalyticsRepository.getLifetimeSum(activePage._id, session.id);
         }
 
@@ -102,9 +96,9 @@ export async function GET(req) {
         return NextResponse.json({
             success: true,
             data: {
-                user,
+                // user: user, // OPTIMIZATION: Removed redundant User object (frontend uses /me)
                 pages: allPages,
-                activePage,
+                activePageId: activePage?._id, // OPTIMIZATION: Send ID only (object is in pages array)
                 links,
                 analytics,
                 lifetime,

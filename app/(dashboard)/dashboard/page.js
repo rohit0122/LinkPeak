@@ -125,12 +125,14 @@ export default function DashboardPage() {
     const subscriptionStatus = initData?.subscriptionStatus || null;
 
     useEffect(() => {
-        if (initData?.activePage && !selectedPageId) {
-            setSelectedPageId(initData.activePage._id);
+        if (initData?.activePageId && !selectedPageId) {
+            setSelectedPageId(initData.activePageId);
         }
     }, [initData, selectedPageId]);
 
-    const page = allPages.find(p => p._id === selectedPageId) || initData?.activePage;
+    const page = allPages.find(p => p._id === selectedPageId)
+        || allPages.find(p => p._id === initData?.activePageId)
+        || allPages[0];
 
     // Sync localPageData when page changes
     useEffect(() => {
@@ -141,11 +143,11 @@ export default function DashboardPage() {
 
     // Secondary Hooks for dynamic updates
     const { data: linksData } = useGetLinksQuery(selectedPageId, { skip: !selectedPageId });
-    const { data: analyticsData } = useGetAnalyticsQuery({ pageId: selectedPageId }, { skip: !selectedPageId });
+    const { data: analyticsData } = useGetAnalyticsQuery({ pageId: selectedPageId }, { skip: !selectedPageId || activeTab !== 'analytics' });
 
-    const links = linksData || (selectedPageId === initData?.activePage?._id ? initData?.links : []) || [];
-    const analytics = analyticsData?.data || (selectedPageId === initData?.activePage?._id ? initData?.analytics : []) || [];
-    const lifetimeStats = analyticsData?.lifetime || (selectedPageId === initData?.activePage?._id ? initData?.lifetime : { totalViews: 0, totalClicks: 0, totalLikes: 0 });
+    const links = linksData || (selectedPageId === initData?.activePageId ? initData?.links : []) || [];
+    const analytics = analyticsData?.data || (selectedPageId === initData?.activePageId ? initData?.analytics : []) || [];
+    const lifetimeStats = analyticsData?.lifetime || (selectedPageId === initData?.activePageId ? initData?.lifetime : { totalViews: 0, totalClicks: 0, totalLikes: 0 });
 
     const handleSwitchRequest = (pageId = null, tabId = null) => {
         if (pageId && pageId === selectedPageId) return;
