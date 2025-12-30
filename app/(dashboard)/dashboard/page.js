@@ -16,6 +16,7 @@ import { SkeletonChart, SkeletonTable, SkeletonDashboard } from "@/components/sh
 import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { useAuth } from "@/context/AuthContext";
+import { useLoading } from "@/context/LoadingContext";
 import { useGetDashboardInitQuery } from "@/store/services/dashboardApi";
 import {
     useUpdatePageMutation,
@@ -78,7 +79,20 @@ const SupportView = dynamic(() => import("@/components/dashboard/SupportView"), 
 
 export default function DashboardPage() {
     const { user: authUser } = useAuth();
+    const { setLoading } = useLoading();
     const router = useRouter();
+
+    // Utility wrapper to show global loading indicator during async operations
+    const withLoading = useCallback((asyncFn) => {
+        return async (...args) => {
+            setLoading(true);
+            try {
+                return await asyncFn(...args);
+            } finally {
+                setLoading(false);
+            }
+        };
+    }, [setLoading]);
 
     // Redux State & Hooks
     const {
@@ -160,8 +174,6 @@ export default function DashboardPage() {
 
     const handleSaveAndSwitch = async () => {
         setIsSwitching(true);
-        if (window.setGlobalLoading) window.setGlobalLoading(true);
-
         try {
             await handleGlobalSave();
             if (pendingPageId) setSelectedPageId(pendingPageId);
@@ -172,11 +184,10 @@ export default function DashboardPage() {
             setPendingTabId(null);
         } finally {
             setIsSwitching(false);
-            if (window.setGlobalLoading) window.setGlobalLoading(false);
         }
     };
 
-    const handleCreatePage = async () => {
+    const handleCreatePage = withLoading(async () => {
         try {
             const newSlug = `page-${Math.floor(Math.random() * 10000)}`;
             const res = await createPage({
@@ -192,20 +203,18 @@ export default function DashboardPage() {
         } catch (error) {
             toast.error(error.data?.error || "Could not create page");
         }
-    };
+    });
 
-    const handleReorder = useCallback(async (newLinks) => {
-        console.log("DEBUG: handleReorder called with", newLinks.length, "links");
+    const handleReorder = useCallback(withLoading(async (newLinks) => {
         try {
             const reorderPayload = newLinks.map((l, index) => ({ id: l._id, order: index }));
             await reorderLinks(reorderPayload).unwrap();
         } catch (error) {
             toast.error("Could not save link order. Please try again.");
         }
-    }, [reorderLinks]);
+    }), [reorderLinks]);
 
-    const handleAddLink = useCallback(async (newLinkData) => {
-        console.log("DEBUG: handleAddLink called");
+    const handleAddLink = useCallback(withLoading(async (newLinkData) => {
         try {
             await createLink({
                 ...newLinkData,
@@ -215,10 +224,9 @@ export default function DashboardPage() {
         } catch (error) {
             toast.error("Could not add link. Please try again.");
         }
-    }, [createLink, selectedPageId]);
+    }), [createLink, selectedPageId]);
 
-    const handleUpdateLink = useCallback(async (updatedLink) => {
-        console.log("DEBUG: handleUpdateLink called for", updatedLink._id);
+    const handleUpdateLink = useCallback(withLoading(async (updatedLink) => {
         try {
             const { _id, ...updates } = updatedLink;
             await updateLink({ id: _id, ...updates }).unwrap();
@@ -226,20 +234,19 @@ export default function DashboardPage() {
         } catch (error) {
             toast.error("Could not update link. Please try again.");
         }
-    }, [updateLink]);
+    }), [updateLink]);
 
-    const handleDeleteLink = useCallback(async (id) => {
-        console.log("DEBUG: handleDeleteLink called for", id);
+    const handleDeleteLink = useCallback(withLoading(async (id) => {
         try {
             await deleteLink(id).unwrap();
             toast.success("Link removed from your bio");
         } catch (error) {
             toast.error("Could not remove link. Please try again.");
         }
-    }, [deleteLink]);
+    }), [deleteLink]);
 
 
-    const handleGlobalSave = async () => {
+    const handleGlobalSave = withLoading(async () => {
         if (!localPageData) return;
         try {
             const res = await updatePage({
@@ -272,7 +279,7 @@ export default function DashboardPage() {
         } catch (error) {
             toast.error(error.data?.error || "Could not save changes. Please try again.");
         }
-    };
+    });
 
     const handleLocalUpdate = (updates) => {
         setLocalPageData(prev => ({ ...prev, ...updates }));
@@ -295,7 +302,7 @@ export default function DashboardPage() {
     const activePageData = unsavedChanges ? localPageData : page;
 
     const [isSeoAiLoading, setIsSeoAiLoading] = useState(false);
-    const handleSeoAiMagic = async () => {
+    const handleSeoAiMagic = withLoading(async () => {
         setIsSeoAiLoading(true);
         try {
             const { data } = await axios.post("/ai/generate-seo", {
@@ -314,7 +321,7 @@ export default function DashboardPage() {
         } finally {
             setIsSeoAiLoading(false);
         }
-    };
+    });
 
     if (isInitLoading) return <SkeletonDashboard />;
     if (isInitError) return <div>Error loading dashboard. Please refresh.</div>;
@@ -449,7 +456,7 @@ export default function DashboardPage() {
                                         1. Choose Template
                                     </h2>
                                     <TemplateSelector
-                                        currentTemplate={page?.template}
+                                        currentTemplate={localPageData?.template}
                                         plan={user?.plan}
                                         onSelect={(t) => handleLocalUpdate({ template: t })}
                                     />
@@ -464,7 +471,7 @@ export default function DashboardPage() {
                                     </h2>
                                     <div className="bg-base-100 p-2 border border-base-300 shadow-sm overflow-hidden">
                                         <ThemeSelector
-                                            currentTheme={page?.theme}
+                                            currentTheme={localPageData?.theme}
                                             plan={user?.plan}
                                             onSelect={(theme) => handleLocalUpdate({ theme })}
                                         />
@@ -887,6 +894,7 @@ export default function DashboardPage() {
                             key={`${selectedPageId}-${links.map(l => l._id + l.isActive).join('|')}-${unsavedChanges}`}
                             pageData={activePageData}
                             links={links}
+                            lifetime={lifetimeStats}
                         />
                     </div>
                 </div>

@@ -32,10 +32,10 @@ export async function GET(req) {
         const startDate = startOfDay(subDays(new Date(), days));
 
         // Use Repository for time-series data
-        const data = await AnalyticsRepository.findByPageIdWithDateRange(pageId, startDate, session.id);
+        const data = await AnalyticsRepository.findByPageIdWithDateRange(pageId, startDate);
 
         // Use Repository for Lifetime Sum
-        const lifetime = await AnalyticsRepository.getLifetimeSum(pageId, session.id);
+        const lifetime = await AnalyticsRepository.getLifetimeSum(pageId);
 
         return NextResponse.json({
             success: true,

@@ -3,6 +3,7 @@ import "./globals.css";
 import GlobalLoading from "@/components/shared/GlobalLoading";
 import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "@/context/AuthContext";
+import { LoadingProvider } from "@/context/LoadingContext";
 import CookieConsent from "@/components/shared/CookieConsent";
 import StoreProvider from "@/store/StoreProvider";
 
@@ -62,10 +63,12 @@ export default function RootLayout({ children }) {
       >
         <StoreProvider>
           <AuthProvider>
-            <GlobalLoading />
-            <Toaster position="top-center" />
-            {children}
-            <CookieConsent />
+            <LoadingProvider>
+              <GlobalLoading />
+              <Toaster position="top-center" />
+              {children}
+              <CookieConsent />
+            </LoadingProvider>
           </AuthProvider>
         </StoreProvider>
       </body>
