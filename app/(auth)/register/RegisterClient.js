@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, Suspense, useEffect } from "react";
 import axios from "@/lib/axios";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -8,6 +8,11 @@ import { CONFIG } from "@/constants/config";
 import { RiFileListLine, RiUserLine, RiMoneyDollarCircleLine, RiShieldCheckLine, RiForbidLine, RiCheckLine, RiCloseLine, RiFileTextFill } from "react-icons/ri";
 
 function RegisterForm() {
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -22,6 +27,14 @@ function RegisterForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const selectedPlan = searchParams.get('plan'); // PRO, AGENCY, or null
+
+    if (!mounted) {
+        return (
+            <div className="flex justify-center items-center min-h-screen bg-base-200">
+                <span className="loading loading-spinner loading-lg"></span>
+            </div>
+        );
+    }
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });

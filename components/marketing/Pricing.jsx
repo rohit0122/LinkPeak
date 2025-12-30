@@ -3,8 +3,6 @@
 import { RiCheckFill, RiCloseFill } from "react-icons/ri";
 import { CONFIG } from "@/constants/config";
 import { useState } from "react";
-import axios from "@/lib/axios";
-import { toast } from "react-hot-toast";
 
 const plans = [
     {
@@ -19,7 +17,8 @@ const plans = [
             { name: `${CONFIG.PLAN_LIMITS.FREE.analyticsDays} Days Analytics`, included: true },
             { name: "Basic QR Code", included: true },
             { name: "Standard Themes", included: true },
-            { name: "AI AI Features", included: false },
+            { name: "Always Free", included: true },
+            { name: "AI Enhanced Features", included: false },
             { name: "Custom QR Code (Logo)", included: false },
         ]
     },
@@ -37,6 +36,7 @@ const plans = [
             { name: "All Premium Themes", included: true },
             { name: "AI Link Title Suggestions", included: true },
             { name: "AI SEO Optimization", included: true },
+            { name: "Instant 24h Trial Access • No Card Required", included: true },
         ]
     },
     {
@@ -53,6 +53,8 @@ const plans = [
             { name: "All Premium Themes", included: true },
             { name: "AI SEO & Titles", included: true },
             { name: "White Labeling", included: true },
+            { name: "Instant 24h Trial Access • No Card Required", included: true },
+
         ]
     }
 ];
@@ -61,38 +63,42 @@ export default function Pricing({ billingCycle }) {
     const [loadingPlan, setLoadingPlan] = useState(null);
 
     const handleUpgrade = async (planName) => {
-        if (planName === 'Free') {
-            // Free plan - redirect to signup with FREE parameter
-            window.location.href = '/register?plan=FREE';
-            return;
-        }
-
-        setLoadingPlan(planName);
-
-        try {
-            // Check if user is logged in by trying to get subscription status
-            const { data: statusData } = await axios.get("/subscriptions");
-
-            // User is logged in - create payment link
-            const { data } = await axios.post("/subscriptions/create-payment-link", {
-                planId: planName.toUpperCase()
-            });
-
-            if (data.success) {
-                // Open payment link in new tab
-                window.open(data.data.url, "_blank");
-                toast.success("Payment link created! Check the new tab.");
-            }
-        } catch (error) {
-            // User not logged in or error - redirect to signup with plan
-            if (error.response?.status === 401) {
-                window.location.href = `/register?plan=${planName.toUpperCase()}`;
-            } else {
-                toast.error(error.response?.data?.error || "Failed to create payment link");
-            }
-        } finally {
-            setLoadingPlan(null);
-        }
+        window.location.href = `/register?plan=${planName.toUpperCase()}`;
+        return;
+        /* if (planName === 'Free') {
+             // Free plan - redirect to signup with FREE parameter
+             window.location.href = '/register?plan=FREE';
+             return;
+         }
+ 
+         
+         setLoadingPlan(planName);
+ 
+         try {
+             // Check if user is logged in by trying to get subscription status
+             const { data: statusData } = await axios.get("/subscriptions");
+ 
+             // User is logged in - create payment link
+             const { data } = await axios.post("/subscriptions/create-payment-link", {
+                 planId: planName.toUpperCase()
+             });
+ 
+             if (data.success) {
+                 // Open payment link in new tab
+                 window.open(data.data.url, "_blank");
+                 toast.success("Payment link created! Check the new tab.");
+             }
+         } catch (error) {
+             // User not logged in or error - redirect to signup with plan
+             if (error.response?.status === 401) {
+                 window.location.href = `/register?plan=${planName.toUpperCase()}`;
+             } else {
+                 toast.error(error.response?.data?.error || "Failed to create payment link");
+             }
+         } finally {
+             setLoadingPlan(null);
+         }
+         */
     };
 
     return (

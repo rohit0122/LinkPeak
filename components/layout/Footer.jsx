@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CONFIG } from "@/constants/config";
 import { RiGithubFill, RiInstagramFill, RiTwitterFill, RiLoader4Line, RiFacebookBoxFill, RiXboxFill, RiTwitterXFill, RiFacebookBoxLine } from "react-icons/ri";
 import axios from "axios";
@@ -9,6 +9,11 @@ import Logo from "./Logo";
 import { SocialIcons } from "../shared/SocialIcons";
 
 export default function Footer() {
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
     const [email, setEmail] = useState("");
     const [loading, setLoading] = useState(false);
 
@@ -29,6 +34,8 @@ export default function Footer() {
             setLoading(false);
         }
     };
+
+    if (!mounted) return null;
 
     return (
         <footer className="bg-base-100 py-20 border-t border-base-200">
