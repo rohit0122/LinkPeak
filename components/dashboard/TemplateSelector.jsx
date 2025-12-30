@@ -38,6 +38,7 @@ export default function TemplateSelector({ currentTemplate, plan, onSelect }) {
                                     : "border-base-200 hover:border-primary/30 hover:shadow-lg bg-base-100"
                             }
                         `}
+                        aria-label={`Select ${template.name} Template${isLocked ? ' (Locked)' : ''}`}
                     >
                         {/* Lock Badge */}
                         {isLocked && (

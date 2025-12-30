@@ -1,3 +1,5 @@
+"use client";
+
 import { RiCheckFill, RiCloseFill } from "react-icons/ri";
 import { CONFIG } from "@/constants/config";
 import { useState } from "react";

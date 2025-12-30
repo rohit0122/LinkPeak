@@ -135,7 +135,7 @@ export default function PublicBio({ page, links, isDemo = false }) {
                                 <div className="w-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
                                     <img
                                         src={page.profileImage || "/avatars/avatar-placeholder.svg"}
-                                        alt="Profile"
+                                        alt={page.title || "Profile"}
                                     />
                                 </div>
                             </div>
@@ -170,6 +170,7 @@ export default function PublicBio({ page, links, isDemo = false }) {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="text-2xl hover:text-primary transition-colors"
+                                        aria-label={`Visit our ${key} page`}
                                     >
                                         <Icon />
                                     </a>

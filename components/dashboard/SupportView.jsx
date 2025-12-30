@@ -205,6 +205,7 @@ export default function SupportView({ user }) {
                             value={replyMessage}
                             onChange={(e) => setReplyMessage(e.target.value)}
                             disabled={isReplying}
+                            aria-label="Type your reply message"
                         />
                         <button
                             type="submit"
@@ -239,24 +240,24 @@ export default function SupportView({ user }) {
                         <form onSubmit={handleCreateTicket} className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                             {/* Compact Form */}
                             <div className="form-control grid col-span-2 md:col-span-1">
-                                <label className="label py-1"><span className="label-text">Category</span></label>
-                                <select className="select select-bordered" value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })}>
+                                <label className="label py-1" htmlFor="ticket-category"><span className="label-text">Category</span></label>
+                                <select id="ticket-category" className="select select-bordered" value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })}>
                                     {CONFIG.SUPPORT_CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
                                 </select>
                             </div>
                             <div className="form-control grid col-span-2 md:col-span-1">
-                                <label className="label py-1"><span className="label-text">Priority</span></label>
-                                <select className="select select-bordered" value={formData.priority} onChange={(e) => setFormData({ ...formData, priority: e.target.value })}>
+                                <label className="label py-1" htmlFor="ticket-priority"><span className="label-text">Priority</span></label>
+                                <select id="ticket-priority" className="select select-bordered" value={formData.priority} onChange={(e) => setFormData({ ...formData, priority: e.target.value })}>
                                     <option value="LOW">Low</option><option value="MEDIUM">Medium</option><option value="HIGH">High</option>
                                 </select>
                             </div>
                             <div className="form-control grid col-span-2">
-                                <label className="label py-1"><span className="label-text">Subject</span></label>
-                                <input type="text" className="input input-bordered w-full" value={formData.subject} onChange={(e) => setFormData({ ...formData, subject: e.target.value })} required placeholder="Brief issue summary" />
+                                <label className="label py-1" htmlFor="ticket-subject"><span className="label-text">Subject</span></label>
+                                <input id="ticket-subject" type="text" className="input input-bordered w-full" value={formData.subject} onChange={(e) => setFormData({ ...formData, subject: e.target.value })} required placeholder="Brief issue summary" />
                             </div>
                             <div className="form-control grid col-span-2">
-                                <label className="label py-1"><span className="label-text">Message</span></label>
-                                <textarea className="textarea textarea-bordered h-24 w-full" value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} required placeholder="Details..." />
+                                <label className="label py-1" htmlFor="ticket-message"><span className="label-text">Message</span></label>
+                                <textarea id="ticket-message" className="textarea textarea-bordered h-24 w-full" value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} required placeholder="Details..." />
                             </div>
                             <div className="col-span-2">
                                 <button type="submit" className="btn btn-primary btn-block">Create Ticket</button>

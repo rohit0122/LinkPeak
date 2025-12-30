@@ -266,10 +266,11 @@ export default function LinkEditor({ links, plan, onReorder, onAdd, onUpdate, on
                             </h3>
                             <form onSubmit={handleSubmit} className="space-y-6">
                                 <div className="form-control">
-                                    <label className="label">
+                                    <label className="label" htmlFor="link-title">
                                         <span className="label-text font-bold text-xs uppercase tracking-widest opacity-50">Link Title</span>
                                     </label>
                                     <input
+                                        id="link-title"
                                         type="text"
                                         placeholder="e.g. My Portfolio"
                                         className="input input-bordered  focus:input-primary transition-all font-bold"
@@ -280,11 +281,12 @@ export default function LinkEditor({ links, plan, onReorder, onAdd, onUpdate, on
                                 </div>
 
                                 <div className="form-control">
-                                    <label className="label">
+                                    <label className="label" htmlFor="link-url">
                                         <span className="label-text font-bold text-xs uppercase tracking-widest opacity-50">Target URL</span>
                                     </label>
                                     <div className="relative">
                                         <input
+                                            id="link-url"
                                             type="url"
                                             placeholder="https://example.com"
                                             className="input input-bordered w-full  focus:input-primary transition-all font-bold pr-12"
@@ -311,11 +313,12 @@ export default function LinkEditor({ links, plan, onReorder, onAdd, onUpdate, on
                                 </div>
 
                                 <div className="space-y-3">
-                                    <label className="label">
+                                    <label className="label" htmlFor="link-icon">
                                         <span className="label-text font-bold text-xs uppercase tracking-widest opacity-50">Link Icon</span>
                                     </label>
                                     <div className="flex gap-2">
                                         <input
+                                            id="link-icon"
                                             type="text"
                                             placeholder="e.g. 🚀"
                                             className="input input-bordered  focus:input-primary transition-all font-bold text-xl flex-1"

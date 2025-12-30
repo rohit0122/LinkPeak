@@ -38,7 +38,7 @@ export default function PreviewPhone({ pageData, links = [], lifetime }) {
                                 <div className="w-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
                                     <img
                                         src={profileImage || "/avatars/avatar-placeholder.svg"}
-                                        alt="Profile"
+                                        alt={title || "Profile"}
                                     />
                                 </div>
                             </div>
@@ -70,37 +70,37 @@ export default function PreviewPhone({ pageData, links = [], lifetime }) {
                             {/* Social Links */}
                             <div className="flex flex-wrap justify-center gap-4 opacity-60">
                                 {pageData?.socialLinks?.instagram && (
-                                    <a href={pageData.socialLinks.instagram.startsWith('http') ? pageData.socialLinks.instagram : `https://${pageData.socialLinks.instagram}`} target="_blank" rel="noopener noreferrer" className="text-2xl hover:text-primary transition-colors">
+                                    <a href={pageData.socialLinks.instagram.startsWith('http') ? pageData.socialLinks.instagram : `https://${pageData.socialLinks.instagram}`} target="_blank" rel="noopener noreferrer" className="text-2xl hover:text-primary transition-colors" aria-label="Instagram">
                                         <RiInstagramLine />
                                     </a>
                                 )}
                                 {pageData?.socialLinks?.twitter && (
-                                    <a href={pageData.socialLinks.twitter.startsWith('http') ? pageData.socialLinks.twitter : `https://${pageData.socialLinks.twitter}`} target="_blank" rel="noopener noreferrer" className="text-2xl hover:text-primary transition-colors">
+                                    <a href={pageData.socialLinks.twitter.startsWith('http') ? pageData.socialLinks.twitter : `https://${pageData.socialLinks.twitter}`} target="_blank" rel="noopener noreferrer" className="text-2xl hover:text-primary transition-colors" aria-label="Twitter">
                                         <RiTwitterLine />
                                     </a>
                                 )}
                                 {pageData?.socialLinks?.facebook && (
-                                    <a href={pageData.socialLinks.facebook.startsWith('http') ? pageData.socialLinks.facebook : `https://${pageData.socialLinks.facebook}`} target="_blank" rel="noopener noreferrer" className="text-2xl hover:text-primary transition-colors">
+                                    <a href={pageData.socialLinks.facebook.startsWith('http') ? pageData.socialLinks.facebook : `https://${pageData.socialLinks.facebook}`} target="_blank" rel="noopener noreferrer" className="text-2xl hover:text-primary transition-colors" aria-label="Facebook">
                                         <RiFacebookLine />
                                     </a>
                                 )}
                                 {pageData?.socialLinks?.linkedin && (
-                                    <a href={pageData.socialLinks.linkedin.startsWith('http') ? pageData.socialLinks.linkedin : `https://${pageData.socialLinks.linkedin}`} target="_blank" rel="noopener noreferrer" className="text-2xl hover:text-primary transition-colors">
+                                    <a href={pageData.socialLinks.linkedin.startsWith('http') ? pageData.socialLinks.linkedin : `https://${pageData.socialLinks.linkedin}`} target="_blank" rel="noopener noreferrer" className="text-2xl hover:text-primary transition-colors" aria-label="LinkedIn">
                                         <RiLinkedinLine />
                                     </a>
                                 )}
                                 {pageData?.socialLinks?.github && (
-                                    <a href={pageData.socialLinks.github.startsWith('http') ? pageData.socialLinks.github : `https://${pageData.socialLinks.github}`} target="_blank" rel="noopener noreferrer" className="text-2xl hover:text-primary transition-colors">
+                                    <a href={pageData.socialLinks.github.startsWith('http') ? pageData.socialLinks.github : `https://${pageData.socialLinks.github}`} target="_blank" rel="noopener noreferrer" className="text-2xl hover:text-primary transition-colors" aria-label="GitHub">
                                         <RiGithubLine />
                                     </a>
                                 )}
                                 {pageData?.socialLinks?.youtube && (
-                                    <a href={pageData.socialLinks.youtube.startsWith('http') ? pageData.socialLinks.youtube : `https://${pageData.socialLinks.youtube}`} target="_blank" rel="noopener noreferrer" className="text-2xl hover:text-primary transition-colors">
+                                    <a href={pageData.socialLinks.youtube.startsWith('http') ? pageData.socialLinks.youtube : `https://${pageData.socialLinks.youtube}`} target="_blank" rel="noopener noreferrer" className="text-2xl hover:text-primary transition-colors" aria-label="YouTube">
                                         <RiYoutubeLine />
                                     </a>
                                 )}
                                 {pageData?.socialLinks?.tiktok && (
-                                    <a href={pageData.socialLinks.tiktok.startsWith('http') ? pageData.socialLinks.tiktok : `https://${pageData.socialLinks.tiktok}`} target="_blank" rel="noopener noreferrer" className="text-2xl hover:text-primary transition-colors">
+                                    <a href={pageData.socialLinks.tiktok.startsWith('http') ? pageData.socialLinks.tiktok : `https://${pageData.socialLinks.tiktok}`} target="_blank" rel="noopener noreferrer" className="text-2xl hover:text-primary transition-colors" aria-label="TikTok">
                                         <RiTiktokLine />
                                     </a>
                                 )}

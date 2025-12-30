@@ -69,10 +69,11 @@ export default function BrandingEditor({ page, user, onUpdate, onPreviewUpdate }
 
                         <div className="grid gap-4">
                             <div className="form-control w-full">
-                                <label className="label">
+                                <label className="label" htmlFor="agency-footer-text">
                                     <span className="label-text">Footer Text</span>
                                 </label>
                                 <input
+                                    id="agency-footer-text"
                                     type="text"
                                     disabled={!isAgency}
                                     placeholder="e.g. Crafted by Creative Agency"
@@ -83,10 +84,11 @@ export default function BrandingEditor({ page, user, onUpdate, onPreviewUpdate }
                             </div>
 
                             <div className="form-control w-full">
-                                <label className="label">
+                                <label className="label" htmlFor="agency-footer-url">
                                     <span className="label-text">Footer Link URL</span>
                                 </label>
                                 <input
+                                    id="agency-footer-url"
                                     type="text"
                                     disabled={!isAgency}
                                     placeholder="https://myagency.com"

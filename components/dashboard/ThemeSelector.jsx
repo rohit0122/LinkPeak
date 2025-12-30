@@ -38,6 +38,7 @@ export default function ThemeSelector({ currentTheme, plan, onSelect }) {
                         `}
                         data-theme={themeId}
                         suppressHydrationWarning={true}
+                        aria-label={`Select ${themeLabel} Theme${isLocked ? ' (Locked)' : ''}`}
                     >
                         {/* Lock Badge */}
                         {isLocked && (

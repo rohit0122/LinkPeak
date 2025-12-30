@@ -1,6 +1,3 @@
-"use client";
-
-import { useState } from "react";
 import Hero from "@/components/marketing/Hero";
 import Features from "@/components/marketing/Features";
 import LiveDemo from "@/components/marketing/LiveDemo";
@@ -8,6 +5,11 @@ import Pricing from "@/components/marketing/Pricing";
 import FAQ from "@/components/marketing/FAQ";
 import { RiArrowRightLine, RiTwitterFill, RiInstagramFill, RiGithubFill } from "react-icons/ri";
 import { CONFIG } from "@/constants/config";
+
+export const metadata = {
+    title: `LinkPeak - One Link for Everything`,
+    description: "The ultimate link in bio tool for creators, influencers, and businesses. Share everything you create, curate, and sell from one simple link.",
+};
 
 export default function MarketingPage() {
     return (

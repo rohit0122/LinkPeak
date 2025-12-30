@@ -528,10 +528,11 @@ export default function DashboardPage() {
 
                                                 <div className="flex flex-col gap-4">
                                                     <div className="form-control">
-                                                        <label className="label">
+                                                        <label className="label" htmlFor="page-title">
                                                             <span className="label-text">Display Title <span className="text-error">*</span></span>
                                                         </label>
                                                         <input
+                                                            id="page-title"
                                                             type="text"
                                                             className="input input-bordered"
                                                             placeholder="e.g. your name or brand"
@@ -542,12 +543,13 @@ export default function DashboardPage() {
                                                     </div>
 
                                                     <div className="form-control">
-                                                        <label className="label">
+                                                        <label className="label" htmlFor="page-slug">
                                                             <span className="label-text">Custom URL <span className="text-error">*</span></span>
                                                         </label>
                                                         <label className="input">
                                                             {CONFIG.SITE_URL}/
                                                             <input
+                                                                id="page-slug"
                                                                 type="text"
                                                                 className="grow"
                                                                 placeholder="your-slug"
@@ -562,10 +564,11 @@ export default function DashboardPage() {
                                                 </div>
 
                                                 <div className="form-control">
-                                                    <label className="label">
+                                                    <label className="label" htmlFor="page-bio">
                                                         <span className="label-text">Bio / Description</span>
                                                     </label>
                                                     <textarea
+                                                        id="page-bio"
                                                         className="textarea textarea-bordered h-24 resize-none"
                                                         placeholder="Tell the world who you are..."
                                                         value={activePageData?.bio || ""}
@@ -587,9 +590,10 @@ export default function DashboardPage() {
                                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                         {/* Instagram */}
                                                         <div className="form-control">
-                                                            <label className="input input-bordered flex items-center gap-2">
+                                                            <label className="input input-bordered flex items-center gap-2" htmlFor="social-instagram">
                                                                 <RiInstagramLine className="text-lg opacity-60" />
                                                                 <input
+                                                                    id="social-instagram"
                                                                     type="text"
                                                                     className="grow"
                                                                     placeholder="instagram.com/username"
@@ -608,9 +612,10 @@ export default function DashboardPage() {
 
                                                         {/* Twitter */}
                                                         <div className="form-control">
-                                                            <label className="input input-bordered flex items-center gap-2">
+                                                            <label className="input input-bordered flex items-center gap-2" htmlFor="social-twitter">
                                                                 <RiTwitterLine className="text-lg opacity-60" />
                                                                 <input
+                                                                    id="social-twitter"
                                                                     type="text"
                                                                     className="grow"
                                                                     placeholder="twitter.com/username"
@@ -629,9 +634,10 @@ export default function DashboardPage() {
 
                                                         {/* Facebook */}
                                                         <div className="form-control">
-                                                            <label className="input input-bordered flex items-center gap-2">
+                                                            <label className="input input-bordered flex items-center gap-2" htmlFor="social-facebook">
                                                                 <RiFacebookLine className="text-lg opacity-60" />
                                                                 <input
+                                                                    id="social-facebook"
                                                                     type="text"
                                                                     className="grow"
                                                                     placeholder="facebook.com/username"
@@ -650,9 +656,10 @@ export default function DashboardPage() {
 
                                                         {/* LinkedIn */}
                                                         <div className="form-control">
-                                                            <label className="input input-bordered flex items-center gap-2">
+                                                            <label className="input input-bordered flex items-center gap-2" htmlFor="social-linkedin">
                                                                 <RiLinkedinLine className="text-lg opacity-60" />
                                                                 <input
+                                                                    id="social-linkedin"
                                                                     type="text"
                                                                     className="grow"
                                                                     placeholder="linkedin.com/in/username"
@@ -671,9 +678,10 @@ export default function DashboardPage() {
 
                                                         {/* GitHub */}
                                                         <div className="form-control">
-                                                            <label className="input input-bordered flex items-center gap-2">
+                                                            <label className="input input-bordered flex items-center gap-2" htmlFor="social-github">
                                                                 <RiGithubLine className="text-lg opacity-60" />
                                                                 <input
+                                                                    id="social-github"
                                                                     type="text"
                                                                     className="grow"
                                                                     placeholder="github.com/username"
@@ -692,9 +700,10 @@ export default function DashboardPage() {
 
                                                         {/* YouTube */}
                                                         <div className="form-control">
-                                                            <label className="input input-bordered flex items-center gap-2">
+                                                            <label className="input input-bordered flex items-center gap-2" htmlFor="social-youtube">
                                                                 <RiYoutubeLine className="text-lg opacity-60" />
                                                                 <input
+                                                                    id="social-youtube"
                                                                     type="text"
                                                                     className="grow"
                                                                     placeholder="youtube.com/@username"
@@ -713,9 +722,10 @@ export default function DashboardPage() {
 
                                                         {/* TikTok */}
                                                         <div className="form-control">
-                                                            <label className="input input-bordered flex items-center gap-2">
+                                                            <label className="input input-bordered flex items-center gap-2" htmlFor="social-tiktok">
                                                                 <RiTiktokLine className="text-lg opacity-60" />
                                                                 <input
+                                                                    id="social-tiktok"
                                                                     type="text"
                                                                     className="grow"
                                                                     placeholder="tiktok.com/@username"

@@ -94,6 +94,7 @@ export default function NavbarClient({ page: propPage }) {
                             <button
                                 className="md:hidden btn btn-ghost btn-square"
                                 onClick={() => setMobileOpen(!mobileOpen)}
+                                aria-label="Toggle mobile menu"
                             >
                                 {mobileOpen ? <RiCloseLine size={24} /> : <RiMenuLine size={24} />}
                             </button>
