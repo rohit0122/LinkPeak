@@ -85,6 +85,9 @@ export function AuthProvider({ children }) {
 
     // Login function
     const login = useCallback(async (email, password) => {
+        if (typeof window !== 'undefined' && window.setGlobalLoading) {
+            window.setGlobalLoading(true);
+        }
         try {
             const res = await loginMutation({ email, password }).unwrap();
 

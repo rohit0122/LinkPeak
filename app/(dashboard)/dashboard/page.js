@@ -118,6 +118,7 @@ export default function DashboardPage() {
     const [selectedPageId, setSelectedPageId] = useState(null);
     const [localPageData, setLocalPageData] = useState(null);
     const [isSwitching, setIsSwitching] = useState(false);
+    const lastSaveTimeRef = useRef(0);
 
     // Derived State
     const user = initData?.user || authUser;
@@ -129,6 +130,11 @@ export default function DashboardPage() {
             setSelectedPageId(initData.activePageId);
         }
     }, [initData, selectedPageId]);
+
+    // Sync global loader with initial data fetching
+    useEffect(() => {
+        setLoading(isInitLoading);
+    }, [isInitLoading, setLoading]);
 
     const page = allPages.find(p => p._id === selectedPageId)
         || allPages.find(p => p._id === initData?.activePageId)
@@ -254,8 +260,6 @@ export default function DashboardPage() {
     }), [deleteLink]);
 
 
-    // Track save timing to prevent stale redux data from reverting local state
-    const lastSaveTimeRef = useRef(0);
 
     const handleGlobalSave = withLoading(async () => {
         if (!localPageData) return;
@@ -314,7 +318,14 @@ export default function DashboardPage() {
         });
     };
 
-    const activePageData = unsavedChanges ? localPageData : page;
+    const isRefetching = isInitLoading || isAnalyticsFetching;
+    const timeSinceSave = Date.now() - lastSaveTimeRef.current;
+
+    // Derived state: Use local data if we have unsaved changes OR if we just saved 
+    // and are likely waiting for the background refetch to complete.
+    const activePageData = (unsavedChanges || (localPageData && timeSinceSave < 3000))
+        ? localPageData
+        : page;
 
     const [isSeoAiLoading, setIsSeoAiLoading] = useState(false);
     const handleSeoAiMagic = withLoading(async () => {

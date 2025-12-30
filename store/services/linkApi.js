@@ -17,7 +17,7 @@ export const linkApi = api.injectEndpoints({
                 body: data,
             }),
             transformResponse: (response) => response.data,
-            invalidatesTags: [{ type: 'Link', id: 'LIST' }],
+            invalidatesTags: ['Link', { type: 'Link', id: 'LIST' }],
             // Optimistic Update
             async onQueryStarted(data, { dispatch, queryFulfilled }) {
                 // We can't easily optimistically add a link because we don't have the ID yet.
@@ -33,7 +33,7 @@ export const linkApi = api.injectEndpoints({
                 body: data,
             }),
             transformResponse: (response) => response.data,
-            invalidatesTags: (result, error, { id }) => [{ type: 'Link', id }],
+            invalidatesTags: (result, error, { id }) => ['Link', { type: 'Link', id }],
             async onQueryStarted({ id, pageId, ...patch }, { dispatch, queryFulfilled }) {
                 const patchResult = dispatch(
                     linkApi.util.updateQueryData('getLinks', pageId, (draft) => {
@@ -55,7 +55,7 @@ export const linkApi = api.injectEndpoints({
                 url: `/links?id=${id}`,
                 method: 'DELETE',
             }),
-            invalidatesTags: [{ type: 'Link', id: 'LIST' }],
+            invalidatesTags: ['Link', { type: 'Link', id: 'LIST' }],
             async onQueryStarted(id, { dispatch, queryFulfilled, getState }) {
                 // We need pageId to update the cache. It might be passed or we might scan caches.
                 // Simpler approach: if we don't have pageId easily, optimistic delete is harder.
@@ -81,7 +81,7 @@ export const linkApi = api.injectEndpoints({
                 method: 'PUT',
                 body: { links },
             }),
-            invalidatesTags: [{ type: 'Link', id: 'LIST' }],
+            invalidatesTags: ['Link', { type: 'Link', id: 'LIST' }],
             async onQueryStarted(links, { dispatch, queryFulfilled, getState }) {
                 // links passed here is the new array of IDs or objects? 
                 // Based on usage: usually just the reordered list.

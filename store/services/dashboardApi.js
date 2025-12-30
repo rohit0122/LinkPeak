@@ -5,7 +5,7 @@ export const dashboardApi = api.injectEndpoints({
         getDashboardInit: builder.query({
             query: () => '/dashboard/init',
             transformResponse: (response) => response.data,
-            providesTags: ['User', 'Subscription'],
+            providesTags: ['User', 'Subscription', 'Page', 'Link', 'Analytics'],
         }),
     }),
 });

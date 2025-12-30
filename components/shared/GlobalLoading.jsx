@@ -8,9 +8,11 @@ export default function GlobalLoading() {
     const { loading, setLoading } = useLoading();
     const pathname = usePathname();
 
-    useEffect(() => {
-        setLoading(false);
-    }, [pathname, setLoading]);
+    // We remove the automatic hiding on pathname change to allow 
+    // the loader to persist through slow page loads (e.g., login to dashboard)
+    // useEffect(() => {
+    //     setLoading(false);
+    // }, [pathname, setLoading]);
 
     if (!loading) return null;
 

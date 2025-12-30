@@ -16,6 +16,12 @@ export default function LoginClient() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
+
+        // Trigger global loader immediately
+        if (typeof window !== 'undefined' && window.setGlobalLoading) {
+            window.setGlobalLoading(true);
+        }
+
         setLoading(true);
 
         // Validate input with Zod
@@ -30,9 +36,11 @@ export default function LoginClient() {
             return;
         }
 
+        let isSuccess = false;
         try {
             // Use AuthContext's login function
             const result = await login(validation.data.email, validation.data.password);
+            isSuccess = result.success;
 
             if (!result.success) {
                 const errorMsg = result.error || "Invalid credentials";
@@ -55,6 +63,12 @@ export default function LoginClient() {
             setError(errorMsg);
         } finally {
             setLoading(false);
+            // Hide global loader if we didn't successfully navigate away
+            if (!isSuccess) {
+                if (typeof window !== 'undefined' && window.setGlobalLoading) {
+                    window.setGlobalLoading(false);
+                }
+            }
         }
     };
 
