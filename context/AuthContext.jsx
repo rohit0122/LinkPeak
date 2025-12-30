@@ -16,6 +16,7 @@ import {
     useRegisterMutation,
     useLogoutMutation
 } from "@/store/services/authApi";
+import { api } from "@/store/services/api";
 import axios from "@/lib/axios";
 
 const AuthContext = createContext(null);
@@ -133,13 +134,25 @@ export function AuthProvider({ children }) {
 
     // Logout function
     const logout = useCallback(async () => {
+        if (typeof window !== 'undefined' && window.setGlobalLoading) {
+            window.setGlobalLoading(true);
+        }
         try {
+            // 1. Clear Redux state & localStorage immediately to trigger 'skip' logic in components
+            dispatch(logoutAction());
+            localStorage.removeItem("site_user");
+
+            // 2. Reset the entire API state to cancel pending requests & clear cache
+            dispatch(api.util.resetApiState());
+
+            // 3. Call backend logout (this might fail if session is already gone, which is fine)
             await logoutMutation().unwrap();
         } catch (error) {
             console.error("Logout error:", error);
         } finally {
-            dispatch(logoutAction());
-            localStorage.removeItem("site_user");
+            if (typeof window !== 'undefined' && window.setGlobalLoading) {
+                window.setGlobalLoading(false);
+            }
             router.push("/login");
             toast.success("Logged out successfully");
         }

@@ -119,7 +119,7 @@ export default function AnalyticsView({ data = [], plan, links = [], page = {}, 
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
             {/* Header with Refresh */}
-            <div className="flex justify-between items-center bg-base-100 p-4 border border-base-300 rounded-xl shadow-sm">
+            <div className="flex justify-between items-center bg-base-100 p-4 border border-base-300 shadow-sm">
                 <div>
                     <h2 className="text-lg font-bold">Analytics Overview</h2>
                     <p className="text-xs opacity-60">Real-time performance metrics</p>

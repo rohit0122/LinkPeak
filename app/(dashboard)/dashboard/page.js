@@ -14,7 +14,6 @@ import UnsavedChangesModal from "@/components/dashboard/UnsavedChangesModal";
 import DangerZone from "@/components/dashboard/DangerZone";
 import { SkeletonChart, SkeletonTable, SkeletonDashboard } from "@/components/shared/SkeletonLoaders";
 import { toast } from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
 import { useAuth } from "@/context/AuthContext";
 import { useLoading } from "@/context/LoadingContext";
 import { useGetDashboardInitQuery } from "@/store/services/dashboardApi";
@@ -55,7 +54,9 @@ import {
     RiLinkedinLine,
     RiGithubLine,
     RiYoutubeLine,
-    RiTiktokLine
+    RiTiktokLine,
+    RiRefreshLine,
+    RiErrorWarningLine
 } from "react-icons/ri";
 import { CONFIG } from "@/constants/config";
 import { useRouter } from "next/navigation";
@@ -78,7 +79,7 @@ const SupportView = dynamic(() => import("@/components/dashboard/SupportView"), 
 });
 
 export default function DashboardPage() {
-    const { user: authUser } = useAuth();
+    const { user: authUser, loading: authLoading } = useAuth();
     const { setLoading } = useLoading();
     const router = useRouter();
 
@@ -99,7 +100,11 @@ export default function DashboardPage() {
         data: initData,
         isLoading: isInitLoading,
         isError: isInitError,
-    } = useGetDashboardInitQuery();
+        error: initError,
+        refetch: refetchInit
+    } = useGetDashboardInitQuery(undefined, {
+        skip: !authUser || authLoading
+    });
 
     const [updatePage] = useUpdatePageMutation();
     const [createPage] = useCreatePageMutation();
@@ -126,6 +131,12 @@ export default function DashboardPage() {
     const subscriptionStatus = initData?.subscriptionStatus || null;
 
     useEffect(() => {
+        if (!authLoading && (!authUser || initError?.status === 401)) {
+            router.push("/login");
+        }
+    }, [authUser, authLoading, initError, router]);
+
+    useEffect(() => {
         if (initData?.activePageId && !selectedPageId) {
             setSelectedPageId(initData.activePageId);
         }
@@ -133,8 +144,8 @@ export default function DashboardPage() {
 
     // Sync global loader with initial data fetching
     useEffect(() => {
-        setLoading(isInitLoading);
-    }, [isInitLoading, setLoading]);
+        setLoading(authLoading || isInitLoading);
+    }, [authLoading, isInitLoading, setLoading]);
 
     const page = allPages.find(p => p._id === selectedPageId)
         || allPages.find(p => p._id === initData?.activePageId)
@@ -350,7 +361,40 @@ export default function DashboardPage() {
     });
 
     if (isInitLoading) return <SkeletonDashboard />;
-    if (isInitError) return <div>Error loading dashboard. Please refresh.</div>;
+    if (isInitError) {
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-base-100">
+                <div className="card w-full max-w-md bg-base-200 shadow-xl border border-base-300">
+                    <div className="card-body items-center text-center space-y-4">
+                        <div className="p-4 bg-error/10 text-error rounded-full">
+                            <RiErrorWarningLine className="text-4xl" />
+                        </div>
+                        <div>
+                            <h2 className="card-title text-xl font-bold">Failed to Load Dashboard</h2>
+                            <p className="text-sm opacity-70">
+                                {initError?.data?.error || initError?.error || "We encountered a temporary issue while loading your data."}
+                            </p>
+                        </div>
+                        <div className="card-actions w-full flex flex-col gap-2">
+                            <button
+                                onClick={() => refetchInit()}
+                                className="btn btn-primary w-full gap-2"
+                            >
+                                <RiRefreshLine className="text-lg" />
+                                Try Again
+                            </button>
+                            <button
+                                onClick={() => router.push("/login")}
+                                className="btn btn-ghost w-full"
+                            >
+                                Sign In Again
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     if (!user) return null;
 
@@ -377,7 +421,7 @@ export default function DashboardPage() {
             <SubscriptionStatusDiv user={user} initialData={subscriptionStatus} redirectOnExpire={true} />
 
             <div className="flex flex-col lg:flex-row gap-8 min-h-full">
-                <div className="flex-1 w-full max-w-2xl mx-auto">
+                <div className="flex-1 w-full">
 
                     {/* Admin Indicator */}
                     {user?.role === 'admin' && (
@@ -388,7 +432,7 @@ export default function DashboardPage() {
                                     Admin Dashboard
                                     <span className="badge badge-xs badge-neutral">SU</span>
                                 </h3>
-                                <div className="text-xs opacity-60">You have full system access. Manage tickets in the Support tab.</div>
+                                <div className="text-xs opacity-80">You have full system access. Manage tickets in the Support tab.</div>
                             </div>
                         </div>
                     )}
@@ -471,7 +515,7 @@ export default function DashboardPage() {
                                         </div>
                                         <div>
                                             <h4 className="font-medium text-sm mb-1 uppercase tracking-wider">Style Preview</h4>
-                                            <p className="text-xs opacity-60 leading-relaxed font-medium">
+                                            <p className="text-xs opacity-80 leading-relaxed font-medium">
                                                 All changes are saved automatically reflected in the live preview on the right.
                                                 Try different combinations to find your perfect look. Don't forgot to save your changes!
                                             </p>
@@ -590,186 +634,210 @@ export default function DashboardPage() {
                                                         </label>
                                                     </div>
                                                 </div>
+                                            </div>
+                                        </div>
+                                        <div className="form-control">
+                                            <label className="label" htmlFor="page-bio">
+                                                <span className="label-text">Bio / Description</span>
+                                            </label>
+                                            <textarea
+                                                id="page-bio"
+                                                className="textarea textarea-bordered h-24 resize-none w-full"
+                                                placeholder="Tell the world who you are..."
+                                                value={activePageData?.bio || ""}
+                                                onChange={(e) => {
+                                                    handleLocalUpdate({ bio: e.target.value });
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
 
+                                <div className="card bg-base-100 shadow-sm border border-base-300 lg:col-span-2">
+                                    <div className="card-body p-8 lg:p-10">
+                                        <div className="flex flex-col gap-6">
+                                            <div>
+                                                <h2 className="text-xl font-medium tracking-tight flex items-center gap-2 mb-1">
+                                                    <RiLinksLine className="text-primary" />
+                                                    Social Media Links
+                                                </h2>
+                                                <p className="text-xs font-medium opacity-50">Add your social profiles. They'll appear at the bottom of your bio page.</p>
+                                            </div>
+
+                                            <div className="grid grid-cols-2 gap-2">
+                                                {/* Instagram */}
                                                 <div className="form-control">
-                                                    <label className="label" htmlFor="page-bio">
-                                                        <span className="label-text">Bio / Description</span>
+                                                    <label className="label py-1" htmlFor="social-instagram">
+                                                        <span className="label-text-alt font-bold opacity-80">Instagram</span>
                                                     </label>
-                                                    <textarea
-                                                        id="page-bio"
-                                                        className="textarea textarea-bordered h-24 resize-none"
-                                                        placeholder="Tell the world who you are..."
-                                                        value={activePageData?.bio || ""}
-                                                        onChange={(e) => {
-                                                            handleLocalUpdate({ bio: e.target.value });
-                                                        }}
-                                                    />
+                                                    <label className="input input-bordered flex items-center gap-2" htmlFor="social-instagram">
+                                                        <RiInstagramLine className="text-lg opacity-80" />
+                                                        <input
+                                                            id="social-instagram"
+                                                            type="text"
+                                                            className="grow"
+                                                            placeholder="instagram.com/username"
+                                                            value={activePageData?.socialLinks?.instagram || ""}
+                                                            onChange={(e) => {
+                                                                handleLocalUpdate({
+                                                                    socialLinks: {
+                                                                        ...activePageData.socialLinks,
+                                                                        instagram: e.target.value
+                                                                    }
+                                                                });
+                                                            }}
+                                                        />
+                                                    </label>
                                                 </div>
 
+                                                {/* Twitter */}
                                                 <div className="form-control">
-                                                    <label className="label">
-                                                        <span className="label-text font-medium flex items-center gap-2">
-                                                            <RiLinksLine className="text-primary" />
-                                                            Social Media Links
-                                                        </span>
+                                                    <label className="label py-1" htmlFor="social-twitter">
+                                                        <span className="label-text-alt font-bold opacity-80">Twitter / X</span>
                                                     </label>
-                                                    <p className="text-xs opacity-50 mb-4">Add your social profiles. They'll appear at the bottom of your bio page.</p>
+                                                    <label className="input input-bordered flex items-center gap-2" htmlFor="social-twitter">
+                                                        <RiTwitterLine className="text-lg opacity-80" />
+                                                        <input
+                                                            id="social-twitter"
+                                                            type="text"
+                                                            className="grow"
+                                                            placeholder="twitter.com/username"
+                                                            value={activePageData?.socialLinks?.twitter || ""}
+                                                            onChange={(e) => {
+                                                                handleLocalUpdate({
+                                                                    socialLinks: {
+                                                                        ...activePageData.socialLinks,
+                                                                        twitter: e.target.value
+                                                                    }
+                                                                });
+                                                            }}
+                                                        />
+                                                    </label>
+                                                </div>
 
-                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                        {/* Instagram */}
-                                                        <div className="form-control">
-                                                            <label className="input input-bordered flex items-center gap-2" htmlFor="social-instagram">
-                                                                <RiInstagramLine className="text-lg opacity-60" />
-                                                                <input
-                                                                    id="social-instagram"
-                                                                    type="text"
-                                                                    className="grow"
-                                                                    placeholder="instagram.com/username"
-                                                                    value={activePageData?.socialLinks?.instagram || ""}
-                                                                    onChange={(e) => {
-                                                                        handleLocalUpdate({
-                                                                            socialLinks: {
-                                                                                ...activePageData.socialLinks,
-                                                                                instagram: e.target.value
-                                                                            }
-                                                                        });
-                                                                    }}
-                                                                />
-                                                            </label>
-                                                        </div>
+                                                {/* Facebook */}
+                                                <div className="form-control">
+                                                    <label className="label py-1" htmlFor="social-facebook">
+                                                        <span className="label-text-alt font-bold opacity-80">Facebook</span>
+                                                    </label>
+                                                    <label className="input input-bordered flex items-center gap-2" htmlFor="social-facebook">
+                                                        <RiFacebookLine className="text-lg opacity-80" />
+                                                        <input
+                                                            id="social-facebook"
+                                                            type="text"
+                                                            className="grow"
+                                                            placeholder="facebook.com/username"
+                                                            value={activePageData?.socialLinks?.facebook || ""}
+                                                            onChange={(e) => {
+                                                                handleLocalUpdate({
+                                                                    socialLinks: {
+                                                                        ...activePageData.socialLinks,
+                                                                        facebook: e.target.value
+                                                                    }
+                                                                });
+                                                            }}
+                                                        />
+                                                    </label>
+                                                </div>
 
-                                                        {/* Twitter */}
-                                                        <div className="form-control">
-                                                            <label className="input input-bordered flex items-center gap-2" htmlFor="social-twitter">
-                                                                <RiTwitterLine className="text-lg opacity-60" />
-                                                                <input
-                                                                    id="social-twitter"
-                                                                    type="text"
-                                                                    className="grow"
-                                                                    placeholder="twitter.com/username"
-                                                                    value={activePageData?.socialLinks?.twitter || ""}
-                                                                    onChange={(e) => {
-                                                                        handleLocalUpdate({
-                                                                            socialLinks: {
-                                                                                ...activePageData.socialLinks,
-                                                                                twitter: e.target.value
-                                                                            }
-                                                                        });
-                                                                    }}
-                                                                />
-                                                            </label>
-                                                        </div>
+                                                {/* LinkedIn */}
+                                                <div className="form-control">
+                                                    <label className="label py-1" htmlFor="social-linkedin">
+                                                        <span className="label-text-alt font-bold opacity-80">LinkedIn</span>
+                                                    </label>
+                                                    <label className="input input-bordered flex items-center gap-2" htmlFor="social-linkedin">
+                                                        <RiLinkedinLine className="text-lg opacity-80" />
+                                                        <input
+                                                            id="social-linkedin"
+                                                            type="text"
+                                                            className="grow"
+                                                            placeholder="linkedin.com/in/username"
+                                                            value={activePageData?.socialLinks?.linkedin || ""}
+                                                            onChange={(e) => {
+                                                                handleLocalUpdate({
+                                                                    socialLinks: {
+                                                                        ...activePageData.socialLinks,
+                                                                        linkedin: e.target.value
+                                                                    }
+                                                                });
+                                                            }}
+                                                        />
+                                                    </label>
+                                                </div>
 
-                                                        {/* Facebook */}
-                                                        <div className="form-control">
-                                                            <label className="input input-bordered flex items-center gap-2" htmlFor="social-facebook">
-                                                                <RiFacebookLine className="text-lg opacity-60" />
-                                                                <input
-                                                                    id="social-facebook"
-                                                                    type="text"
-                                                                    className="grow"
-                                                                    placeholder="facebook.com/username"
-                                                                    value={activePageData?.socialLinks?.facebook || ""}
-                                                                    onChange={(e) => {
-                                                                        handleLocalUpdate({
-                                                                            socialLinks: {
-                                                                                ...activePageData.socialLinks,
-                                                                                facebook: e.target.value
-                                                                            }
-                                                                        });
-                                                                    }}
-                                                                />
-                                                            </label>
-                                                        </div>
+                                                {/* GitHub */}
+                                                <div className="form-control">
+                                                    <label className="label py-1" htmlFor="social-github">
+                                                        <span className="label-text-alt font-bold opacity-80">GitHub</span>
+                                                    </label>
+                                                    <label className="input input-bordered flex items-center gap-2" htmlFor="social-github">
+                                                        <RiGithubLine className="text-lg opacity-80" />
+                                                        <input
+                                                            id="social-github"
+                                                            type="text"
+                                                            className="grow"
+                                                            placeholder="github.com/username"
+                                                            value={activePageData?.socialLinks?.github || ""}
+                                                            onChange={(e) => {
+                                                                handleLocalUpdate({
+                                                                    socialLinks: {
+                                                                        ...activePageData.socialLinks,
+                                                                        github: e.target.value
+                                                                    }
+                                                                });
+                                                            }}
+                                                        />
+                                                    </label>
+                                                </div>
 
-                                                        {/* LinkedIn */}
-                                                        <div className="form-control">
-                                                            <label className="input input-bordered flex items-center gap-2" htmlFor="social-linkedin">
-                                                                <RiLinkedinLine className="text-lg opacity-60" />
-                                                                <input
-                                                                    id="social-linkedin"
-                                                                    type="text"
-                                                                    className="grow"
-                                                                    placeholder="linkedin.com/in/username"
-                                                                    value={activePageData?.socialLinks?.linkedin || ""}
-                                                                    onChange={(e) => {
-                                                                        handleLocalUpdate({
-                                                                            socialLinks: {
-                                                                                ...activePageData.socialLinks,
-                                                                                linkedin: e.target.value
-                                                                            }
-                                                                        });
-                                                                    }}
-                                                                />
-                                                            </label>
-                                                        </div>
+                                                {/* YouTube */}
+                                                <div className="form-control">
+                                                    <label className="label py-1" htmlFor="social-youtube">
+                                                        <span className="label-text-alt font-bold opacity-80">YouTube</span>
+                                                    </label>
+                                                    <label className="input input-bordered flex items-center gap-2" htmlFor="social-youtube">
+                                                        <RiYoutubeLine className="text-lg opacity-80" />
+                                                        <input
+                                                            id="social-youtube"
+                                                            type="text"
+                                                            className="grow"
+                                                            placeholder="youtube.com/@username"
+                                                            value={activePageData?.socialLinks?.youtube || ""}
+                                                            onChange={(e) => {
+                                                                handleLocalUpdate({
+                                                                    socialLinks: {
+                                                                        ...activePageData.socialLinks,
+                                                                        youtube: e.target.value
+                                                                    }
+                                                                });
+                                                            }}
+                                                        />
+                                                    </label>
+                                                </div>
 
-                                                        {/* GitHub */}
-                                                        <div className="form-control">
-                                                            <label className="input input-bordered flex items-center gap-2" htmlFor="social-github">
-                                                                <RiGithubLine className="text-lg opacity-60" />
-                                                                <input
-                                                                    id="social-github"
-                                                                    type="text"
-                                                                    className="grow"
-                                                                    placeholder="github.com/username"
-                                                                    value={activePageData?.socialLinks?.github || ""}
-                                                                    onChange={(e) => {
-                                                                        handleLocalUpdate({
-                                                                            socialLinks: {
-                                                                                ...activePageData.socialLinks,
-                                                                                github: e.target.value
-                                                                            }
-                                                                        });
-                                                                    }}
-                                                                />
-                                                            </label>
-                                                        </div>
-
-                                                        {/* YouTube */}
-                                                        <div className="form-control">
-                                                            <label className="input input-bordered flex items-center gap-2" htmlFor="social-youtube">
-                                                                <RiYoutubeLine className="text-lg opacity-60" />
-                                                                <input
-                                                                    id="social-youtube"
-                                                                    type="text"
-                                                                    className="grow"
-                                                                    placeholder="youtube.com/@username"
-                                                                    value={activePageData?.socialLinks?.youtube || ""}
-                                                                    onChange={(e) => {
-                                                                        handleLocalUpdate({
-                                                                            socialLinks: {
-                                                                                ...activePageData.socialLinks,
-                                                                                youtube: e.target.value
-                                                                            }
-                                                                        });
-                                                                    }}
-                                                                />
-                                                            </label>
-                                                        </div>
-
-                                                        {/* TikTok */}
-                                                        <div className="form-control">
-                                                            <label className="input input-bordered flex items-center gap-2" htmlFor="social-tiktok">
-                                                                <RiTiktokLine className="text-lg opacity-60" />
-                                                                <input
-                                                                    id="social-tiktok"
-                                                                    type="text"
-                                                                    className="grow"
-                                                                    placeholder="tiktok.com/@username"
-                                                                    value={activePageData?.socialLinks?.tiktok || ""}
-                                                                    onChange={(e) => {
-                                                                        handleLocalUpdate({
-                                                                            socialLinks: {
-                                                                                ...activePageData.socialLinks,
-                                                                                tiktok: e.target.value
-                                                                            }
-                                                                        });
-                                                                    }}
-                                                                />
-                                                            </label>
-                                                        </div>
-                                                    </div>
+                                                {/* TikTok */}
+                                                <div className="form-control">
+                                                    <label className="label py-1" htmlFor="social-tiktok">
+                                                        <span className="label-text-alt font-bold opacity-80">TikTok</span>
+                                                    </label>
+                                                    <label className="input input-bordered flex items-center gap-2" htmlFor="social-tiktok">
+                                                        <RiTiktokLine className="text-lg opacity-80" />
+                                                        <input
+                                                            id="social-tiktok"
+                                                            type="text"
+                                                            className="grow"
+                                                            placeholder="tiktok.com/@username"
+                                                            value={activePageData?.socialLinks?.tiktok || ""}
+                                                            onChange={(e) => {
+                                                                handleLocalUpdate({
+                                                                    socialLinks: {
+                                                                        ...activePageData.socialLinks,
+                                                                        tiktok: e.target.value
+                                                                    }
+                                                                });
+                                                            }}
+                                                        />
+                                                    </label>
                                                 </div>
                                             </div>
                                         </div>
@@ -923,10 +991,11 @@ export default function DashboardPage() {
                                     </div>
                                 </div>
                                 <DangerZone />
-                            </div>
-                        )}
-                    </div>
-                </div>
+                            </div >
+                        )
+                        }
+                    </div >
+                </div >
 
                 <div className="w-full lg:w-[400px] mt-20 lg:mt-0">
                     <div className="lg:sticky top-8 transform-gpu scale-[0.8] sm:scale-95 lg:scale-90 lg:translate-x-4 origin-top flex justify-center lg:block">
@@ -938,7 +1007,7 @@ export default function DashboardPage() {
                         />
                     </div>
                 </div>
-            </div>
+            </div >
 
             <div className={`fixed bottom-8 right-8 z-50 transition-all duration-300 transform ${unsavedChanges ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0 pointer-events-none'}`}>
                 <button

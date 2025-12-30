@@ -27,7 +27,8 @@ import {
     RiToggleLine,
     RiToggleFill,
     RiAddLine,
-    RiMagicLine
+    RiMagicLine,
+    RiEyeLine
 } from "react-icons/ri";
 import { toast } from "react-hot-toast";
 import axios from "@/lib/axios";
@@ -41,7 +42,6 @@ function SortableItem({ link, onEdit, onDelete, onToggle }) {
         transition,
         isDragging
     } = useSortable({ id: link._id });
-
     const style = {
         transform: CSS.Transform.toString(transform),
         transition,
@@ -53,7 +53,7 @@ function SortableItem({ link, onEdit, onDelete, onToggle }) {
         <div
             ref={setNodeRef}
             style={style}
-            className={`card bg-base-100 border-2 ${link.isActive ? 'border-base-300' : 'border-dashed border-base-200 opacity-60'} mb-4 transition-all hover:shadow-lg`}
+            className={`card bg-base-100 border border-primary/20 ${link.isActive ? 'hover:border-primary/40' : 'border-dashed border-base-200 opacity-60'} mb-4 transition-all shadow-sm hover:shadow-xl  duration-300 animate-slide-up`}
         >
             <div className="card-body p-5 flex-row items-center gap-4">
                 {/* Drag Handle */}
@@ -106,6 +106,12 @@ function SortableItem({ link, onEdit, onDelete, onToggle }) {
                     >
                         <RiDeleteBin6Line className="text-xl" />
                     </button>
+                </div>
+            </div>
+            <div className="bg-base-200/30 px-4 py-1.5 flex items-center gap-4 border-t border-base-200/50">
+                <div className="flex items-center gap-1.5 text-[10px] opacity-40 font-bold uppercase tracking-tight">
+                    <RiEyeLine className="text-primary w-3 h-3" />
+                    {link.clicks} clicks
                 </div>
             </div>
         </div>
