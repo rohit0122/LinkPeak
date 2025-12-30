@@ -10,6 +10,7 @@ export default function LikeButton({ likes, onLike, isLiked }) {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={onLike}
+                aria-label="Like this page"
                 className={`flex items-center gap-2 p-4 rounded-full shadow-2xl transition-colors ${isLiked ? "bg-primary text-primary-content" : "bg-base-100 text-primary border-2 border-primary"
                     }`}
             >

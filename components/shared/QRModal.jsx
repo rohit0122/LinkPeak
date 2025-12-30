@@ -40,7 +40,7 @@ export default function QRModal({ slug, isOpen, onClose, plan = "FREE" }) {
                             </div>
                             <h2 className="font-medium text-xl">Share Profile</h2>
                         </div>
-                        <button onClick={onClose} className="btn btn-ghost btn-circle btn-sm">
+                        <button onClick={onClose} className="btn btn-ghost btn-circle btn-sm" aria-label="Close modal">
                             <RiCloseLine className="text-xl" />
                         </button>
                     </div>

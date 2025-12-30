@@ -97,6 +97,7 @@ export default function PublicBioView({ page, links }) {
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="text-2xl hover:text-primary transition-colors"
+                                            aria-label={`Visit our ${key} page`}
                                         >
                                             <Icon />
                                         </a>
