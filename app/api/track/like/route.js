@@ -3,9 +3,16 @@ import dbConnect from "@/lib/db";
 import BioPage from "@/models/BioPage";
 import Analytics from "@/models/Analytics";
 import { startOfDay } from "date-fns";
+import { trackingRateLimit } from "@/lib/rateLimit";
 
 export async function POST(req) {
     try {
+        // Rate limiting
+        const rateLimitResult = await trackingRateLimit(req);
+        if (!rateLimitResult.success) {
+            return NextResponse.json({ success: false, error: "Rate limit exceeded" }, { status: 429 });
+        }
+
         const { pageId } = await req.json();
         if (!pageId) return NextResponse.json({ success: false }, { status: 400 });
 
