@@ -26,8 +26,12 @@ export default function Footer() {
         setLoading(true);
         try {
             const { data } = await axios.post("/api/newsletter/subscribe", { email });
-            toast.success(data.message);
-            setEmail("");
+            if (data.success) {
+                toast.success(data.message);
+                setEmail("");
+            } else {
+                toast.error(data.error || "Subscription failed.");
+            }
         } catch (error) {
             toast.error(error.response?.data?.error || "Subscription failed. Please try again.");
         } finally {

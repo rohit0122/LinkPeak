@@ -13,7 +13,7 @@ export async function POST(req) {
         // Basic validation
         if (!name || !email || !message) {
             return NextResponse.json(
-                { error: "Name, email, and message are required." },
+                { success: false, error: "Name, email, and message are required." },
                 { status: 400 }
             );
         }
@@ -41,7 +41,7 @@ export async function POST(req) {
     } catch (error) {
         console.error("Contact API Error:", error);
         return NextResponse.json(
-            { error: "Failed to send message. Please try again later." },
+            { success: false, error: "Failed to send message. Please try again later." },
             { status: 500 }
         );
     }

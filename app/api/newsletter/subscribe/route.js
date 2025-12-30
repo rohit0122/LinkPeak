@@ -9,7 +9,7 @@ export async function POST(req) {
 
         if (!email || !email.includes("@")) {
             return NextResponse.json(
-                { error: "Please provide a valid email address." },
+                { success: false, error: "Please provide a valid email address." },
                 { status: 400 }
             );
         }
@@ -23,12 +23,12 @@ export async function POST(req) {
                 existingUser.isActive = true;
                 await existingUser.save();
                 return NextResponse.json(
-                    { message: "Welcome back! You've successfully resubscribed to our newsletter." },
+                    { success: true, message: "Welcome back! You've successfully resubscribed to our newsletter." },
                     { status: 200 }
                 );
             }
             return NextResponse.json(
-                { error: "This email is already subscribed to our newsletter." },
+                { success: false, error: "This email is already subscribed to our newsletter." },
                 { status: 409 } // Conflict
             );
         }
@@ -37,7 +37,7 @@ export async function POST(req) {
         await NewsletterUser.create({ email });
 
         return NextResponse.json(
-            { message: "Thank you for subscribing! You've been added to our newsletter." },
+            { success: true, message: "Thank you for subscribing! You've been added to our newsletter." },
             { status: 201 }
         );
     } catch (error) {
@@ -46,13 +46,13 @@ export async function POST(req) {
         // Handle duplicate key error (if race condition occurs)
         if (error.code === 11000) {
             return NextResponse.json(
-                { error: "This email is already subscribed." },
+                { success: false, error: "This email is already subscribed." },
                 { status: 409 }
             );
         }
 
         return NextResponse.json(
-            { error: "Something went wrong. Please try again later." },
+            { success: false, error: "Something went wrong. Please try again later." },
             { status: 500 }
         );
     }
