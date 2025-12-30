@@ -15,7 +15,7 @@ import {
     Cell
 } from "recharts";
 import { format } from "date-fns";
-import { RiEyeLine, RiCursorLine, RiHeartLine, RiPercentLine, RiBarChartGroupedLine } from "react-icons/ri";
+import { RiEyeLine, RiCursorLine, RiHeartLine, RiPercentLine, RiBarChartGroupedLine, RiRefreshLine } from "react-icons/ri";
 
 function StatCard({ title, value, icon: Icon, colorClass }) {
     return (
@@ -35,7 +35,7 @@ function StatCard({ title, value, icon: Icon, colorClass }) {
     );
 }
 
-export default function AnalyticsView({ data = [], plan, links = [], page = {}, lifetime }) {
+export default function AnalyticsView({ data = [], plan, links = [], page = {}, lifetime, onRefresh, isRefreshing }) {
     const [chartData, setChartData] = useState([]);
     const [performanceRange, setPerformanceRange] = useState(7); // Default 7 days
 
@@ -118,6 +118,22 @@ export default function AnalyticsView({ data = [], plan, links = [], page = {}, 
 
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            {/* Header with Refresh */}
+            <div className="flex justify-between items-center bg-base-100 p-4 border border-base-300 rounded-xl shadow-sm">
+                <div>
+                    <h2 className="text-lg font-bold">Analytics Overview</h2>
+                    <p className="text-xs opacity-60">Real-time performance metrics</p>
+                </div>
+                <button
+                    onClick={onRefresh}
+                    disabled={isRefreshing}
+                    className="btn btn-sm btn-ghost gap-2"
+                >
+                    <RiRefreshLine className={isRefreshing ? "animate-spin" : ""} />
+                    {isRefreshing ? "Refreshing..." : "Refresh Data"}
+                </button>
+            </div>
+
             {/* Stat Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
                 <StatCard

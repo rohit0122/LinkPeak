@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import dynamic from "next/dynamic";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import LinkEditor from "@/components/dashboard/LinkEditor";
@@ -135,15 +135,21 @@ export default function DashboardPage() {
         || allPages[0];
 
     // Sync localPageData when page changes
+    // Sync localPageData when page changes, but ignore if we just saved < 2 seconds ago
     useEffect(() => {
-        if (page && !unsavedChanges) {
+        const timeSinceSave = Date.now() - lastSaveTimeRef.current;
+        if (page && !unsavedChanges && timeSinceSave > 2000) {
             setLocalPageData(page);
         }
     }, [page?._id, page, unsavedChanges]);
 
     // Secondary Hooks for dynamic updates
     const { data: linksData } = useGetLinksQuery(selectedPageId, { skip: !selectedPageId });
-    const { data: analyticsData } = useGetAnalyticsQuery({ pageId: selectedPageId }, { skip: !selectedPageId || activeTab !== 'analytics' });
+    const {
+        data: analyticsData,
+        refetch: refetchAnalytics,
+        isFetching: isAnalyticsFetching
+    } = useGetAnalyticsQuery({ pageId: selectedPageId }, { skip: !selectedPageId || activeTab !== 'analytics' });
 
     const links = linksData || (selectedPageId === initData?.activePageId ? initData?.links : []) || [];
     const analytics = analyticsData?.data || (selectedPageId === initData?.activePageId ? initData?.analytics : []) || [];
@@ -248,6 +254,9 @@ export default function DashboardPage() {
     }), [deleteLink]);
 
 
+    // Track save timing to prevent stale redux data from reverting local state
+    const lastSaveTimeRef = useRef(0);
+
     const handleGlobalSave = withLoading(async () => {
         if (!localPageData) return;
         try {
@@ -266,7 +275,11 @@ export default function DashboardPage() {
             }).unwrap();
 
             if (res) {
+                // Update local state with the server response (which is the truth)
+                setLocalPageData(res);
+                lastSaveTimeRef.current = Date.now();
                 setUnsavedChanges(false);
+
                 const sections = Array.from(dirtySections);
                 let message = "Global changes saved!";
                 if (sections.length > 0) {
@@ -327,6 +340,8 @@ export default function DashboardPage() {
 
     if (isInitLoading) return <SkeletonDashboard />;
     if (isInitError) return <div>Error loading dashboard. Please refresh.</div>;
+
+    if (!user) return null;
 
     const trialEndDate = new Date(user.createdAt);
     trialEndDate.setHours(trialEndDate.getHours() + 24);
@@ -423,6 +438,8 @@ export default function DashboardPage() {
                                 links={links}
                                 page={page}
                                 lifetime={lifetimeStats}
+                                onRefresh={refetchAnalytics}
+                                isRefreshing={isAnalyticsFetching}
                             />
                         )}
 
