@@ -168,7 +168,7 @@ function ProfileDropdown({ user, page, onLogout }) {
             </button>
 
             {open && (
-                <div className="absolute right-0 mt-3 w-72 bg-base-100 border rounded-xl shadow-lg z-50">
+                <div className="absolute right-0 mt-3 w-72 bg-base-100 border shadow-lg z-50">
                     <div className="flex items-center gap-3 p-4 bg-primary/5 border-b">
                         <div className="w-8 h-8 rounded-full overflow-hidden ring-2 ring-primary">
                             {page?.profileImage ? (
@@ -213,8 +213,11 @@ function ProfileDropdown({ user, page, onLogout }) {
                                     }}
                                     className="flex items-center gap-2 px-4 py-2 hover:bg-primary/10 w-full text-left"
                                 >
+
                                     <RiExternalLinkLine size={20} className="text-secondary" />
-                                    Public Profile
+                                    <div>
+                                        Public Profile <span className="text-sm">({page?.slug ? `/${page.slug}` : "not-set"})</span>
+                                    </div>
                                 </button>
                             </li>
                         )}
@@ -238,7 +241,7 @@ function ProfileDropdown({ user, page, onLogout }) {
                                     onLogout();
                                     closeDropdown();
                                 }}
-                                className="flex items-center gap-2 px-4 py-2 text-error hover:bg-error/10 w-full text-left"
+                                className="flex items-center gap-2 px-4 py-2 text-error hover:bg-error/10 w-full text-left cursor-pointer"
                             >
                                 <RiLogoutBoxRLine size={20} />
                                 Logout

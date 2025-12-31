@@ -64,9 +64,10 @@ export default function SubscriptionStatusDiv({
     const handleCreatePaymentLink = async (planId) => {
         try {
             const res = await createPaymentLink(planId).unwrap();
-            if (res.success) {
+            //console.log('resresres ', res);
+            if (res?.paymentLinkId) {
                 toast.success("Payment link created");
-                window.open(res.data.url, "_blank");
+                window.open(res.url, "_blank");
             }
         } catch (err) {
             toast.error(
@@ -82,7 +83,7 @@ export default function SubscriptionStatusDiv({
 
     const currentPlan = user?.plan || "FREE";
     const isExpired =
-        !trial.active &&
+        !trial?.active &&
         (!subscription || subscription.status !== "active");
 
     const PLAN_DETAILS = {
@@ -126,19 +127,19 @@ export default function SubscriptionStatusDiv({
                         </span>
                     )} */}
 
-                    <span className={`badge badge-${user.plan !== "FREE" && subscription?.status === "active" ? "success" : "warning"} badge-sm gap-1`}>
-                        <RiCheckboxCircleLine /> {subscription?.planId || user.plan} PLAN
+                    <span className={`badge badge-${user?.plan !== "FREE" && subscription?.status === "active" ? "success" : "warning"} badge-sm gap-1`}>
+                        <RiCheckboxCircleLine /> {subscription?.planId || user?.plan} PLAN
                     </span>
 
                 </div>
 
                 {/* ───────── Trial Info ───────── */}
-                {user.plan !== "FREE" && trial.active && subscription?.status !== "active" && (
+                {user?.plan !== "FREE" && trial?.active && subscription?.status !== "active" && (
                     <div className="alert alert-info shadow-sm my-1 text-info-content">
                         <RiTimeLine className="text-lg" />
                         <div>
                             <div className="font-bold text-sm">
-                                {user.plan} PLAN Trial Access Active
+                                {user?.plan} PLAN Trial Access Active
                             </div>
                             <div className="text-xs ">
                                 Full access until{" "}
@@ -164,7 +165,7 @@ export default function SubscriptionStatusDiv({
                 )}
 
                 {/* ───────── Renewal Window ───────── */}
-                {renewalWindow.active && (
+                {renewalWindow?.active && (
                     <div className="alert alert-warning shadow-sm my-1">
                         <RiAlertLine className="text-lg" />
                         <div>

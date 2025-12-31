@@ -18,7 +18,6 @@ export async function POST(req) {
 
         await dbConnect();
         const today = startOfDay(new Date());
-
         // Atomic increment for Link
         await Link.findByIdAndUpdate(linkId, { $inc: { clicks: 1 } });
 

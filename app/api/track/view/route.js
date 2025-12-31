@@ -19,7 +19,7 @@ export async function POST(req) {
 
         await dbConnect();
         const today = startOfDay(new Date());
-
+        console.log('todaytodaytodaytoday ', today)
         // Atomic increment for BioPage
         await BioPage.findByIdAndUpdate(pageId, { $inc: { views: 1 } });
 

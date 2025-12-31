@@ -32,9 +32,9 @@ export async function proxy(req) {
             }
 
             // Active users visiting Suspended -> Redirect to Dashboard
-            if (payload.isActive !== false && pathname === "/suspended") {
-                return NextResponse.redirect(new URL("/dashboard", req.url));
-            }
+            /* if (payload.isActive !== false && pathname === "/suspended") {
+                 return NextResponse.redirect(new URL("/dashboard", req.url));
+             }*/
 
             return NextResponse.next();
         } catch (error) {

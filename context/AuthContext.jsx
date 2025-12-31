@@ -4,18 +4,25 @@ import { createContext, useContext, useEffect, useCallback } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
+
 import {
     setCredentials,
     logout as logoutAction,
-    selectCurrentUser,
-    selectAuthLoading,
-    setLoading
+    selectCurrentUser
 } from "@/store/slices/authSlice";
+
+import {
+    startLoading,
+    stopLoading,
+    resetLoading
+} from "@/store/slices/loaderSlice";
+
 import {
     useLoginMutation,
     useRegisterMutation,
     useLogoutMutation
 } from "@/store/services/authApi";
+
 import { api } from "@/store/services/api";
 import axios from "@/lib/axios";
 
@@ -24,7 +31,6 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
     const dispatch = useDispatch();
     const user = useSelector(selectCurrentUser);
-    const loading = useSelector(selectAuthLoading);
 
     const router = useRouter();
     const pathname = usePathname();
@@ -33,152 +39,123 @@ export function AuthProvider({ children }) {
     const [registerMutation] = useRegisterMutation();
     const [logoutMutation] = useLogoutMutation();
 
-    // Check if route requires auth
     const isProtectedRoute = useCallback(() => {
-        const protectedPaths = ['/dashboard', '/admin'];
-        return protectedPaths.some(path => pathname?.startsWith(path));
+        return pathname?.startsWith("/dashboard") || pathname?.startsWith("/admin");
     }, [pathname]);
 
-    // Fetch user session
-    const fetchUser = useCallback(async (force = false) => {
+    // ───────── Fetch user ─────────
+    const fetchUser = useCallback(async () => {
+        dispatch(startLoading());
         try {
-            dispatch(setLoading(true));
             const res = await axios.get("/auth/me", { skipLoader: true });
 
             if (res.data?.success) {
-                const userData = res.data.data;
-                dispatch(setCredentials(userData));
-                localStorage.setItem("site_user", JSON.stringify(userData));
+                dispatch(setCredentials(res.data.data));
+                localStorage.setItem("site_user", JSON.stringify(res.data.data));
             }
         } catch (error) {
             if (error.response?.status === 401) {
                 dispatch(logoutAction());
                 localStorage.removeItem("site_user");
+
                 if (isProtectedRoute()) {
                     router.push("/login");
                 }
             }
         } finally {
-            dispatch(setLoading(false));
+            dispatch(stopLoading());
         }
-    }, [dispatch, isProtectedRoute, router]);
+    }, [dispatch, router, isProtectedRoute]);
 
-    // Initialize from cache first
+    // ───────── Init ─────────
     useEffect(() => {
         const cached = localStorage.getItem("site_user");
+
         if (cached) {
             try {
-                const cachedUser = JSON.parse(cached);
-                dispatch(setCredentials(cachedUser));
-                fetchUser(); // Verify with server
-            } catch (e) {
-                localStorage.removeItem("site_user");
-                dispatch(setLoading(false));
-            }
-        } else {
-            if (isProtectedRoute()) {
+                dispatch(setCredentials(JSON.parse(cached)));
                 fetchUser();
-            } else {
-                dispatch(setLoading(false));
+            } catch {
+                localStorage.removeItem("site_user");
             }
+        } else if (isProtectedRoute()) {
+            fetchUser();
         }
-    }, [dispatch, isProtectedRoute, fetchUser]);
+    }, [dispatch, fetchUser, isProtectedRoute]);
 
-    // Login function
+    // ───────── Login ─────────
     const login = useCallback(async (email, password) => {
-        if (typeof window !== 'undefined' && window.setGlobalLoading) {
-            window.setGlobalLoading(true);
-        }
+        dispatch(startLoading());
         try {
             const res = await loginMutation({ email, password }).unwrap();
 
             if (res.success) {
-                const userData = res.data;
-                dispatch(setCredentials(userData));
-                localStorage.setItem("site_user", JSON.stringify(userData));
+                dispatch(setCredentials(res.data));
+                localStorage.setItem("site_user", JSON.stringify(res.data));
                 toast.success("Welcome back!");
 
-                if (typeof window !== 'undefined' && window.setGlobalLoading) {
-                    window.setGlobalLoading(true);
-                }
-
-                if (userData.role === 'admin') {
-                    router.push("/admin");
-                } else {
-                    router.push("/dashboard");
-                }
+                router.push(res.data.role === "admin" ? "/admin" : "/dashboard");
                 return { success: true };
             }
-        } catch (error) {
-            const message = error.data?.error || "Login failed";
-            toast.error(message);
-            return { success: false, error: message };
+        } catch (err) {
+            toast.error(err.data?.error || "Login failed");
+            return { success: false };
+        } finally {
+            dispatch(stopLoading());
         }
     }, [dispatch, loginMutation, router]);
 
-    // Register function
+    // ───────── Register ─────────
     const register = useCallback(async (name, email, password) => {
+        dispatch(startLoading());
         try {
             const res = await registerMutation({ name, email, password }).unwrap();
             if (res.success) {
-                toast.success("Registration successful! Please login.");
+                toast.success("Registration successful!");
                 router.push("/login");
-                return { success: true };
             }
-        } catch (error) {
-            const message = error.data?.error || "Registration failed";
-            toast.error(message);
-            return { success: false, error: message };
+        } catch (err) {
+            toast.error(err.data?.error || "Registration failed");
+        } finally {
+            dispatch(stopLoading());
         }
-    }, [registerMutation, router]);
+    }, [dispatch, registerMutation, router]);
 
-    // Logout function
+    // ───────── Logout ─────────
     const logout = useCallback(async () => {
-        if (typeof window !== 'undefined' && window.setGlobalLoading) {
-            window.setGlobalLoading(true);
-        }
+        dispatch(startLoading());
         try {
-            // 1. Clear Redux state & localStorage immediately to trigger 'skip' logic in components
             dispatch(logoutAction());
             localStorage.removeItem("site_user");
-
-            // 2. Reset the entire API state to cancel pending requests & clear cache
             dispatch(api.util.resetApiState());
-
-            // 3. Call backend logout (this might fail if session is already gone, which is fine)
             await logoutMutation().unwrap();
-        } catch (error) {
-            console.error("Logout error:", error);
+        } catch (err) {
+            console.error(err);
         } finally {
-            if (typeof window !== 'undefined' && window.setGlobalLoading) {
-                window.setGlobalLoading(false);
-            }
+            dispatch(resetLoading());
             router.push("/login");
-            toast.success("Logged out successfully");
+            toast.success("Logged out");
         }
     }, [dispatch, logoutMutation, router]);
 
-    const refreshUser = useCallback(() => {
-        return fetchUser(true);
-    }, [fetchUser]);
-
-    const value = {
-        user,
-        loading,
-        isAuthenticated: !!user,
-        login,
-        register,
-        logout,
-        refreshUser
-    };
-
-    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+    return (
+        <AuthContext.Provider
+            value={{
+                user,
+                isAuthenticated: !!user,
+                login,
+                register,
+                logout,
+                refreshUser: fetchUser
+            }}
+        >
+            {children}
+        </AuthContext.Provider>
+    );
 }
 
 export function useAuth() {
-    const context = useContext(AuthContext);
-    if (!context) {
-        throw new Error("useAuth must be used within AuthProvider");
-    }
-    return context;
+    const ctx = useContext(AuthContext);
+    if (!ctx) throw new Error("useAuth must be used within AuthProvider");
+    return ctx;
 }

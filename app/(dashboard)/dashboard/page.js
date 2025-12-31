@@ -28,7 +28,6 @@ import {
     useDeleteLinkMutation,
     useReorderLinksMutation
 } from "@/store/services/linkApi";
-import { useGetAnalyticsQuery } from "@/store/services/analyticsApi";
 import axios from "@/lib/axios"; // Kept for AI calls for now
 import {
     RiLayoutLine,
@@ -61,6 +60,9 @@ import {
 import { CONFIG } from "@/constants/config";
 import { useRouter } from "next/navigation";
 import SubscriptionStatusDiv from "@/components/dashboard/SubscriptionStatusDiv";
+import { createWithLoading } from "@/lib/withLoading";
+import { useDispatch } from "react-redux";
+import { startLoading, stopLoading } from "@/store/slices/loaderSlice";
 
 // Lazy load heavy components
 const AnalyticsView = dynamic(() => import("@/components/dashboard/AnalyticsView"), {
@@ -80,20 +82,22 @@ const SupportView = dynamic(() => import("@/components/dashboard/SupportView"), 
 
 export default function DashboardPage() {
     const { user: authUser, loading: authLoading } = useAuth();
-    const { setLoading } = useLoading();
+
     const router = useRouter();
+    const dispatch = useDispatch();
+    const withLoading = createWithLoading(dispatch);
 
     // Utility wrapper to show global loading indicator during async operations
-    const withLoading = useCallback((asyncFn) => {
-        return async (...args) => {
-            setLoading(true);
-            try {
-                return await asyncFn(...args);
-            } finally {
-                setLoading(false);
-            }
-        };
-    }, [setLoading]);
+    /* const withLoading = useCallback((asyncFn) => {
+         return async (...args) => {
+             setLoading(true);
+             try {
+                 return await asyncFn(...args);
+             } finally {
+                 setLoading(false);
+             }
+         };
+     }, [setLoading]);*/
 
     // Redux State & Hooks
     const {
@@ -144,12 +148,18 @@ export default function DashboardPage() {
 
     // Sync global loader with initial data fetching
     useEffect(() => {
-        setLoading(authLoading || isInitLoading);
-    }, [authLoading, isInitLoading, setLoading]);
+        if (authLoading || isInitLoading) {
+            dispatch(startLoading());
+        } else {
+            dispatch(stopLoading());
+        }
+    }, [authLoading, isInitLoading]);
+
 
     const page = allPages.find(p => p._id === selectedPageId)
         || allPages.find(p => p._id === initData?.activePageId)
         || allPages[0];
+
 
     // Sync localPageData when page changes
     // Sync localPageData when page changes, but ignore if we just saved < 2 seconds ago
@@ -162,15 +172,8 @@ export default function DashboardPage() {
 
     // Secondary Hooks for dynamic updates
     const { data: linksData } = useGetLinksQuery(selectedPageId, { skip: !selectedPageId });
-    const {
-        data: analyticsData,
-        refetch: refetchAnalytics,
-        isFetching: isAnalyticsFetching
-    } = useGetAnalyticsQuery({ pageId: selectedPageId }, { skip: !selectedPageId || activeTab !== 'analytics' });
-
     const links = linksData || (selectedPageId === initData?.activePageId ? initData?.links : []) || [];
-    const analytics = analyticsData?.data || (selectedPageId === initData?.activePageId ? initData?.analytics : []) || [];
-    const lifetimeStats = analyticsData?.lifetime || (selectedPageId === initData?.activePageId ? initData?.lifetime : { totalViews: 0, totalClicks: 0, totalLikes: 0 });
+    const lifetimeStats = selectedPageId === initData?.activePageId ? initData?.lifetime : { totalViews: 0, totalClicks: 0, totalLikes: 0 };
 
     const handleSwitchRequest = (pageId = null, tabId = null) => {
         if (pageId && pageId === selectedPageId) return;
@@ -329,7 +332,6 @@ export default function DashboardPage() {
         });
     };
 
-    const isRefetching = isInitLoading || isAnalyticsFetching;
     const timeSinceSave = Date.now() - lastSaveTimeRef.current;
 
     // Derived state: Use local data if we have unsaved changes OR if we just saved 
@@ -444,8 +446,8 @@ export default function DashboardPage() {
                             { key: "analytics", label: "Stats", icon: RiBarChartLine },
                             { key: "qr", label: "QR", icon: RiQrCodeLine },
                             { key: "theme", label: "Style", icon: RiPaletteLine },
-                            { key: "support", label: "Help", icon: RiCustomerService2Line },
                             { key: "settings", label: "Settings", icon: RiSettingsLine },
+                            { key: "support", label: "Help", icon: RiCustomerService2Line },
                         ].map(({ key, label, icon: Icon }) => (
                             <button
                                 key={key}
@@ -488,13 +490,8 @@ export default function DashboardPage() {
 
                         {activeTab === "analytics" && (
                             <AnalyticsView
-                                data={analytics}
                                 plan={user?.plan}
-                                links={links}
-                                page={page}
-                                lifetime={lifetimeStats}
-                                onRefresh={refetchAnalytics}
-                                isRefreshing={isAnalyticsFetching}
+                                pageId={page?._id}
                             />
                         )}
 

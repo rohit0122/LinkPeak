@@ -20,11 +20,16 @@ export default function UnsavedChangesModal({ isOpen, onCancel, onDiscard, onSav
 
                     <div className="flex flex-col gap-3 w-full mt-4">
                         <button
-                            className={`btn btn-primary w-full shadow-lg shadow-primary/20 ${isLoading ? 'loading' : ''}`}
+                            className="btn btn-primary w-full shadow-lg shadow-primary/20"
                             onClick={onSave}
                             disabled={isLoading}
                         >
-                            {isLoading ? 'Saving...' : 'Save & Switch'}
+                            {isLoading ? (
+                                <>
+                                    <span className="loading loading-spinner loading-xs"></span>
+                                    Saving...
+                                </>
+                            ) : 'Save & Switch'}
                         </button>
 
                         <button

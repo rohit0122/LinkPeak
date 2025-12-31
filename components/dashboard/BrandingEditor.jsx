@@ -59,9 +59,9 @@ export default function BrandingEditor({ page, user, onUpdate, onPreviewUpdate }
                     {/* Agency Custom Branding */}
                     <div className={`p-4 bg-base-200/50  border ${isAgency ? 'border-base-300' : 'border-base-200 opacity-60'}`}>
                         <div className="flex items-center gap-2 mb-4">
-                            <h3 className="font-medium text-sm md:text-lg">Agency Footer</h3>
+                            <h3 className="font-medium text-sm md:text-lg">White Labeling - Footer</h3>
                             {!isAgency && (
-                                <span className="badge badge-primary badge-xs md:badge-sm badge-outline font-medium uppercase tracking-widest">
+                                <span className="badge badge-warning badge-xs font-medium uppercase tracking-widest">
                                     AGENCY ONLY
                                 </span>
                             )}

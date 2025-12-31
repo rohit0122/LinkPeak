@@ -42,7 +42,7 @@ export class ErrorBoundary extends React.Component {
                                 </button>
                                 <button
                                     onClick={() => window.location.href = "/dashboard"}
-                                    className="btn btn-ghost btn-sm"
+                                    className="btn btn-neutral btn-outline btn-sm"
                                 >
                                     Go to Dashboard
                                 </button>

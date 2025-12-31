@@ -7,9 +7,15 @@ export const analyticsApi = api.injectEndpoints({
             transformResponse: (res) => res.data,
             providesTags: (result, error, { pageId }) => [{ type: 'Analytics', id: pageId }],
         }),
+        getLifeTimeStats: builder.query({
+            query: ({ pageId, lifetime }) => `/analytics?pageId=${pageId}&lifetime=${lifetime}`,
+            transformResponse: (res) => res.data,
+            providesTags: (result, error, { pageId }) => [{ type: 'Analytics', id: pageId }],
+        }),
     }),
 });
 
 export const {
     useGetAnalyticsQuery,
+    useGetLifeTimeStatsQuery,
 } = analyticsApi;

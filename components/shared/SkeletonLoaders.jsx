@@ -19,17 +19,31 @@ export function SkeletonStat() {
 
 export function SkeletonChart() {
     return (
-        <div className="card bg-base-100 shadow-sm p-6 animate-pulse">
-            <div className="h-4 bg-base-300 rounded w-1/4 mb-6"></div>
-            <div className="space-y-3">
-                {[...Array(5)].map((_, i) => (
-                    <div key={i} className="flex items-end gap-2 h-32">
-                        <div className="flex-1 bg-base-300 rounded" style={{ height: `${Math.random() * 100}%` }}></div>
-                        <div className="flex-1 bg-base-300 rounded" style={{ height: `${Math.random() * 100}%` }}></div>
+        <div className="card bg-base-100 shadow-sm p-6">
+            {/* Title skeleton */}
+            <div className="skeleton h-4 w-1/4 mb-6"></div>
+
+            {/* Chart area */}
+            <div className="relative h-40 flex items-end gap-3 px-2">
+                {/* Y-axis grid lines */}
+                <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
+                    {[...Array(4)].map((_, i) => (
+                        <div key={i} className="border-t border-base-300/40"></div>
+                    ))}
+                </div>
+
+                {/* Bars */}
+                {[60, 40, 80, 55, 70, 35].map((h, i) => (
+                    <div key={i} className="flex-1 flex items-end z-10">
+                        <div
+                            className="skeleton w-full rounded-t-md"
+                            style={{ height: `${h}%` }}
+                        ></div>
                     </div>
                 ))}
             </div>
         </div>
+
     );
 }
 

@@ -63,12 +63,10 @@ export default function RootLayout({ children }) {
       >
         <StoreProvider>
           <AuthProvider>
-            <LoadingProvider>
-              <GlobalLoading />
-              <Toaster position="top-center" />
-              {children}
-              <CookieConsent />
-            </LoadingProvider>
+            <GlobalLoading />
+            <Toaster position="top-center" />
+            {children}
+            <CookieConsent />
           </AuthProvider>
         </StoreProvider>
       </body>
