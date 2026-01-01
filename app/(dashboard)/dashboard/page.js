@@ -640,7 +640,7 @@ export default function DashboardPage() {
                                                         </label>
                                                         <input
                                                             type="text"
-                                                            className="input input-bordered"
+                                                            className="input input-bordered w-full"
                                                             placeholder="e.g. your name or brand"
                                                             value={page?.title || ""}
                                                             onChange={(e) => {
@@ -656,7 +656,7 @@ export default function DashboardPage() {
                                                         <label className="label">
                                                             <span className="label-text">Custom URL <span className="text-error">*</span></span>
                                                         </label>
-                                                        <label className="input">
+                                                        <label className="input w-full">
                                                             {CONFIG.SITE_URL}/
                                                             <input
                                                                 type="text"

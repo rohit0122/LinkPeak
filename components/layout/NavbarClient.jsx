@@ -239,7 +239,7 @@ function ProfileDropdown({ currentUser, page, onLogout }) {
                                     onLogout();
                                     closeDropdown();
                                 }}
-                                className="flex items-center gap-2 px-4 py-2 text-error hover:bg-error/10 w-full text-left"
+                                className="flex items-center gap-2 px-4 py-2 text-error hover:bg-error/10 w-full text-left cursor-pointer"
                             >
                                 <RiLogoutBoxRLine size={20} />
                                 Logout
