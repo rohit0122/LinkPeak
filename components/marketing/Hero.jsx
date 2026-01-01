@@ -1,6 +1,7 @@
 import { RiArrowRightLine, RiCheckFill, RiHeartFill, RiPlayCircleLine } from "react-icons/ri";
 import { CONFIG } from "@/constants/config";
 import PreviewPhone from "@/components/shared/PreviewPhone";
+import Link from "next/link";
 
 export default function Hero() {
     const demoPage = {
@@ -48,12 +49,12 @@ export default function Hero() {
                     </p>
 
                     <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-                        <a href="/register" className="btn btn-primary btn-lg px-8 text-xl font-medium shadow-2xl shadow-primary/20 hover:scale-105 transition-all group">
+                        <Link href="/register" className="btn btn-primary btn-lg px-8 text-xl font-medium shadow-2xl shadow-primary/20 hover:scale-105 transition-all group">
                             Get Started Free <RiArrowRightLine className="group-hover:translate-x-1 transition-transform" />
-                        </a>
-                        <a href="#features" className="btn btn-ghost btn-lg px-8 text-xl font-bold flex items-center gap-2">
+                        </Link>
+                        <Link href="#features" className="btn btn-ghost btn-lg px-8 text-xl font-bold flex items-center gap-2">
                             <RiPlayCircleLine className="text-2xl" /> See How it Works
-                        </a>
+                        </Link>
                     </div>
 
                     <div className="mt-16 pt-8 border-t border-base-300 w-full flex flex-col sm:flex-row items-center gap-8 lg:justify-start justify-center">

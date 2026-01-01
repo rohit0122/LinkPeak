@@ -5,6 +5,7 @@ import PreviewPhone from "@/components/shared/PreviewPhone";
 import ThemeSelector from "@/components/dashboard/ThemeSelector";
 import { RiPaletteLine, RiMagicLine, RiArrowRightUpLine } from "react-icons/ri";
 import { CONFIG } from "@/constants/config";
+import Link from "next/link";
 
 export default function LiveDemo() {
     const [theme, setTheme] = useState("light");
@@ -63,9 +64,9 @@ export default function LiveDemo() {
                                     plan={'DEMO'}
                                 />
                                 <div className="mt-8 pt-8 border-t border-base-200 flex justify-center">
-                                    <a href="/register" className="btn btn-primary btn-block gap-2 shadow-lg shadow-primary/20">
+                                    <Link href="/register" className="btn btn-primary btn-block gap-2 shadow-lg shadow-primary/20">
                                         Claim Your Link Now <RiArrowRightUpLine className="text-xl" />
-                                    </a>
+                                    </Link>
                                 </div>
                             </div>
                         </div>

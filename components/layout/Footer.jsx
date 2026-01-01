@@ -7,6 +7,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import Logo from "./Logo";
 import { SocialIcons } from "../shared/SocialIcons";
+import Link from "next/link";
 
 export default function Footer() {
     const [email, setEmail] = useState("");
@@ -48,20 +49,20 @@ export default function Footer() {
                     <div>
                         <h4 className="font-medium uppercase tracking-widest text-xs opacity-60 mb-6">Product</h4>
                         <ul className="space-y-4 font-bold">
-                            <li><a href="#features" className="hover:text-primary transition-colors">Features</a></li>
-                            <li><a href="#pricing" className="hover:text-primary transition-colors">Pricing</a></li>
-                            <li><a href="#demo" className="hover:text-primary transition-colors">Interactive Demo</a></li>
-                            <li><a href="#faq" className="hover:text-primary transition-colors">FAQ</a></li>
+                            <li><Link href="#features" className="hover:text-primary transition-colors">Features</Link></li>
+                            <li><Link href="#pricing" className="hover:text-primary transition-colors">Pricing</Link></li>
+                            <li><Link href="#demo" className="hover:text-primary transition-colors">Interactive Demo</Link></li>
+                            <li><Link href="#faq" className="hover:text-primary transition-colors">FAQ</Link></li>
                         </ul>
                     </div>
 
                     <div>
                         <h4 className="font-medium uppercase tracking-widest text-xs opacity-60 mb-6">Legal</h4>
                         <ul className="space-y-4 font-bold">
-                            <li><a href="/terms-and-conditions" className="hover:text-primary transition-colors">Terms of Service</a></li>
-                            <li><a href="/privacy-policy" className="hover:text-primary transition-colors">Privacy Policy</a></li>
-                            <li><a href="/cookies-policy" className="hover:text-primary transition-colors">Cookie Policy</a></li>
-                            <li><a href="/contact-us" className="hover:text-primary transition-colors">Contact Us</a></li>
+                            <li><Link href="/terms-and-conditions" className="hover:text-primary transition-colors">Terms of Service</Link></li>
+                            <li><Link href="/privacy-policy" className="hover:text-primary transition-colors">Privacy Policy</Link></li>
+                            <li><Link href="/cookies-policy" className="hover:text-primary transition-colors">Cookie Policy</Link></li>
+                            <li><Link href="/contact-us" className="hover:text-primary transition-colors">Contact Us</Link></li>
                         </ul>
                     </div>
 

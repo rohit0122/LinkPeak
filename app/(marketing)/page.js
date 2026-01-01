@@ -8,6 +8,7 @@ import Pricing from "@/components/marketing/Pricing";
 import FAQ from "@/components/marketing/FAQ";
 import { RiArrowRightLine, RiTwitterFill, RiInstagramFill, RiGithubFill } from "react-icons/ri";
 import { CONFIG } from "@/constants/config";
+import Link from "next/link";
 
 export default function MarketingPage() {
     return (
@@ -34,9 +35,9 @@ export default function MarketingPage() {
                         Join thousands of creators who are taking their digital identity to the next level.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-6 justify-center">
-                        <a href="/register" className="btn btn-lg bg-base-100 text-primary border-none hover:bg-base-200 shadow-2xl px-12 text-2xl font-medium">
+                        <Link href="/register" className="btn btn-lg bg-base-100 text-primary border-none hover:bg-base-200 shadow-2xl px-12 text-2xl font-medium">
                             Create Your Page <RiArrowRightLine />
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </section>

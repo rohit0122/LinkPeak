@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CONFIG } from "@/constants/config";
 import { RiFileListLine, RiUserLine, RiMoneyDollarCircleLine, RiShieldCheckLine, RiForbidLine, RiCheckLine, RiCloseLine, RiFileTextFill } from "react-icons/ri";
+import { useLoader } from "@/context/LoaderContext";
 
 function RegisterForm() {
     const [formData, setFormData] = useState({
@@ -22,6 +23,7 @@ function RegisterForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const selectedPlan = searchParams.get('plan'); // PRO, AGENCY, or null
+    const { showLoader, hideLoader } = useLoader();
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -40,6 +42,7 @@ function RegisterForm() {
             return setError("You must agree to the Terms of Service and Privacy Policy to register.");
         }
 
+        showLoader();
         setLoading(true);
 
         try {
@@ -59,6 +62,7 @@ function RegisterForm() {
             setError(err.response?.data?.error || "Registration failed. Please try again.");
         } finally {
             setLoading(false);
+            hideLoader();
         }
     };
 
@@ -241,7 +245,7 @@ function RegisterForm() {
                             <div className="divider"></div>
 
                             <p className="text-center text-sm opacity-70 italic">
-                                This is a summary. For full details, please visit our <a href="/terms" target="_blank" className="link link-primary">Terms of Service</a> and <a href="/privacy" target="_blank" className="link link-primary">Privacy Policy</a> pages.
+                                This is a summary. For full details, please visit our <Link href="/terms-and-conditions" target="_blank" className="link link-primary">Terms of Service</Link> and <Link href="/privacy" target="_blank" className="link link-primary">Privacy Policy</Link> pages.
                             </p>
                         </div>
 

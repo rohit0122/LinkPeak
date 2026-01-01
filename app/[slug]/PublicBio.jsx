@@ -23,6 +23,7 @@ import GridTemplate from "@/components/templates/upgradedTemplates/GridTemplate"
 import HeroTemplate from "@/components/templates/upgradedTemplates/HeroTemplate";
 import SocialTemplate from "@/components/templates/upgradedTemplates/SocialTemplate";
 import ModernTemplate from "@/components/templates/upgradedTemplates/ModernTemplate";
+import Link from "next/link";
 
 const iconMap = {
     instagram: RiInstagramLine,
@@ -182,7 +183,7 @@ export default function PublicBio({ page, links, isDemo = false }) {
                             <div className="mt-6 flex flex-col items-center gap-1">
                                 <span className="text-[10px] font-bold tracking-widest uppercase opacity-30">Powered by</span>
                                 <span className="text-xs font-medium tracking-tighter opacity-70">
-                                    <a href={CONFIG.SITE_URL} target="_blank" rel="noopener noreferrer"> {CONFIG.SITE_NAME}</a>
+                                    <Link href={CONFIG.SITE_URL} target="_blank" rel="noopener noreferrer"> {CONFIG.SITE_NAME}</Link>
                                 </span>
                             </div>
                         ) : page.branding?.customText && (

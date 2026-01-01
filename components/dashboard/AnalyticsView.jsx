@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { CONFIG } from "@/constants/config";
-import { RiEyeLine, RiCursorLine, RiHeartLine, RiPercentLine, RiRefreshLine } from "react-icons/ri";
+import { RiRefreshLine } from "react-icons/ri";
 import StatsCards from "../shared/charts/StatsCards";
 import SummaryAreaChart from "../shared/charts/SummaryAreaChart";
 import LinkPerformanceChart from "../shared/charts/LinkPerformanceChart";
 import { SkeletonChart, SkeletonTable } from "../shared/SkeletonLoaders";
+import { useLoader } from "@/context/LoaderContext";
 
 export default function AnalyticsView({ data = [], plan, links = [], page = {}, lifetime }) {
     const [summaryChartData, setSummaryChartData] = useState([]);
@@ -14,17 +14,23 @@ export default function AnalyticsView({ data = [], plan, links = [], page = {}, 
     const [currentRange, setCurrentRange] = useState(7);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    const { showLoader, hideLoader } = useLoader();
 
-    // Calculate totals from lifetime data or fallback to data array
-    const totals = lifetime ? {
-        views: lifetime.totalViews || 0,
-        clicks: lifetime.totalClicks || 0,
-        likes: lifetime.totalLikes || 0
-    } : data.reduce((acc, curr) => ({
-        views: acc.views + curr.views,
-        clicks: acc.clicks + curr.clicks,
-        likes: acc.likes + curr.likes
-    }), { views: 0, clicks: 0, likes: 0 });
+    // Initialize activeTotals from props or fallback calculation
+    const [activeTotals, setActiveTotals] = useState(() => {
+        if (lifetime && (lifetime.totalViews || lifetime.totalClicks || lifetime.totalLikes)) {
+            return {
+                views: lifetime.totalViews || 0,
+                clicks: lifetime.totalClicks || 0,
+                likes: lifetime.totalLikes || 0
+            };
+        }
+        return data.reduce((acc, curr) => ({
+            views: acc.views + curr.views,
+            clicks: acc.clicks + curr.clicks,
+            likes: acc.likes + curr.likes
+        }), { views: 0, clicks: 0, likes: 0 });
+    });
 
     // Fetch chart data from API (single call for both charts)
     const fetchChartData = async (range) => {
@@ -54,6 +60,24 @@ export default function AnalyticsView({ data = [], plan, links = [], page = {}, 
         }
     };
 
+    // Fetch fresh lifetime stats
+    const fetchLifetimeStats = async () => {
+        if (!page?._id) return;
+        try {
+            const response = await fetch(`/api/analytics?pageId=${page._id}`);
+            const result = await response.json();
+            if (result.success && result.lifetime) {
+                setActiveTotals({
+                    views: result.lifetime.totalViews || 0,
+                    clicks: result.lifetime.totalClicks || 0,
+                    likes: result.lifetime.totalLikes || 0
+                });
+            }
+        } catch (err) {
+            console.error('Error fetching lifetime stats:', err);
+        }
+    };
+
     // Fetch initial data on mount
     useEffect(() => {
         if (page?._id) {
@@ -67,9 +91,15 @@ export default function AnalyticsView({ data = [], plan, links = [], page = {}, 
         fetchChartData(newRange);
     };
 
-    // Handle refresh
+    // Handle refresh: Reset to 7 days, fetch charts, fetch stats
     const handleRefresh = () => {
-        fetchChartData(currentRange);
+        showLoader();
+        setCurrentRange(7);
+        // We trigger both. fetchChartData manages the loading state / main spinner.
+        // fetchLifetimeStats updates the cards silently/concurrently.
+        fetchChartData(7);
+        fetchLifetimeStats();
+        hideLoader();
     };
 
     return (
@@ -81,7 +111,7 @@ export default function AnalyticsView({ data = [], plan, links = [], page = {}, 
                     <p className="text-xs opacity-60">Real-time performance metrics</p>
                 </div>
                 <button
-                    onClick={handleRefresh}
+                    onClick={() => handleRefresh()}
                     disabled={isLoading}
                     className="btn btn-sm btn-neutral btn-outline gap-2"
                 >
@@ -98,7 +128,7 @@ export default function AnalyticsView({ data = [], plan, links = [], page = {}, 
             )}
 
             {/* Stat Cards */}
-            <StatsCards totals={totals} />
+            <StatsCards totals={activeTotals} />
 
             {/* Summary Engagement Chart */}
             {isLoading ? (

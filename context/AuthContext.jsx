@@ -78,7 +78,6 @@ export function AuthProvider({ children }) {
     // Login function
     const login = useCallback(async (email, password) => {
         try {
-            showLoader();
             const res = await axios.post(API_FRONTEND_LOGIN, { email, password });
             if (res.data?.success) {
                 const userData = await res.data.data;
@@ -99,15 +98,13 @@ export function AuthProvider({ children }) {
             const message = error.response?.data?.error || "Login failed";
             toast.error(message);
             return { success: false, error: message };
-        } finally {
-            hideLoader();
         }
     }, [router]);
 
     // Register function
     const register = useCallback(async (name, email, password) => {
         try {
-            showLoader();
+
             const res = await axios.post(API_FRONTEND_REGISTER, { name, email, password });
 
             if (res.data?.success) {
@@ -119,8 +116,6 @@ export function AuthProvider({ children }) {
             const message = error.response?.data?.error || "Registration failed";
             toast.error(message);
             return { success: false, error: message };
-        } finally {
-            hideLoader();
         }
     }, [router]);
 

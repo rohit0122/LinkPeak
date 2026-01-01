@@ -5,6 +5,7 @@ import Link from "next/link";
 import { CONFIG } from "@/constants/config";
 import toast from "react-hot-toast";
 import { useAuth } from "@/context/AuthContext";
+import { useLoader } from "@/context/LoaderContext";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -12,9 +13,11 @@ export default function LoginPage() {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const { login } = useAuth();
+    const { showLoader, hideLoader } = useLoader();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        showLoader();
         setError("");
         setLoading(true);
 
@@ -27,6 +30,7 @@ export default function LoginPage() {
             setError(firstError);
             toast.error(firstError);
             setLoading(false);
+            hideLoader();
             return;
         }
 
@@ -45,7 +49,7 @@ export default function LoginPage() {
                     // Show custom toast with contact support link
                     toast.error((t) => (
                         <div>
-                            Account suspended. <a href="/contact-us" className="underline font-bold">Contact Support</a>
+                            Account suspended. <Link href="/contact-us" className="underline font-bold">Contact Support</Link>
                         </div>
                     ), { duration: 6000 });
                 }
@@ -55,6 +59,7 @@ export default function LoginPage() {
             setError(errorMsg);
         } finally {
             setLoading(false);
+            hideLoader();
         }
     };
 
