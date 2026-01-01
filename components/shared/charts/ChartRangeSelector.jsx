@@ -33,7 +33,7 @@ export default function ChartRangeSelector({ plan, title, subtitle, onRangeChang
                             <button
                                 data-tip={`${isDisabled ? "Upgrade plan to view more" : `${label} analytics`} `}
                                 onClick={() => !isDisabled && handleChartRangeChange(Number(r))}
-                                className={`btn btn - xs tooltip ${Number(r) === currentRange ? "btn-primary" : "btn-ghost"} ${isDisabled ? "opacity-30 cursor-not-allowed" : ""} `}
+                                className={`btn btn-xs tooltip ${Number(r) === currentRange ? "btn-primary" : "btn-ghost"} ${isDisabled ? "opacity-30 cursor-not-allowed" : ""} `}
                             >
                                 {label}
                             </button>

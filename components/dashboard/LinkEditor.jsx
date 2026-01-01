@@ -31,6 +31,7 @@ import {
 } from "react-icons/ri";
 import { toast } from "react-hot-toast";
 import axios from "@/lib/axios";
+import ConfirmationModal from "../shared/ConfirmationModal";
 
 function SortableItem({ link, onEdit, onDelete, onToggle }) {
     const {
@@ -119,6 +120,10 @@ export default function LinkEditor({ links, plan, onReorder, onAdd, onUpdate, on
     const [activeEmojiTab, setActiveEmojiTab] = useState(CONFIG.COMMON_EMOJIS[0].name);
     const [isAiLoading, setIsAiLoading] = useState(false);
 
+    // Delete Confirmation State
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [linkToDelete, setLinkToDelete] = useState(null);
+
     const limit = CONFIG.PLAN_LIMITS[plan || "FREE"].links;
     const isLimitReached = links.length >= limit;
 
@@ -163,6 +168,20 @@ export default function LinkEditor({ links, plan, onReorder, onAdd, onUpdate, on
         setFormData({ title: "", url: "", icon: "" });
     };
 
+    // Delete Handlers
+    const handleDeleteRequest = (id) => {
+        setLinkToDelete(id);
+        setShowDeleteModal(true);
+    };
+
+    const handleConfirmDelete = () => {
+        if (linkToDelete) {
+            onDelete(linkToDelete);
+        }
+        setShowDeleteModal(false);
+        setLinkToDelete(null);
+    };
+
     const handleAiTitle = async () => {
         if (!formData.url) {
             toast.error("Please enter a URL first");
@@ -194,6 +213,17 @@ export default function LinkEditor({ links, plan, onReorder, onAdd, onUpdate, on
 
     return (
         <div className="w-full">
+            <ConfirmationModal
+                isOpen={showDeleteModal}
+                title="Delete Link?"
+                message="Are you sure you want to delete this link? This action cannot be undone."
+                confirmText="Delete Link"
+                cancelText="Keep it"
+                isDestructive={true}
+                onConfirm={handleConfirmDelete}
+                onCancel={() => setShowDeleteModal(false)}
+            />
+
             {/* Header */}
             <div className="flex justify-between items-center mb-8">
                 <h2 className="text-xl font-medium tracking-tight flex items-center gap-3">
@@ -237,7 +267,7 @@ export default function LinkEditor({ links, plan, onReorder, onAdd, onUpdate, on
                                     key={link._id}
                                     link={link}
                                     onEdit={handleEditClick}
-                                    onDelete={onDelete}
+                                    onDelete={handleDeleteRequest}
                                     onToggle={(id, active) => onUpdate({ _id: id, isActive: active })}
                                 />
                             ))

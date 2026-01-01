@@ -6,6 +6,7 @@ import { RiEyeLine, RiCursorLine, RiHeartLine, RiPercentLine, RiRefreshLine } fr
 import StatsCards from "../shared/charts/StatsCards";
 import SummaryAreaChart from "../shared/charts/SummaryAreaChart";
 import LinkPerformanceChart from "../shared/charts/LinkPerformanceChart";
+import { SkeletonChart, SkeletonTable } from "../shared/SkeletonLoaders";
 
 export default function AnalyticsView({ data = [], plan, links = [], page = {}, lifetime }) {
     const [summaryChartData, setSummaryChartData] = useState([]);
@@ -101,11 +102,7 @@ export default function AnalyticsView({ data = [], plan, links = [], page = {}, 
 
             {/* Summary Engagement Chart */}
             {isLoading ? (
-                <div className="card bg-base-100 shadow-sm border border-base-300 p-6">
-                    <div className="flex items-center justify-center h-[400px]">
-                        <span className="loading loading-spinner loading-lg"></span>
-                    </div>
-                </div>
+                <SkeletonTable />
             ) : (
                 <SummaryAreaChart
                     summaryChart={summaryChartData}
@@ -117,11 +114,7 @@ export default function AnalyticsView({ data = [], plan, links = [], page = {}, 
 
             {/* Link Performance Chart */}
             {isLoading ? (
-                <div className="card bg-base-100 shadow-sm border border-base-300 p-6">
-                    <div className="flex items-center justify-center h-[400px]">
-                        <span className="loading loading-spinner loading-lg"></span>
-                    </div>
-                </div>
+                <SkeletonTable />
             ) : (
                 <LinkPerformanceChart
                     plan={plan}
