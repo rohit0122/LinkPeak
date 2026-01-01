@@ -274,7 +274,7 @@ export default function SupportView({ currentUser }) {
                             {isAdmin ? <RiAdminLine className="text-secondary" /> : <RiHistoryLine className="text-primary" />}
                             {isAdmin ? "All User Tickets" : "Your Ticket History"}
                         </div>
-                        <button onClick={fetchTickets} className="btn btn-ghost btn-sm btn-circle" title="Refresh">
+                        <button onClick={fetchTickets} className="btn btn-neutral btn-outline btn-sm btn-circle" title="Refresh">
                             <RiHistoryLine />
                         </button>
                     </h2>

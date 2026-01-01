@@ -27,7 +27,7 @@ export default function UnsavedChangesModal({ isOpen, onCancel, onDiscard, onSav
                         </button>
 
                         <button
-                            className="btn btn-ghost text-error hover:bg-error/10 w-full"
+                            className="btn btn-neutral btn-outline text-error hover:bg-error/10 w-full"
                             onClick={onDiscard}
                         >
                             Discard Changes

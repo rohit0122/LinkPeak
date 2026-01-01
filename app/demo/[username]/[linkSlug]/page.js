@@ -49,7 +49,7 @@ export default async function DemoContentPage({ params }) {
             {/* Navigation Bar */}
             <nav className="navbar bg-base-100/80 backdrop-blur-md sticky top-0 z-50 border-b border-base-200 px-4 md:px-8">
                 <div className="flex-1">
-                    <Link href={bioLink} className="btn btn-ghost gap-2 normal-case text-lg font-medium">
+                    <Link href={bioLink} className="btn btn-neutral btn-outline gap-2 normal-case btn-sm md:btn-md font-medium">
                         <RiArrowLeftLine />
                         <span className="hidden sm:inline">Back to</span> {userTitle}'s Bio
                     </Link>

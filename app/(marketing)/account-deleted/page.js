@@ -20,7 +20,7 @@ export default function AccountDeletedPage() {
                         <Link href="/" className="btn btn-primary">
                             Return to Homepage
                         </Link>
-                        <Link href="/contact-us" className="btn btn-ghost">
+                        <Link href="/contact-us" className="btn btn-neutral btn-outline">
                             Leave Feedback
                         </Link>
                     </div>

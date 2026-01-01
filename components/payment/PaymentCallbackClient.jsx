@@ -94,7 +94,7 @@ export default function PaymentCallbackClient() {
                         <p className="mt-2 opacity-70">
                             We couldn't verify your payment. If money was deducted, please wait 5 minutes or contact support.
                         </p>
-                        <button onClick={() => router.replace("/dashboard")} className="btn btn-ghost btn-sm mt-6">Return to Dashboard</button>
+                        <button onClick={() => router.replace("/dashboard")} className="btn btn-neutral btn-outline btn-sm mt-6">Return to Dashboard</button>
                     </div>
                 )}
 

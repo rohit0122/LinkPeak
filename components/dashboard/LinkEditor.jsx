@@ -326,7 +326,7 @@ export default function LinkEditor({ links, plan, onReorder, onAdd, onUpdate, on
                                             <button
                                                 type="button"
                                                 onClick={() => setFormData({ ...formData, icon: "" })}
-                                                className="btn btn-ghost  font-medium text-error"
+                                                className="btn btn-neutral btn-outline  font-medium text-error"
                                             >
                                                 Clear
                                             </button>
@@ -366,7 +366,7 @@ export default function LinkEditor({ links, plan, onReorder, onAdd, onUpdate, on
                                 <div className="flex gap-3 pt-4">
                                     <button
                                         type="button"
-                                        className="btn btn-ghost flex-1  font-bold"
+                                        className="btn btn-neutral btn-outline flex-1  font-bold"
                                         onClick={() => { setShowAddModal(false); setEditingLink(null); }}
                                     >
                                         Cancel

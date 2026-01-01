@@ -189,10 +189,10 @@ export default function DashboardPage() {
     };
 
     const handleSaveAndSwitch = async () => {
-        await handleGlobalSave();
+        const success = await handleGlobalSave();
         // After save, handleGlobalSave sets unsavedChanges to false
         // We can then switch
-        if (pendingPageId) {
+        if (success && pendingPageId) {
             performPageSwitch(pendingPageId);
         }
     };
@@ -290,7 +290,7 @@ export default function DashboardPage() {
 
     // Global Save Logic
     const handleGlobalSave = async () => {
-        if (!page) return;
+        if (!page) return false;
         showLoader();
         try {
             // Save all relevant fields
@@ -324,13 +324,19 @@ export default function DashboardPage() {
 
                 toast.success(message);
                 setDirtySections(new Set());
+                return true;
+            } else {
+                toast.error(data.error || "Save failed but no error returned.");
+                return false;
             }
         } catch (error) {
             toast.error(error.response?.data?.error || "Could not save changes. Please try again.");
+            return false;
         } finally {
             hideLoader();
         }
     };
+
 
     // Helper for purely local updates (that trigger unsaved state)
     const handleLocalUpdate = (updates) => {

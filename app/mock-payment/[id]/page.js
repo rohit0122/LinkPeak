@@ -119,7 +119,7 @@ export default function MockPaymentPage() {
 
                     {/* Optional: Expired */}
                     <button
-                        className="btn btn-ghost btn-xs w-full mt-4 text-gray-400"
+                        className="btn btn-neutral btn-outline btn-xs w-full mt-4 text-gray-400"
                         disabled={loading}
                     >
                         Simulate Expiry (via code only)
