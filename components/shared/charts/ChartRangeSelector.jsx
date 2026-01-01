@@ -2,10 +2,9 @@
 import { useState } from "react";
 
 
-export default function ChartRangeSelector({ plan, title, subtitle }) {
+export default function ChartRangeSelector({ plan, title, subtitle, onRangeChange, currentRange = 7 }) {
 
     const limitDays = plan === "FREE" ? 7 : plan === "PRO" ? 90 : 9999;
-    const [range, setRange] = useState(7);
     const RANGE_LABELS = {
         7: "7D",
         15: "15D",
@@ -15,8 +14,9 @@ export default function ChartRangeSelector({ plan, title, subtitle }) {
         9999: "ALL",
     };
     const handleChartRangeChange = (rangeId) => {
-        console.log('dfasdfsdfasfas===== ', rangeId)
-        //  dispatch(setRange(rangeId));
+        if (onRangeChange) {
+            onRangeChange(rangeId);
+        }
     };
 
     return (
@@ -31,9 +31,9 @@ export default function ChartRangeSelector({ plan, title, subtitle }) {
                     return (
                         <li key={r}>
                             <button
-                                data-tip={`${isDisabled ? "Upgrade plan to view more" : `${label} analytics`}`}
+                                data-tip={`${isDisabled ? "Upgrade plan to view more" : `${label} analytics`} `}
                                 onClick={() => !isDisabled && handleChartRangeChange(Number(r))}
-                                className={`btn btn-xs tooltip ${Number(r) === range ? "btn-primary" : "btn-ghost"} ${isDisabled ? "opacity-30 cursor-not-allowed" : ""}`}
+                                className={`btn btn - xs tooltip ${Number(r) === currentRange ? "btn-primary" : "btn-ghost"} ${isDisabled ? "opacity-30 cursor-not-allowed" : ""} `}
                             >
                                 {label}
                             </button>

@@ -213,7 +213,9 @@ function ProfileDropdown({ currentUser, page, onLogout }) {
                                     className="flex items-center gap-2 px-4 py-2 hover:bg-primary/10 w-full text-left"
                                 >
                                     <RiExternalLinkLine size={20} className="text-secondary" />
-                                    Public Profile
+                                    <div>
+                                        Public Profile <span className="text-sm">({page?.slug ? `/${page.slug}` : "not-set"})</span>
+                                    </div>
                                 </button>
                             </li>
                         )}

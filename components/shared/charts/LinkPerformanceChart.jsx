@@ -17,7 +17,7 @@ import { RiBarChartGroupedLine } from "react-icons/ri";
  * ]
  */
 
-export default function LinkPerformanceChart({ plan, linkChart }) {
+export default function LinkPerformanceChart({ plan, linkChart, onRangeChange, currentRange }) {
     if (plan === "FREE") return (
         <div className="card bg-slate-900 text-white shadow-xl border border-slate-700/50 group overflow-hidden relative">
             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 blur-[100px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2"></div>
@@ -82,11 +82,17 @@ export default function LinkPerformanceChart({ plan, linkChart }) {
         plan !== "FREE" && (
             <div className="card bg-base-100 shadow-sm border border-base-300 p-6">
                 <div className="card-body p-6">
-                    <ChartRangeSelector plan={plan} title="Link Performance" subtitle="Click distribution for selected period" />
+                    <ChartRangeSelector
+                        plan={plan}
+                        title="Link Performance"
+                        subtitle="Click distribution for selected period"
+                        onRangeChange={onRangeChange}
+                        currentRange={currentRange}
+                    />
                     {
                         hasLinkData ? (
-                            <div style={{ width: "100%", height: 360 }}>
-                                <ResponsiveContainer width="100%" height="100%">
+                            <div className="w-full h-[360px]">
+                                <ResponsiveContainer width="100%" height={360}>
                                     <BarChart
                                         data={linkChart}
                                         margin={{ top: 20, right: 30, left: 10, bottom: 40 }}
@@ -98,6 +104,10 @@ export default function LinkPerformanceChart({ plan, linkChart }) {
                                             dataKey="label"
                                             tickLine={false}
                                             axisLine={false}
+                                            angle={-45}
+                                            textAnchor="end"
+                                            height={60}
+                                            interval={0}
                                         />
 
                                         {/* Y Axis = Click Count */}
