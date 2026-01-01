@@ -41,17 +41,17 @@ export async function GET(req) {
             const users = await User.find({
                 planExpiresAt: getDayWindow(days),
                 isActive: true,
-                role: "user", // CRITICAL: Exclude admins
+                role: "currentUser", // CRITICAL: Exclude admins
                 plan: { $ne: "FREE" }
             });
 
-            for (const user of users) {
+            for (const currentUser of users) {
                 try {
-                    await sendExpiryReminderEmail(user.email, user.name, days);
+                    await sendExpiryReminderEmail(currentUser.email, currentUser.name, days);
                     results.reminders[`d${days}`]++;
                 } catch (err) {
-                    console.error(`[Cron Email Error] ${user.email}:`, err);
-                    results.errors.push(`Email error (Reminder ${days}d) for ${user.email}: ${err.message}`);
+                    console.error(`[Cron Email Error] ${currentUser.email}:`, err);
+                    results.errors.push(`Email error (Reminder ${days}d) for ${currentUser.email}: ${err.message}`);
                 }
             }
         }
@@ -61,21 +61,21 @@ export async function GET(req) {
         const expiredUsers = await User.find({
             planExpiresAt: { $lt: now },
             isActive: true,
-            role: "user", // CRITICAL: Exclude admins
+            role: "currentUser", // CRITICAL: Exclude admins
             plan: { $ne: "FREE" }
         });
 
-        for (const user of expiredUsers) {
+        for (const currentUser of expiredUsers) {
             try {
-                // Deactivate user
-                user.isActive = false;
-                await user.save();
+                // Deactivate currentUser
+                currentUser.isActive = false;
+                await currentUser.save();
 
                 // Send suspension email
-                await sendSuspensionEmail(user.email, user.name, "Your subscription has expired.");
+                await sendSuspensionEmail(currentUser.email, currentUser.name, "Your subscription has expired.");
                 results.suspended++;
             } catch (err) {
-                results.errors.push(`Suspension error for ${user.email}: ${err.message}`);
+                results.errors.push(`Suspension error for ${currentUser.email}: ${err.message}`);
             }
         }
 

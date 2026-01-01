@@ -12,21 +12,21 @@ export async function GET() {
 
         await dbConnect();
         //console.log('session ', session);
-        const user = await User.findById(session.id);
-        // console.log('user ', user);
-        if (!user) {
+        const currentUser = await User.findById(session.id);
+        // console.log('currentUser ', currentUser);
+        if (!currentUser) {
             return NextResponse.json({ success: false, error: "User not found" }, { status: 404 });
         }
 
         return NextResponse.json({
             success: true,
             data: {
-                id: user._id.toString(),
-                name: user.name,
-                email: user.email,
-                role: user.role,
-                plan: user.plan,
-                isVerified: user.isVerified,
+                id: currentUser._id.toString(),
+                name: currentUser.name,
+                email: currentUser.email,
+                role: currentUser.role,
+                plan: currentUser.plan,
+                isVerified: currentUser.isVerified,
             },
         });
     } catch (error) {

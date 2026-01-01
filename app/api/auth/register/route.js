@@ -20,7 +20,7 @@ export async function POST(req) {
 
         const verificationToken = uuidv4();
 
-        const user = await User.create({
+        const currentUser = await User.create({
             name,
             email,
             password,

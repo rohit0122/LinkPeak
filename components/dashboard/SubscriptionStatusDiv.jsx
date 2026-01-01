@@ -16,7 +16,7 @@ import {
 } from "react-icons/ri";
 
 export default function SubscriptionStatusDiv({
-    user,
+    currentUser,
     initialData,
     redirectOnExpire = false
 }) {
@@ -46,7 +46,7 @@ export default function SubscriptionStatusDiv({
             (!subscription || subscription.status !== "active");
 
         if (isExpired) {
-            axios.post("/user/suspend").catch(() => { });
+            axios.post("/currentUser/suspend").catch(() => { });
             toast.error(
                 "Trial expired! Redirecting to suspended page...",
                 { duration: 3000 }
@@ -97,7 +97,7 @@ export default function SubscriptionStatusDiv({
     const { trial, subscription, renewalWindow, pendingPaymentLink } =
         subscriptionData;
 
-    const currentPlan = user?.plan || "FREE";
+    const currentPlan = currentUser?.plan || "FREE";
     const isExpired =
         !trial.active &&
         (!subscription || subscription.status !== "active");
@@ -137,29 +137,29 @@ export default function SubscriptionStatusDiv({
                         Subscription Status
                     </h3>
 
-                    {/* {user.plan !== "FREE" && subscription?.status === "active" && (
+                    {/* {currentUser.plan !== "FREE" && subscription?.status === "active" && (
                         <span className="badge badge-success badge-sm gap-1">
                             <RiCheckboxCircleLine /> {subscription.planId} ACTIVE
                         </span>
                     )} */}
 
-                    <span className={`badge badge-${user.plan !== "FREE" && subscription?.status === "active" ? "success" : "warning"} badge-sm gap-1`}>
-                        <RiCheckboxCircleLine /> {subscription?.planId || user.plan} PLAN
+                    <span className={`badge badge-${currentUser?.plan !== "FREE" && subscription?.status === "active" ? "success" : "warning"} badge-sm gap-1`}>
+                        <RiCheckboxCircleLine /> {subscription?.planId || currentUser?.plan} PLAN
                     </span>
 
                 </div>
 
                 {/* ───────── Trial Info ───────── */}
-                {user.plan !== "FREE" && trial.active && subscription?.status !== "active" && (
+                {currentUser?.plan !== "FREE" && trial?.active && subscription?.status !== "active" && (
                     <div className="alert alert-info shadow-sm my-1 text-info-content">
                         <RiTimeLine className="text-lg" />
                         <div>
                             <div className="font-bold text-sm">
-                                {user.plan} PLAN Trial Access Active
+                                {currentUser?.plan} PLAN Trial Access Active
                             </div>
                             <div className="text-xs ">
                                 Full access until{" "}
-                                {new Date(trial.endsAt).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                                {new Date(trial?.endsAt).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                             </div>
                         </div>
                     </div>
@@ -208,7 +208,7 @@ export default function SubscriptionStatusDiv({
                             </div>
                         </div>
                         <a
-                            href={pendingPaymentLink.url}
+                            href={pendingPaymentLink?.url}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="btn btn-sm btn-primary"
@@ -219,7 +219,7 @@ export default function SubscriptionStatusDiv({
                 )}
 
                 {/* ───────── Accordion: Plans ───────── */}
-                {!pendingPaymentLink && (currentPlan === "FREE" || subscription?.status !== "active" || renewalWindow.active) && (
+                {!pendingPaymentLink && (currentPlan === "FREE" || subscription?.status !== "active" || renewalWindow?.active) && (
                     <div className="collapse collapse-arrow border border-base-200 rounded-lg my-1">
                         <input type="checkbox" />
                         <div className="collapse-title text-sm font-bold">
@@ -251,7 +251,7 @@ export default function SubscriptionStatusDiv({
                 )}
 
                 {/* ───────── Footer ───────── */}
-                {!pendingPaymentLink && (currentPlan === "FREE" || subscription?.status !== "active" || renewalWindow.active) && (
+                {!pendingPaymentLink && (currentPlan === "FREE" || subscription?.status !== "active" || renewalWindow?.active) && (
                     <div className="mt-4 pt-3 border-t border-base-200 flex items-center justify-between text-[10px] opacity-60">
                         <div className="flex items-center gap-1 font-bold uppercase">
                             <RiSecurePaymentLine /> SSL Secure

@@ -6,7 +6,7 @@ export async function POST() {
         message: "Logged out successfully",
     });
 
-    response.cookies.set("token", "", {
+    response.cookies.set("lpkSiteToken", "", {
         httpOnly: true,
         expires: new Date(0),
     });

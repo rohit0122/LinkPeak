@@ -1,7 +1,7 @@
 import { CONFIG } from "@/constants/config";
 
-export default function UsageMetrics({ user, links = [], pages = [] }) {
-    const planLimits = CONFIG.PLAN_LIMITS[user?.plan] || CONFIG.PLAN_LIMITS.FREE;
+export default function UsageMetrics({ currentUser, links = [], pages = [] }) {
+    const planLimits = CONFIG.PLAN_LIMITS[currentUser?.plan] || CONFIG.PLAN_LIMITS.FREE;
 
     const metrics = [
         {
@@ -44,8 +44,8 @@ export default function UsageMetrics({ user, links = [], pages = [] }) {
                                 <div className="w-full bg-base-300 rounded-full h-2">
                                     <div
                                         className={`h-2 rounded-full transition-all ${isAtLimit ? 'bg-error' :
-                                                isNearLimit ? 'bg-warning' :
-                                                    `bg-${metric.color}`
+                                            isNearLimit ? 'bg-warning' :
+                                                `bg-${metric.color}`
                                             }`}
                                         style={{ width: `${Math.min(percentage, 100)}%` }}
                                     ></div>
@@ -65,7 +65,7 @@ export default function UsageMetrics({ user, links = [], pages = [] }) {
                     })}
                 </div>
 
-                {user?.plan === 'FREE' && (
+                {currentUser?.plan === 'FREE' && (
                     <div className="mt-4 p-3 bg-primary/5 rounded-lg border border-primary/20">
                         <p className="text-xs font-semibold text-primary mb-2">
                             🚀 Upgrade to unlock more

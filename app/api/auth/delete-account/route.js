@@ -15,29 +15,29 @@ export async function DELETE(req) {
         await dbConnect();
 
         // 1. Verify Authentication
-        const user = await getAuthUser();
-        if (!user) {
+        const currentUser = await getAuthUser();
+        if (!currentUser) {
             return NextResponse.json(
                 { error: "Unauthorized" },
                 { status: 401 }
             );
         }
 
-        const userId = user.id;
-        const userEmail = user.email;
+        const userId = currentUser.id;
+        const userEmail = currentUser.email;
 
         // 2. Begin Deletion Process
-        console.log(`[DANGER] Starting account deletion for user: ${userId} (${userEmail})`);
+        console.log(`[DANGER] Starting account deletion for currentUser: ${userId} (${userEmail})`);
 
-        // Get user's pages to delete associated links and analytics
+        // Get currentUser's pages to delete associated links and analytics
         const userPages = await BioPage.find({ userId });
         const pageIds = userPages.map(page => page._id);
 
-        // Delete Links associated with user's pages
+        // Delete Links associated with currentUser's pages
         const deletedLinks = await Link.deleteMany({ pageId: { $in: pageIds } });
         console.log(`Deleted ${deletedLinks.deletedCount} links`);
 
-        // Delete Analytics associated with user's pages
+        // Delete Analytics associated with currentUser's pages
         const deletedAnalytics = await Analytics.deleteMany({ pageId: { $in: pageIds } });
         console.log(`Deleted ${deletedAnalytics.deletedCount} analytics records`);
 
@@ -57,7 +57,7 @@ export async function DELETE(req) {
         // We act conservatively here and only delete if exact email match
         const deletedSubscriber = await NewsletterUser.findOneAndDelete({ email: userEmail });
         if (deletedSubscriber) {
-            console.log(`Removed user from newsletter`);
+            console.log(`Removed currentUser from newsletter`);
         }
 
         // Finally, Delete the User
@@ -65,9 +65,9 @@ export async function DELETE(req) {
         console.log(`User account deleted successfully`);
 
         // 3. Clear Auth Cookie
-        // Note: verify-token middleware might also check, but we clear it here to be safe
+        // Note: verify-lpkSiteToken middleware might also check, but we clear it here to be safe
         const cookieStore = await cookies();
-        cookieStore.delete("token");
+        cookieStore.delete("lpkSiteToken");
 
         return NextResponse.json(
             {

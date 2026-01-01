@@ -33,7 +33,7 @@ export async function POST(req) {
             );
         }
 
-        // Create new newsletter user
+        // Create new newsletter currentUser
         await NewsletterUser.create({ email });
 
         return NextResponse.json(

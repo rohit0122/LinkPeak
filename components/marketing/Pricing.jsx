@@ -3,6 +3,7 @@ import { CONFIG } from "@/constants/config";
 import { useState } from "react";
 import axios from "@/lib/axios";
 import { toast } from "react-hot-toast";
+import Link from "next/link";
 
 const plans = [
     {
@@ -134,14 +135,17 @@ export default function Pricing({ billingCycle }) {
                                     ))}
                                 </div>
 
-                                <button
+                                {/*} <button
                                     onClick={() => handleUpgrade(plan.name)}
                                     className={`btn btn-block ${plan.popular ? 'btn-primary shadow-lg shadow-primary/20' : 'btn-outline'}`}
                                     disabled={loadingPlan === plan.name}
                                     suppressHydrationWarning={true}
                                 >
                                     {loadingPlan === plan.name ? <span className="loading loading-spinner"></span> : (plan.name === 'Free' ? 'Get Started' : 'Upgrade Now')}
-                                </button>
+                                </button>*/}
+                                <Link href={`/register?plan=${plan.name.toUpperCase()}`} className={`btn btn-block ${plan.popular ? 'btn-primary shadow-lg shadow-primary/20' : 'btn-outline'}`}>
+                                    {plan.name === 'Free' ? 'Get Started' : 'Upgrade Now'}
+                                </Link>
                             </div>
                         </div>
                     ))}

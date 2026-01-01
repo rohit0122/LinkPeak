@@ -25,50 +25,50 @@ export async function POST(req) {
         await dbConnect();
         const { email, password } = await req.json();
 
-        const user = await User.findOne({ email }).select("+password");
-        if (!user) {
+        const currentUser = await User.findOne({ email }).select("+password");
+        if (!currentUser) {
             return NextResponse.json({ success: false, error: "Invalid credentials" }, { status: 401 });
         }
 
-        if (!user.isVerified) {
+        if (!currentUser.isVerified) {
             return NextResponse.json({ success: false, error: "Please verify your email first" }, { status: 403 });
         }
 
         // Check if account is active (suspended)
-        if (user.isActive === false) {
+        if (currentUser.isActive === false) {
             return NextResponse.json({
                 success: false,
                 error: "Account suspended. Please contact support to reactivate."
             }, { status: 403 });
         }
 
-        const isMatch = await user.matchPassword(password);
+        const isMatch = await currentUser.matchPassword(password);
         if (!isMatch) {
             return NextResponse.json({ success: false, error: "Invalid credentials" }, { status: 401 });
         }
 
-        const token = await createToken({
-            id: user._id.toString(),
-            email: user.email,
-            role: user.role,
-            name: user.name,
-            plan: user.plan,
-            isActive: user.isActive,
+        const lpkSiteToken = await createToken({
+            id: currentUser._id.toString(),
+            email: currentUser.email,
+            role: currentUser.role,
+            name: currentUser.name,
+            plan: currentUser.plan,
+            isActive: currentUser.isActive,
         });
 
         const response = NextResponse.json({
             success: true,
             data: {
-                id: user._id.toString(),
-                email: user.email,
-                role: user.role,
-                name: user.name,
-                plan: user.plan,
-                isActive: user.isActive,
+                id: currentUser._id.toString(),
+                email: currentUser.email,
+                role: currentUser.role,
+                name: currentUser.name,
+                plan: currentUser.plan,
+                isActive: currentUser.isActive,
             },
         });
 
-        response.cookies.set("token", token, {
+        response.cookies.set("lpkSiteToken", lpkSiteToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "lax",

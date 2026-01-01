@@ -24,8 +24,8 @@ const UserSchema = new mongoose.Schema(
         },
         role: {
             type: String,
-            enum: ["user", "admin"],
-            default: "user",
+            enum: ["currentUser", "admin"],
+            default: "currentUser",
         },
         isVerified: {
             type: Boolean,
@@ -57,7 +57,7 @@ UserSchema.pre("save", async function () {
     this.password = await bcrypt.hash(this.password, salt);
 });
 
-// Match user entered password to hashed password in database
+// Match currentUser entered password to hashed password in database
 UserSchema.methods.matchPassword = async function (enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 };

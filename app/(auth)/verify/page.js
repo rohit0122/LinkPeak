@@ -7,21 +7,21 @@ import Link from "next/link";
 
 function VerifyContent() {
     const searchParams = useSearchParams();
-    const token = searchParams.get("token");
+    const lpkSiteToken = searchParams.get("lpkSiteToken");
     const router = useRouter();
     const [status, setStatus] = useState("verifying"); // verifying, success, error
     const [message, setMessage] = useState("Please wait while we verify your email...");
 
     useEffect(() => {
-        if (!token) {
+        if (!lpkSiteToken) {
             setStatus("error");
-            setMessage("Invalid verification link. No token provided.");
+            setMessage("Invalid verification link. No lpkSiteToken provided.");
             return;
         }
 
         const verifyEmail = async () => {
             try {
-                const { data } = await axios.get(`/auth/verify?token=${token}`);
+                const { data } = await axios.get(`/auth/verify?lpkSiteToken=${lpkSiteToken}`);
                 if (data.success) {
                     setStatus("success");
                     setMessage(data.message);
@@ -33,7 +33,7 @@ function VerifyContent() {
         };
 
         verifyEmail();
-    }, [token]);
+    }, [lpkSiteToken]);
 
     return (
         <div className="card w-full max-w-sm bg-base-200">

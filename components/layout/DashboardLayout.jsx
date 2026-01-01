@@ -6,17 +6,17 @@ import NavbarClient from "./NavbarClient";
 import { RiAddCircleLine, RiArrowDownSLine, RiCheckLine, RiLayoutMasonryLine } from "react-icons/ri";
 import { ErrorBoundary } from "@/components/shared/ErrorBoundary";
 
-export default function DashboardLayout({ children, user, page, pages = [], onSelectPage, onCreatePage }) {
+export default function DashboardLayout({ children, currentUser, page, pages = [], onSelectPage, onCreatePage }) {
     return (
         <ErrorBoundary>
             <div className="min-h-screen bg-base-200 flex flex-col">
                 {/* Unified Navbar */}
-                <NavbarClient user={user} page={page} />
+                <NavbarClient currentUser={currentUser} page={page} />
 
                 {/* Main Content Area */}
                 <main className="flex-1 w-full max-w-7xl mx-auto p-4 md:p-8">
                     {/* Page Switcher (Authenticated + Non-FREE only + Non-Admin) */}
-                    {user && user?.plan === 'AGENCY' && user?.role !== 'admin' && (
+                    {currentUser && currentUser?.plan === 'AGENCY' && currentUser?.role !== 'admin' && (
                         <div className="w-full md:w-auto md:max-w-2xl md:ml-0 mb-6">
                             <div className="dropdown w-full md:w-auto">
                                 <div
@@ -45,7 +45,7 @@ export default function DashboardLayout({ children, user, page, pages = [], onSe
                                             </button>
                                         </li>
                                     ))}
-                                    {pages.length < (CONFIG.PLAN_LIMITS[user?.plan] || CONFIG.PLAN_LIMITS.FREE).pages && (
+                                    {pages.length < (CONFIG.PLAN_LIMITS[currentUser?.plan] || CONFIG.PLAN_LIMITS.FREE).pages && (
                                         <>
                                             <div className="divider my-1 opacity-10"></div>
                                             <li>

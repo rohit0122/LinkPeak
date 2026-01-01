@@ -3,13 +3,13 @@ import { getAuthUser } from "@/lib/auth";
 
 export async function POST(req) {
     try {
-        const user = await getAuthUser();
-        if (!user) {
+        const currentUser = await getAuthUser();
+        if (!currentUser) {
             return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
         }
 
         // Feature gating: PRO or AGENCY only
-        if (user.plan === "FREE") {
+        if (currentUser.plan === "FREE") {
             return NextResponse.json({
                 success: false,
                 error: "AI Features require a PRO or AGENCY plan."

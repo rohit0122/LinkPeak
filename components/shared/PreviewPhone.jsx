@@ -8,7 +8,8 @@ import {
     RiLinkedinLine,
     RiGithubLine,
     RiYoutubeLine,
-    RiTiktokLine
+    RiTiktokLine,
+    RiEyeLine
 } from "react-icons/ri";
 
 import ClassicTemplate from "@/components/templates/upgradedTemplates/ClassicTemplate";
@@ -17,9 +18,9 @@ import HeroTemplate from "@/components/templates/upgradedTemplates/HeroTemplate"
 import SocialTemplate from "@/components/templates/upgradedTemplates/SocialTemplate";
 import ModernTemplate from "@/components/templates/upgradedTemplates/ModernTemplate";
 
-export default function PreviewPhone({ pageData, links = [] }) {
+export default function PreviewPhone({ pageData, links = [], lifetime }) {
     const { theme, title, bio, profileImage, template } = pageData || {};
-
+    const updatedLinks = links.filter(link => link.isActive === true)
     return (
         <div className="mockup-phone border-primary shadow-2xl sticky top-10 transform-gpu origin-top will-change-transform overflow-hidden min-w-[322px] min-h-[660px]">
             <div className="mockup-phone-camera"></div>
@@ -38,18 +39,25 @@ export default function PreviewPhone({ pageData, links = [] }) {
                                 />
                             </div>
                         </div>
-                        <h1 className="text-xl font-bold">{title || "Your Title"}</h1>
+                        <div className="flex flex-col items-center gap-1">
+
+                            <h1 className="text-xl font-bold">{title || "Your Title"}</h1>
+                            <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
+                                <RiEyeLine className="text-primary text-xs" />
+                                <span className="text-[10px] font-bold text-primary uppercase tracking-wider">{lifetime?.totalViews} Views</span>
+                            </div>
+                        </div>
                         <p className="text-sm opacity-70 mt-1 max-w-[200px]">{bio || "Your bio here..."}</p>
                     </div>
 
                     {/* Templates Switcher */}
                     <div className="w-full">
-                        {template === "classic" && <ClassicTemplate page={pageData} links={links} />}
-                        {template === "grid" && <GridTemplate page={pageData} links={links} />}
-                        {template === "hero" && <HeroTemplate page={pageData} links={links} />}
-                        {template === "social" && <SocialTemplate page={pageData} links={links} />}
-                        {template === "modern" && <ModernTemplate page={pageData} links={links} />}
-                        {!template && <ClassicTemplate page={pageData} links={links} />}
+                        {template === "classic" && <ClassicTemplate page={pageData} links={updatedLinks} />}
+                        {template === "grid" && <GridTemplate page={pageData} links={updatedLinks} />}
+                        {template === "hero" && <HeroTemplate page={pageData} links={updatedLinks} />}
+                        {template === "social" && <SocialTemplate page={pageData} links={updatedLinks} />}
+                        {template === "modern" && <ModernTemplate page={pageData} links={updatedLinks} />}
+                        {!template && <ClassicTemplate page={pageData} links={updatedLinks} />}
                     </div>
 
                     {/* Social Links */}

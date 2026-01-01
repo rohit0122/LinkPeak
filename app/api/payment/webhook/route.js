@@ -35,7 +35,7 @@ export async function POST(req) {
                     activeSub.endDate = new Date(activeSub.endDate.getTime() + (30 * 24 * 60 * 60 * 1000));
                     activeSub.updatedAt = new Date();
                     await activeSub.save();
-                    console.log(`Webhook: Extended subscription for user ${userId}`);
+                    console.log(`Webhook: Extended subscription for currentUser ${userId}`);
                     return NextResponse.json({ success: true });
                 } else {
                     startDate = activeSub.endDate;
@@ -66,9 +66,9 @@ export async function POST(req) {
                 updatedAt: new Date(),
             });
 
-            console.log(`Webhook: Processed ${event} for user ${userId} (${status})`);
+            console.log(`Webhook: Processed ${event} for currentUser ${userId} (${status})`);
         } else if (event === "payment_link.expired" || event === "payment_link.cancelled") {
-            console.log(`Webhook: Payment link ${paymentLinkId} ${event} for user ${userId}`);
+            console.log(`Webhook: Payment link ${paymentLinkId} ${event} for currentUser ${userId}`);
         }
 
         return NextResponse.json({ success: true });

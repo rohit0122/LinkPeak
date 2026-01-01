@@ -63,7 +63,7 @@ function RegisterForm() {
     };
 
     return (
-        <div className="flex justify-center items-center min-h-screen px-4">
+        <div className="flex justify-center items-center min-h-screen px-4 mt-2">
             <div className="card w-full max-w-sm bg-base-200">
                 <div className="h-2 bg-primary w-full"></div>
                 <div className="card-body">

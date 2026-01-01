@@ -6,49 +6,49 @@ import { sendPasswordChangedEmail } from "@/lib/mailer";
 
 /**
  * POST /api/auth/reset-password
- * Resets user password using valid token
+ * Resets currentUser password using valid lpkSiteToken
  */
 export async function POST(req) {
     try {
         await dbConnect();
 
-        const { token, password } = await req.json();
+        const { lpkSiteToken, password } = await req.json();
 
-        if (!token || !password) {
+        if (!lpkSiteToken || !password) {
             return NextResponse.json(
                 { success: false, error: "Token and password are required" },
                 { status: 400 }
             );
         }
 
-        // Hash the token provided in URL to match the one in DB
+        // Hash the lpkSiteToken provided in URL to match the one in DB
         const resetTokenHash = crypto
             .createHash("sha256")
-            .update(token)
+            .update(lpkSiteToken)
             .digest("hex");
 
-        // Find user with valid token and not expired
-        const user = await User.findOne({
+        // Find currentUser with valid lpkSiteToken and not expired
+        const currentUser = await User.findOne({
             resetPasswordToken: resetTokenHash,
             resetPasswordExpire: { $gt: Date.now() },
         });
 
-        if (!user) {
+        if (!currentUser) {
             return NextResponse.json(
-                { success: false, error: "Invalid or expired reset token" },
+                { success: false, error: "Invalid or expired reset lpkSiteToken" },
                 { status: 400 }
             );
         }
 
         // Update password (will be hashed by User model pre-save hook)
-        user.password = password;
-        user.resetPasswordToken = undefined;
-        user.resetPasswordExpire = undefined;
-        await user.save();
+        currentUser.password = password;
+        currentUser.resetPasswordToken = undefined;
+        currentUser.resetPasswordExpire = undefined;
+        await currentUser.save();
 
         // Send confirmation email
         try {
-            await sendPasswordChangedEmail(user.email, user.name || "Creator");
+            await sendPasswordChangedEmail(currentUser.email, currentUser.name || "Creator");
         } catch (mailError) {
             console.error("Password changed email failed:", mailError);
         }

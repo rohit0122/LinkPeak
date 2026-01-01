@@ -16,14 +16,14 @@ function ResetPasswordForm() {
     const [tokenValid, setTokenValid] = useState(true);
     const router = useRouter();
     const searchParams = useSearchParams();
-    const token = searchParams.get("token");
+    const lpkSiteToken = searchParams.get("lpkSiteToken");
 
     useEffect(() => {
-        if (!token) {
+        if (!lpkSiteToken) {
             setTokenValid(false);
-            setError("Invalid or missing reset token");
+            setError("Invalid or missing reset lpkSiteToken");
         }
-    }, [token]);
+    }, [lpkSiteToken]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -41,7 +41,7 @@ function ResetPasswordForm() {
 
         try {
             const { data } = await axios.post("/auth/reset-password", {
-                token,
+                lpkSiteToken,
                 password,
             });
 

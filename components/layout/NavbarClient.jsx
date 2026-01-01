@@ -26,15 +26,15 @@ const publicLinks = [
 ];
 
 export default function NavbarClient({ page: propPage }) {
-    const { user, logout, loading } = useAuth();
+    const { currentUser, logout, loading } = useAuth();
     const [mobileOpen, setMobileOpen] = useState(false);
 
     const handleLogout = async () => {
         await logout();
     };
 
-    const isLoggedIn = Boolean(user);
-
+    const isLoggedIn = Boolean(currentUser);
+    console.log(' isLoggedIn ', isLoggedIn);
     return (
         <nav className="sticky top-0 z-50 bg-base-100/90 backdrop-blur border-b">
             <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -42,7 +42,7 @@ export default function NavbarClient({ page: propPage }) {
 
                 <div className="flex items-center gap-3">
                     {/* View Bio Button (Non-Admin) */}
-                    {isLoggedIn && user?.role !== 'admin' && (
+                    {isLoggedIn && currentUser?.role !== 'admin' && (
                         <div className="hidden md:flex items-center gap-2">
                             <button
                                 onClick={() => {
@@ -70,7 +70,7 @@ export default function NavbarClient({ page: propPage }) {
                     )}
 
                     {/* Profile Dropdown */}
-                    {isLoggedIn && <ProfileDropdown user={user} page={propPage} onLogout={handleLogout} />}
+                    {isLoggedIn && <ProfileDropdown currentUser={currentUser} page={propPage} onLogout={handleLogout} />}
 
                     {/* Guest Navigation */}
                     {!isLoggedIn && !loading && (
@@ -125,7 +125,7 @@ export default function NavbarClient({ page: propPage }) {
     );
 }
 
-function ProfileDropdown({ user, page, onLogout }) {
+function ProfileDropdown({ currentUser, page, onLogout }) {
     const [open, setOpen] = useState(false);
     const dropdownRef = useRef(null);
 
@@ -157,7 +157,7 @@ function ProfileDropdown({ user, page, onLogout }) {
             >
                 <div className="w-8 h-8 rounded-full ring-2 ring-primary overflow-hidden shadow-sm">
                     {page?.profileImage ? (
-                        <img src={page.profileImage} alt={user?.name} className="w-full h-full object-cover" />
+                        <img src={page.profileImage} alt={currentUser?.name} className="w-full h-full object-cover" />
                     ) : (
                         <div className="w-full h-full flex items-center justify-center bg-base-200">
                             <RiUserLine className="w-6 h-6 text-gray-400" />
@@ -171,7 +171,7 @@ function ProfileDropdown({ user, page, onLogout }) {
                     <div className="flex items-center gap-3 p-4 bg-primary/5 border-b">
                         <div className="w-8 h-8 rounded-full overflow-hidden ring-2 ring-primary">
                             {page?.profileImage ? (
-                                <img src={page.profileImage} alt={user?.name} className="w-full h-full object-cover" />
+                                <img src={page.profileImage} alt={currentUser?.name} className="w-full h-full object-cover" />
                             ) : (
                                 <div className="w-full h-full flex items-center justify-center bg-base-200">
                                     <RiUserLine className="w-8 h-8 text-gray-400" />
@@ -179,10 +179,10 @@ function ProfileDropdown({ user, page, onLogout }) {
                             )}
                         </div>
                         <div className="flex-1">
-                            <p className="font-semibold">{user?.name}</p>
-                            <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+                            <p className="font-semibold">{currentUser?.name}</p>
+                            <p className="text-xs text-gray-500 truncate">{currentUser?.email}</p>
                             <span className="mt-1 inline-block px-2 py-0.5 text-xs font-medium bg-primary/20 text-primary rounded-full">
-                                {user?.plan || 'FREE'}
+                                {currentUser?.plan || 'FREE'}
                             </span>
                         </div>
                     </div>
@@ -190,7 +190,7 @@ function ProfileDropdown({ user, page, onLogout }) {
                     <ul className="py-2">
                         <li>
                             <Link
-                                href={user?.role === 'admin' ? "/admin" : "/dashboard"}
+                                href={currentUser?.role === 'admin' ? "/admin" : "/dashboard"}
                                 className="flex items-center gap-2 px-4 py-2 hover:bg-primary/10"
                                 onClick={closeDropdown}
                             >
@@ -199,7 +199,7 @@ function ProfileDropdown({ user, page, onLogout }) {
                             </Link>
                         </li>
 
-                        {user?.role !== 'admin' && (
+                        {currentUser?.role !== 'admin' && (
                             <li className="md:hidden">
                                 <button
                                     onClick={() => {

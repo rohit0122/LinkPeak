@@ -8,18 +8,18 @@ export async function POST(req) {
     try {
         await dbConnect();
 
-        const user = await getAuthUser();
-        if (!user) {
+        const currentUser = await getAuthUser();
+        if (!currentUser) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        // Fetch user data for name/email
-        const dbUser = await User.findById(user.id);
+        // Fetch currentUser data for name/email
+        const dbUser = await User.findById(currentUser.id);
         if (!dbUser) {
             return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
 
-        await User.findByIdAndUpdate(user.id, { isActive: false });
+        await User.findByIdAndUpdate(currentUser.id, { isActive: false });
 
         // Send Suspension Email
         try {
@@ -28,7 +28,7 @@ export async function POST(req) {
             console.error("Suspension email failed:", mailError);
         }
 
-        console.log(`User ${user.id} (${user.email}) marked as inactive (suspended) due to trial expiry.`);
+        console.log(`User ${currentUser.id} (${currentUser.email}) marked as inactive (suspended) due to trial expiry.`);
 
         return NextResponse.json({ success: true, message: "User suspended" });
 

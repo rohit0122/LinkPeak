@@ -6,10 +6,10 @@ import { jwtVerify } from "jose";
 const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
 async function checkAdmin(req) {
-    const token = req.cookies.get("token")?.value;
-    if (!token) return null;
+    const lpkSiteToken = req.cookies.get("lpkSiteToken")?.value;
+    if (!lpkSiteToken) return null;
     try {
-        const { payload } = await jwtVerify(token, secret);
+        const { payload } = await jwtVerify(lpkSiteToken, secret);
         return payload.role === "admin" ? payload : null;
     } catch {
         return null;
@@ -24,7 +24,7 @@ export async function GET(req) {
 
         await dbConnect();
 
-        // Find all tickets and populate user info
+        // Find all tickets and populate currentUser info
         const tickets = await SupportTicket.find({})
             .populate("userId", "name email")
             .sort({ createdAt: -1 });

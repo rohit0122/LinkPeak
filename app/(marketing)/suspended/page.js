@@ -2,15 +2,16 @@
 
 import Link from "next/link";
 import { RiErrorWarningLine, RiCustomerService2Line } from "react-icons/ri";
-import SubscriptionStatus from "@/components/dashboard/SubscriptionStatus";
 import SubscriptionStatusDiv from "@/components/dashboard/SubscriptionStatusDiv";
+import { useAuth } from "@/context/AuthContext";
 
 export default function SuspendedPage() {
-    // We fetch user client-side here or just rely on SubscriptionStatus to fetch its own data
+    const { currentUser } = useAuth();
+    // We fetch currentUser client-side here or just rely on SubscriptionStatus to fetch its own data
     // For simplicity, we just render the structure
 
     return (
-        <div className="min-h-screen max-w-5xl mx-auto bg-base-200 flex items-center justify-center p-4">
+        <div className="min-h-screen max-w-5xl mx-auto flex items-center justify-center p-4">
             <div className="card w-full bg-base-100 shadow-xl border-t-8 border-error">
                 <div className="card-body items-center text-center">
                     <div className="w-16 h-16 bg-error/10 rounded-full flex items-center justify-center mb-4 text-error">
@@ -20,13 +21,12 @@ export default function SuspendedPage() {
                     <h1 className="text-2xl font-bold mb-2">Access Suspended</h1>
                     <p className="text-base-content/70 mb-6">
                         Your free trial has expired and we haven't received a subscription payment.
-                        To continue using your bio page and dashboard, please select a plan below.
+                        To continue using your bio page and dashboard, {currentUser ? "please select a plan below." : "connect support with your account details."}
                     </p>
 
                     <div className="w-full mb-6">
                         {/* We use SubscriptionStatus but disable redirect to prevent loop */}
                         <SubscriptionStatusDiv redirectOnExpire={false} />
-                        <SubscriptionStatus redirectOnExpire={false} />
                     </div>
 
                     <div className="divider">Need Help?</div>

@@ -4,17 +4,17 @@ import { jwtVerify } from "jose";
 const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
 export async function proxy(req) {
-    const token = req.cookies.get("token")?.value;
+    const lpkSiteToken = req.cookies.get("lpkSiteToken")?.value;
     const { pathname } = req.nextUrl;
 
     // Protect dashboard and admin routes
     if (pathname.startsWith("/dashboard") || pathname.startsWith("/admin") || pathname === "/suspended") {
-        if (!token) {
+        if (!lpkSiteToken) {
             return NextResponse.redirect(new URL("/login", req.url));
         }
 
         try {
-            const { payload } = await jwtVerify(token, secret);
+            const { payload } = await jwtVerify(lpkSiteToken, secret);
 
             // Super Admin protection
             if (pathname.startsWith("/admin") && payload.role !== "admin") {
@@ -32,9 +32,9 @@ export async function proxy(req) {
             }
 
             // Active users visiting Suspended -> Redirect to Dashboard
-            if (payload.isActive !== false && pathname === "/suspended") {
+            /*if (payload.isActive !== false && pathname === "/suspended") {
                 return NextResponse.redirect(new URL("/dashboard", req.url));
-            }
+            }*/
 
             return NextResponse.next();
         } catch (error) {
@@ -43,7 +43,7 @@ export async function proxy(req) {
     }
 
     // Redirect authenticated users away from auth pages
-    if (token && (pathname === "/login" || pathname === "/register")) {
+    if (lpkSiteToken && (pathname === "/login" || pathname === "/register")) {
         return NextResponse.redirect(new URL("/dashboard", req.url));
     }
 

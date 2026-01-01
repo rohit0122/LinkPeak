@@ -4,15 +4,18 @@ import { createContext, useContext, useState, useEffect, useCallback } from "rea
 import axios from "@/lib/axios";
 import { useRouter, usePathname } from "next/navigation";
 import { toast } from "react-hot-toast";
+import { API_FRONTEND_LOGIN, API_FRONTEND_LOGOUT, API_FRONTEND_REGISTER } from "@/constants/endpoints";
+import { useLoader } from "@/context/LoaderContext";
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-    const [user, setUser] = useState(null);
+    const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [initialized, setInitialized] = useState(false);
     const router = useRouter();
     const pathname = usePathname();
+    const { showLoader, hideLoader } = useLoader();
 
     // Check if route requires auth
     const isProtectedRoute = useCallback(() => {
@@ -20,7 +23,7 @@ export function AuthProvider({ children }) {
         return protectedPaths.some(path => pathname?.startsWith(path));
     }, [pathname]);
 
-    // Fetch user session (called only once on mount or after login)
+    // Fetch currentUser session (called only once on mount or after login)
     const fetchUser = useCallback(async (force = false) => {
         // Skip if already initialized and not forced
         if (initialized && !force) return;
@@ -31,16 +34,16 @@ export function AuthProvider({ children }) {
 
             if (res.data?.success) {
                 const userData = res.data.data;
-                setUser(userData);
+                setCurrentUser(userData);
 
                 // Cache in localStorage for instant load
-                localStorage.setItem("site_user", JSON.stringify(userData));
+                localStorage.setItem("lpkSiteCurrentUser", JSON.stringify(userData));
             }
         } catch (error) {
             // Clear cache on 401
             if (error.response?.status === 401) {
-                setUser(null);
-                localStorage.removeItem("site_user");
+                setCurrentUser(null);
+                localStorage.removeItem("lpkSiteCurrentUser");
 
                 // Redirect to login if on protected route
                 if (isProtectedRoute()) {
@@ -55,49 +58,34 @@ export function AuthProvider({ children }) {
 
     // Initialize from cache first, then verify ONLY if needed
     useEffect(() => {
-        // Try to load from cache immediately
-        const cached = localStorage.getItem("site_user");
 
-        if (cached) {
+        // Try to load from cache immediately
+        const userData = localStorage.getItem("lpkSiteCurrentUser");
+
+        if (userData && userData !== "undefined" && userData !== "null") {
             try {
-                const cachedUser = JSON.parse(cached);
-                setUser(cachedUser);
-                setLoading(false);
-                // Verify cached data with server
-                fetchUser();
-            } catch (e) {
-                localStorage.removeItem("site_user");
-                setLoading(false);
-                setInitialized(true);
+                const parsed = JSON.parse(userData);
+                setCurrentUser(parsed);
+            } catch (error) {
+                console.error("❌ Failed to decrypt or parse currentUser data:", error);
+                // localStorage.removeItem("currentUser");
             }
-        } else {
-            // No cached user
-            // Only fetch if on protected route
-            if (isProtectedRoute()) {
-                fetchUser();
-            } else {
-                // Public page, no user - skip API call
-                setLoading(false);
-                setInitialized(true);
-            }
+            setInitialized(true);
         }
+        setLoading(false);
     }, []); // Empty deps - runs once on mount
 
     // Login function
     const login = useCallback(async (email, password) => {
         try {
-            const res = await axios.post("/auth/login", { email, password });
-
+            showLoader();
+            const res = await axios.post(API_FRONTEND_LOGIN, { email, password });
             if (res.data?.success) {
-                const userData = res.data.data;
-                setUser(userData);
-                localStorage.setItem("site_user", JSON.stringify(userData));
-                toast.success("Welcome back!");
+                const userData = await res.data.data;
+                localStorage.setItem("lpkSiteCurrentUser", JSON.stringify(userData));
 
-                // Show global loader for smooth transition
-                if (typeof window !== 'undefined' && window.setGlobalLoading) {
-                    window.setGlobalLoading(true);
-                }
+                setCurrentUser(userData);
+                toast.success("Welcome back!");
 
                 // Redirect based on role
                 if (userData.role === 'admin') {
@@ -111,13 +99,16 @@ export function AuthProvider({ children }) {
             const message = error.response?.data?.error || "Login failed";
             toast.error(message);
             return { success: false, error: message };
+        } finally {
+            hideLoader();
         }
     }, [router]);
 
     // Register function
     const register = useCallback(async (name, email, password) => {
         try {
-            const res = await axios.post("/auth/register", { name, email, password });
+            showLoader();
+            const res = await axios.post(API_FRONTEND_REGISTER, { name, email, password });
 
             if (res.data?.success) {
                 toast.success("Registration successful! Please login.");
@@ -128,36 +119,50 @@ export function AuthProvider({ children }) {
             const message = error.response?.data?.error || "Registration failed";
             toast.error(message);
             return { success: false, error: message };
+        } finally {
+            hideLoader();
         }
     }, [router]);
 
     // Logout function
     const logout = useCallback(async () => {
         try {
-            await axios.post("/auth/logout");
+            showLoader();
+            await axios.post(API_FRONTEND_LOGOUT);
         } catch (error) {
             console.error("Logout error:", error);
         } finally {
-            setUser(null);
-            localStorage.removeItem("site_user");
+            setCurrentUser(null);
+            localStorage.removeItem("lpkSiteCurrentUser");
             router.push("/login");
             toast.success("Logged out successfully");
+            hideLoader();
         }
     }, [router]);
 
-    // Refresh user data (call after profile updates)
+    const updateCurrentUserSession = (currentUser) => {
+        if (currentUser) {
+            const encryptedUser = (JSON.stringify(currentUser));
+            localStorage.setItem("currentUser", encryptedUser);
+            setCurrentUser(currentUser);
+        }
+    };
+
+
+    // Refresh currentUser data (call after profile updates)
     const refreshUser = useCallback(() => {
         return fetchUser(true);
     }, [fetchUser]);
 
     const value = {
-        user,
+        currentUser,
         loading,
-        isAuthenticated: !!user,
+        isAuthenticated: !!currentUser,
         login,
         register,
         logout,
-        refreshUser
+        refreshUser,
+        updateCurrentUserSession
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

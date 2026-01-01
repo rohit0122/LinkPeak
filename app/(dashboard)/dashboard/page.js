@@ -10,8 +10,6 @@ import ThemeSelector from "@/components/dashboard/ThemeSelector";
 import TemplateSelector from "@/components/dashboard/TemplateSelector";
 import BrandingEditor from "@/components/dashboard/BrandingEditor";
 import ProfileUpload from "@/components/dashboard/ProfileUpload";
-import SubscriptionStatus from "@/components/dashboard/SubscriptionStatus";
-import SmartPlanAlert from "@/components/dashboard/SmartPlanAlert";
 import UnsavedChangesModal from "@/components/dashboard/UnsavedChangesModal";
 import DangerZone from "@/components/dashboard/DangerZone";
 import { SkeletonChart, SkeletonTable, SkeletonDashboard } from "@/components/shared/SkeletonLoaders";
@@ -45,6 +43,8 @@ import {
 import { CONFIG } from "@/constants/config";
 import { useRouter } from "next/navigation";
 import SubscriptionStatusDiv from "@/components/dashboard/SubscriptionStatusDiv";
+import { useLoader } from "@/context/LoaderContext";
+import { useAuth } from "@/context/AuthContext";
 
 // Lazy load heavy components
 const AnalyticsView = dynamic(() => import("@/components/dashboard/AnalyticsView"), {
@@ -63,7 +63,7 @@ const SupportView = dynamic(() => import("@/components/dashboard/SupportView"), 
 });
 
 export default function DashboardPage() {
-    const [user, setUser] = useState(null);
+    const { currentUser } = useAuth();
     const [subscriptionStatus, setSubscriptionStatus] = useState(null);
 
     const [page, setPage] = useState(null);
@@ -76,6 +76,8 @@ export default function DashboardPage() {
     const [unsavedChanges, setUnsavedChanges] = useState(false);
     const router = useRouter();
 
+    const { showLoader, hideLoader } = useLoader();
+
     useEffect(() => {
         fetchData();
     }, []);
@@ -83,13 +85,12 @@ export default function DashboardPage() {
 
     const fetchData = async () => {
         try {
-            setLoading(true);
+            showLoader();
             const { data } = await axios.get("/dashboard/init");
-
+            console.log('datadatadatadata = ', data);
             if (data.success) {
-                const { user, pages, activePage, links: initLinks, analytics: initAnalytics, lifetime: initLifetime, subscriptionStatus: subStatus } = data.data;
+                const { currentUser, pages, activePage, links: initLinks, analytics: initAnalytics, lifetime: initLifetime, subscriptionStatus: subStatus } = data.data;
 
-                setUser(user);
                 setAllPages(pages);
                 setSubscriptionStatus(subStatus);
                 setLifetimeStats(initLifetime || { totalViews: 0, totalClicks: 0, totalLikes: 0 });
@@ -112,13 +113,13 @@ export default function DashboardPage() {
                 // No need to create default page here anymore - handled by verification API
             }
         } catch (error) {
-            console.error("Fetch error:", error);
+            console.error("Fetch error", error);
             // Fallback to legacy flow if aggregated fails? 
             // "Backward Compatibility Guarantee ... Existing APIs remain available as fallback"
             // For now, let's trust the new API but log error.
             toast.error("Failed to load dashboard data");
         } finally {
-            setLoading(false);
+            hideLoader();
         }
     };
 
@@ -154,6 +155,7 @@ export default function DashboardPage() {
 
     const performPageSwitch = async (pageId) => {
         try {
+            showLoader();
             // Fetch fresh pages list to ensure local state is distinct and up-to-date
             const { data } = await axios.get("/pages");
             if (data.success) {
@@ -172,9 +174,12 @@ export default function DashboardPage() {
         } catch (error) {
             console.error("Failed to switch page:", error);
             toast.error("Failed to load page data");
+        } finally {
+            hideLoader();
+            setShowUnsavedModal(false);
+            setPendingPageId(null);
         }
-        setShowUnsavedModal(false);
-        setPendingPageId(null);
+
     };
 
     const handleDiscardAndSwitch = () => {
@@ -194,6 +199,7 @@ export default function DashboardPage() {
 
     const handleCreatePage = async () => {
         try {
+            showLoader();
             const newSlug = `page-${Math.floor(Math.random() * 10000)}`;
             const { data } = await axios.post("/pages", {
                 slug: newSlug,
@@ -209,10 +215,13 @@ export default function DashboardPage() {
             }
         } catch (error) {
             toast.error(error.response?.data?.error || "Could not create page");
+        } finally {
+            hideLoader();
         }
     };
 
     const handleReorder = async (newLinks) => {
+        showLoader();
         setLinks(newLinks);
         try {
             const reorderPayload = newLinks.map((l, index) => ({ id: l._id, order: index }));
@@ -220,11 +229,14 @@ export default function DashboardPage() {
         } catch (error) {
             toast.error("Could not save link order. Please try again.");
             fetchData();
+        } finally {
+            hideLoader();
         }
     };
 
     const handleAddLink = async (newLinkData) => {
         try {
+            showLoader();
             const { data } = await axios.post("/links", {
                 ...newLinkData,
                 pageId: page._id
@@ -235,24 +247,33 @@ export default function DashboardPage() {
             }
         } catch (error) {
             toast.error("Could not add link. Please try again.");
+        } finally {
+            hideLoader();
         }
     };
 
     const handleUpdateLink = async (updatedLink) => {
         try {
+            showLoader();
             const { id, ...updates } = updatedLink;
             const { data } = await axios.patch("/links", { id: updatedLink._id, ...updates });
             if (data.success) {
-                setLinks(links.map(l => l._id === updatedLink._id ? data.data : l));
+                console.log('data.data ', data.data)
+                const updatedData = await data.data;
+                const updatedLinks = links.map(l => l._id === updatedLink._id ? updatedData : l);
+                setLinks(updatedLinks);
                 toast.success("Link updated successfully!");
             }
         } catch (error) {
             toast.error("Could not update link. Please try again.");
+        } finally {
+            hideLoader();
         }
     };
 
     const handleDeleteLink = async (id) => {
         try {
+            showLoader();
             const { data } = await axios.delete(`/links?id=${id}`);
             if (data.success) {
                 setLinks(links.filter(l => l._id !== id));
@@ -260,6 +281,8 @@ export default function DashboardPage() {
             }
         } catch (error) {
             toast.error("Could not remove link. Please try again.");
+        } finally {
+            hideLoader();
         }
     };
 
@@ -268,6 +291,7 @@ export default function DashboardPage() {
     // Global Save Logic
     const handleGlobalSave = async () => {
         if (!page) return;
+        showLoader();
         try {
             // Save all relevant fields
             const { data } = await axios.patch("/pages", {
@@ -303,26 +327,35 @@ export default function DashboardPage() {
             }
         } catch (error) {
             toast.error(error.response?.data?.error || "Could not save changes. Please try again.");
+        } finally {
+            hideLoader();
         }
     };
 
     // Helper for purely local updates (that trigger unsaved state)
     const handleLocalUpdate = (updates) => {
-        setPage(prev => ({ ...prev, ...updates }));
-        setUnsavedChanges(true);
+        showLoader();
+        try {
+            setPage(prev => ({ ...prev, ...updates }));
+            setUnsavedChanges(true);
 
-        // Track dirty sections for smarter toast
-        const keys = Object.keys(updates);
-        setDirtySections(prev => {
-            const newSet = new Set(prev);
-            keys.forEach(key => {
-                if (['title', 'slug', 'bio', 'profileImage'].includes(key)) newSet.add('Identity');
-                if (['seo'].includes(key)) newSet.add('SEO');
-                if (['branding'].includes(key)) newSet.add('Branding');
-                if (['theme', 'template'].includes(key)) newSet.add('Style');
+            // Track dirty sections for smarter toast
+            const keys = Object.keys(updates);
+            setDirtySections(prev => {
+                const newSet = new Set(prev);
+                keys.forEach(key => {
+                    if (['title', 'slug', 'bio', 'profileImage'].includes(key)) newSet.add('Identity');
+                    if (['seo'].includes(key)) newSet.add('SEO');
+                    if (['branding'].includes(key)) newSet.add('Branding');
+                    if (['theme', 'template'].includes(key)) newSet.add('Style');
+                });
+                return newSet;
             });
-            return newSet;
-        });
+        } catch (error) {
+            toast.error("Could not update page. Please try again.");
+        } finally {
+            hideLoader();
+        }
     };
 
     const [isSeoAiLoading, setIsSeoAiLoading] = useState(false);
@@ -330,6 +363,7 @@ export default function DashboardPage() {
     const handleSeoAiMagic = async () => {
         setIsSeoAiLoading(true);
         try {
+            showLoader();
             const { data } = await axios.post("/ai/generate-seo", {
                 title: page.title,
                 bio: page.bio,
@@ -342,7 +376,7 @@ export default function DashboardPage() {
                         ...data.data
                     }
                 };
-                // Use local update so user can review before saving
+                // Use local update so currentUser can review before saving
                 handleLocalUpdate(seoUpdates);
                 toast.success("AI generated new SEO data! Review & Click Save.", { icon: "✨" });
             }
@@ -350,20 +384,19 @@ export default function DashboardPage() {
             toast.error(error.response?.data?.error || "AI Optimization failed. Please try again.");
         } finally {
             setIsSeoAiLoading(false);
+            hideLoader();
         }
     };
 
-    if (loading) {
-        return null;
-    }
-    const trialEndDate = new Date(user.createdAt);
+
+    const trialEndDate = new Date(currentUser?.createdAt);
     trialEndDate.setHours(trialEndDate.getHours() + 24);
-    const expiryDate = new Date(user.createdAt);
+    const expiryDate = new Date(currentUser?.createdAt);
     expiryDate.setDate(expiryDate.getDate() + 8);
 
     return (
         <DashboardLayout
-            user={user}
+            currentUser={currentUser}
             page={page}
             pages={allPages}
             onSelectPage={handleSwitchRequest}
@@ -379,15 +412,14 @@ export default function DashboardPage() {
 
 
             {/* Subscription Status - Handles Trial & Renewal Alerts */}
-            <SubscriptionStatusDiv user={user} initialData={subscriptionStatus} redirectOnExpire={false} />
-            {user?.plan !== 'FREE' && <SubscriptionStatus user={user} initialData={subscriptionStatus} redirectOnExpire={true} />}
+            <SubscriptionStatusDiv currentUser={currentUser} initialData={subscriptionStatus} redirectOnExpire={false} />
 
             <div className="flex flex-col lg:flex-row gap-8 min-h-full">
-                <div className="flex-1 w-full max-w-2xl mx-auto">
+                <div className="flex-1 w-full max-w-5xl mx-auto">
 
                     {/* Admin Indicator */}
-                    {user?.role === 'admin' && (
-                        <div className="alert bg-base-100 border-l-4 border-primary shadow-sm mb-6 rounded-r-xl rounded-l-none">
+                    {currentUser?.role === 'admin' && (
+                        <div className="alert bg-base-100 border-l-4 border-primary shadow-sm mb-6 rounded-l-none">
                             <RiAdminLine className="text-2xl text-primary" />
                             <div>
                                 <h3 className="font-bold flex items-center gap-2">
@@ -400,7 +432,7 @@ export default function DashboardPage() {
                     )}
 
                     {/* Responsive Tabs Grid */}
-                    <div className="grid grid-cols-3 md:grid-cols-6 gap-2 bg-base-100 p-2 mb-8 shadow-sm">
+                    <div className="grid grid-cols-3 md:grid-cols-6 gap-2 bg-base-100 p-2 mb-2 shadow-sm">
                         {[
                             { key: "links", label: "Links", icon: RiLayoutLine },
                             { key: "analytics", label: "Stats", icon: RiBarChartLine },
@@ -443,7 +475,7 @@ export default function DashboardPage() {
 
 
                     {/* Stats Overview */}
-                    <div className="grid grid-cols-2 gap-4 mb-8">
+                    <div className="grid grid-cols-2 gap-4 mb-4">
                         <div className="hidden bg-base-100 p-6 shadow-sm border border-base-200 flex items-center gap-4">
                             <div className="w-12 h-12 bg-primary/10 flex items-center justify-center text-primary">
                                 <RiEyeLine className="text-2xl" />
@@ -468,7 +500,7 @@ export default function DashboardPage() {
                         {activeTab === "links" && (
                             <LinkEditor
                                 links={links}
-                                plan={user?.plan}
+                                plan={currentUser?.plan}
                                 onReorder={handleReorder}
                                 onAdd={handleAddLink}
                                 onUpdate={handleUpdateLink}
@@ -479,7 +511,7 @@ export default function DashboardPage() {
                         {activeTab === "analytics" && (
                             <AnalyticsView
                                 data={analytics}
-                                plan={user?.plan}
+                                plan={currentUser?.plan}
                                 links={links}
                                 page={page}
                                 lifetime={lifetimeStats}
@@ -487,11 +519,11 @@ export default function DashboardPage() {
                         )}
 
                         {activeTab === "qr" && (
-                            <QRGenerator slug={page?.slug} plan={user?.plan} />
+                            <QRGenerator slug={page?.slug} plan={currentUser?.plan} />
                         )}
 
                         {activeTab === "support" && (
-                            <SupportView user={user} />
+                            <SupportView currentUser={currentUser} />
                         )}
 
                         {activeTab === "theme" && (
@@ -521,7 +553,7 @@ export default function DashboardPage() {
                                     </h2>
                                     <TemplateSelector
                                         currentTemplate={page?.template}
-                                        plan={user?.plan}
+                                        plan={currentUser?.plan}
                                         onSelect={(t) => handleLocalUpdate({ template: t })}
                                     />
                                 </section>
@@ -537,7 +569,7 @@ export default function DashboardPage() {
                                     <div className="bg-base-100 p-2 border border-base-300 shadow-sm overflow-hidden">
                                         <ThemeSelector
                                             currentTheme={page?.theme}
-                                            plan={user?.plan}
+                                            plan={currentUser?.plan}
                                             onSelect={(theme) => handleLocalUpdate({ theme })}
                                         />
                                     </div>
@@ -554,7 +586,7 @@ export default function DashboardPage() {
                                     </h2>
                                     <BrandingEditor
                                         page={page}
-                                        user={user}
+                                        currentUser={currentUser}
                                         onUpdate={handleLocalUpdate}
                                     // onPreviewUpdate removed as onUpdate now handles it via parent state
                                     />
@@ -573,7 +605,7 @@ export default function DashboardPage() {
                                                 <div className="relative group">
                                                     <ProfileUpload
                                                         currentImage={page?.profileImage}
-                                                        userId={user?._id}
+                                                        userId={currentUser?._id}
                                                         onUploadSuccess={(url, hash) => {
                                                             handleLocalUpdate({
                                                                 profileImage: url,
@@ -633,215 +665,197 @@ export default function DashboardPage() {
                                                                 required
                                                             />
                                                         </label>
-                                                        {/*<label className="label">
-                                                            <span className="label-text">Custom URL <span className="text-error">*</span></span>
-                                                        </label>
-                                                         <div className="flex items-center gap-2">
-                                                            <span className="text-sm opacity-60">linkpeak.com/</span>
-                                                            <input
-                                                                type="text"
-                                                                className="input input-bordered flex-1"
-                                                                placeholder="your-slug"
-                                                                value={page?.slug || ""}
-                                                                onChange={(e) => {
-                                                                    setPage({ ...page, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') });
-                                                                    setUnsavedChanges(true);
-                                                                }}
-                                                                // onBlur removed
-                                                                required
-                                                            />
-                                                        </div>*/}
                                                     </div>
                                                 </div>
 
+
+                                            </div>
+                                        </div>
+                                        <div className="form-control">
+                                            <label className="label">
+                                                <span className="label-text">Bio / Description</span>
+                                            </label>
+                                            <textarea
+                                                className="textarea textarea-bordered h-24 resize-none w-full"
+                                                placeholder="Tell the world who you are..."
+                                                value={page?.bio || ""}
+                                                onChange={(e) => {
+                                                    setPage({ ...page, bio: e.target.value });
+                                                    setUnsavedChanges(true);
+                                                }}
+                                            />
+                                        </div>
+
+                                        {/* Social Links Section */}
+                                        <div className="form-control">
+                                            <label className="label">
+                                                <span className="label-text font-medium flex items-center gap-2">
+                                                    <RiLinksLine className="text-primary" />
+                                                    Social Media Links
+                                                </span>
+                                            </label>
+                                            <p className="text-xs opacity-50 mb-4">Add your social profiles. They'll appear at the bottom of your bio page.</p>
+
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                {/* Instagram */}
                                                 <div className="form-control">
-                                                    <label className="label">
-                                                        <span className="label-text">Bio / Description</span>
+                                                    <label className="input input-bordered flex items-center gap-2">
+                                                        <RiInstagramLine className="text-lg opacity-60" />
+                                                        <input
+                                                            type="text"
+                                                            className="grow"
+                                                            placeholder="instagram.com/username"
+                                                            value={page?.socialLinks?.instagram || ""}
+                                                            onChange={(e) => {
+                                                                setPage({
+                                                                    ...page,
+                                                                    socialLinks: {
+                                                                        ...page.socialLinks,
+                                                                        instagram: e.target.value
+                                                                    }
+                                                                });
+                                                                setUnsavedChanges(true);
+                                                            }}
+                                                        />
                                                     </label>
-                                                    <textarea
-                                                        className="textarea textarea-bordered h-24 resize-none"
-                                                        placeholder="Tell the world who you are..."
-                                                        value={page?.bio || ""}
-                                                        onChange={(e) => {
-                                                            setPage({ ...page, bio: e.target.value });
-                                                            setUnsavedChanges(true);
-                                                        }}
-                                                    // onBlur removed
-                                                    />
                                                 </div>
 
-                                                {/* Social Links Section */}
+                                                {/* Twitter */}
                                                 <div className="form-control">
-                                                    <label className="label">
-                                                        <span className="label-text font-medium flex items-center gap-2">
-                                                            <RiLinksLine className="text-primary" />
-                                                            Social Media Links
-                                                        </span>
+                                                    <label className="input input-bordered flex items-center gap-2">
+                                                        <RiTwitterLine className="text-lg opacity-60" />
+                                                        <input
+                                                            type="text"
+                                                            className="grow"
+                                                            placeholder="twitter.com/username"
+                                                            value={page?.socialLinks?.twitter || ""}
+                                                            onChange={(e) => {
+                                                                setPage({
+                                                                    ...page,
+                                                                    socialLinks: {
+                                                                        ...page.socialLinks,
+                                                                        twitter: e.target.value
+                                                                    }
+                                                                });
+                                                                setUnsavedChanges(true);
+                                                            }}
+                                                        />
                                                     </label>
-                                                    <p className="text-xs opacity-50 mb-4">Add your social profiles. They'll appear at the bottom of your bio page.</p>
+                                                </div>
 
-                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                        {/* Instagram */}
-                                                        <div className="form-control">
-                                                            <label className="input input-bordered flex items-center gap-2">
-                                                                <RiInstagramLine className="text-lg opacity-60" />
-                                                                <input
-                                                                    type="text"
-                                                                    className="grow"
-                                                                    placeholder="instagram.com/username"
-                                                                    value={page?.socialLinks?.instagram || ""}
-                                                                    onChange={(e) => {
-                                                                        setPage({
-                                                                            ...page,
-                                                                            socialLinks: {
-                                                                                ...page.socialLinks,
-                                                                                instagram: e.target.value
-                                                                            }
-                                                                        });
-                                                                        setUnsavedChanges(true);
-                                                                    }}
-                                                                />
-                                                            </label>
-                                                        </div>
+                                                {/* Facebook */}
+                                                <div className="form-control">
+                                                    <label className="input input-bordered flex items-center gap-2">
+                                                        <RiFacebookLine className="text-lg opacity-60" />
+                                                        <input
+                                                            type="text"
+                                                            className="grow"
+                                                            placeholder="facebook.com/username"
+                                                            value={page?.socialLinks?.facebook || ""}
+                                                            onChange={(e) => {
+                                                                setPage({
+                                                                    ...page,
+                                                                    socialLinks: {
+                                                                        ...page.socialLinks,
+                                                                        facebook: e.target.value
+                                                                    }
+                                                                });
+                                                                setUnsavedChanges(true);
+                                                            }}
+                                                        />
+                                                    </label>
+                                                </div>
 
-                                                        {/* Twitter */}
-                                                        <div className="form-control">
-                                                            <label className="input input-bordered flex items-center gap-2">
-                                                                <RiTwitterLine className="text-lg opacity-60" />
-                                                                <input
-                                                                    type="text"
-                                                                    className="grow"
-                                                                    placeholder="twitter.com/username"
-                                                                    value={page?.socialLinks?.twitter || ""}
-                                                                    onChange={(e) => {
-                                                                        setPage({
-                                                                            ...page,
-                                                                            socialLinks: {
-                                                                                ...page.socialLinks,
-                                                                                twitter: e.target.value
-                                                                            }
-                                                                        });
-                                                                        setUnsavedChanges(true);
-                                                                    }}
-                                                                />
-                                                            </label>
-                                                        </div>
+                                                {/* LinkedIn */}
+                                                <div className="form-control">
+                                                    <label className="input input-bordered flex items-center gap-2">
+                                                        <RiLinkedinLine className="text-lg opacity-60" />
+                                                        <input
+                                                            type="text"
+                                                            className="grow"
+                                                            placeholder="linkedin.com/in/username"
+                                                            value={page?.socialLinks?.linkedin || ""}
+                                                            onChange={(e) => {
+                                                                setPage({
+                                                                    ...page,
+                                                                    socialLinks: {
+                                                                        ...page.socialLinks,
+                                                                        linkedin: e.target.value
+                                                                    }
+                                                                });
+                                                                setUnsavedChanges(true);
+                                                            }}
+                                                        />
+                                                    </label>
+                                                </div>
 
-                                                        {/* Facebook */}
-                                                        <div className="form-control">
-                                                            <label className="input input-bordered flex items-center gap-2">
-                                                                <RiFacebookLine className="text-lg opacity-60" />
-                                                                <input
-                                                                    type="text"
-                                                                    className="grow"
-                                                                    placeholder="facebook.com/username"
-                                                                    value={page?.socialLinks?.facebook || ""}
-                                                                    onChange={(e) => {
-                                                                        setPage({
-                                                                            ...page,
-                                                                            socialLinks: {
-                                                                                ...page.socialLinks,
-                                                                                facebook: e.target.value
-                                                                            }
-                                                                        });
-                                                                        setUnsavedChanges(true);
-                                                                    }}
-                                                                />
-                                                            </label>
-                                                        </div>
+                                                {/* GitHub */}
+                                                <div className="form-control">
+                                                    <label className="input input-bordered flex items-center gap-2">
+                                                        <RiGithubLine className="text-lg opacity-60" />
+                                                        <input
+                                                            type="text"
+                                                            className="grow"
+                                                            placeholder="github.com/username"
+                                                            value={page?.socialLinks?.github || ""}
+                                                            onChange={(e) => {
+                                                                setPage({
+                                                                    ...page,
+                                                                    socialLinks: {
+                                                                        ...page.socialLinks,
+                                                                        github: e.target.value
+                                                                    }
+                                                                });
+                                                                setUnsavedChanges(true);
+                                                            }}
+                                                        />
+                                                    </label>
+                                                </div>
 
-                                                        {/* LinkedIn */}
-                                                        <div className="form-control">
-                                                            <label className="input input-bordered flex items-center gap-2">
-                                                                <RiLinkedinLine className="text-lg opacity-60" />
-                                                                <input
-                                                                    type="text"
-                                                                    className="grow"
-                                                                    placeholder="linkedin.com/in/username"
-                                                                    value={page?.socialLinks?.linkedin || ""}
-                                                                    onChange={(e) => {
-                                                                        setPage({
-                                                                            ...page,
-                                                                            socialLinks: {
-                                                                                ...page.socialLinks,
-                                                                                linkedin: e.target.value
-                                                                            }
-                                                                        });
-                                                                        setUnsavedChanges(true);
-                                                                    }}
-                                                                />
-                                                            </label>
-                                                        </div>
+                                                {/* YouTube */}
+                                                <div className="form-control">
+                                                    <label className="input input-bordered flex items-center gap-2">
+                                                        <RiYoutubeLine className="text-lg opacity-60" />
+                                                        <input
+                                                            type="text"
+                                                            className="grow"
+                                                            placeholder="youtube.com/@username"
+                                                            value={page?.socialLinks?.youtube || ""}
+                                                            onChange={(e) => {
+                                                                setPage({
+                                                                    ...page,
+                                                                    socialLinks: {
+                                                                        ...page.socialLinks,
+                                                                        youtube: e.target.value
+                                                                    }
+                                                                });
+                                                                setUnsavedChanges(true);
+                                                            }}
+                                                        />
+                                                    </label>
+                                                </div>
 
-                                                        {/* GitHub */}
-                                                        <div className="form-control">
-                                                            <label className="input input-bordered flex items-center gap-2">
-                                                                <RiGithubLine className="text-lg opacity-60" />
-                                                                <input
-                                                                    type="text"
-                                                                    className="grow"
-                                                                    placeholder="github.com/username"
-                                                                    value={page?.socialLinks?.github || ""}
-                                                                    onChange={(e) => {
-                                                                        setPage({
-                                                                            ...page,
-                                                                            socialLinks: {
-                                                                                ...page.socialLinks,
-                                                                                github: e.target.value
-                                                                            }
-                                                                        });
-                                                                        setUnsavedChanges(true);
-                                                                    }}
-                                                                />
-                                                            </label>
-                                                        </div>
-
-                                                        {/* YouTube */}
-                                                        <div className="form-control">
-                                                            <label className="input input-bordered flex items-center gap-2">
-                                                                <RiYoutubeLine className="text-lg opacity-60" />
-                                                                <input
-                                                                    type="text"
-                                                                    className="grow"
-                                                                    placeholder="youtube.com/@username"
-                                                                    value={page?.socialLinks?.youtube || ""}
-                                                                    onChange={(e) => {
-                                                                        setPage({
-                                                                            ...page,
-                                                                            socialLinks: {
-                                                                                ...page.socialLinks,
-                                                                                youtube: e.target.value
-                                                                            }
-                                                                        });
-                                                                        setUnsavedChanges(true);
-                                                                    }}
-                                                                />
-                                                            </label>
-                                                        </div>
-
-                                                        {/* TikTok */}
-                                                        <div className="form-control">
-                                                            <label className="input input-bordered flex items-center gap-2">
-                                                                <RiTiktokLine className="text-lg opacity-60" />
-                                                                <input
-                                                                    type="text"
-                                                                    className="grow"
-                                                                    placeholder="tiktok.com/@username"
-                                                                    value={page?.socialLinks?.tiktok || ""}
-                                                                    onChange={(e) => {
-                                                                        setPage({
-                                                                            ...page,
-                                                                            socialLinks: {
-                                                                                ...page.socialLinks,
-                                                                                tiktok: e.target.value
-                                                                            }
-                                                                        });
-                                                                        setUnsavedChanges(true);
-                                                                    }}
-                                                                />
-                                                            </label>
-                                                        </div>
-                                                    </div>
+                                                {/* TikTok */}
+                                                <div className="form-control">
+                                                    <label className="input input-bordered flex items-center gap-2">
+                                                        <RiTiktokLine className="text-lg opacity-60" />
+                                                        <input
+                                                            type="text"
+                                                            className="grow"
+                                                            placeholder="tiktok.com/@username"
+                                                            value={page?.socialLinks?.tiktok || ""}
+                                                            onChange={(e) => {
+                                                                setPage({
+                                                                    ...page,
+                                                                    socialLinks: {
+                                                                        ...page.socialLinks,
+                                                                        tiktok: e.target.value
+                                                                    }
+                                                                });
+                                                                setUnsavedChanges(true);
+                                                            }}
+                                                        />
+                                                    </label>
                                                 </div>
                                             </div>
                                         </div>
@@ -881,7 +895,7 @@ export default function DashboardPage() {
                                                 </div>
                                             </div>
 
-                                            {user?.plan !== 'FREE' ? (
+                                            {currentUser?.plan !== 'FREE' ? (
                                                 <button
                                                     onClick={handleSeoAiMagic}
                                                     disabled={isSeoAiLoading}
@@ -915,7 +929,7 @@ group-hover:text-secondary" />
                                         </div>
 
                                         {/* Inputs Section */}
-                                        <div className={`grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/5 p-4 border border-white/5 backdrop-blur-sm relative ${user?.plan === 'FREE' ? 'opacity-50 grayscale cursor-not-allowed' : ''}`}>
+                                        <div className={`grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/5 p-4 border border-white/5 backdrop-blur-sm relative ${currentUser?.plan === 'FREE' ? 'opacity-50 grayscale cursor-not-allowed' : ''}`}>
                                             <div className="space-y-6">
                                                 <div className="form-control">
                                                     <label className="label pl-1">
@@ -924,14 +938,14 @@ group-hover:text-secondary" />
                                                     <input
                                                         type="text"
                                                         placeholder="e.g. John Doe | Creative Director & Bio"
-                                                        className={`input bg-slate-900/50 border-white/10 text-white placeholder-white/20 focus:border-primary/50 focus:bg-slate-900/80 transition-all font-medium text-sm h-10 ${user?.plan === 'FREE' ? 'pointer-events-none' : ''}`}
+                                                        className={`input bg-slate-900/50 border-white/10 text-white placeholder-white/20 focus:border-primary/50 focus:bg-slate-900/80 transition-all font-medium text-sm h-10 ${currentUser?.plan === 'FREE' ? 'pointer-events-none' : ''}`}
                                                         value={page?.seo?.title || ""}
                                                         onChange={(e) => {
-                                                            if (user?.plan === 'FREE') return;
+                                                            if (currentUser?.plan === 'FREE') return;
                                                             setPage({ ...page, seo: { ...page.seo, title: e.target.value } });
                                                             setUnsavedChanges(true);
                                                         }}
-                                                        readOnly={user?.plan === 'FREE'}
+                                                        readOnly={currentUser?.plan === 'FREE'}
                                                     />
                                                 </div>
 
@@ -942,14 +956,14 @@ group-hover:text-secondary" />
                                                     <input
                                                         type="text"
                                                         placeholder="design, photography, links, bio"
-                                                        className={`input bg-slate-900/50 border-white/10 text-white placeholder-white/20  focus:border-primary/50 focus:bg-slate-900/80 transition-all font-medium text-sm h-10 ${user?.plan === 'FREE' ? 'pointer-events-none' : ''}`}
+                                                        className={`input bg-slate-900/50 border-white/10 text-white placeholder-white/20  focus:border-primary/50 focus:bg-slate-900/80 transition-all font-medium text-sm h-10 ${currentUser?.plan === 'FREE' ? 'pointer-events-none' : ''}`}
                                                         value={page?.seo?.keywords || ""}
                                                         onChange={(e) => {
-                                                            if (user?.plan === 'FREE') return;
+                                                            if (currentUser?.plan === 'FREE') return;
                                                             setPage({ ...page, seo: { ...page.seo, keywords: e.target.value } });
                                                             setUnsavedChanges(true);
                                                         }}
-                                                        readOnly={user?.plan === 'FREE'}
+                                                        readOnly={currentUser?.plan === 'FREE'}
                                                     />
                                                 </div>
                                             </div>
@@ -961,15 +975,15 @@ group-hover:text-secondary" />
                                                 <textarea className="textarea h-24 bg-slate-900/50 border-white/10 text-white placeholder-white/20 focus:border-primary/50 focus:bg-slate-900/80 transition-all font-medium text-sm"
                                                     value={page?.seo?.description || ""}
                                                     onChange={(e) => {
-                                                        if (user?.plan === 'FREE') return;
+                                                        if (currentUser?.plan === 'FREE') return;
                                                         setPage({ ...page, seo: { ...page.seo, description: e.target.value } });
                                                         setUnsavedChanges(true);
                                                     }}
-                                                    readOnly={user?.plan === 'FREE'}
+                                                    readOnly={currentUser?.plan === 'FREE'}
                                                 />
 
                                                 {/* SEO Lock Badge (Theme Selector Style) */}
-                                                {user?.plan === 'FREE' && (
+                                                {currentUser?.plan === 'FREE' && (
                                                     <div className="absolute top-2 right-2 z-20 flex flex-col items-end gap-1 pointer-events-none">
                                                         <div className="p-1 bg-base-100 shadow-sm text-primary">
                                                             <RiLockLine className="text-xs" />
@@ -1013,8 +1027,11 @@ group-hover:text-secondary" />
 
                 <div className="w-full lg:w-[400px] mt-20 lg:mt-0">
                     <div className="lg:sticky top-8 transform-gpu scale-[0.8] sm:scale-95 lg:scale-90 lg:translate-x-4 origin-top flex justify-center lg:block">
-                        <PreviewPhone key={links.map(l => l._id).join("-")}
-                            pageData={page} links={links} />
+                        <PreviewPhone
+                            key={`${page?.id}-${links.map(l => l._id + l.isActive).join('|')}-${unsavedChanges}`}
+                            pageData={page} links={links}
+                            lifetime={lifetimeStats}
+                        />
                     </div>
                 </div>
             </div>

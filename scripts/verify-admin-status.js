@@ -9,9 +9,9 @@ async function verifyAdmin() {
     try {
         await mongoose.connect(process.env.MONGODB_URI);
         const User = mongoose.model('User', new mongoose.Schema({ email: String, role: String, plan: String }));
-        const user = await User.findOne({ email });
-        if (user) {
-            console.log(`User ${email} status: role=${user.role}, plan=${user.plan}`);
+        const currentUser = await User.findOne({ email });
+        if (currentUser) {
+            console.log(`User ${email} status: role=${currentUser.role}, plan=${currentUser.plan}`);
         } else {
             console.log(`User ${email} not found.`);
         }

@@ -8,7 +8,7 @@ export default function CookieConsent() {
 
     useEffect(() => {
         // Check if user has already made a choice
-        const consent = localStorage.getItem("cookie_consent");
+        const consent = localStorage.getItem("lpkSiteCookieConsent");
         if (!consent) {
             // Delay slightly to prevent hydration issues and allow animation
             const timer = setTimeout(() => setIsVisible(true), 1000);
@@ -18,7 +18,7 @@ export default function CookieConsent() {
 
     const handleAction = (action) => {
         // Store user preference
-        localStorage.setItem("cookie_consent", action);
+        localStorage.setItem("lpkSiteCookieConsent", action);
 
         // Hide banner
         setIsVisible(false);

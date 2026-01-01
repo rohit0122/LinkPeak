@@ -14,8 +14,8 @@ export async function GET() {
         // --- Plan-Based Data Filtering (Handle Downgrades) ---
         const User = (await import("@/models/User")).default;
         const { CONFIG } = await import("@/constants/config");
-        const user = await User.findById(session.id);
-        const plan = user?.plan || "FREE";
+        const currentUser = await User.findById(session.id);
+        const plan = currentUser?.plan || "FREE";
         const limits = CONFIG.PLAN_LIMITS[plan];
 
         // Filter each page's data based on current plan
@@ -65,14 +65,14 @@ export async function POST(req) {
         // Page Limit Check
         const User = (await import("@/models/User")).default;
         const { CONFIG } = await import("@/constants/config");
-        const user = await User.findById(session.id);
-        const limit = CONFIG.PLAN_LIMITS[user.plan || "FREE"].pages;
+        const currentUser = await User.findById(session.id);
+        const limit = CONFIG.PLAN_LIMITS[currentUser.plan || "FREE"].pages;
         const count = await BioPage.countDocuments({ userId: session.id });
 
         if (count >= limit) {
             return NextResponse.json({
                 success: false,
-                error: `Limit reached! Your ${user.plan} plan allows up to ${limit} page(s). Please upgrade for more.`
+                error: `Limit reached! Your ${currentUser.plan} plan allows up to ${limit} page(s). Please upgrade for more.`
             }, { status: 403 });
         }
 
@@ -105,8 +105,8 @@ export async function PATCH(req) {
         // --- RBAC & Security Check ---
         const User = (await import("@/models/User")).default;
         const { CONFIG } = await import("@/constants/config");
-        const user = await User.findById(session.id);
-        const plan = user?.plan || "FREE";
+        const currentUser = await User.findById(session.id);
+        const plan = currentUser?.plan || "FREE";
         const limits = CONFIG.PLAN_LIMITS[plan];
 
         if (!plan) {
@@ -127,7 +127,7 @@ export async function PATCH(req) {
                 error: "Slug must be at least 3 characters long. Refer Settings tab."
             }, { status: 400 });
         }
-        // check if slug is not used by other user
+        // check if slug is not used by other currentUser
         const existingPage = await BioPage.findOne({ slug: updates.slug.toLowerCase() });
         //console.log('existingPage ', existingPage)
         if (existingPage && existingPage._id.toString() !== id) {

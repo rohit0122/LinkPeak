@@ -5,9 +5,9 @@ import { useState, useEffect } from "react";
 
 import { RiShieldStarLine, RiGlobeLine, RiText, RiLinkM } from "react-icons/ri";
 
-export default function BrandingEditor({ page, user, onUpdate, onPreviewUpdate }) {
-    const isAgency = user?.plan === "AGENCY";
-    const isPro = user?.plan === "PRO" || isAgency;
+export default function BrandingEditor({ page, currentUser, onUpdate, onPreviewUpdate }) {
+    const isAgency = currentUser?.plan === "AGENCY";
+    const isPro = currentUser?.plan === "PRO" || isAgency;
     const [localBranding, setLocalBranding] = useState(page?.branding || { removeWatermark: false, customText: "", customUrl: "" });
     const [isDirty, setIsDirty] = useState(false);
 

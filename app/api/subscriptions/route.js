@@ -7,7 +7,7 @@ import { getAuthUser } from "@/lib/auth";
 
 /**
  * GET /api/subscriptions
- * Returns current user's subscription status, trial info, and renewal window
+ * Returns current currentUser's subscription status, trial info, and renewal window
  */
 export async function GET(req) {
     try {
@@ -20,12 +20,12 @@ export async function GET(req) {
 
         // Calculate trial end (createdAt + 24 hours)
         // Note: We're using existing createdAt field, not adding trialEndsAt
-        const user = await User.findById(session.id);
-        if (!user) {
+        const currentUser = await User.findById(session.id);
+        if (!currentUser) {
             return NextResponse.json({ success: false, error: "User not found" }, { status: 404 });
         }
 
-        const trialEndsAt = new Date(user.createdAt);
+        const trialEndsAt = new Date(currentUser.createdAt);
         trialEndsAt.setHours(trialEndsAt.getHours() + 24);
 
         const now = new Date();

@@ -13,10 +13,10 @@ export async function GET(req) {
         await dbConnect();
 
         // Admin check
-        const token = req.cookies.get("token")?.value;
-        if (!token) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+        const lpkSiteToken = req.cookies.get("lpkSiteToken")?.value;
+        if (!lpkSiteToken) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
 
-        const { payload } = await jwtVerify(token, secret);
+        const { payload } = await jwtVerify(lpkSiteToken, secret);
         if (payload.role !== "admin") {
             return NextResponse.json({ success: false, error: "Forbidden" }, { status: 403 });
         }
@@ -48,11 +48,11 @@ export async function GET(req) {
                         from: "users",
                         localField: "userId",
                         foreignField: "_id",
-                        as: "user"
+                        as: "currentUser"
                     }
                 },
-                { $unwind: "$user" },
-                { $match: { "user.role": { $ne: "admin" } } },
+                { $unwind: "$currentUser" },
+                { $match: { "currentUser.role": { $ne: "admin" } } },
                 { $group: { _id: null, total: { $sum: "$views" } } }
             ]),
             Link.aggregate([
@@ -61,11 +61,11 @@ export async function GET(req) {
                         from: "users",
                         localField: "userId",
                         foreignField: "_id",
-                        as: "user"
+                        as: "currentUser"
                     }
                 },
-                { $unwind: "$user" },
-                { $match: { "user.role": { $ne: "admin" } } },
+                { $unwind: "$currentUser" },
+                { $match: { "currentUser.role": { $ne: "admin" } } },
                 { $count: "total" }
             ]),
             BioPage.aggregate([
@@ -74,11 +74,11 @@ export async function GET(req) {
                         from: "users",
                         localField: "userId",
                         foreignField: "_id",
-                        as: "user"
+                        as: "currentUser"
                     }
                 },
-                { $unwind: "$user" },
-                { $match: { "user.role": { $ne: "admin" } } },
+                { $unwind: "$currentUser" },
+                { $match: { "currentUser.role": { $ne: "admin" } } },
                 { $group: { _id: null, total: { $sum: "$likes" } } }
             ]),
 
@@ -112,11 +112,11 @@ export async function GET(req) {
                         from: "users",
                         localField: "userId",
                         foreignField: "_id",
-                        as: "user"
+                        as: "currentUser"
                     }
                 },
-                { $unwind: "$user" },
-                { $match: { "user.role": { $ne: "admin" } } },
+                { $unwind: "$currentUser" },
+                { $match: { "currentUser.role": { $ne: "admin" } } },
                 {
                     $match: {
                         status: "active",
@@ -139,11 +139,11 @@ export async function GET(req) {
                         from: "users",
                         localField: "userId",
                         foreignField: "_id",
-                        as: "user"
+                        as: "currentUser"
                     }
                 },
-                { $unwind: "$user" },
-                { $match: { "user.role": { $ne: "admin" } } },
+                { $unwind: "$currentUser" },
+                { $match: { "currentUser.role": { $ne: "admin" } } },
                 {
                     $match: {
                         createdAt: { $gte: last30Days }

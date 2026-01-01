@@ -1,26 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
-
-export default function GlobalLoading() {
-    const [loading, setLoading] = useState(false);
-    const pathname = usePathname();
-
-    useEffect(() => {
-        setLoading(false);
-    }, [pathname]);
-
-    useEffect(() => {
-        // Expose setLoading to the window so the axios interceptor can use it
-        window.setGlobalLoading = setLoading;
-
-        return () => {
-            delete window.setGlobalLoading;
-        };
-    }, []);
-
-    if (!loading) return null;
+export default function GlobalLoading({ show }) {
+    if (!show) return null;
 
     return (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/20 backdrop-blur-[2px]">

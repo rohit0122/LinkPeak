@@ -18,8 +18,8 @@ export async function GET(req) {
         // --- Plan-Based Link Filtering (Handle Downgrades) ---
         const User = (await import("@/models/User")).default;
         const { CONFIG } = await import("@/constants/config");
-        const user = await User.findById(session.id);
-        const planLimit = CONFIG.PLAN_LIMITS[user?.plan || "FREE"].links;
+        const currentUser = await User.findById(session.id);
+        const planLimit = CONFIG.PLAN_LIMITS[currentUser?.plan || "FREE"].links;
 
         // Return only allowed number of links (preserves excess in DB)
         const filteredLinks = links.slice(0, planLimit);
@@ -43,14 +43,14 @@ export async function POST(req) {
         const User = (await import("@/models/User")).default;
         const { CONFIG } = await import("@/constants/config");
 
-        const user = await User.findById(session.id);
-        const planLimit = CONFIG.PLAN_LIMITS[user.plan || "FREE"].links;
+        const currentUser = await User.findById(session.id);
+        const planLimit = CONFIG.PLAN_LIMITS[currentUser.plan || "FREE"].links;
         const currentCount = await Link.countDocuments({ pageId, userId: session.id });
 
         if (currentCount >= planLimit) {
             return NextResponse.json({
                 success: false,
-                error: `Limit reached! Your ${user.plan} plan allows up to ${planLimit} links. Please upgrade for more.`
+                error: `Limit reached! Your ${currentUser.plan} plan allows up to ${planLimit} links. Please upgrade for more.`
             }, { status: 403 });
         }
 

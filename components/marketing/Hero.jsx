@@ -60,13 +60,13 @@ export default function Hero() {
                         <div className="flex items-center gap-2">
                             <div className="avatar-group -space-x-4 rtl:space-x-reverse">
                                 <div className="avatar">
-                                    <div className="w-10"><img src="/avatars/avatar-female.svg" alt="user" /></div>
+                                    <div className="w-10"><img src="/avatars/avatar-female.svg" alt="currentUser" /></div>
                                 </div>
                                 <div className="avatar">
-                                    <div className="w-10"><img src="/avatars/avatar-male.svg" alt="user" /></div>
+                                    <div className="w-10"><img src="/avatars/avatar-male.svg" alt="currentUser" /></div>
                                 </div>
                                 <div className="avatar">
-                                    <div className="w-10"><img src="/avatars/avatar-generic-eco.svg" alt="user" /></div>
+                                    <div className="w-10"><img src="/avatars/avatar-generic-eco.svg" alt="currentUser" /></div>
                                 </div>
                             </div>
                             <div className="text-left leading-none">

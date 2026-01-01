@@ -8,29 +8,29 @@ export async function GET(req) {
     try {
         await dbConnect();
         const { searchParams } = new URL(req.url);
-        const token = searchParams.get("token");
-        if (!token) {
-            return NextResponse.json({ success: false, error: "No token provided" }, { status: 400 });
+        const lpkSiteToken = searchParams.get("lpkSiteToken");
+        if (!lpkSiteToken) {
+            return NextResponse.json({ success: false, error: "No lpkSiteToken provided" }, { status: 400 });
         }
 
-        const user = await User.findOne({ verificationToken: token });
+        const currentUser = await User.findOne({ verificationToken: lpkSiteToken });
 
-        if (!user) {
-            return NextResponse.json({ success: false, error: "Invalid or expired token" }, { status: 400 });
+        if (!currentUser) {
+            return NextResponse.json({ success: false, error: "Invalid or expired lpkSiteToken" }, { status: 400 });
         }
 
-        user.isVerified = true;
-        user.verificationToken = null;
-        user.isActive = true;
-        await user.save();
+        currentUser.isVerified = true;
+        currentUser.verificationToken = null;
+        currentUser.isActive = true;
+        await currentUser.save();
 
-        // Create default BioPage for the user
+        // Create default BioPage for the currentUser
         try {
-            const defaultSlug = user.name.toLowerCase().replace(/[^a-z0-9]/g, '-') + "-" + Math.floor(Math.random() * 1000);
+            const defaultSlug = currentUser.name.toLowerCase().replace(/[^a-z0-9]/g, '-') + "-" + Math.floor(Math.random() * 1000);
             await BioPage.create({
-                userId: user._id,
+                userId: currentUser._id,
                 slug: defaultSlug,
-                title: `${user.name}'s Bio`,
+                title: `${currentUser.name}'s Bio`,
                 bio: "Welcome to my link-in-bio page!",
                 template: "classic",
                 theme: "light"
@@ -42,7 +42,7 @@ export async function GET(req) {
 
         // Send Welcome Email
         try {
-            await sendWelcomeEmail(user.email, user.name || "Creator");
+            await sendWelcomeEmail(currentUser.email, currentUser.name || "Creator");
         } catch (mailError) {
             console.error("Welcome email failed but verification succeeded:", mailError);
         }

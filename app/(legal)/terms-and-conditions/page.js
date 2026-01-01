@@ -13,7 +13,7 @@ export default function TermsPage() {
                 {/* Header */}
                 <div className="text-center mb-12">
                     <h1 className="text-4xl font-bold mt-8 mb-4">Terms of Service</h1>
-                    <p className="text-sm opacity-60">Last Updated: December 26, 2024</p>
+                    <p className="text-sm opacity-60">Last Updated: December 31, 2024</p>
                 </div>
 
                 {/* Content */}
@@ -57,7 +57,7 @@ export default function TermsPage() {
                         <h3 className="text-xl font-semibold mb-2 mt-4">3.3 Account Termination</h3>
                         <p>
                             We reserve the right to suspend or terminate your account if you violate these Terms or engage
-                            in fraudulent, abusive, or illegal activities.
+                            in fraudulent, abusive, or illegal activities. You may also delete your account at any time through your dashboard settings.
                         </p>
                     </section>
 
@@ -77,8 +77,15 @@ export default function TermsPage() {
                         </p>
                         <h3 className="text-xl font-semibold mb-2 mt-4">4.3 Cancellation and Refunds</h3>
                         <p>
-                            You may cancel your subscription at any time. Cancellations take effect at the end of the current
-                            billing period. We do not offer refunds for partial months or unused features.
+                            We want you to buy with confidence, which is why we offer a 24-hour full-access trial for PRO and AGENCY plans to evaluate the platform.
+                            You may cancel your subscription or delete your account at any time through your dashboard.
+                        </p>
+                        <p className="mt-2">
+                            Cancellations take effect at the end of the current billing period. Due to the access provided during the trial period, we do not offer refunds on cancellations or account deletions. No refunds or cancellation refunds are applicable once a paid subscription begins.
+                        </p>
+                        <h3 className="text-xl font-semibold mb-2 mt-4">4.4 Data Retention after Expiration</h3>
+                        <p>
+                            If your plan expires or is cancelled, your account will transition to the FREE tier. Your data remains safe in our database; however, extra pages and premium themes will be archived. You can restore access to all premium features and archived content instantly by renewing your plan.
                         </p>
                     </section>
 
@@ -160,7 +167,7 @@ export default function TermsPage() {
                     <section className="mb-8">
                         <h2 className="text-2xl font-bold mb-4">12. Governing Law</h2>
                         <p>
-                            These Terms shall be governed by and construed in accordance with the laws of [Your Jurisdiction],
+                            These Terms shall be governed by and construed in accordance with the laws of {CONFIG.JURISDICTION},
                             without regard to its conflict of law provisions.
                         </p>
                     </section>

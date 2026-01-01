@@ -13,7 +13,7 @@ export default function PrivacyPage() {
                 {/* Header */}
                 <div className="text-center mb-12">
                     <h1 className="text-4xl font-bold mt-8 mb-4">Privacy Policy</h1>
-                    <p className="text-sm opacity-60">Last Updated: December 26, 2024</p>
+                    <p className="text-sm opacity-60">Last Updated: December 31, 2024</p>
                 </div>
 
                 {/* Content */}

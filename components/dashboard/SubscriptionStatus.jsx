@@ -15,7 +15,7 @@ import {
     RiSecurePaymentLine
 } from "react-icons/ri";
 
-export default function SubscriptionStatus({ user, initialData, redirectOnExpire = false }) {
+export default function SubscriptionStatus({ currentUser, initialData, redirectOnExpire = false }) {
     const router = useRouter();
     const [subscriptionData, setSubscriptionData] = useState(initialData || null);
     const [loading, setLoading] = useState(!initialData);
@@ -110,7 +110,7 @@ export default function SubscriptionStatus({ user, initialData, redirectOnExpire
     const showRenewButton = renewalWindow.active && subscription;
 
     // Action Logic
-    const currentPlan = user?.plan || "FREE";
+    const currentPlan = currentUser?.plan || "FREE";
     const isExpired = !trial.active && (!subscription || subscription.status !== "active");
 
     const PLAN_DETAILS = {

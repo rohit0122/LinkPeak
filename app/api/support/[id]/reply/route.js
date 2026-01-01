@@ -25,9 +25,9 @@ export async function POST(req, { params }) {
             return NextResponse.json({ success: false, error: "Ticket not found" }, { status: 404 });
         }
 
-        // Get full user details to check role
-        const user = await User.findById(session.id);
-        const isAdmin = user.role === "admin";
+        // Get full currentUser details to check role
+        const currentUser = await User.findById(session.id);
+        const isAdmin = currentUser.role === "admin";
 
         // Authorization Check: Must be admin OR ticket owner
         if (!isAdmin && ticket.userId.toString() !== session.id) {
@@ -37,8 +37,8 @@ export async function POST(req, { params }) {
         // Add Reply
         const reply = {
             senderId: session.id,
-            senderName: user.name || "User",
-            role: isAdmin ? "admin" : "user",
+            senderName: currentUser.name || "User",
+            role: isAdmin ? "admin" : "currentUser",
             message: message.trim(),
             createdAt: new Date(),
         };
@@ -56,16 +56,16 @@ export async function POST(req, { params }) {
         ticket.replies.push(reply);
 
         // Update status if replied by admin (e.g., to PENDING or answered state)
-        // If user replies, maybe set to OPEN?
+        // If currentUser replies, maybe set to OPEN?
         if (isAdmin) {
-            ticket.status = "PENDING"; // Admin replied, waiting for user
+            ticket.status = "PENDING"; // Admin replied, waiting for currentUser
         } else {
             ticket.status = "OPEN"; // User replied, needs admin attention
         }
 
         await ticket.save();
 
-        // Populate userId so the frontend can display user details
+        // Populate userId so the frontend can display currentUser details
         await ticket.populate('userId', 'name email');
 
         return NextResponse.json({ success: true, data: ticket });

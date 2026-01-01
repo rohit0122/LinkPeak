@@ -19,13 +19,13 @@ export async function GET() {
         }
 
         const samples = [
-            { name: "verification.html", html: verificationTemplate("dummy-token") },
+            { name: "verification.html", html: verificationTemplate("dummy-lpkSiteToken") },
             { name: "welcome.html", html: welcomeTemplate({ name: "John Doe" }) },
             { name: "suspension.html", html: suspensionTemplate({ name: "John Doe", reason: "Trial Period Expired" }) },
             { name: "reminder-7days.html", html: reminderTemplate({ name: "John Doe", days: 7 }) },
             { name: "reminder-3days.html", html: reminderTemplate({ name: "John Doe", days: 3 }) },
             { name: "reminder-1day.html", html: reminderTemplate({ name: "John Doe", days: 1 }) },
-            { name: "reset-password.html", html: resetPasswordTemplate("dummy-reset-token") },
+            { name: "reset-password.html", html: resetPasswordTemplate("dummy-reset-lpkSiteToken") },
             { name: "password-changed.html", html: passwordChangedTemplate({ name: "John Doe" }) },
             { name: "contact-receipt.html", html: contactReceiptTemplate({ name: "John Doe", subject: "Billing Inquiry" }) },
             { name: "contact-admin.html", html: contactAdminTemplate({ name: "John Doe", email: "john@example.com", subject: "Billing Inquiry", message: "I have a question about my last invoice." }) },

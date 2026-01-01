@@ -13,7 +13,7 @@ import { activateScheduledSubscriptions } from "@/lib/subscriptionHelper";
  * GET /api/dashboard/init
  * Aggregated endpoint for dashboard initialization.
  * Follows API_MERGER.md guidelines:
- * - Aggregates user, pages, active page data, and subscription.
+ * - Aggregates currentUser, pages, active page data, and subscription.
  * - Optimized with field selection.
  * - Backward compatible (strictly read-only aggregation).
  */
@@ -30,11 +30,11 @@ export async function GET(req) {
         await activateScheduledSubscriptions(session.id);
 
         // 1. Fetch User (Optimized fields)
-        const user = await User.findById(session.id)
+        const currentUser = await User.findById(session.id)
             .select("name email role plan createdAt profileImage bio")
             .lean();
 
-        if (!user) {
+        if (!currentUser) {
             return NextResponse.json({ success: false, error: "User not found" }, { status: 404 });
         }
 
@@ -65,9 +65,9 @@ export async function GET(req) {
             const { subDays, startOfDay } = await import("date-fns");
             const mongoose = (await import("mongoose")).default;
 
-            let maxDays = CONFIG.PLAN_LIMITS[user.plan || "FREE"].analyticsDays;
-            if (user.plan === "PRO") maxDays = CONFIG.PLAN_LIMITS.PRO.analyticsDays;
-            if (user.plan === "AGENCY") maxDays = 36500;
+            let maxDays = CONFIG.PLAN_LIMITS[currentUser.plan || "FREE"].analyticsDays;
+            if (currentUser.plan === "PRO") maxDays = CONFIG.PLAN_LIMITS.PRO.analyticsDays;
+            if (currentUser.plan === "AGENCY") maxDays = 36500;
 
             const startDate = startOfDay(subDays(new Date(), maxDays));
 
@@ -95,7 +95,7 @@ export async function GET(req) {
         // 4. Fetch Subscription Status (Replicating logic from /api/subscriptions)
         // Logic: Trial (24h), Subscription (Active), PaymentLink (Pending)
 
-        const trialEndsAt = new Date(user.createdAt);
+        const trialEndsAt = new Date(currentUser.createdAt);
         trialEndsAt.setHours(trialEndsAt.getHours() + 24);
         const now = new Date();
         const isInTrial = now < trialEndsAt;
@@ -154,7 +154,7 @@ export async function GET(req) {
         return NextResponse.json({
             success: true,
             data: {
-                user,
+                currentUser,
                 pages: allPages,
                 activePage,
                 links,

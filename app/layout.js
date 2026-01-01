@@ -1,9 +1,7 @@
 import { Outfit, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
-import GlobalLoading from "@/components/shared/GlobalLoading";
-import { Toaster } from "react-hot-toast";
-import { AuthProvider } from "@/context/AuthContext";
-import CookieConsent from "@/components/shared/CookieConsent";
+import { CONFIG } from "@/constants/config";
+import ClientProvider from "@/components/providers/ClientProvider";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -17,7 +15,7 @@ const jakarta = Plus_Jakarta_Sans({
   display: "swap",
 });
 
-import { CONFIG } from "@/constants/config";
+
 
 export const metadata = {
   title: CONFIG.METATAGS.title,
@@ -59,12 +57,9 @@ export default function RootLayout({ children }) {
         className={`${outfit.variable} ${jakarta.variable} antialiased`}
         suppressHydrationWarning
       >
-        <AuthProvider>
-          <GlobalLoading />
-          <Toaster position="top-center" />
+        <ClientProvider>
           {children}
-          <CookieConsent />
-        </AuthProvider>
+        </ClientProvider>
       </body>
     </html >
   );

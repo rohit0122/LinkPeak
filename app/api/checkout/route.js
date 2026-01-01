@@ -3,8 +3,8 @@ import { getAuthUser } from "@/lib/auth";
 
 export async function POST(req) {
     try {
-        const user = await getAuthUser();
-        if (!user) {
+        const currentUser = await getAuthUser();
+        if (!currentUser) {
             return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
         }
 

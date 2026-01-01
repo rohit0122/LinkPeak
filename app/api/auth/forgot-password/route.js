@@ -6,7 +6,7 @@ import { sendResetPasswordEmail } from "@/lib/mailer";
 
 /**
  * POST /api/auth/forgot-password
- * Sends password reset email with token
+ * Sends password reset email with lpkSiteToken
  */
 export async function POST(req) {
     try {
@@ -21,29 +21,29 @@ export async function POST(req) {
             );
         }
 
-        // Find user by email
-        const user = await User.findOne({ email: email.toLowerCase() });
+        // Find currentUser by email
+        const currentUser = await User.findOne({ email: email.toLowerCase() });
 
         // Always return success to prevent email enumeration
-        if (!user) {
+        if (!currentUser) {
             return NextResponse.json({
                 success: true,
                 message: "If an account exists with this email, a reset link has been sent.",
             });
         }
 
-        // Generate reset token
+        // Generate reset lpkSiteToken
         const resetToken = crypto.randomBytes(32).toString("hex");
         const resetTokenHash = crypto.createHash("sha256").update(resetToken).digest("hex");
 
-        // Set token and expiry (1 hour)
-        user.resetPasswordToken = resetTokenHash;
-        user.resetPasswordExpire = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
-        await user.save();
+        // Set lpkSiteToken and expiry (1 hour)
+        currentUser.resetPasswordToken = resetTokenHash;
+        currentUser.resetPasswordExpire = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+        await currentUser.save();
 
         // Send Reset Email
         try {
-            await sendResetPasswordEmail(user.email, resetToken);
+            await sendResetPasswordEmail(currentUser.email, resetToken);
         } catch (mailError) {
             console.error("Reset password email failed:", mailError);
             // Optionally we could return an error here, but standard practice is to not confirm account existence

@@ -11,7 +11,7 @@ export async function generateMetadata({ params }) {
     const page = await BioPage.findOne({ slug: slug.toLowerCase() }).lean();
     if (!page) return <BioNotFound />;
 
-    // Use user's profile image if available, otherwise use site banner
+    // Use currentUser's profile image if available, otherwise use site banner
     const ogImage = page.profileImage || `${CONFIG.SITE_URL}/linkpeakk-home.webp`;
 
     return {

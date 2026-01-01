@@ -9,7 +9,7 @@ import {
 } from "react-icons/ri";
 import { CONFIG } from "@/constants/config";
 
-export default function SupportView({ user }) {
+export default function SupportView({ currentUser }) {
     const [tickets, setTickets] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedTicket, setSelectedTicket] = useState(null);
@@ -19,12 +19,12 @@ export default function SupportView({ user }) {
     // New Ticket Form
     const [formData, setFormData] = useState({ subject: "", message: "", priority: "MEDIUM", category: CONFIG.SUPPORT_CATEGORIES[0] });
 
-    const isAdmin = user?.role === "admin";
+    const isAdmin = currentUser?.role === "admin";
     const messagesEndRef = useRef(null);
 
     useEffect(() => {
-        if (user) fetchTickets();
-    }, [user]);
+        if (currentUser) fetchTickets();
+    }, [currentUser]);
 
     // Scroll to bottom of chat
     const scrollToBottom = () => {
@@ -62,7 +62,7 @@ export default function SupportView({ user }) {
                 setTickets([data.data, ...tickets]);
                 setFormData({ subject: "", message: "", priority: "MEDIUM", category: CONFIG.SUPPORT_CATEGORIES[0] });
                 toast.success("Ticket created!");
-                if (!isAdmin) setSelectedTicket(data.data); // Open it immediately for user
+                if (!isAdmin) setSelectedTicket(data.data); // Open it immediately for currentUser
             }
         } catch (error) {
             toast.error("Failed to create ticket.");
@@ -144,22 +144,22 @@ export default function SupportView({ user }) {
                 <div className="flex-1 overflow-y-auto p-4 space-y-6 bg-base-100">
                     {/* Original Issue */}
                     {(() => {
-                        // Debug: Check user object structure
-                        console.log("Full user object:", user);
-                        console.log("User keys:", user ? Object.keys(user) : "user is null");
+                        // Debug: Check currentUser object structure
+                        console.log("Full currentUser object:", currentUser);
+                        console.log("User keys:", currentUser ? Object.keys(currentUser) : "currentUser is null");
 
                         // Check if current user created this ticket
-                        const isMyTicket = selectedTicket.userId?._id === user?.id;
+                        const isMyTicket = selectedTicket.userId?._id === currentUser?.id;
                         console.log("Original Ticket Check:", {
                             ticketUserId: selectedTicket.userId?._id,
-                            currentUserId: user?._id,
+                            currentUserId: currentUser?._id,
                             isMyTicket
                         });
                         return (
                             <div className={`chat ${isMyTicket ? 'chat-end' : 'chat-start'}`}>
                                 <div className="chat-image avatar placeholder">
                                     <div className="bg-neutral text-neutral-content rounded-full w-10 flex items-center justify-center">
-                                        <span className="text-sm font-bold">{getInitials(isMyTicket ? user?.name : selectedTicket.userId?.name)}</span>
+                                        <span className="text-sm font-bold">{getInitials(isMyTicket ? currentUser?.name : selectedTicket.userId?.name)}</span>
                                     </div>
                                 </div>
                                 <div className="chat-header opacity-50 text-xs mb-1">
@@ -174,7 +174,7 @@ export default function SupportView({ user }) {
 
                     {/* Replies */}
                     {selectedTicket.replies?.map((reply, idx) => {
-                        const isMe = reply.senderId === user?.id;
+                        const isMe = reply.senderId === currentUser?.id;
                         return (
                             <div key={idx} className={`chat ${isMe ? 'chat-end' : 'chat-start'}`}>
                                 <div className="chat-image avatar placeholder">

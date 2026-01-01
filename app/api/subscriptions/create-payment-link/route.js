@@ -28,9 +28,9 @@ export async function POST(req) {
             );
         }
 
-        // Get user for trial calculation
-        const user = await User.findById(session.id);
-        const trialEndsAt = new Date(user.createdAt);
+        // Get currentUser for trial calculation
+        const currentUser = await User.findById(session.id);
+        const trialEndsAt = new Date(currentUser.createdAt);
         trialEndsAt.setHours(trialEndsAt.getHours() + 24);
         const now = new Date();
         const isInTrial = now < trialEndsAt;
@@ -41,7 +41,7 @@ export async function POST(req) {
             status: { $in: ["active", "scheduled"] },
         });
 
-        // Determine if user is eligible to create payment link
+        // Determine if currentUser is eligible to create payment link
         let isEligible = false;
         let reason = "";
 

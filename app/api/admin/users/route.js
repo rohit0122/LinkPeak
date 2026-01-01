@@ -6,10 +6,10 @@ import { jwtVerify } from "jose";
 const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
 async function checkAdmin(req) {
-    const token = req.cookies.get("token")?.value;
-    if (!token) return null;
+    const lpkSiteToken = req.cookies.get("lpkSiteToken")?.value;
+    if (!lpkSiteToken) return null;
     try {
-        const { payload } = await jwtVerify(token, secret);
+        const { payload } = await jwtVerify(lpkSiteToken, secret);
         return payload.role === "admin" ? payload : null;
     } catch {
         return null;
@@ -86,9 +86,9 @@ export async function PATCH(req) {
             return NextResponse.json({ success: false, error: "You cannot deactivate or Downgrade yourself" }, { status: 400 });
         }
 
-        const user = await User.findByIdAndUpdate(userId, updates, { new: true });
+        const currentUser = await User.findByIdAndUpdate(userId, updates, { new: true });
 
-        return NextResponse.json({ success: true, data: user });
+        return NextResponse.json({ success: true, data: currentUser });
     } catch (error) {
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }

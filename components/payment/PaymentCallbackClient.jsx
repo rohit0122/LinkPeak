@@ -36,8 +36,8 @@ export default function PaymentCallbackClient() {
                     razorpay_payment_link_reference_id: params.get("razorpay_payment_link_reference_id") || "",
                     razorpay_signature: signature,
                     userId:
-                        JSON.parse(localStorage.getItem("site_user") || "{}")?.id ||
-                        params.get("user"),
+                        JSON.parse(localStorage.getItem("lpkSiteCurrentUser") || "{}")?.id ||
+                        params.get("currentUser"),
                     planId: params.get("plan"),
                 });
 

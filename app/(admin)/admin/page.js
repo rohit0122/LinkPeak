@@ -137,7 +137,7 @@ export default function AdminDashboard() {
                 toast.success("User account updated successfully! ✅");
             }
         } catch (error) {
-            toast.error(error.response?.data?.error || "Could not update user. Please try again.");
+            toast.error(error.response?.data?.error || "Could not update currentUser. Please try again.");
         }
     };
 
@@ -158,7 +158,7 @@ export default function AdminDashboard() {
     }
 
     return (
-        <DashboardLayout user={currentUser || { name: "System Admin", role: "admin", plan: "AGENCY" }}>
+        <DashboardLayout currentUser={currentUser || { name: "System Admin", role: "admin", plan: "AGENCY" }}>
             <div className="max-w-[1400px] mx-auto py-10 px-4 space-y-8">
                 {/* Minimal Global Header */}
                 <div className="flex flex-col md:flex-row items-center justify-between bg-base-100 p-6  border border-base-200 shadow-sm gap-2">
@@ -368,49 +368,49 @@ export default function AdminDashboard() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {users.map(user => (
-                                        <tr key={user._id} className="hover:bg-base-200/20 transition-colors">
+                                    {users.map(currentUser => (
+                                        <tr key={currentUser._id} className="hover:bg-base-200/20 transition-colors">
                                             <td>
                                                 <div className="flex items-center gap-3">
                                                     <div className="w-10 h-10 bg-base-300 flex items-center justify-center font-medium text-xs">
-                                                        {user.name[0]}
+                                                        {currentUser.name[0]}
                                                     </div>
                                                     <div>
-                                                        <div className="font-medium text-sm">{user.name}</div>
-                                                        <div className="text-xs opacity-40 font-medium">{user.email}</div>
+                                                        <div className="font-medium text-sm">{currentUser.name}</div>
+                                                        <div className="text-xs opacity-40 font-medium">{currentUser.email}</div>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td>
-                                                {user.role !== 'admin' ? <select
-                                                    disabled={user.role === 'admin'}
-                                                    className={`select select-xs select-bordered  font-medium text-[10px] ${user.plan === 'AGENCY' ? 'border-primary text-primary' : ''}`}
-                                                    value={user.plan}
-                                                    onChange={(e) => handleUserUpdate(user._id, { plan: e.target.value })}
+                                                {currentUser.role !== 'admin' ? <select
+                                                    disabled={currentUser.role === 'admin'}
+                                                    className={`select select-xs select-bordered  font-medium text-[10px] ${currentUser.plan === 'AGENCY' ? 'border-primary text-primary' : ''}`}
+                                                    value={currentUser.plan}
+                                                    onChange={(e) => handleUserUpdate(currentUser._id, { plan: e.target.value })}
                                                 >
                                                     <option value="FREE">FREE</option>
                                                     <option value="PRO">PRO</option>
                                                     <option value="AGENCY">AGENCY</option>
                                                     <option value="ADMIN">ADMIN</option>
 
-                                                </select> : <div className="font-medium text-[10px]">{user.plan}</div>}
+                                                </select> : <div className="font-medium text-[10px]">{currentUser.plan}</div>}
                                             </td>
                                             <td>
-                                                <div className={`badge badge-sm font-medium gap-1 py-3 px-4 ${user.isActive ? 'badge-success text-success-content' : 'badge-error text-error-content'}`}>
-                                                    {user.isActive ? 'ACTIVE' : 'SUSPENDED'}
+                                                <div className={`badge badge-sm font-medium gap-1 py-3 px-4 ${currentUser.isActive ? 'badge-success text-success-content' : 'badge-error text-error-content'}`}>
+                                                    {currentUser.isActive ? 'ACTIVE' : 'SUSPENDED'}
                                                 </div>
                                             </td>
                                             <td className="text-right flex justify-end gap-2">
-                                                {user.role !== 'admin' ? <button
-                                                    disabled={user.role === 'admin'}
-                                                    onClick={() => handleUserUpdate(user._id, { isActive: !user.isActive })}
-                                                    className={`btn btn-xs  font-medium ${user.isActive ? 'btn-error' : 'btn-success'}`}
+                                                {currentUser.role !== 'admin' ? <button
+                                                    disabled={currentUser.role === 'admin'}
+                                                    onClick={() => handleUserUpdate(currentUser._id, { isActive: !currentUser.isActive })}
+                                                    className={`btn btn-xs  font-medium ${currentUser.isActive ? 'btn-error' : 'btn-success'}`}
                                                 >
-                                                    {user.isActive ? 'Deactivate' : 'Activate'}
+                                                    {currentUser.isActive ? 'Deactivate' : 'Activate'}
                                                 </button> : <span className="badge badge-success badge-sm text-success-content font-medium py-3 px-4">Active</span>}
-                                                {user.role !== 'admin' && (
+                                                {currentUser.role !== 'admin' && (
                                                     <button
-                                                        onClick={() => handleUserUpdate(user._id, { role: 'admin' })}
+                                                        onClick={() => handleUserUpdate(currentUser._id, { role: 'admin' })}
                                                         className="btn btn-xs btn-outline  font-medium hidden"
                                                     >
                                                         Make Admin
@@ -490,7 +490,7 @@ export default function AdminDashboard() {
 
                         <div className="bg-base-100 border border-base-200 shadow-sm overflow-hidden rounded-xl">
                             {/* Integrating the shared SupportView for full interactivity */}
-                            <SupportView user={currentUser} />
+                            <SupportView currentUser={currentUser} />
                         </div>
                     </div>
                 )}

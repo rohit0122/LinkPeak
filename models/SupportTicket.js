@@ -44,7 +44,7 @@ const SupportTicketSchema = new mongoose.Schema(
                 },
                 role: {
                     type: String,
-                    enum: ["user", "admin", "User", "Admin"],
+                    enum: ["currentUser", "admin", "User", "Admin"],
                     required: true,
                 },
                 message: {
