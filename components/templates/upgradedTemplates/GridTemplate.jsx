@@ -38,7 +38,7 @@ export default function GridTemplate({ links, handleLinkClick }) {
                             relative
                             flex flex-col items-center justify-center
                             p-6 gap-3
-                            bg-base-100
+                            bg-base-200
                             hover:bg-neutral hover:text-neutral-content
                             rounded-2xl
                             shadow-md hover:shadow-2xl

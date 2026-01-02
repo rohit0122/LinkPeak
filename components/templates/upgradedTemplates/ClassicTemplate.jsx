@@ -50,6 +50,7 @@ export default function ClassicTemplate({ page, links, handleLinkClick }) {
                         transition-all duration-300 ease-out
                         hover:-translate-y-1
                         overflow-hidden
+                        bg-primary text-primary-content
                     "
                     aria-label={link.title}
                 >
