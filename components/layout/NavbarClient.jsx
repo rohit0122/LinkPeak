@@ -12,8 +12,13 @@ import {
     RiPlayCircleLine,
     RiPriceTag3Line,
     RiQuestionLine,
+    RiLayoutMasonryLine,
+    RiArrowDownSLine,
+    RiCheckLine,
+    RiAddCircleLine,
 } from "react-icons/ri";
 import { toast } from "react-hot-toast";
+import { CONFIG } from "@/constants/config";
 import Logo from "./Logo";
 import Avatar from "@/components/shared/Avatar";
 import { useAuth } from "@/context/AuthContext";
@@ -25,7 +30,7 @@ const publicLinks = [
     { name: "FAQ", href: "/#faq", icon: <RiQuestionLine size={24} />, color: "text-success" },
 ];
 
-export default function NavbarClient({ page: propPage }) {
+export default function NavbarClient({ page: propPage, pages = [], onSelectPage, onCreatePage }) {
     const { currentUser, logout, loading } = useAuth();
     const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -38,7 +43,57 @@ export default function NavbarClient({ page: propPage }) {
     return (
         <nav className="sticky top-0 z-50 bg-base-100/90 backdrop-blur border-b">
             <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-                <Logo />
+                <div className="flex items-center gap-4">
+                    <Logo />
+
+                    {/* Agency Page Selector */}
+                    {isLoggedIn && currentUser?.plan === 'AGENCY' && currentUser?.role !== 'admin' && (
+                        <div className="dropdown dropdown-bottom">
+                            <div
+                                tabIndex={0}
+                                role="button"
+                                className="btn btn-sm btn-ghost gap-2 font-bold normal-case text-base-content/80 hover:bg-base-200/50"
+                            >
+                                <RiLayoutMasonryLine className="text-primary text-lg" />
+                                <span className="hidden sm:inline-block max-w-[100px] truncate">{propPage?.slug ? `/${propPage.slug}` : "Select Page"}</span>
+                                <RiArrowDownSLine className="opacity-40" />
+                            </div>
+                            <ul tabIndex={0} className="dropdown-content z-[60] menu p-2 shadow-2xl bg-base-100 w-64 mt-2 border border-base-200 rounded-box">
+                                <li className="menu-title px-4 py-2 my-1">
+                                    <span className="text-[10px] font-black uppercase tracking-widest opacity-40">My Bio Pages</span>
+                                </li>
+                                {pages.map((p) => (
+                                    <li key={p._id}>
+                                        <button
+                                            onClick={() => onSelectPage && onSelectPage(p._id)}
+                                            className={`flex items-center justify-between py-2.5 px-3 ${propPage?._id === p._id ? 'bg-primary/10 text-primary font-bold my-1' : ''}`}
+                                        >
+                                            <div className="flex items-center gap-2 overflow-hidden">
+                                                <div className={`w-1.5 h-1.5 rounded-full ${propPage?._id === p._id ? 'bg-primary' : 'bg-base-300'}`}></div>
+                                                <span className="truncate text-xs">/{p.slug}</span>
+                                            </div>
+                                            {propPage?._id === p._id && <RiCheckLine className="flex-shrink-0 text-xs" />}
+                                        </button>
+                                    </li>
+                                ))}
+                                {pages.length < (CONFIG.PLAN_LIMITS[currentUser?.plan] || CONFIG.PLAN_LIMITS.FREE).pages && (
+                                    <>
+                                        <div className="divider my-1 opacity-10"></div>
+                                        <li>
+                                            <button
+                                                onClick={onCreatePage}
+                                                className="flex items-center gap-3 py-2.5 px-3 text-primary font-bold hover:bg-primary/5 text-xs"
+                                            >
+                                                <RiAddCircleLine className="text-base flex-shrink-0" />
+                                                Add New Page
+                                            </button>
+                                        </li>
+                                    </>
+                                )}
+                            </ul>
+                        </div>
+                    )}
+                </div>
 
                 <div className="flex items-center gap-3">
                     {/* View Bio Button (Non-Admin) */}
