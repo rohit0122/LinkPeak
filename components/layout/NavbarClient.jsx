@@ -169,7 +169,7 @@ function ProfileDropdown({ currentUser, page, onLogout }) {
             {open && (
                 <div className="absolute right-0 mt-3 w-72 bg-base-100 border rounded-xl shadow-lg z-50">
                     <div className="flex items-center gap-3 p-4 bg-primary/5 border-b">
-                        <div className="w-8 h-8 rounded-full overflow-hidden ring-2 ring-primary">
+                        <div className="w-12 h-12 rounded-full overflow-hidden ring-2 ring-primary">
                             {page?.profileImage ? (
                                 <img src={page.profileImage} alt={currentUser?.name} className="w-full h-full object-cover" />
                             ) : (
@@ -181,7 +181,7 @@ function ProfileDropdown({ currentUser, page, onLogout }) {
                         <div className="flex-1">
                             <p className="font-semibold">{currentUser?.name}</p>
                             <p className="text-xs text-gray-500 truncate">{currentUser?.email}</p>
-                            <span className="mt-1 inline-block px-2 py-0.5 text-xs font-medium bg-primary/20 text-primary rounded-full">
+                            <span className="badge badge-primary badge-sm font-medium">
                                 {currentUser?.plan || 'FREE'}
                             </span>
                         </div>
