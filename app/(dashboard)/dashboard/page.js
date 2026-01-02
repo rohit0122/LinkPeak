@@ -141,6 +141,7 @@ export default function DashboardPage() {
 
     const [showUnsavedModal, setShowUnsavedModal] = useState(false);
     const [pendingPageId, setPendingPageId] = useState(null);
+    const [pendingTab, setPendingTab] = useState(null);
 
     const handleSwitchRequest = (pageId) => {
         if (pageId === page._id) return; // Same page
@@ -185,6 +186,12 @@ export default function DashboardPage() {
     const handleDiscardAndSwitch = () => {
         if (pendingPageId) {
             performPageSwitch(pendingPageId);
+        } else if (pendingTab) {
+            setActiveTab(pendingTab);
+            setUnsavedChanges(false);
+            setDirtySections(new Set());
+            setShowUnsavedModal(false);
+            setPendingTab(null);
         }
     };
 
@@ -194,6 +201,21 @@ export default function DashboardPage() {
         // We can then switch
         if (success && pendingPageId) {
             performPageSwitch(pendingPageId);
+        } else if (success && pendingTab) {
+            setActiveTab(pendingTab);
+            setShowUnsavedModal(false);
+            setPendingTab(null);
+        }
+    };
+
+    const handleTabSwitch = (tabKey) => {
+        if (tabKey === activeTab) return; // Same tab
+
+        if (unsavedChanges) {
+            setPendingTab(tabKey);
+            setShowUnsavedModal(true);
+        } else {
+            setActiveTab(tabKey);
         }
     };
 
@@ -210,8 +232,8 @@ export default function DashboardPage() {
                 toast.success("New bio page created successfully! 🚀");
                 setAllPages([...allPages, data.data]);
                 setPage(data.data);
-                setLinks([]);
-                setAnalytics([]);
+                // Fetch fresh data for the new page (links, analytics, lifetime stats)
+                fetchPageData(data.data._id);
             }
         } catch (error) {
             toast.error(error.response?.data?.error || "Could not create page");
@@ -449,7 +471,7 @@ export default function DashboardPage() {
                         ].map(({ key, label, icon: Icon }) => (
                             <button
                                 key={key}
-                                onClick={() => setActiveTab(key)}
+                                onClick={() => handleTabSwitch(key)}
                                 className={`
                 btn btn-ghost
                 h-14 md:h-10
