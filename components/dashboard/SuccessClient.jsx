@@ -11,6 +11,7 @@ import {
 } from "react-icons/ri";
 import axios from "@/lib/axios";
 import { toast } from "react-hot-toast";
+import { ENDPOINTS } from "@/constants/endpoints";
 
 export default function SuccessClient() {
     const router = useRouter();
@@ -23,7 +24,7 @@ export default function SuccessClient() {
             try {
                 await new Promise((r) => setTimeout(r, 3000));
 
-                await axios.patch("/admin/users", {
+                await axios.patch(ENDPOINTS.ADMIN.USERS, {
                     userId: "ME",
                     updates: { plan: plan.toUpperCase() },
                 });

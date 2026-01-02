@@ -11,6 +11,7 @@ import {
     RiGlobalLine
 } from "react-icons/ri";
 import axios from "@/lib/axios";
+import { ENDPOINTS } from "@/constants/endpoints";
 import { toast } from "react-hot-toast";
 import { CONFIG } from "@/constants/config";
 import { SocialIcons } from "@/components/shared/SocialIcons";
@@ -30,7 +31,7 @@ export default function ContactUsPage() {
         setLoading(true);
 
         try {
-            const { data } = await axios.post("/contact", formData);
+            const { data } = await axios.post(ENDPOINTS.CONTACT, formData);
             if (data.success) {
                 setSuccess(true);
                 toast.success("Message sent successfully!");
@@ -78,11 +79,11 @@ export default function ContactUsPage() {
                         <div className="space-y-6">
                             <span className="badge badge-primary badge-outline font-bold tracking-widest px-4 py-3 uppercase text-xs">Contact Us</span>
                             <h1 className="text-4xl md:text-6xl font-bold tracking-tighter leading-none">
-                                Let's build something <br />
+                                Let&apos;s build something <br />
                                 <span className="text-primary italic">extraordinary</span> together.
                             </h1>
                             <p className="text-xl text-base-content/70 font-medium max-w-lg">
-                                Have questions about our Pro plan or need technical assistance? We're here to help you peak your digital presence.
+                                Have questions about our Pro plan or need technical assistance? We&apos;re here to help you peak your digital presence.
                             </p>
                         </div>
 

@@ -137,7 +137,7 @@ export default function PrivacyPage() {
                             <li>Keep you logged in (JWT tokens)</li>
                             <li>Cache profile images for faster loading</li>
                             <li>Remember your preferences (theme, language)</li>
-                            <li>Track which bio pages you've viewed (to prevent duplicate view counts)</li>
+                            <li>Track which bio pages you&apos;ve viewed (to prevent duplicate view counts)</li>
                         </ul>
                         <p className="mt-4">
                             You can clear localStorage through your browser settings. See our{" "}
@@ -184,7 +184,7 @@ export default function PrivacyPage() {
                         <p>If you are a California resident, you have the right to:</p>
                         <ul className="list-disc pl-6 space-y-2">
                             <li>Know what personal information we collect</li>
-                            <li>Know whether we sell or disclose your personal information (we don't)</li>
+                            <li>Know whether we sell or disclose your personal information (we don&apos;t)</li>
                             <li>Access your personal information</li>
                             <li>Delete your personal information</li>
                             <li>Opt-out of the sale of personal information (not applicable)</li>

@@ -24,8 +24,8 @@ export function SkeletonChart() {
             <div className="space-y-3">
                 {[...Array(5)].map((_, i) => (
                     <div key={i} className="flex items-end gap-2 h-32">
-                        <div className="flex-1 bg-base-300 rounded" style={{ height: `${Math.random() * 100}%` }}></div>
-                        <div className="flex-1 bg-base-300 rounded" style={{ height: `${Math.random() * 100}%` }}></div>
+                        <div className="flex-1 bg-base-300 rounded" style={{ height: '60%' }}></div>
+                        <div className="flex-1 bg-base-300 rounded" style={{ height: '40%' }}></div>
                     </div>
                 ))}
             </div>

@@ -51,7 +51,7 @@ export default async function DemoContentPage({ params }) {
                 <div className="flex-1">
                     <Link href={bioLink} className="btn btn-neutral btn-outline gap-2 normal-case btn-sm md:btn-md font-medium">
                         <RiArrowLeftLine />
-                        <span className="hidden sm:inline">Back to</span> {userTitle}'s Bio
+                        <span className="hidden sm:inline">Back to</span> {userTitle}&apos;s Bio
                     </Link>
                 </div>
                 <div className="flex-none">

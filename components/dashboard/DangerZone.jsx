@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { RiAlertFill, RiDeleteBinLine, RiErrorWarningLine } from "react-icons/ri";
 import axios from "@/lib/axios";
 import { toast } from "react-hot-toast";
+import { ENDPOINTS } from "@/constants/endpoints";
 
 export default function DangerZone() {
     const router = useRouter();
@@ -18,7 +19,7 @@ export default function DangerZone() {
 
         try {
             setIsDeleting(true);
-            const { data } = await axios.delete("/auth/delete-account");
+            const { data } = await axios.delete(ENDPOINTS.AUTH.DELETE_ACCOUNT);
 
             if (data.success) {
                 // Hard redirect to clear client state
@@ -98,7 +99,7 @@ export default function DangerZone() {
 
                         <div className="modal-action">
                             <button
-                                className="btn"
+                                className="btn btn-neutral btn-outline"
                                 onClick={() => {
                                     setShowModal(false);
                                     setConfirmationText("");

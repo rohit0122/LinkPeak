@@ -31,7 +31,7 @@ export class ErrorBoundary extends React.Component {
                                 Oops! Something went wrong
                             </h2>
                             <p className="text-sm opacity-70 mb-6">
-                                We've been notified and are working on a fix.
+                                We&apos;ve been notified and are working on a fix.
                             </p>
                             <div className="flex gap-2 justify-center">
                                 <button

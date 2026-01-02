@@ -5,6 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import axios from "@/lib/axios";
 import toast from "react-hot-toast";
 import { CONFIG } from "@/constants/config";
+import { ENDPOINTS } from "@/constants/endpoints";
 import {
     RiTimeLine,
     RiCheckboxCircleLine,
@@ -48,7 +49,7 @@ export default function SubscriptionStatus({ currentUser, initialData, redirectO
         if (isExpired) {
             // First, protectively suspend the user in the backend
             // strict: true used to prevent loops or race conditions, but simple post is fine
-            axios.post("/user/suspend").catch(err => console.error("Suspension error:", err));
+            axios.post(ENDPOINTS.USER.SUSPEND).catch(err => console.error("Suspension error:", err));
             toast.error("Trial expired! Redirecting to suspended page in few seconds...", {
                 duration: 3000,
                 icon: "⏳"
@@ -66,7 +67,7 @@ export default function SubscriptionStatus({ currentUser, initialData, redirectO
 
     const fetchSubscriptionStatus = async () => {
         try {
-            const { data } = await axios.get("/subscriptions");
+            const { data } = await axios.get(ENDPOINTS.PAYMENT.SUBSCRIPTIONS);
             if (data.success) {
                 setSubscriptionData(data.data);
             }
@@ -80,7 +81,7 @@ export default function SubscriptionStatus({ currentUser, initialData, redirectO
     const handleCreatePaymentLink = async (planId) => {
         setCreatingLink(true);
         try {
-            const { data } = await axios.post("/subscriptions/create-payment-link", { planId });
+            const { data } = await axios.post(ENDPOINTS.PAYMENT.CREATE_PAYMENT_LINK, { planId });
             if (data.success) {
                 toast.success("Payment link created!");
                 // Open payment link in new tab

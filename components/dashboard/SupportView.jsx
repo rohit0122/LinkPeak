@@ -8,6 +8,7 @@ import {
     RiTimeLine, RiArrowLeftLine, RiSendPlaneFill, RiUserSmileLine, RiAdminLine
 } from "react-icons/ri";
 import { CONFIG } from "@/constants/config";
+import { ENDPOINTS } from "@/constants/endpoints";
 
 export default function SupportView({ currentUser }) {
     const [tickets, setTickets] = useState([]);
@@ -37,7 +38,7 @@ export default function SupportView({ currentUser }) {
 
     const fetchTickets = async () => {
         try {
-            const endpoint = isAdmin ? "/admin/tickets" : "/support";
+            const endpoint = isAdmin ? ENDPOINTS.ADMIN.TICKETS : ENDPOINTS.SUPPORT.CREATE;
             const { data } = await axios.get(endpoint);
             if (data.success) {
                 setTickets(data.data);
@@ -57,7 +58,7 @@ export default function SupportView({ currentUser }) {
     const handleCreateTicket = async (e) => {
         e.preventDefault();
         try {
-            const { data } = await axios.post("/support", formData);
+            const { data } = await axios.post(ENDPOINTS.SUPPORT.CREATE, formData);
             if (data.success) {
                 setTickets([data.data, ...tickets]);
                 setFormData({ subject: "", message: "", priority: "MEDIUM", category: CONFIG.SUPPORT_CATEGORIES[0] });
@@ -75,7 +76,7 @@ export default function SupportView({ currentUser }) {
 
         setIsReplying(true);
         try {
-            const { data } = await axios.post(`/support/${selectedTicket._id}/reply`, { message: replyMessage });
+            const { data } = await axios.post(ENDPOINTS.SUPPORT.REPLY(selectedTicket._id), { message: replyMessage });
             console.log("Reply API Response:", data);
             if (data.success) {
                 const updatedTicket = data.data;

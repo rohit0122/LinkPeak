@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import Link from "next/link";
 import { CONFIG } from "@/constants/config";
+import { ENDPOINTS, API_PREFIX } from "@/constants/endpoints";
 import { RiMailLine, RiArrowRightLine, RiRefreshLine, RiEyeLine } from "react-icons/ri";
 
 export default function EmailSampleGallery() {
@@ -28,7 +29,7 @@ export default function EmailSampleGallery() {
                     </div>
                     <div className="mt-6 md:mt-0">
                         <Link
-                            href="/api/debug/export-emails"
+                            href={`${API_PREFIX}${ENDPOINTS.DEBUG.EXPORT_EMAILS}`}
                             className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-violet-600 hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500 transition-all gap-2"
                         >
                             <RiRefreshLine className="w-4 h-4" />
@@ -82,7 +83,7 @@ export default function EmailSampleGallery() {
                         <p className="mt-1 text-sm text-gray-500">You need to run the export utility first.</p>
                         <div className="mt-6">
                             <Link
-                                href="/api/debug/export-emails"
+                                href={`${API_PREFIX}${ENDPOINTS.DEBUG.EXPORT_EMAILS}`}
                                 className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-violet-600 hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500 gap-2"
                             >
                                 <RiRefreshLine className="w-4 h-4" />

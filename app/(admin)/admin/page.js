@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "@/lib/axios";
+import { ENDPOINTS } from "@/constants/endpoints";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import SupportView from "@/components/dashboard/SupportView";
 import {
@@ -82,9 +83,9 @@ export default function AdminDashboard() {
         setLoading(true);
         try {
             const [statsRes, ticketsRes, userRes] = await Promise.all([
-                axios.get("/admin/stats"),
-                axios.get("/admin/tickets"),
-                axios.get("/auth/me")
+                axios.get(ENDPOINTS.ADMIN.STATS),
+                axios.get(ENDPOINTS.ADMIN.TICKETS),
+                axios.get(ENDPOINTS.AUTH.ME)
             ]);
             if (statsRes.data.success) setStats(statsRes.data.data);
             if (ticketsRes.data.success) setTickets(ticketsRes.data.data);
@@ -102,7 +103,7 @@ export default function AdminDashboard() {
     const fetchUsers = async (page = 1, searchQuery = "") => {
         setUsersLoading(true);
         try {
-            const { data } = await axios.get(`/admin/users?page=${page}&limit=10&search=${searchQuery}`);
+            const { data } = await axios.get(`${ENDPOINTS.ADMIN.USERS}?page=${page}&limit=10&search=${searchQuery}`);
             if (data.success) {
                 setUsers(data.data.users);
                 setPagination(data.data.pagination);
@@ -131,7 +132,7 @@ export default function AdminDashboard() {
 
     const handleUserUpdate = async (userId, updates) => {
         try {
-            const { data } = await axios.patch("/admin/users", { userId, updates });
+            const { data } = await axios.patch(ENDPOINTS.ADMIN.USERS, { userId, updates });
             if (data.success) {
                 setUsers(users.map(u => u._id === userId ? data.data : u));
                 toast.success("User account updated successfully! ✅");
@@ -143,7 +144,7 @@ export default function AdminDashboard() {
 
     const handleTicketStatus = async (ticketId, status) => {
         try {
-            const { data } = await axios.patch("/admin/tickets", { ticketId, updates: { status } });
+            const { data } = await axios.patch(ENDPOINTS.ADMIN.TICKETS, { ticketId, updates: { status } });
             if (data.success) {
                 setTickets(tickets.map(t => t._id === ticketId ? data.data : t));
                 toast.success("Support ticket updated! 🎫");

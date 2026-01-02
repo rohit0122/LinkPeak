@@ -16,7 +16,9 @@ import {
 import LikeButton from "@/components/shared/LikeButton";
 import QRModal from "@/components/shared/QRModal";
 import axios from "@/lib/axios";
+
 import { CONFIG } from "@/constants/config";
+import { ENDPOINTS } from "@/constants/endpoints";
 
 import ClassicTemplate from "@/components/templates/upgradedTemplates/ClassicTemplate";
 import GridTemplate from "@/components/templates/upgradedTemplates/GridTemplate";
@@ -61,7 +63,7 @@ export default function PublicBio({ page, links, isDemo = false }) {
         const viewedKey = `viewed_${page._id}`;
         if (checkUnique(viewedKey)) {
             const timer = setTimeout(() => {
-                axios.post("/track/view", { pageId: page._id }, { skipLoader: true })
+                axios.post(ENDPOINTS.TRACK.VIEW, { pageId: page._id }, { skipLoader: true })
                     .then(() => localStorage.setItem(viewedKey, new Date().getTime().toString()))
                     .catch(console.error);
             }, 3000); // 3s genuine view
@@ -87,7 +89,7 @@ export default function PublicBio({ page, links, isDemo = false }) {
 
         try {
             localStorage.setItem(`liked_${page._id}`, "true");
-            axios.post("/track/like", { pageId: page._id }, { skipLoader: true });
+            axios.post(ENDPOINTS.TRACK.LIKE, { pageId: page._id }, { skipLoader: true });
         } catch (error) {
             console.error("Like failed", error);
         }
@@ -105,7 +107,7 @@ export default function PublicBio({ page, links, isDemo = false }) {
         if (hoursSince > 24) {
             try {
                 localStorage.setItem(clickKey, new Date().getTime().toString());
-                axios.post("/track/click", { linkId, pageId: page._id }, { skipLoader: true });
+                axios.post(ENDPOINTS.TRACK.CLICK, { linkId, pageId: page._id }, { skipLoader: true });
             } catch (error) {
                 console.error("Click tracking failed", error);
             }

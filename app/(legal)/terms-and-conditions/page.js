@@ -21,7 +21,7 @@ export default function TermsPage() {
                     <section className="mb-8">
                         <h2 className="text-2xl font-bold mb-4">1. Acceptance of Terms</h2>
                         <p>
-                            By accessing or using {CONFIG.SITE_NAME} ("Service"), you agree to be bound by these Terms of Service ("Terms").
+                            By accessing or using {CONFIG.SITE_NAME} (&quot;Service&quot;), you agree to be bound by these Terms of Service (&quot;Terms&quot;).
                             If you do not agree to these Terms, please do not use our Service.
                         </p>
                     </section>
@@ -143,7 +143,7 @@ export default function TermsPage() {
                     <section className="mb-8">
                         <h2 className="text-2xl font-bold mb-4">9. Disclaimer of Warranties</h2>
                         <p>
-                            THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED.
+                            THE SERVICE IS PROVIDED &quot;AS IS&quot; AND &quot;AS AVAILABLE&quot; WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED.
                             WE DO NOT GUARANTEE THAT THE SERVICE WILL BE UNINTERRUPTED, SECURE, OR ERROR-FREE.
                         </p>
                     </section>

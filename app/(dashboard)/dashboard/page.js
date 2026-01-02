@@ -38,6 +38,7 @@ import {
     RiTiktokLine
 } from "react-icons/ri";
 import { CONFIG } from "@/constants/config";
+import { ENDPOINTS } from "@/constants/endpoints";
 import { useRouter } from "next/navigation";
 import SubscriptionStatusDiv from "@/components/dashboard/SubscriptionStatusDiv";
 import { useLoader } from "@/context/LoaderContext";
@@ -83,7 +84,7 @@ export default function DashboardPage() {
     const fetchData = async () => {
         try {
             showLoader();
-            const { data } = await axios.get("/dashboard/init");
+            const { data } = await axios.get(ENDPOINTS.DASHBOARD.INIT);
             console.log('datadatadatadata = ', data);
             if (data.success) {
                 const { currentUser, pages, activePage, links: initLinks, analytics: initAnalytics, lifetime: initLifetime, subscriptionStatus: subStatus } = data.data;
@@ -123,8 +124,8 @@ export default function DashboardPage() {
     const fetchPageData = async (pageId) => {
         try {
             const [linksRes, analyticsRes] = await Promise.all([
-                axios.get(`/links?pageId=${pageId}`),
-                axios.get(`/analytics?pageId=${pageId}`)
+                axios.get(`${ENDPOINTS.LINKS}?pageId=${pageId}`),
+                axios.get(`${ENDPOINTS.ANALYTICS.GET}?pageId=${pageId}`)
             ]);
             if (linksRes.data.success) setLinks(linksRes.data.data);
             if (analyticsRes.data.success) {
@@ -155,7 +156,7 @@ export default function DashboardPage() {
         try {
             showLoader();
             // Fetch fresh pages list to ensure local state is distinct and up-to-date
-            const { data } = await axios.get("/pages");
+            const { data } = await axios.get(ENDPOINTS.PAGES);
             if (data.success) {
                 const freshPages = data.data;
                 setAllPages(freshPages);
@@ -220,7 +221,7 @@ export default function DashboardPage() {
         try {
             showLoader();
             const newSlug = `page-${Math.floor(Math.random() * 10000)}`;
-            const { data } = await axios.post("/pages", {
+            const { data } = await axios.post(ENDPOINTS.PAGES, {
                 slug: newSlug,
                 title: "My New Bio",
                 bio: "Welcome to my new page!"
@@ -244,7 +245,7 @@ export default function DashboardPage() {
         setLinks(newLinks);
         try {
             const reorderPayload = newLinks.map((l, index) => ({ id: l._id, order: index }));
-            await axios.put("/links", { links: reorderPayload });
+            await axios.put(ENDPOINTS.LINKS, { links: reorderPayload });
         } catch (error) {
             toast.error("Could not save link order. Please try again.");
             fetchData();
@@ -256,7 +257,7 @@ export default function DashboardPage() {
     const handleAddLink = async (newLinkData) => {
         try {
             showLoader();
-            const { data } = await axios.post("/links", {
+            const { data } = await axios.post(ENDPOINTS.LINKS, {
                 ...newLinkData,
                 pageId: page._id
             });
@@ -275,7 +276,7 @@ export default function DashboardPage() {
         try {
             showLoader();
             const { id, ...updates } = updatedLink;
-            const { data } = await axios.patch("/links", { id: updatedLink._id, ...updates });
+            const { data } = await axios.patch(ENDPOINTS.LINKS, { id: updatedLink._id, ...updates });
             if (data.success) {
                 console.log('data.data ', data.data)
                 const updatedData = await data.data;
@@ -293,7 +294,7 @@ export default function DashboardPage() {
     const handleDeleteLink = async (id) => {
         try {
             showLoader();
-            const { data } = await axios.delete(`/links?id=${id}`);
+            const { data } = await axios.delete(`${ENDPOINTS.LINKS}?id=${id}`);
             if (data.success) {
                 setLinks(links.filter(l => l._id !== id));
                 toast.success("Link removed from your bio");
@@ -313,7 +314,7 @@ export default function DashboardPage() {
         showLoader();
         try {
             // Save all relevant fields
-            const { data } = await axios.patch("/pages", {
+            const { data } = await axios.patch(ENDPOINTS.PAGES, {
                 id: page._id,
                 title: page.title,
                 slug: page.slug,
@@ -389,7 +390,7 @@ export default function DashboardPage() {
         setIsSeoAiLoading(true);
         try {
             showLoader();
-            const { data } = await axios.post("/ai/generate-seo", {
+            const { data } = await axios.post(ENDPOINTS.AI.GENERATE_SEO, {
                 title: page.title,
                 bio: page.bio,
                 slug: page.slug

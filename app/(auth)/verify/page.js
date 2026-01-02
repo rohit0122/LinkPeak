@@ -9,15 +9,11 @@ function VerifyContent() {
     const searchParams = useSearchParams();
     const lpkSiteToken = searchParams.get("lpkSiteToken");
     const router = useRouter();
-    const [status, setStatus] = useState("verifying"); // verifying, success, error
-    const [message, setMessage] = useState("Please wait while we verify your email...");
+    const [status, setStatus] = useState(lpkSiteToken ? "verifying" : "error"); // verifying, success, error
+    const [message, setMessage] = useState(lpkSiteToken ? "Please wait while we verify your email..." : "Invalid verification link. No lpkSiteToken provided.");
 
     useEffect(() => {
-        if (!lpkSiteToken) {
-            setStatus("error");
-            setMessage("Invalid verification link. No lpkSiteToken provided.");
-            return;
-        }
+        if (!lpkSiteToken) return;
 
         const verifyEmail = async () => {
             try {

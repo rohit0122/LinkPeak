@@ -5,6 +5,7 @@ import { RiUploadCloud2Line, RiUser3Line, RiRefreshLine } from "react-icons/ri";
 import axios from "@/lib/axios";
 import { toast } from "react-hot-toast";
 import imageCompression from "browser-image-compression";
+import { ENDPOINTS } from "@/constants/endpoints";
 import { setCachedImage, invalidateUserCache } from "@/lib/imageCache";
 
 export default function ProfileUpload({ currentImage, onUploadSuccess, userId }) {
@@ -46,7 +47,7 @@ export default function ProfileUpload({ currentImage, onUploadSuccess, userId })
                 try {
                     // Send pre-processed image to server
                     toast.loading("Uploading...", { id: "upload" });
-                    const { data } = await axios.post("/upload/profile", { dataURI });
+                    const { data } = await axios.post(ENDPOINTS.UPLOAD.PROFILE, { dataURI });
                     toast.dismiss("upload");
 
                     if (data.success) {

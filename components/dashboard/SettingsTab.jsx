@@ -1,6 +1,7 @@
 "use client";
 
 import ProfileUpload from "./ProfileUpload";
+import BrandingEditor from "./BrandingEditor";
 import DangerZone from "./DangerZone";
 import { toast } from "react-hot-toast";
 import {
@@ -24,6 +25,7 @@ export default function SettingsTab({
     setPage,
     setUnsavedChanges,
     onUpdate,
+    onPreviewUpdate,
     onSeoAiMagic,
     isSeoAiLoading,
     CONFIG
@@ -125,7 +127,7 @@ export default function SettingsTab({
                                 Social Media Links
                             </span>
                         </label>
-                        <p className="text-xs opacity-50 mb-4">Add your social profiles. They'll appear at the bottom of your bio page.</p>
+                        <p className="text-xs opacity-50 mb-4">Add your social profiles. They&apos;ll appear at the bottom of your bio page.</p>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {/* Instagram */}
@@ -446,6 +448,16 @@ group-hover:text-secondary" />
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div className="space-y-6">
+                <BrandingEditor
+                    key={page?._id}
+                    page={page}
+                    currentUser={currentUser}
+                    onUpdate={onUpdate}
+                    onPreviewUpdate={onPreviewUpdate}
+                />
             </div>
 
             <DangerZone />

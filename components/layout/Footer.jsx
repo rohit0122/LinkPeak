@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { CONFIG } from "@/constants/config";
+import { ENDPOINTS } from "@/constants/endpoints";
 import { RiGithubFill, RiInstagramFill, RiTwitterFill, RiLoader4Line, RiFacebookBoxFill, RiXboxFill, RiTwitterXFill, RiFacebookBoxLine } from "react-icons/ri";
-import axios from "axios";
+import axios from "@/lib/axios";
 import toast from "react-hot-toast";
 import Logo from "./Logo";
 import { SocialIcons } from "../shared/SocialIcons";
@@ -21,7 +22,7 @@ export default function Footer() {
 
         setLoading(true);
         try {
-            const { data } = await axios.post("/api/newsletter/subscribe", { email });
+            const { data } = await axios.post(ENDPOINTS.NEWSLETTER.SUBSCRIBE, { email });
             toast.success(data.message);
             setEmail("");
         } catch (error) {
@@ -41,7 +42,7 @@ export default function Footer() {
                             <Logo />
                         </h3>
                         <p className="opacity-70 font-medium leading-relaxed mb-8">
-                            Empowering creators with the world's most beautiful and data-driven bio pages.
+                            Empowering creators with the world&apos;s most beautiful and data-driven bio pages.
                         </p>
                         <SocialIcons />
                     </div>

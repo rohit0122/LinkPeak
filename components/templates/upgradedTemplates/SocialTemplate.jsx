@@ -80,7 +80,7 @@ export default function SocialTemplate({ links, handleLinkClick }) {
                     <div className="w-12 h-12 rounded-full bg-base-200 flex items-center justify-center mb-1">
                         <RiShareLine className="text-xl opacity-60" />
                     </div>
-                    <p className="font-medium text-base-content/80">Let's get social</p>
+                    <p className="font-medium text-base-content/80">Let&apos;s get social</p>
                     <p className="text-sm opacity-50 max-w-[200px]">Add your social profiles so people can find you everywhere.</p>
                 </div>
             )}

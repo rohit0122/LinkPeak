@@ -8,6 +8,8 @@ import LinkPerformanceChart from "../shared/charts/LinkPerformanceChart";
 import { SkeletonChart, SkeletonTable } from "../shared/SkeletonLoaders";
 import { useLoader } from "@/context/LoaderContext";
 
+import { API_PREFIX, ENDPOINTS } from "@/constants/endpoints";
+
 export default function AnalyticsView({ data = [], plan, links = [], page = {}, lifetime }) {
     const [summaryChartData, setSummaryChartData] = useState([]);
     const [linkChartData, setLinkChartData] = useState([]);
@@ -41,7 +43,7 @@ export default function AnalyticsView({ data = [], plan, links = [], page = {}, 
 
         try {
             const response = await fetch(
-                `/api/analytics/charts?pageId=${page._id}&range=${range}`
+                `${API_PREFIX}${ENDPOINTS.ANALYTICS.CHARTS}?pageId=${page._id}&range=${range}`
             );
             const result = await response.json();
 
@@ -64,7 +66,7 @@ export default function AnalyticsView({ data = [], plan, links = [], page = {}, 
     const fetchLifetimeStats = async () => {
         if (!page?._id) return;
         try {
-            const response = await fetch(`/api/analytics?pageId=${page._id}`);
+            const response = await fetch(`${API_PREFIX}${ENDPOINTS.ANALYTICS.GET}?pageId=${page._id}`);
             const result = await response.json();
             if (result.success && result.lifetime) {
                 setActiveTotals({

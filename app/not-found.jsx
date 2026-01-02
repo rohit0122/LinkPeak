@@ -38,11 +38,11 @@ export default function NotFound() {
                         {/* Description */}
                         <div className="max-w-md mb-8 space-y-3">
                             <p className="text-lg text-base-content/70">
-                                Oops! This link seems to be broken or doesn't exist yet.
+                                Oops! This link seems to be broken or doesn&apos;t exist yet.
                             </p>
                             <div className="divider my-4">OR</div>
                             <p className="text-base text-base-content/60">
-                                You may have accidentally landed on the wrong page. This URL might be a placeholder we haven't created yet.
+                                You may have accidentally landed on the wrong page. This URL might be a placeholder we haven&apos;t created yet.
                             </p>
                         </div>
 

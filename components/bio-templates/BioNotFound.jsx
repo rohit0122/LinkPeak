@@ -12,7 +12,7 @@ export default function BioNotFound() {
                     <RiUserUnfollowLine className="mx-auto text-6xl text-warning" />
 
                     <h2 className="text-3xl font-semibold">
-                        This profile isn't available
+                        This profile isn&apos;t available
                     </h2>
 
                     <p className="text-base-content/60">

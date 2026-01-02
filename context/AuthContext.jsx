@@ -4,7 +4,7 @@ import { createContext, useContext, useState, useEffect, useCallback } from "rea
 import axios from "@/lib/axios";
 import { useRouter, usePathname } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { API_FRONTEND_LOGIN, API_FRONTEND_LOGOUT, API_FRONTEND_REGISTER } from "@/constants/endpoints";
+import { ENDPOINTS } from "@/constants/endpoints";
 import { useLoader } from "@/context/LoaderContext";
 
 const AuthContext = createContext(null);
@@ -30,7 +30,7 @@ export function AuthProvider({ children }) {
 
         try {
             setLoading(true);
-            const res = await axios.get("/auth/me", { skipLoader: true });
+            const res = await axios.get(ENDPOINTS.AUTH.ME, { skipLoader: true });
 
             if (res.data?.success) {
                 const userData = res.data.data;
@@ -78,7 +78,7 @@ export function AuthProvider({ children }) {
     // Login function
     const login = useCallback(async (email, password) => {
         try {
-            const res = await axios.post(API_FRONTEND_LOGIN, { email, password });
+            const res = await axios.post(ENDPOINTS.AUTH.LOGIN, { email, password });
             if (res.data?.success) {
                 const userData = await res.data.data;
                 localStorage.setItem("lpkSiteCurrentUser", JSON.stringify(userData));
@@ -105,7 +105,7 @@ export function AuthProvider({ children }) {
     const register = useCallback(async (name, email, password) => {
         try {
 
-            const res = await axios.post(API_FRONTEND_REGISTER, { name, email, password });
+            const res = await axios.post(ENDPOINTS.AUTH.REGISTER, { name, email, password });
 
             if (res.data?.success) {
                 toast.success("Registration successful! Please login.");
@@ -123,7 +123,7 @@ export function AuthProvider({ children }) {
     const logout = useCallback(async () => {
         try {
             showLoader();
-            await axios.post(API_FRONTEND_LOGOUT);
+            await axios.post(ENDPOINTS.AUTH.LOGOUT);
         } catch (error) {
             console.error("Logout error:", error);
         } finally {

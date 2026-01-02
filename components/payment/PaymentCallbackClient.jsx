@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import axios from "axios";
+import axios from "@/lib/axios";
+import { ENDPOINTS } from "@/constants/endpoints";
 
 export default function PaymentCallbackClient() {
     const params = useSearchParams();
@@ -29,7 +30,7 @@ export default function PaymentCallbackClient() {
             }
 
             try {
-                const res = await axios.post("/api/payment/callback", {
+                const res = await axios.post(ENDPOINTS.PAYMENT.CALLBACK, {
                     razorpay_payment_id: paymentId,
                     razorpay_payment_link_id: linkId,
                     razorpay_payment_link_status: payStatus,
@@ -65,7 +66,7 @@ export default function PaymentCallbackClient() {
                 {status === "loading" && (
                     <div className="flex flex-col items-center gap-4">
                         <span className="loading loading-spinner loading-lg text-primary"></span>
-                        <p className="text-sm opacity-60">Verifying your payment, please don't close this window...</p>
+                        <p className="text-sm opacity-60">Verifying your payment, please don&apos;t close this window...</p>
                     </div>
                 )}
 
@@ -92,7 +93,7 @@ export default function PaymentCallbackClient() {
                             Verification Failed ❌
                         </h2>
                         <p className="mt-2 opacity-70">
-                            We couldn't verify your payment. If money was deducted, please wait 5 minutes or contact support.
+                            We couldn&apos;t verify your payment. If money was deducted, please wait 5 minutes or contact support.
                         </p>
                         <button onClick={() => router.replace("/dashboard")} className="btn btn-neutral btn-outline btn-sm mt-6">Return to Dashboard</button>
                     </div>

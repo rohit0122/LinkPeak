@@ -32,6 +32,7 @@ import {
 import { toast } from "react-hot-toast";
 import axios from "@/lib/axios";
 import ConfirmationModal from "../shared/ConfirmationModal";
+import { ENDPOINTS } from "@/constants/endpoints";
 
 function SortableItem({ link, onEdit, onDelete, onToggle }) {
     const {
@@ -190,7 +191,7 @@ export default function LinkEditor({ links, plan, onReorder, onAdd, onUpdate, on
 
         setIsAiLoading(true);
         try {
-            const { data } = await axios.post("/ai/generate-title", { url: formData.url });
+            const { data } = await axios.post(ENDPOINTS.AI.GENERATE_TITLE, { url: formData.url });
 
             if (data.success && data.data?.title) {
                 setFormData(prev => ({

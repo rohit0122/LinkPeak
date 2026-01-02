@@ -17,7 +17,7 @@ export default function ThemeTab({ page, currentUser, onUpdate }) {
                         <h4 className="font-medium text-sm mb-1 uppercase tracking-wider">Style Preview</h4>
                         <p className="text-xs opacity-60 leading-relaxed font-medium">
                             All changes are saved automatically reflected in the live preview on the right.
-                            Try different combinations to find your perfect look. Don't forgot to save your changes!
+                            Try different combinations to find your perfect look. Don&apos;t forgot to save your changes!
                         </p>
                     </div>
                 </div>

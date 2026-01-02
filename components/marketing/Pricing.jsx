@@ -2,6 +2,7 @@ import { RiCheckFill, RiCloseFill } from "react-icons/ri";
 import { CONFIG } from "@/constants/config";
 import { useState } from "react";
 import axios from "@/lib/axios";
+import { ENDPOINTS } from "@/constants/endpoints";
 import { toast } from "react-hot-toast";
 import Link from "next/link";
 
@@ -70,10 +71,10 @@ export default function Pricing({ billingCycle }) {
 
         try {
             // Check if user is logged in by trying to get subscription status
-            const { data: statusData } = await axios.get("/subscriptions");
+            const { data: statusData } = await axios.get(ENDPOINTS.PAYMENT.SUBSCRIPTIONS);
 
             // User is logged in - create payment link
-            const { data } = await axios.post("/subscriptions/create-payment-link", {
+            const { data } = await axios.post(ENDPOINTS.PAYMENT.CREATE_PAYMENT_LINK, {
                 planId: planName.toUpperCase()
             });
 

@@ -13,7 +13,7 @@ export default function AccountDeletedPage() {
                     <h2 className="card-title text-2xl mb-2">Account Deleted</h2>
 
                     <p className="text-base-content/70 mb-6">
-                        We're sorry to see you go. Your account and all associated data have been permanently removed from our system.
+                        We&apos;re sorry to see you go. Your account and all associated data have been permanently removed from our system.
                     </p>
 
                     <div className="flex flex-col w-full gap-3">

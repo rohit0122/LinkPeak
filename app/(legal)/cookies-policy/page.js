@@ -111,7 +111,7 @@ export default function CookiesPage() {
                                 <tbody>
                                     <tr>
                                         <td><code>viewed_pages_*</code></td>
-                                        <td>Tracks which bio pages you've viewed (prevents duplicate view counts)</td>
+                                        <td>Tracks which bio pages you&apos;ve viewed (prevents duplicate view counts)</td>
                                         <td>24 hours</td>
                                     </tr>
                                     <tr>
@@ -208,7 +208,7 @@ export default function CookiesPage() {
                         <h2 className="text-2xl font-bold mb-4">5. Updates to This Policy</h2>
                         <p>
                             We may update this Cookie Policy from time to time. Check this page periodically for changes.
-                            The "Last Updated" date at the top indicates when changes were made.
+                            The &quot;Last Updated&quot; date at the top indicates when changes were made.
                         </p>
                     </section>
 

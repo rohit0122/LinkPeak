@@ -5,6 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import axios from "@/lib/axios";
 import toast from "react-hot-toast";
 import { CONFIG } from "@/constants/config";
+import { ENDPOINTS } from "@/constants/endpoints";
 import {
     RiTimeLine,
     RiCheckboxCircleLine,
@@ -47,7 +48,7 @@ export default function SubscriptionStatusDiv({
             (!subscription || subscription.status !== "active") && currentPlan !== "FREE";
 
         if (isExpired) {
-            axios.post("/currentUser/suspend").catch(() => { });
+            axios.post(ENDPOINTS.USER.SUSPEND).catch(() => { });
             toast.error(
                 "Trial expired! Redirecting to suspended page...",
                 { duration: 3000 }
@@ -63,7 +64,7 @@ export default function SubscriptionStatusDiv({
 
     const fetchSubscriptionStatus = async () => {
         try {
-            const { data } = await axios.get("/subscriptions");
+            const { data } = await axios.get(ENDPOINTS.PAYMENT.SUBSCRIPTIONS);
             if (data.success) setSubscriptionData(data.data);
         } catch (err) {
             console.error(err);
@@ -76,7 +77,7 @@ export default function SubscriptionStatusDiv({
         setCreatingLink(true);
         try {
             const { data } = await axios.post(
-                "/subscriptions/create-payment-link",
+                ENDPOINTS.PAYMENT.CREATE_PAYMENT_LINK,
                 { planId }
             );
             if (data.success) {

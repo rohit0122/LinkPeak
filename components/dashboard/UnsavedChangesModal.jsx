@@ -34,7 +34,7 @@ export default function UnsavedChangesModal({ isOpen, onCancel, onDiscard, onSav
                         </button>
 
                         <button
-                            className="btn btn-sm btn-ghost w-full font-normal opacity-60"
+                            className="btn btn-sm btn-neutral btn-outline w-full font-normal opacity-60"
                             onClick={onCancel}
                         >
                             Cancel

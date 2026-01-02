@@ -12,10 +12,7 @@ export default function BrandingEditor({ page, currentUser, onUpdate, onPreviewU
     const [isDirty, setIsDirty] = useState(false);
 
     // Sync on page change
-    useEffect(() => {
-        setLocalBranding(page?.branding || { removeWatermark: false, customText: "", customUrl: "" });
-        setIsDirty(false);
-    }, [page?._id]);
+
 
     const handleChange = (field, value) => {
         const newBranding = { ...localBranding, [field]: value };
@@ -46,7 +43,7 @@ export default function BrandingEditor({ page, currentUser, onUpdate, onPreviewU
                                 onChange={(e) => handleChange("removeWatermark", e.target.checked)}
                             />
                             <div>
-                                <span className="label-text font-bold text-sm md:text-lg">Remove "Powered by {CONFIG.SITE_NAME}"</span>
+                                <span className="label-text font-bold text-sm md:text-lg">Remove &quot;Powered by {CONFIG.SITE_NAME}&quot;</span>
                                 {!isPro && (
                                     <span className="badge badge-xs badge-neutral ml-2 font-semibold uppercase tracking-wider">
                                         PRO Feature
