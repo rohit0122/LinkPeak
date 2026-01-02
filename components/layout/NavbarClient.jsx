@@ -5,7 +5,6 @@ import { useState, useEffect, useRef } from "react";
 import {
     RiMenuLine,
     RiCloseLine,
-    RiUserLine,
     RiLogoutBoxRLine,
     RiLinksLine,
     RiExternalLinkLine,
@@ -16,6 +15,7 @@ import {
 } from "react-icons/ri";
 import { toast } from "react-hot-toast";
 import Logo from "./Logo";
+import Avatar from "@/components/shared/Avatar";
 import { useAuth } from "@/context/AuthContext";
 
 const publicLinks = [
@@ -155,29 +155,23 @@ function ProfileDropdown({ currentUser, page, onLogout }) {
                 className="transition-transform hover:scale-105 focus:outline-none"
                 onClick={() => setOpen(!open)}
             >
-                <div className="w-8 h-8 rounded-full ring-2 ring-primary overflow-hidden shadow-sm">
-                    {page?.profileImage ? (
-                        <img src={page.profileImage} alt={currentUser?.name} className="w-full h-full object-cover" />
-                    ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-base-200">
-                            <RiUserLine className="w-6 h-6 text-gray-400" />
-                        </div>
-                    )}
-                </div>
+                <Avatar
+                    src={page?.profileImage}
+                    alt={currentUser?.name}
+                    size="sm"
+                    ring={true}
+                />
             </button>
 
             {open && (
                 <div className="absolute right-0 mt-3 w-72 bg-base-100 border rounded-xl shadow-lg z-50">
                     <div className="flex items-center gap-3 p-4 bg-primary/5 border-b">
-                        <div className="w-12 h-12 rounded-full overflow-hidden ring-2 ring-primary">
-                            {page?.profileImage ? (
-                                <img src={page.profileImage} alt={currentUser?.name} className="w-full h-full object-cover" />
-                            ) : (
-                                <div className="w-full h-full flex items-center justify-center bg-base-200">
-                                    <RiUserLine className="w-8 h-8 text-gray-400" />
-                                </div>
-                            )}
-                        </div>
+                        <Avatar
+                            src={page?.profileImage}
+                            alt={currentUser?.name}
+                            size="md"
+                            ring={true}
+                        />
                         <div className="flex-1">
                             <p className="font-semibold">{currentUser?.name}</p>
                             <p className="text-xs text-gray-500 truncate">{currentUser?.email}</p>

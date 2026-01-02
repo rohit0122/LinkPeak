@@ -26,6 +26,7 @@ import HeroTemplate from "@/components/templates/upgradedTemplates/HeroTemplate"
 import SocialTemplate from "@/components/templates/upgradedTemplates/SocialTemplate";
 import ModernTemplate from "@/components/templates/upgradedTemplates/ModernTemplate";
 import Link from "next/link";
+import Avatar from "@/components/shared/Avatar";
 
 const iconMap = {
     instagram: RiInstagramLine,
@@ -134,14 +135,12 @@ export default function PublicBio({ page, links, isDemo = false }) {
 
                         {/* Profile Section */}
                         <div className="flex flex-col items-center mb-8 text-center w-full">
-                            <div className="avatar mb-4">
-                                <div className="w-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                                    <img
-                                        src={page.profileImage || "/avatars/avatar-placeholder.svg"}
-                                        alt="Profile"
-                                    />
-                                </div>
-                            </div>
+                            <Avatar
+                                src={page?.profileImage}
+                                alt="Profile"
+                                size="lg" // w-20
+                                className="mb-4 ring-primary ring-offset-base-100 ring-offset-2 ring"
+                            />
                             <div className="flex flex-col items-center gap-1">
                                 <h1 className="text-xl font-medium tracking-tight">{page.title || "Your Title"}</h1>
                                 <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
