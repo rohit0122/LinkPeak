@@ -19,16 +19,29 @@ export async function POST(req) {
         const { title, bio, slug } = await req.json();
 
         const { aiEngine } = await import("@/lib/ai");
-        const prompt = `Generate catchy SEO metadata for a "Link in Bio" page.
-        User Name: ${title}
-        User Bio: ${bio}
-        Slug: ${slug}
+        const prompt = `Act as an expert SEO Strategist & Copywriter. Your goal is to generate high-converting, click-worthy metadata for a "Link in Bio" page.
         
-        Respond ONLY with a JSON object in this format:
+        CONTEXT:
+        - Page Name: "${title}"
+        - Bio/Description: "${bio}"
+        - URL Slug: "${slug}"
+
+        TASK:
+        Generate minimal, professional, and engaging SEO metadata that drives clicks.
+        
+        RULES:
+        1. Title: Must be catchy, include the brand name, and feel premium (max 60 chars).
+        2. Description: compelling summary that encourages users to click. Use active voice. (max 160 chars).
+        3. Keywords: 10 highly relevant, high-traffic keywords separated by commas.
+        4. Output format: STRICT JSON.
+
+        Refine the copy to be "Human-written" and avoid generic AI phrases like "Unlock your potential".
+
+        Respond ONLY with this JSON structure:
         {
-            "title": "Meta Title (max 60 chars)",
-            "description": "Meta Description (max 160 chars)",
-            "keywords": "comma, separated, keywords (max 10)"
+            "title": "Compelling Title Here",
+            "description": "Engaging description that drives clicks...",
+            "keywords": "keyword1, keyword2, keyword3..."
         }`;
 
         const aiData = await aiEngine.generateContent(prompt, { json: true });

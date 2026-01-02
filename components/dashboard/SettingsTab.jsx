@@ -129,7 +129,7 @@ export default function SettingsTab({
                         </label>
                         <p className="text-xs opacity-50 mb-4">Add your social profiles. They&apos;ll appear at the bottom of your bio page.</p>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             {/* Instagram */}
                             <div className="form-control">
                                 <label className="input input-bordered flex items-center gap-2">
@@ -369,7 +369,7 @@ group-hover:text-secondary" />
                                 <input
                                     type="text"
                                     placeholder="e.g. John Doe | Creative Director & Bio"
-                                    className={`input bg-slate-900/50 border-white/10 text-white placeholder-white/20 focus:border-primary/50 focus:bg-slate-900/80 transition-all font-medium text-sm h-10 ${currentUser?.plan === 'FREE' ? 'pointer-events-none' : ''}`}
+                                    className={`input bg-slate-900/50 border-white/10 text-white placeholder-white/20 focus:border-primary/50 focus:bg-slate-900/80 transition-all font-medium text-sm h-10 ${currentUser?.plan === 'FREE' ? 'pointer-events-none' : ''} w-full`}
                                     value={page?.seo?.title || ""}
                                     onChange={(e) => {
                                         if (currentUser?.plan === 'FREE') return;
@@ -387,7 +387,7 @@ group-hover:text-secondary" />
                                 <input
                                     type="text"
                                     placeholder="design, photography, links, bio"
-                                    className={`input bg-slate-900/50 border-white/10 text-white placeholder-white/20  focus:border-primary/50 focus:bg-slate-900/80 transition-all font-medium text-sm h-10 ${currentUser?.plan === 'FREE' ? 'pointer-events-none' : ''}`}
+                                    className={`input bg-slate-900/50 border-white/10 text-white placeholder-white/20  focus:border-primary/50 focus:bg-slate-900/80 transition-all font-medium text-sm h-10 ${currentUser?.plan === 'FREE' ? 'pointer-events-none' : ''} w-full`}
                                     value={page?.seo?.keywords || ""}
                                     onChange={(e) => {
                                         if (currentUser?.plan === 'FREE') return;
@@ -403,7 +403,7 @@ group-hover:text-secondary" />
                             <label className="label pl-1">
                                 <span className="label-text text-white/60">Meta Description</span>
                             </label>
-                            <textarea className="textarea h-24 bg-slate-900/50 border-white/10 text-white placeholder-white/20 focus:border-primary/50 focus:bg-slate-900/80 transition-all font-medium text-sm"
+                            <textarea className="textarea h-24 bg-slate-900/50 border-white/10 text-white placeholder-white/20 focus:border-primary/50 focus:bg-slate-900/80 transition-all font-medium text-sm w-full"
                                 value={page?.seo?.description || ""}
                                 onChange={(e) => {
                                     if (currentUser?.plan === 'FREE') return;
