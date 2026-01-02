@@ -22,36 +22,129 @@ export async function POST(req) {
         }
 
         const { aiEngine } = await import("@/lib/ai");
-        const prompt = `Generate a short, catchy, and professional link title (max 4-5 words) for this URL: ${url}. 
-        Identify the brand or content type. Add one relevant emoji at the end.
-        Example Output: "My Instagram 📸" or "Latest Tech Blog 💻"`;
+        const prompt = `Analyze this URL: "${url}".
+        Return a JSON object with two fields:
+        1. "brand": A short string identifying the platform, brand, or content type.
+        2. "suggestions": An array of 3 distinct title options:
+           - Option 1: Professional & Direct
+           - Option 2: Creative & Engaging (with emoji)
+           - Option 3: Minimal & Clean
+        
+        Example JSON:
+        { 
+            "brand": "GitHub", 
+            "suggestions": [
+                "My Professional GitHub Profile", 
+                "Check out my Open Source Code 💻", 
+                "My Code"
+            ] 
+        }`;
 
-        const aiTitle = await aiEngine.generateContent(prompt);
+        const aiResponse = await aiEngine.generateContent(prompt, { json: true });
 
-        if (aiTitle) {
+        console.log("AI Response:", aiResponse);
+
+        // Handle both object (if parsed by aiEngine) or string
+        let result = aiResponse;
+        if (typeof aiResponse === 'string') {
+            try {
+                result = JSON.parse(aiResponse);
+            } catch (e) {
+                // Fallback if JSON parsing fails but we got text
+                result = { suggestions: [aiResponse.replace(/[*_]/g, '').trim()], brand: "Link" };
+            }
+        }
+
+        // Normalize response: Ensure suggestions array exists
+        let suggestions = result.suggestions || [];
+        if (!suggestions.length && result.title) {
+            suggestions = [result.title];
+        }
+
+        if (suggestions.length > 0) {
             return NextResponse.json({
                 success: true,
-                data: { title: aiTitle.replace(/"/g, '').trim() }
+                data: {
+                    suggestions: suggestions,
+                    brand: result.brand || "Link"
+                }
             });
         }
 
         // --- MOCK FALLBACK LOGIC ---
-        let title = "Check out this link!";
+        // If we reach here, AI failed or returned empty results.
         const lowerUrl = url.toLowerCase();
+        let fallbackSuggestions = ["Check out this link!"];
+        let fallbackBrand = "Link";
 
-        if (lowerUrl.includes("github")) title = "My Open Source Projects 💻";
-        else if (lowerUrl.includes("linkedin")) title = "My Professional Journey 🤝";
-        else if (lowerUrl.includes("twitter") || lowerUrl.includes("x.com")) title = "Join the Conversation on X 🐦";
-        else if (lowerUrl.includes("instagram")) title = "Follow My Daily Life 📸";
-        else if (lowerUrl.includes("youtube")) title = "Watch My Latest Videos 🎥";
-        else if (lowerUrl.includes("spotify")) title = "My Ultimate Playlist 🎵";
-        else if (lowerUrl.includes("discord")) title = "Join My Community 🎮";
-        else if (lowerUrl.includes("portfolio")) title = "View My Creative Portfolio ✨";
-        else title = "Highly Recommended Link 🚀";
+        if (lowerUrl.includes("github")) {
+            fallbackBrand = "GitHub";
+            fallbackSuggestions = [
+                "My Open Source Projects 💻",
+                "Check out my Repositories",
+                "Coding Portfolio"
+            ];
+        } else if (lowerUrl.includes("linkedin")) {
+            fallbackBrand = "LinkedIn";
+            fallbackSuggestions = [
+                "My Professional Journey 🤝",
+                "Connect with me on LinkedIn",
+                "View my Resume & Experience"
+            ];
+        } else if (lowerUrl.includes("twitter") || lowerUrl.includes("x.com")) {
+            fallbackBrand = "X (Twitter)";
+            fallbackSuggestions = [
+                "Join the Conversation on X 🐦",
+                "Follow my Tweets",
+                "My Thoughts & Updates"
+            ];
+        } else if (lowerUrl.includes("instagram")) {
+            fallbackBrand = "Instagram";
+            fallbackSuggestions = [
+                "Follow My Daily Life 📸",
+                "Check out my Photos",
+                "My Visual Diary"
+            ];
+        } else if (lowerUrl.includes("youtube")) {
+            fallbackBrand = "YouTube";
+            fallbackSuggestions = [
+                "Watch My Latest Videos 🎥",
+                "Subscribe to my Channel",
+                "My Video Content"
+            ];
+        } else if (lowerUrl.includes("spotify")) {
+            fallbackBrand = "Spotify";
+            fallbackSuggestions = [
+                "My Ultimate Playlist 🎵",
+                "Listen along with me",
+                "My Music Rotation"
+            ];
+        } else if (lowerUrl.includes("discord")) {
+            fallbackBrand = "Discord";
+            fallbackSuggestions = [
+                "Join My Community 🎮",
+                "Chat with us on Discord",
+                "My Server Invite"
+            ];
+        } else if (lowerUrl.includes("portfolio")) {
+            fallbackBrand = "Portfolio";
+            fallbackSuggestions = [
+                "View My Creative Portfolio ✨",
+                "My Selected Works",
+                "Hire Me!"
+            ];
+        } else {
+            fallbackBrand = "Website";
+            fallbackSuggestions = [
+                "Highly Recommended Link 🚀",
+                "Visit this Page",
+                "Check this out!"
+            ];
+        }
 
         return NextResponse.json({
             success: true,
-            data: { title }
+            data: { suggestions: fallbackSuggestions, brand: fallbackBrand }
         });
     } catch (error) {
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });

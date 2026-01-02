@@ -79,7 +79,7 @@ export const CONFIG = {
 
     // AI API Endpoints
     AI_ENDPOINTS: {
-        GEMINI: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
+        GEMINI: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent",
         MISTRAL: "https://api.mistral.ai/v1/chat/completions"
     }
 };

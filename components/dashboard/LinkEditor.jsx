@@ -27,6 +27,7 @@ import {
     RiToggleLine,
     RiToggleFill,
     RiAddLine,
+    RiSubtractLine,
     RiMagicLine
 } from "react-icons/ri";
 import { toast } from "react-hot-toast";
@@ -119,7 +120,9 @@ export default function LinkEditor({ links, plan, onReorder, onAdd, onUpdate, on
     const [editingLink, setEditingLink] = useState(null);
     const [formData, setFormData] = useState({ title: "", url: "", icon: "" });
     const [activeEmojiTab, setActiveEmojiTab] = useState(CONFIG.COMMON_EMOJIS[0].name);
+    const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
     const [isAiLoading, setIsAiLoading] = useState(false);
+    const [aiSuggestion, setAiSuggestion] = useState(null);
 
     // Delete Confirmation State
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -149,11 +152,13 @@ export default function LinkEditor({ links, plan, onReorder, onAdd, onUpdate, on
 
     const handleAddClick = () => {
         setFormData({ title: "", url: "", icon: "" });
+        setAiSuggestion(null);
         setShowAddModal(true);
     };
 
     const handleEditClick = (link) => {
         setFormData({ title: link.title, url: link.url, icon: link.icon || "" });
+        setAiSuggestion(null);
         setEditingLink(link);
     };
 
@@ -193,12 +198,21 @@ export default function LinkEditor({ links, plan, onReorder, onAdd, onUpdate, on
         try {
             const { data } = await axios.post(ENDPOINTS.AI.GENERATE_TITLE, { url: formData.url });
 
-            if (data.success && data.data?.title) {
-                setFormData(prev => ({
-                    ...prev,
-                    title: data.data.title,
-                }));
-                toast.success("AI generated a title!");
+            if (data.success && (data.data?.suggestions?.length > 0 || data.data?.title)) {
+                setAiSuggestion(data.data);
+
+                // Optional: Auto-fill if empty
+                if (!formData.title) {
+                    const firstOption = data.data.suggestions ? data.data.suggestions[0] : data.data.title;
+                    if (firstOption) {
+                        setFormData(prev => ({
+                            ...prev,
+                            title: firstOption,
+                        }));
+                    }
+                }
+
+                toast.success("AI Validation Successful!");
             } else {
                 toast.error(data.error || "Failed to generate title");
             }
@@ -243,7 +257,7 @@ export default function LinkEditor({ links, plan, onReorder, onAdd, onUpdate, on
                         <button
                             onClick={handleAddClick}
                             disabled={isLimitReached}
-                            className={`btn btn-primary btn-sm ${isLimitReached ? 'grayscale opacity-50 cursor-not-allowed' : ''}`}
+                            className={`btn btn-primary btn-sm ${isLimitReached ? 'grayscale cursor-not-allowed' : ''}`}
                         >
                             <RiAddLine className="text-lg" /> Add New Link
                         </button>
@@ -291,19 +305,19 @@ export default function LinkEditor({ links, plan, onReorder, onAdd, onUpdate, on
             {(showAddModal || editingLink) && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
                     <div className="bg-base-100 w-full max-w-md  shadow-2xl overflow-hidden border border-white/10 animate-in zoom-in-95 duration-300">
-                        <div className="p-8">
+                        <div className="p-6">
                             <h3 className="font-medium text-2xl mb-8 tracking-tight">
                                 {editingLink ? "Edit Link" : "Add New Link"}
                             </h3>
-                            <form onSubmit={handleSubmit} className="space-y-6">
+                            <form onSubmit={handleSubmit} className="space-y-2">
                                 <div className="form-control">
                                     <label className="label">
-                                        <span className="label-text font-bold text-xs uppercase tracking-widest opacity-50">Link Title</span>
+                                        <span className="label-text font-bold text-xs uppercase tracking-widest">Link Title</span>
                                     </label>
                                     <input
                                         type="text"
                                         placeholder="e.g. My Portfolio"
-                                        className="input input-bordered  focus:input-primary transition-all font-bold"
+                                        className="input input-bordered w-full focus:input-primary transition-all font-bold"
                                         value={formData.title}
                                         onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                                         required
@@ -312,7 +326,7 @@ export default function LinkEditor({ links, plan, onReorder, onAdd, onUpdate, on
 
                                 <div className="form-control">
                                     <label className="label">
-                                        <span className="label-text font-bold text-xs uppercase tracking-widest opacity-50">Target URL</span>
+                                        <span className="label-text font-bold text-xs uppercase tracking-widest">Target URL</span>
                                     </label>
                                     <div className="relative">
                                         <input
@@ -340,10 +354,38 @@ export default function LinkEditor({ links, plan, onReorder, onAdd, onUpdate, on
                                         )}
                                     </div>
                                 </div>
+                                {aiSuggestion && (
+                                    <div className="mt-4">
+                                        <div className="flex items-center gap-2 mb-2 px-1">
+                                            <span className="badge badge-primary badge-outline badge-xs uppercase font-bold tracking-wider">
+                                                {aiSuggestion.brand}
+                                            </span>
+                                            <span className="text-[10px] uppercase tracking-widest font-bold">Suggestions</span>
+                                        </div>
+                                        <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar snap-x">
+                                            {aiSuggestion.suggestions?.map((title, idx) => (
+                                                <button
+                                                    key={idx}
+                                                    type="button"
+                                                    onClick={() => {
+                                                        if (plan === "FREE") return;
+                                                        setFormData({ ...formData, title });
+                                                    }}
+                                                    className="snap-start flex-shrink-0 max-w-[200px] text-left p-2.5 rounded-lg bg-base-200/50 border border-base-300 hover:border-primary hover:bg-base-100 hover:shadow-md transition-all group relative overflow-hidden"
+                                                >
+                                                    <div className="font-medium text-xs text-base-content/80 group-hover:text-primary transition-colors line-clamp-2 leading-relaxed">
+                                                        {title}
+                                                    </div>
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
 
-                                <div className="space-y-3">
+
+                                <div className="">
                                     <label className="label">
-                                        <span className="label-text font-bold text-xs uppercase tracking-widest opacity-50">Link Icon</span>
+                                        <span className="label-text font-bold text-xs uppercase tracking-widest">Link Icon</span>
                                     </label>
                                     <div className="flex gap-2">
                                         <input
@@ -357,39 +399,57 @@ export default function LinkEditor({ links, plan, onReorder, onAdd, onUpdate, on
                                             <button
                                                 type="button"
                                                 onClick={() => setFormData({ ...formData, icon: "" })}
-                                                className="btn btn-neutral btn-outline  font-medium text-error"
+                                                className="btn btn-neutral btn-outline  font-medium"
                                             >
                                                 Clear
                                             </button>
                                         )}
                                     </div>
 
-                                    {/* Tabbed Emoji Picker */}
-                                    <div className="bg-base-200/50  p-4 border border-base-300">
-                                        <div className="flex gap-1 bg-base-300/40 p-1  mb-4 overflow-x-auto no-scrollbar">
-                                            {CONFIG.COMMON_EMOJIS.map((cat) => (
-                                                <button
-                                                    key={cat.name}
-                                                    type="button"
-                                                    onClick={() => setActiveEmojiTab(cat.name)}
-                                                    className={`px-3 py-1.5  text-[10px] font-medium uppercase tracking-widest transition-all flex-shrink-0 ${activeEmojiTab === cat.name ? 'bg-base-100 text-primary shadow-sm' : 'opacity-40 hover:opacity-100'}`}
-                                                >
-                                                    {cat.name}
-                                                </button>
-                                            ))}
-                                        </div>
+                                    <div className="border border-base-300 overflow-hidden bg-base-100 transition-all duration-300 mt-1">
+                                        <button
+                                            type="button"
+                                            onClick={() => setIsEmojiPickerOpen(!isEmojiPickerOpen)}
+                                            className="w-full flex items-center justify-between p-3 bg-base-200/50 hover:bg-base-200 transition-colors text-xs font-bold uppercase tracking-widest text-base-content/60"
+                                        >
+                                            <span>
+                                                {isEmojiPickerOpen ? "Close Icon Picker" : "Select Icon"}
+                                            </span>
+                                            <div className={`transition-transform duration-300 ${isEmojiPickerOpen ? 'rotate-180' : ''}`}>
+                                                {isEmojiPickerOpen ? <RiSubtractLine className="text-xl" /> : <RiAddLine className="text-xl" />}
+                                            </div>
+                                        </button>
 
-                                        <div className="grid grid-cols-6 gap-2 min-h-[100px] content-start">
-                                            {CONFIG.COMMON_EMOJIS.find(c => c.name === activeEmojiTab)?.emojis.map((emoji) => (
-                                                <button
-                                                    key={emoji}
-                                                    type="button"
-                                                    onClick={() => setFormData({ ...formData, icon: emoji })}
-                                                    className={`w-10 h-10  flex items-center justify-center text-xl hover:bg-primary hover:text-white transition-all ${formData.icon === emoji ? 'bg-primary text-white shadow-lg shadow-primary/20 scale-110' : 'bg-base-100/50'}`}
-                                                >
-                                                    {emoji}
-                                                </button>
-                                            ))}
+                                        <div className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${isEmojiPickerOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
+                                            <div className="overflow-hidden">
+                                                <div className="p-4 border-t border-base-300">
+                                                    <div className="flex gap-2 bg-base-200/50 p-1.5 mb-4 rounded-xl overflow-x-auto no-scrollbar">
+                                                        {CONFIG.COMMON_EMOJIS.map((cat) => (
+                                                            <button
+                                                                key={cat.name}
+                                                                type="button"
+                                                                onClick={() => setActiveEmojiTab(cat.name)}
+                                                                className={`px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all flex-shrink-0 ${activeEmojiTab === cat.name ? 'bg-white text-primary shadow-sm ring-1 ring-base-200' : 'text-base-content/50 hover:text-base-content hover:bg-base-200/50'}`}
+                                                            >
+                                                                {cat.name}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+
+                                                    <div className="grid grid-cols-6 gap-2">
+                                                        {CONFIG.COMMON_EMOJIS.find(c => c.name === activeEmojiTab)?.emojis.map((emoji) => (
+                                                            <button
+                                                                key={emoji}
+                                                                type="button"
+                                                                onClick={() => setFormData({ ...formData, icon: emoji })}
+                                                                className={`w-10 h-10 flex items-center justify-center text-2xl hover:ring-secondary hover:ring-2 transition-all rounded-md ${formData.icon === emoji ? 'bg-primary/10 text-primary ring-2 ring-primary ring-offset-1 ring-offset-base-100 shadow-sm' : 'bg-base-100/50'}`}
+                                                            >
+                                                                {emoji}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -409,8 +469,9 @@ export default function LinkEditor({ links, plan, onReorder, onAdd, onUpdate, on
                             </form>
                         </div>
                     </div>
-                </div>
-            )}
-        </div>
+                </div >
+            )
+            }
+        </div >
     );
 }
