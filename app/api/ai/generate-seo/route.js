@@ -56,8 +56,8 @@ export async function POST(req) {
         // --- MOCK FALLBACK LOGIC ---
         const suggestions = {
             title: `${title} | Professional Bio & Links`,
-            description: `Connect with ${title} on LinkPeak. ${bio?.slice(0, 100)}... Check out all my official links and social media profiles in one place!`,
-            keywords: `linkpeak, ${title?.toLowerCase()}, link in bio, ${slug}, social links, creator toolkit`
+            description: `Connect with ${title} on ${CONFIG.SITE_NAME}. ${bio?.slice(0, 100)}... Check out all my official links and social media profiles in one place!`,
+            keywords: `${CONFIG.SITE_NAME}, ${title?.toLowerCase()}, link in bio, ${slug}, social links, creator toolkit`
         };
 
         return NextResponse.json({

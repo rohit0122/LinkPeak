@@ -1,5 +1,7 @@
+import { CONFIG } from "@/constants/config";
+
 export const metadata = {
-    title: "Dashboard | LinkPeak",
+    title: `Dashboard | ${CONFIG.SITE_NAME}`,
     description: "Manage your links, analytics, and bio page settings.",
 };
 

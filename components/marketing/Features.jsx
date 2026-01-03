@@ -1,3 +1,4 @@
+import { CONFIG } from "@/constants/config";
 import { RiBarChartBoxLine, RiHeartFill, RiPaletteLine } from "react-icons/ri";
 
 const features = [
@@ -29,7 +30,7 @@ export default function Features() {
         <section id="features" className="py-24 bg-base-100">
             <div className="max-w-7xl mx-auto px-6">
                 <div className="text-center mb-20">
-                    <h2 className="text-4xl md:text-5xl font-medium tracking-tighter mb-4">Why Creators Choose LinkPeak</h2>
+                    <h2 className="text-4xl md:text-5xl font-medium tracking-tighter mb-4">Why Creators Choose {CONFIG.SITE_NAME}</h2>
                     <p className="text-xl opacity-60">The only platform built for high-performance engagement.</p>
                 </div>
 

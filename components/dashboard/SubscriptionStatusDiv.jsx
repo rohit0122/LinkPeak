@@ -27,15 +27,16 @@ export default function SubscriptionStatusDiv({
     const [subscriptionData, setSubscriptionData] = useState(initialData || null);
     const [loading, setLoading] = useState(!initialData);
     const [creatingLink, setCreatingLink] = useState(false);
-    const [currentPlan, setCurrentPlan] = useState(currentUser?.plan);
 
     useEffect(() => {
-        if (!initialData) fetchSubscriptionStatus();
-        else {
+        if (initialData) {
             setSubscriptionData(initialData);
             setLoading(false);
+        } else {
+            fetchSubscriptionStatus();
         }
-    }, [initialData]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []); // Only run once on mount
 
     /* 🔒 Trial expiry redirect — UNCHANGED */
     useEffect(() => {
@@ -45,7 +46,8 @@ export default function SubscriptionStatusDiv({
         const { trial, subscription } = subscriptionData;
         const isExpired =
             !trial?.active &&
-            (!subscription || subscription.status !== "active") && currentPlan !== "FREE";
+            (!subscription || subscription.status !== "active") &&
+            currentUser?.plan !== "FREE";
 
         if (isExpired) {
             axios.post(ENDPOINTS.USER.SUSPEND).catch(() => { });
@@ -100,8 +102,9 @@ export default function SubscriptionStatusDiv({
         subscriptionData;
 
     const isExpired =
-        !trial.active &&
-        (!subscription || subscription.status !== "active") && currentPlan !== "FREE";
+        !trial?.active &&
+        (!subscription || subscription.status !== "active") &&
+        currentUser?.plan !== "FREE";
 
     const PLAN_DETAILS = {
         PRO: {
@@ -213,7 +216,7 @@ export default function SubscriptionStatusDiv({
                     )}
 
                     {/* ───────── Accordion: Plans ───────── */}
-                    {!pendingPaymentLink && (currentPlan === "FREE" || subscription?.status !== "active" || renewalWindow?.active) && (
+                    {!pendingPaymentLink && (currentUser?.plan === "FREE" || subscription?.status !== "active" || renewalWindow?.active) && (
                         <div className="collapse collapse-arrow border border-base-200 rounded-lg my-1">
                             <input type="checkbox" />
                             <div className="collapse-title text-sm font-bold">
@@ -223,11 +226,11 @@ export default function SubscriptionStatusDiv({
                             <div className="collapse-content">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-                                    {(currentPlan === "FREE" ||
-                                        currentPlan === "PRO") && (
+                                    {(currentUser?.plan === "FREE" ||
+                                        currentUser?.plan === "PRO") && (
                                             <PlanCard
                                                 plan={PLAN_DETAILS.PRO}
-                                                active={currentPlan === "PRO"}
+                                                active={currentUser?.plan === "PRO"}
                                                 onClick={handleCreatePaymentLink}
                                                 loading={creatingLink}
                                             />
@@ -235,7 +238,7 @@ export default function SubscriptionStatusDiv({
 
                                     <PlanCard
                                         plan={PLAN_DETAILS.AGENCY}
-                                        active={currentPlan === "AGENCY"}
+                                        active={currentUser?.plan === "AGENCY"}
                                         onClick={handleCreatePaymentLink}
                                         loading={creatingLink}
                                     />
@@ -245,7 +248,7 @@ export default function SubscriptionStatusDiv({
                     )}
 
                     {/* ───────── Footer ───────── */}
-                    {!pendingPaymentLink && (currentPlan === "FREE" || subscription?.status !== "active" || renewalWindow?.active) && (
+                    {!pendingPaymentLink && (currentUser?.plan === "FREE" || subscription?.status !== "active" || renewalWindow?.active) && (
                         <div className="mt-4 pt-3 border-t border-base-200 flex items-center justify-between text-[10px] opacity-60">
                             <div className="flex items-center gap-1 font-bold uppercase">
                                 <RiSecurePaymentLine /> SSL Secure

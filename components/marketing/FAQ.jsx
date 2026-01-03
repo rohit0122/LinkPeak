@@ -74,7 +74,7 @@ export default function FAQ() {
                 <div className="text-center mb-16">
                     <RiQuestionLine className="text-6xl text-primary mx-auto mb-4 animate-pulse" />
                     <h2 className="text-4xl md:text-5xl font-medium tracking-tighter mb-4">Common Questions</h2>
-                    <p className="text-xl opacity-60">Everything you need to know about LinkPeak.</p>
+                    <p className="text-xl opacity-60">Everything you need to know about {CONFIG.SITE_NAME}.</p>
                 </div>
 
                 <div className="space-y-4">

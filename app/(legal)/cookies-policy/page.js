@@ -181,7 +181,7 @@ export default function CookiesPage() {
                             <li><strong>Edge:</strong> Settings → Privacy, search, and services → Cookies and site data</li>
                         </ul>
 
-                        <h3 className="text-xl font-semibold mb-2 mt-6">4.2 Clear LinkPeak Data</h3>
+                        <h3 className="text-xl font-semibold mb-2 mt-6">4.2 Clear {CONFIG.SITE_NAME} Data</h3>
                         <p>
                             To clear only {CONFIG.SITE_NAME}'s stored data:
                         </p>

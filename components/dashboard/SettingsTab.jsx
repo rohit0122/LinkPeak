@@ -444,13 +444,13 @@ group-hover:text-secondary" />
                         </div>
 
                         <div className="text-[10px] font-mono text-white/20">
-                            LinkPeak AI v2.0
+                            {CONFIG.SITE_NAME} AI v2.0
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-6 hidden">
                 <BrandingEditor
                     key={page?._id}
                     page={page}
