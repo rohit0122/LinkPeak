@@ -10,12 +10,21 @@ import {
 import { CONFIG } from "@/constants/config";
 import { ENDPOINTS } from "@/constants/endpoints";
 
-export default function SupportView({ currentUser }) {
-    const [tickets, setTickets] = useState([]);
-    const [loading, setLoading] = useState(true);
+import { useAuth } from "@/context/AuthContext";
+import { useLoader } from "@/context/LoaderContext";
+
+export default function SupportView({ currentUser, tickets: propTickets, setTickets: propSetTickets }) {
+    const [internalTickets, setInternalTickets] = useState([]);
+
+    // Controlled vs Uncontrolled Logic
+    const isControlled = typeof propTickets !== "undefined";
+    const tickets = isControlled ? propTickets : internalTickets;
+    const setTickets = isControlled ? propSetTickets : setInternalTickets;
+
     const [selectedTicket, setSelectedTicket] = useState(null);
     const [replyMessage, setReplyMessage] = useState("");
     const [isReplying, setIsReplying] = useState(false);
+    const { showLoader, hideLoader } = useLoader();
 
     // New Ticket Form
     const [formData, setFormData] = useState({ subject: "", message: "", priority: "MEDIUM", category: CONFIG.SUPPORT_CATEGORIES[0] });
@@ -24,8 +33,10 @@ export default function SupportView({ currentUser }) {
     const messagesEndRef = useRef(null);
 
     useEffect(() => {
-        if (currentUser) fetchTickets();
-    }, [currentUser]);
+        // Only fetch on mount if NOT controlled (parent doesn't manage data)
+        if (currentUser && !isControlled) fetchTickets();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentUser, isControlled]);
 
     // Scroll to bottom of chat
     const scrollToBottom = () => {
@@ -37,6 +48,7 @@ export default function SupportView({ currentUser }) {
     }, [selectedTicket?.replies]);
 
     const fetchTickets = async () => {
+        showLoader();
         try {
             const endpoint = isAdmin ? ENDPOINTS.ADMIN.TICKETS : ENDPOINTS.SUPPORT.CREATE;
             const { data } = await axios.get(endpoint);
@@ -51,12 +63,13 @@ export default function SupportView({ currentUser }) {
         } catch (error) {
             toast.error("Could not load tickets.");
         } finally {
-            setLoading(false);
+            hideLoader();
         }
     };
 
     const handleCreateTicket = async (e) => {
         e.preventDefault();
+        showLoader();
         try {
             const { data } = await axios.post(ENDPOINTS.SUPPORT.CREATE, formData);
             if (data.success) {
@@ -67,6 +80,8 @@ export default function SupportView({ currentUser }) {
             }
         } catch (error) {
             toast.error("Failed to create ticket.");
+        } finally {
+            hideLoader();
         }
     };
 
@@ -74,14 +89,12 @@ export default function SupportView({ currentUser }) {
         e.preventDefault();
         if (!replyMessage.trim()) return;
 
-        setIsReplying(true);
+        showLoader();
         try {
             const { data } = await axios.post(ENDPOINTS.SUPPORT.REPLY(selectedTicket._id), { message: replyMessage });
             console.log("Reply API Response:", data);
             if (data.success) {
                 const updatedTicket = data.data;
-                console.log("Updated Ticket:", updatedTicket);
-                console.log("Replies count:", updatedTicket.replies?.length);
                 // Update local tickets list
                 setTickets(tickets.map(t => t._id === updatedTicket._id ? updatedTicket : t));
                 setSelectedTicket(updatedTicket);
@@ -92,7 +105,7 @@ export default function SupportView({ currentUser }) {
             console.error("Reply Error:", error);
             toast.error("Failed to send reply.");
         } finally {
-            setIsReplying(false);
+            hideLoader();
         }
     };
 
@@ -205,20 +218,13 @@ export default function SupportView({ currentUser }) {
                             placeholder="Type your reply here..."
                             value={replyMessage}
                             onChange={(e) => setReplyMessage(e.target.value)}
-                            disabled={isReplying}
                         />
                         <button
                             type="submit"
                             className="btn btn-primary px-6"
-                            disabled={!replyMessage.trim() || isReplying}
+                            disabled={!replyMessage.trim()}
                         >
-                            {isReplying ? (
-                                <span className="loading loading-spinner loading-xs"></span>
-                            ) : (
-                                <>
-                                    Send Reply <RiSendPlaneFill className="ml-2" />
-                                </>
-                            )}
+                            Reply <RiSendPlaneFill className="ml-2" />
                         </button>
                     </form>
                 </div>
@@ -280,9 +286,7 @@ export default function SupportView({ currentUser }) {
                         </button>
                     </h2>
 
-                    {loading ? (
-                        <div className="flex justify-center p-8"><span className="loading loading-dots loading-lg text-primary"></span></div>
-                    ) : tickets.length > 0 ? (
+                    {tickets.length > 0 ? (
                         <div className="overflow-x-auto">
                             <table className="table table-hover">
                                 <thead>

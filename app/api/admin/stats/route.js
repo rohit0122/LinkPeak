@@ -158,18 +158,21 @@ export async function GET(req) {
             ])
         ]);
 
-        // Calculate MRR (Monthly Recurring Revenue)
-        const mrr = activeSubscriptions.reduce((acc, curr) => {
-            return acc + (PLAN_PRICES[curr._id] || 0) * curr.count;
+        // Calculate MRR (Monthly Recurring Revenue) based on Active Users in Plan Distribution
+        // We use planDistribution instead of activeSubscriptions to avoid Plan ID mismatches (internal vs external IDs).
+        const mrr = planDistribution.reduce((acc, curr) => {
+            const price = PLAN_PRICES[curr._id] || 0;
+            return acc + (price * curr.active);
         }, 0);
 
         // Calculate ARR (Annual Recurring Revenue)
         const arr = mrr * 12;
 
-        // Calculate conversion rate
+        // Calculate conversion rate (Based on ACTIVE paid users)
         const paidUsers = planDistribution
             .filter(p => p._id !== 'FREE')
-            .reduce((acc, curr) => acc + curr.count, 0);
+            .reduce((acc, curr) => acc + curr.active, 0); // Fixed: used curr.active instead of undefined curr.count
+
         const conversionRate = totalUsers > 0 ? ((paidUsers / totalUsers) * 100).toFixed(2) : 0;
 
         // Calculate growth rate

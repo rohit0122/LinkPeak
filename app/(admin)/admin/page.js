@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import axios from "@/lib/axios";
 import { ENDPOINTS } from "@/constants/endpoints";
 import DashboardLayout from "@/components/layout/DashboardLayout";
+import { useLoader } from "@/context/LoaderContext";
 import SupportView from "@/components/dashboard/SupportView";
+import Pagination from "@/components/shared/Pagination";
 import {
     RiUserFollowLine,
     RiEyeLine,
@@ -30,6 +32,7 @@ import {
     Legend,
     ResponsiveContainer
 } from 'recharts';
+import { useAuth } from "@/context/AuthContext";
 
 function StatCard({ title, value, icon: Icon, colorClass, trend }) {
     return (
@@ -59,59 +62,82 @@ export default function AdminDashboard() {
     const [activeTab, setActiveTab] = useState("OVERVIEW");
     const [stats, setStats] = useState(null);
     const [users, setUsers] = useState([]);
+    const [tickets, setTickets] = useState([]);
+    const [isLoaded, setIsLoaded] = useState({ users: false, tickets: false });
+
+    // ... (rest of state)
+
     const [pagination, setPagination] = useState({
         total: 0,
         page: 1,
         limit: 10,
         totalPages: 1
     });
-    const [tickets, setTickets] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [usersLoading, setUsersLoading] = useState(false);
+
     const [search, setSearch] = useState("");
-    const [currentUser, setCurrentUser] = useState(null);
+    const { currentUser } = useAuth();
+    const { showLoader, hideLoader } = useLoader();
     const router = useRouter();
 
     // Plan prices for reference (matching backend)
     const PLAN_PRICES = { FREE: 0, PRO: 9, AGENCY: 49 };
 
+    // Initial Load - Stats Only
     useEffect(() => {
-        fetchData();
+        fetchStats();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const fetchData = async () => {
-        setLoading(true);
-        try {
-            const [statsRes, ticketsRes, userRes] = await Promise.all([
-                axios.get(ENDPOINTS.ADMIN.STATS),
-                axios.get(ENDPOINTS.ADMIN.TICKETS),
-                axios.get(ENDPOINTS.AUTH.ME)
-            ]);
-            if (statsRes.data.success) setStats(statsRes.data.data);
-            if (ticketsRes.data.success) setTickets(ticketsRes.data.data);
-            if (userRes.data.success) setCurrentUser(userRes.data.data);
+    // Lazy Load Data on Tab Change
+    useEffect(() => {
+        if (activeTab === "USERS" && !isLoaded.users) {
+            fetchUsers(1, "");
+        } else if (activeTab === "SUPPORT" && !isLoaded.tickets) {
+            fetchTickets();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [activeTab]);
 
-            // Initial fetch for users
-            await fetchUsers(1, "");
+    const fetchStats = async () => {
+        showLoader();
+        try {
+            const { data } = await axios.get(ENDPOINTS.ADMIN.STATS);
+            if (data.success) setStats(data.data);
         } catch (error) {
-            toast.error("Could not load admin dashboard data.");
+            toast.error("Could not load stats.");
         } finally {
-            setLoading(false);
+            hideLoader();
+        }
+    };
+
+    const fetchTickets = async () => {
+        showLoader();
+        try {
+            const { data } = await axios.get(ENDPOINTS.ADMIN.TICKETS);
+            if (data.success) {
+                setTickets(data.data);
+                setIsLoaded(prev => ({ ...prev, tickets: true }));
+            }
+        } catch (error) {
+            toast.error("Could not load tickets.");
+        } finally {
+            hideLoader();
         }
     };
 
     const fetchUsers = async (page = 1, searchQuery = "") => {
-        setUsersLoading(true);
+        showLoader(); // Always show loader for explicit user actions or first load
         try {
-            const { data } = await axios.get(`${ENDPOINTS.ADMIN.USERS}?page=${page}&limit=10&search=${searchQuery}`);
+            const { data } = await axios.get(`${ENDPOINTS.ADMIN.USERS}?page=${page}&limit=${pagination.limit}&search=${searchQuery}`);
             if (data.success) {
                 setUsers(data.data.users);
                 setPagination(data.data.pagination);
+                setIsLoaded(prev => ({ ...prev, users: true }));
             }
         } catch (error) {
             toast.error("Could not load users.");
         } finally {
-            setUsersLoading(false);
+            hideLoader();
         }
     };
 
@@ -142,21 +168,9 @@ export default function AdminDashboard() {
         }
     };
 
-    const handleTicketStatus = async (ticketId, status) => {
-        try {
-            const { data } = await axios.patch(ENDPOINTS.ADMIN.TICKETS, { ticketId, updates: { status } });
-            if (data.success) {
-                setTickets(tickets.map(t => t._id === ticketId ? data.data : t));
-                toast.success("Support ticket updated! 🎫");
-            }
-        } catch (error) {
-            toast.error("Could not update ticket. Please try again.");
-        }
-    };
 
-    if (loading) {
-        return <div className="flex items-center justify-center min-h-screen"><span className="loading loading-spinner loading-lg text-primary"></span></div>;
-    }
+
+
 
     return (
         <DashboardLayout currentUser={currentUser || { name: "System Admin", role: "admin", plan: "AGENCY" }}>
@@ -283,8 +297,8 @@ export default function AdminDashboard() {
                                         <RiGroupLine className="text-primary text-lg" />
                                         User Distribution (Active vs Inactive)
                                     </h2>
-                                    <div className="h-[300px] w-full mt-4">
-                                        <ResponsiveContainer width="100%" height="100%">
+                                    <div className="w-full mt-4">
+                                        <ResponsiveContainer width="100%" height={300}>
                                             <BarChart
                                                 data={stats?.planDistribution || []}
                                                 margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
@@ -354,11 +368,7 @@ export default function AdminDashboard() {
 
                         {/* Users Table */}
                         <div className="bg-base-100  border border-base-200 shadow-sm overflow-hidden relative">
-                            {usersLoading && (
-                                <div className="absolute inset-0 bg-base-100/50 backdrop-blur-[1px] flex items-center justify-center z-10">
-                                    <span className="loading loading-spinner loading-md text-primary"></span>
-                                </div>
-                            )}
+
                             <table className="table w-full">
                                 <thead>
                                     <tr className="bg-base-200/30">
@@ -392,7 +402,6 @@ export default function AdminDashboard() {
                                                     <option value="FREE">FREE</option>
                                                     <option value="PRO">PRO</option>
                                                     <option value="AGENCY">AGENCY</option>
-                                                    <option value="ADMIN">ADMIN</option>
 
                                                 </select> : <div className="font-medium text-[10px]">{currentUser.plan}</div>}
                                             </td>
@@ -409,14 +418,6 @@ export default function AdminDashboard() {
                                                 >
                                                     {currentUser.isActive ? 'Deactivate' : 'Activate'}
                                                 </button> : <span className="badge badge-success badge-sm text-success-content font-medium py-3 px-4">Active</span>}
-                                                {currentUser.role !== 'admin' && (
-                                                    <button
-                                                        onClick={() => handleUserUpdate(currentUser._id, { role: 'admin' })}
-                                                        className="btn btn-xs btn-outline  font-medium hidden"
-                                                    >
-                                                        Make Admin
-                                                    </button>
-                                                )}
                                             </td>
                                         </tr>
                                     ))}
@@ -425,50 +426,10 @@ export default function AdminDashboard() {
                         </div>
 
                         {/* Pagination Controls */}
-                        {pagination.totalPages > 1 && (
-                            <div className="flex items-center justify-center gap-4 mt-8 pb-10">
-                                <button
-                                    onClick={() => handlePageChange(pagination.page - 1)}
-                                    disabled={pagination.page === 1 || usersLoading}
-                                    className="btn btn-sm btn-outline px-6"
-                                >
-                                    Previous
-                                </button>
-                                <div className="flex items-center gap-2">
-                                    {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map((p) => {
-                                        if (
-                                            p === 1 ||
-                                            p === pagination.totalPages ||
-                                            (p >= pagination.page - 1 && p <= pagination.page + 1)
-                                        ) {
-                                            return (
-                                                <button
-                                                    key={p}
-                                                    onClick={() => handlePageChange(p)}
-                                                    className={`btn btn-sm btn-square ${pagination.page === p ? 'btn-primary' : 'btn-ghost'}`}
-                                                    disabled={usersLoading}
-                                                >
-                                                    {p}
-                                                </button>
-                                            );
-                                        } else if (
-                                            p === pagination.page - 2 ||
-                                            p === pagination.page + 2
-                                        ) {
-                                            return <span key={p} className="opacity-40">...</span>;
-                                        }
-                                        return null;
-                                    })}
-                                </div>
-                                <button
-                                    onClick={() => handlePageChange(pagination.page + 1)}
-                                    disabled={pagination.page === pagination.totalPages || usersLoading}
-                                    className="btn btn-sm btn-outline px-6"
-                                >
-                                    Next
-                                </button>
-                            </div>
-                        )}
+                        <Pagination
+                            pagination={pagination}
+                            onPageChange={handlePageChange}
+                        />
                     </div>
                 )}
 
@@ -491,7 +452,7 @@ export default function AdminDashboard() {
 
                         <div className="bg-base-100 border border-base-200 shadow-sm overflow-hidden rounded-xl">
                             {/* Integrating the shared SupportView for full interactivity */}
-                            <SupportView currentUser={currentUser} />
+                            <SupportView currentUser={currentUser} tickets={tickets} setTickets={setTickets} />
                         </div>
                     </div>
                 )}

@@ -86,6 +86,11 @@ export async function PATCH(req) {
             return NextResponse.json({ success: false, error: "You cannot deactivate or Downgrade yourself" }, { status: 400 });
         }
 
+        // Prevent promoting anyone to admin
+        if (updates.role === 'admin') {
+            return NextResponse.json({ success: false, error: "You cannot promote users to Admin" }, { status: 403 });
+        }
+
         const currentUser = await User.findByIdAndUpdate(userId, updates, { new: true });
 
         return NextResponse.json({ success: true, data: currentUser });
