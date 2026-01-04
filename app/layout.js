@@ -2,6 +2,8 @@ import { Outfit, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { CONFIG } from "@/constants/config";
 import ClientProvider from "@/components/providers/ClientProvider";
+import { GoogleAnalytics } from "@next/third-parties/google";
+
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -61,6 +63,7 @@ export default function RootLayout({ children }) {
           {children}
         </ClientProvider>
       </body>
+      <GoogleAnalytics gaId="G-YQLKK9K593" />
     </html >
   );
 }
