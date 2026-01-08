@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import {
@@ -19,14 +20,15 @@ import axios from "@/lib/axios";
 
 import { CONFIG } from "@/constants/config";
 import { ENDPOINTS } from "@/constants/endpoints";
-
-import ClassicTemplate from "@/components/templates/upgradedTemplates/ClassicTemplate";
-import GridTemplate from "@/components/templates/upgradedTemplates/GridTemplate";
-import HeroTemplate from "@/components/templates/upgradedTemplates/HeroTemplate";
-import SocialTemplate from "@/components/templates/upgradedTemplates/SocialTemplate";
-import ModernTemplate from "@/components/templates/upgradedTemplates/ModernTemplate";
 import Link from "next/link";
 import Avatar from "@/components/shared/Avatar";
+
+// Dynamically import templates to reduce initial bundle size
+const ClassicTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/ClassicTemplate"), { ssr: true });
+const GridTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/GridTemplate"), { ssr: true });
+const HeroTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/HeroTemplate"), { ssr: true });
+const SocialTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/SocialTemplate"), { ssr: true });
+const ModernTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/ModernTemplate"), { ssr: true });
 
 const iconMap = {
     instagram: RiInstagramLine,
@@ -127,7 +129,7 @@ export default function PublicBio({ page, links, isDemo = false }) {
                         {/* Share Button with accesssible name */}
                         <button
                             onClick={() => setIsQRModalOpen(true)}
-                            className="absolute top-6 right-6 btn btn-circle btn-ghost btn-sm bg-base-100/50 backdrop-blur shadow-sm"
+                            className="absolute top-6 right-6 btn btn-circle btn-ghost btn-sm bg-base-100/50 backdrop-blur shadow-sm z-10"
                             aria-label={`Share QR Code for ${page.title}`}
                         >
                             <RiQrCodeLine className="text-lg" />

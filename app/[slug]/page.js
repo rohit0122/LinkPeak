@@ -1,3 +1,4 @@
+import { cache } from "react";
 import dbConnect from "@/lib/db";
 import BioPage from "@/models/BioPage";
 import UserModel from "@/models/User";
@@ -6,11 +7,19 @@ import PublicBio from "./PublicBio";
 import BioNotFound from "@/components/bio-templates/BioNotFound";
 import { CONFIG } from "@/constants/config";
 
+// Memoize the data fetch to avoid duplicate queries in generateMetadata and Page
+const getBioPage = cache(async (slug) => {
+    await dbConnect();
+    return await BioPage.findOne({ slug: slug.toLowerCase() })
+        .populate("userId", "plan")
+        .lean();
+});
+
 export async function generateMetadata({ params }) {
     const { slug } = await params;
-    await dbConnect();
-    const page = await BioPage.findOne({ slug: slug.toLowerCase() }).lean();
-    if (!page) return <BioNotFound />;
+    const page = await getBioPage(slug);
+
+    if (!page) return { title: "Page Not Found" };
 
     // Use currentUser's profile image if available, otherwise use site banner
     const ogImage = page.profileImage || `${CONFIG.SITE_URL}/linkpeakk-home.webp`;
@@ -45,12 +54,8 @@ export async function generateMetadata({ params }) {
 
 export default async function Page({ params }) {
     const { slug } = await params;
+    const page = await getBioPage(slug);
 
-    // ... rest of component
-    await dbConnect();
-    const page = await BioPage.findOne({ slug: slug.toLowerCase() })
-        .populate("userId", "plan")
-        .lean();
     if (!page) {
         return <BioNotFound />;
     }
