@@ -1,5 +1,6 @@
 import dbConnect from "@/lib/db";
 import BioPage from "@/models/BioPage";
+import UserModel from "@/models/User";
 import LinkModel from "@/models/Link";
 import PublicBio from "./PublicBio";
 import BioNotFound from "@/components/bio-templates/BioNotFound";
