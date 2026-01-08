@@ -367,9 +367,8 @@ export default function AdminDashboard() {
                         </div>
 
                         {/* Users Table */}
-                        <div className="bg-base-100  border border-base-200 shadow-sm overflow-hidden relative">
-
-                            <table className="table w-full">
+                        <div className="bg-base-100 border border-base-200 shadow-sm overflow-x-auto relative">
+                            <table className="table w-full whitespace-nowrap">
                                 <thead>
                                     <tr className="bg-base-200/30">
                                         <th className="font-medium uppercase text-[10px] tracking-widest py-6">User</th>
@@ -393,17 +392,20 @@ export default function AdminDashboard() {
                                                 </div>
                                             </td>
                                             <td>
-                                                {currentUser.role !== 'admin' ? <select
-                                                    disabled={currentUser.role === 'admin'}
-                                                    className={`select select-xs select-bordered  font-medium text-[10px] ${currentUser.plan === 'AGENCY' ? 'border-primary text-primary' : ''}`}
-                                                    value={currentUser.plan}
-                                                    onChange={(e) => handleUserUpdate(currentUser._id, { plan: e.target.value })}
-                                                >
-                                                    <option value="FREE">FREE</option>
-                                                    <option value="PRO">PRO</option>
-                                                    <option value="AGENCY">AGENCY</option>
-
-                                                </select> : <div className="font-medium text-[10px]">{currentUser.plan}</div>}
+                                                {currentUser.role !== 'admin' ? (
+                                                    <select
+                                                        disabled={currentUser.role === 'admin'}
+                                                        className={`select select-xs select-bordered font-medium text-[10px] ${currentUser.plan === 'AGENCY' ? 'border-primary text-primary' : ''}`}
+                                                        value={currentUser.plan}
+                                                        onChange={(e) => handleUserUpdate(currentUser._id, { plan: e.target.value })}
+                                                    >
+                                                        <option value="FREE">FREE</option>
+                                                        <option value="PRO">PRO</option>
+                                                        <option value="AGENCY">AGENCY</option>
+                                                    </select>
+                                                ) : (
+                                                    <div className="font-medium text-[10px]">{currentUser.plan}</div>
+                                                )}
                                             </td>
                                             <td>
                                                 <div className={`badge badge-sm font-medium gap-1 py-3 px-4 ${currentUser.isActive ? 'badge-success text-success-content' : 'badge-error text-error-content'}`}>
@@ -411,13 +413,17 @@ export default function AdminDashboard() {
                                                 </div>
                                             </td>
                                             <td className="text-right flex justify-end gap-2">
-                                                {currentUser.role !== 'admin' ? <button
-                                                    disabled={currentUser.role === 'admin'}
-                                                    onClick={() => handleUserUpdate(currentUser._id, { isActive: !currentUser.isActive })}
-                                                    className={`btn btn-xs  font-medium ${currentUser.isActive ? 'btn-error' : 'btn-success'}`}
-                                                >
-                                                    {currentUser.isActive ? 'Deactivate' : 'Activate'}
-                                                </button> : <span className="badge badge-success badge-sm text-success-content font-medium py-3 px-4">Active</span>}
+                                                {currentUser.role !== 'admin' ? (
+                                                    <button
+                                                        disabled={currentUser.role === 'admin'}
+                                                        onClick={() => handleUserUpdate(currentUser._id, { isActive: !currentUser.isActive })}
+                                                        className={`btn btn-xs font-medium ${currentUser.isActive ? 'btn-error' : 'btn-success'}`}
+                                                    >
+                                                        {currentUser.isActive ? 'Deactivate' : 'Activate'}
+                                                    </button>
+                                                ) : (
+                                                    <span className="badge badge-success badge-sm text-success-content font-medium py-3 px-4">Active</span>
+                                                )}
                                             </td>
                                         </tr>
                                     ))}
