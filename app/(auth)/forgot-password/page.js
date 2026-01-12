@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import axios from "@/lib/axios";
+import axios from "@/lib/httpClient";
 import Link from "next/link";
 import { CONFIG } from "@/constants/config";
 import { RiMailLine, RiArrowLeftLine } from "react-icons/ri";

@@ -20,7 +20,7 @@ export default function TemplateSelector({ currentTemplate, plan, onSelect }) {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 bg-base-100 p-2 border border-base-300 shadow-sm rounded-xl overflow-hidden">
             {TEMPLATES.map((template) => {
                 const isLocked = !isAllUnlocked && !allowed.includes(template.id);
-                const isActive = currentTemplate === template.id;
+                const is_active = currentTemplate === template.id;
 
                 return (
                     <button
@@ -31,7 +31,7 @@ export default function TemplateSelector({ currentTemplate, plan, onSelect }) {
                             relative group flex flex-col items-center justify-center p-4 
                             border-2 transition-all duration-300 rounded-xl
                             hover:scale-105 active:scale-95
-                            ${isActive
+                            ${is_active
                                 ? "border-primary bg-primary/5 shadow-inner ring-2 ring-primary ring-offset-2"
                                 : isLocked
                                     ? "border-base-200 opacity-50 grayscale cursor-not-allowed bg-base-200/50"
@@ -54,7 +54,7 @@ export default function TemplateSelector({ currentTemplate, plan, onSelect }) {
                         </div>
 
                         {/* Name */}
-                        <h3 className={`font-bold text-sm uppercase tracking-wide mb-1 ${isActive ? 'text-primary' : 'text-base-content/80'}`}>
+                        <h3 className={`font-bold text-sm uppercase tracking-wide mb-1 ${is_active ? 'text-primary' : 'text-base-content/80'}`}>
                             {template.name}
                         </h3>
 

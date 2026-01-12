@@ -3,6 +3,7 @@ import "./globals.css";
 import { CONFIG } from "@/constants/config";
 import ClientProvider from "@/components/providers/ClientProvider";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import "@/lib/axiosClientInterceptors";
 
 
 const outfit = Outfit({

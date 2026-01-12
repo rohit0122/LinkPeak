@@ -1,139 +1,94 @@
 import { NextResponse } from "next/server";
-import dbConnect from "@/lib/db";
-import Link from "@/models/Link";
-import { getAuthUser } from "@/lib/auth";
+import restClient from "@/lib/restClient";
+import { BACKEND_ENDPOINTS } from "@/constants/endpoints";
 
+// GET: List links for a page
 export async function GET(req) {
     try {
-        const session = await getAuthUser();
-        if (!session) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
-        //console.log('session api links,  ', session)
         const { searchParams } = new URL(req.url);
         const pageId = searchParams.get("pageId");
-        if (!pageId) return NextResponse.json({ success: false, error: "Page ID required" }, { status: 400 });
 
-        await dbConnect();
-        const links = await Link.find({ pageId, userId: session.id }).sort({ order: 1 });
+        const url = pageId
+            ? `${BACKEND_ENDPOINTS.LINKS.BASE}?pageId=${pageId}`
+            : BACKEND_ENDPOINTS.LINKS.BASE;
 
-        // --- Plan-Based Link Filtering (Handle Downgrades) ---
-        const User = (await import("@/models/User")).default;
-        const { CONFIG } = await import("@/constants/config");
-        const currentUser = await User.findById(session.id);
-        const planLimit = CONFIG.PLAN_LIMITS[currentUser?.plan || "FREE"].links;
-
-        // Return only allowed number of links (preserves excess in DB)
-        const filteredLinks = links.slice(0, planLimit);
-        // -------------------------------------------------------
-
-        return NextResponse.json({ success: true, data: filteredLinks });
+        const response = await restClient.get(url);
+        return NextResponse.json(response.data, { status: response.status });
     } catch (error) {
-        return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+        return NextResponse.json(
+            { success: false, message: "Failed to fetch links" },
+            { status: error.response?.status || 500 }
+        );
     }
 }
 
+// POST: Create a new link
 export async function POST(req) {
     try {
-        const session = await getAuthUser();
-        if (!session) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
-
-        await dbConnect();
-        const { pageId, title, url, icon } = await req.json();
-
-        // Plan Limit Check
-        const User = (await import("@/models/User")).default;
-        const { CONFIG } = await import("@/constants/config");
-
-        const currentUser = await User.findById(session.id);
-        const planLimit = CONFIG.PLAN_LIMITS[currentUser.plan || "FREE"].links;
-        const currentCount = await Link.countDocuments({ pageId, userId: session.id });
-
-        if (currentCount >= planLimit) {
-            return NextResponse.json({
-                success: false,
-                error: `Limit reached! Your ${currentUser.plan} plan allows up to ${planLimit} links. Please upgrade for more.`
-            }, { status: 403 });
-        }
-
-        const link = await Link.create({
-            userId: session.id,
-            pageId,
-            title,
-            url,
-            icon,
-            order: currentCount,
-        });
-
-        return NextResponse.json({ success: true, data: link });
+        const body = await req.json();
+        const response = await restClient.post(BACKEND_ENDPOINTS.LINKS.BASE, body);
+        return NextResponse.json(response.data, { status: response.status });
     } catch (error) {
-        return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+        return NextResponse.json(
+            { success: false, error: "Failed to create link" },
+            { status: error.response?.status || 500 }
+        );
     }
 }
 
+// PATCH: Update a single link (Proxies to Backend PUT /links/{id})
 export async function PATCH(req) {
     try {
-        const session = await getAuthUser();
-        if (!session) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+        const body = await req.json();
+        const { id, ...updates } = body;
 
-        await dbConnect();
-        const { id, ...updates } = await req.json();
-
-        const link = await Link.findOneAndUpdate(
-            { _id: id, userId: session.id },
-            updates,
-            { new: true }
-        );
-
-        if (!link) {
-            return NextResponse.json({ success: false, error: "Link not found" }, { status: 404 });
-        }
-
-        return NextResponse.json({ success: true, data: link });
-    } catch (error) {
-        return NextResponse.json({ success: false, error: error.message }, { status: 500 });
-    }
-}
-
-export async function DELETE(req) {
-    try {
-        const session = await getAuthUser();
-        if (!session) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
-
-        const { searchParams } = new URL(req.url);
-        const id = searchParams.get("id");
         if (!id) return NextResponse.json({ success: false, error: "Link ID required" }, { status: 400 });
 
-        await dbConnect();
-        const link = await Link.findOneAndDelete({ _id: id, userId: session.id });
-
-        if (!link) {
-            return NextResponse.json({ success: false, error: "Link not found" }, { status: 404 });
-        }
-
-        return NextResponse.json({ success: true, message: "Link deleted" });
+        const response = await restClient.put(BACKEND_ENDPOINTS.LINKS.BY_ID(id), updates);
+        return NextResponse.json(response.data, { status: response.status });
     } catch (error) {
-        return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+        return NextResponse.json(
+            { success: false, error: "Failed to update link" },
+            { status: error.response?.status || 500 }
+        );
     }
 }
 
+// PUT: Bulk Reorder
 export async function PUT(req) {
     try {
-        const session = await getAuthUser();
-        if (!session) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+        const body = await req.json();
 
-        await dbConnect();
-        const { links } = await req.json(); // Array of { id, order }
+        // Check if it's a reorder request (contains 'links' array)
+        if (body.links && Array.isArray(body.links)) {
+            const response = await restClient.put(BACKEND_ENDPOINTS.LINKS.BULK_REORDER, body);
+            return NextResponse.json(response.data, { status: response.status });
+        }
 
-        const bulkOps = links.map((link) => ({
-            updateOne: {
-                filter: { _id: link.id, userId: session.id },
-                update: { order: link.order },
-            },
-        }));
-
-        await Link.bulkWrite(bulkOps);
-
-        return NextResponse.json({ success: true, message: "Links reordered" });
+        return NextResponse.json({ success: false, error: "Invalid request format" }, { status: 400 });
     } catch (error) {
-        return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+        return NextResponse.json(
+            { success: false, error: "Failed to reorder links" },
+            { status: error.response?.status || 500 }
+        );
+    }
+}
+
+// DELETE: Delete a link
+export async function DELETE(req) {
+    try {
+        const { searchParams } = new URL(req.url);
+        const id = searchParams.get("id");
+
+        if (!id) return NextResponse.json({ success: false, error: "Link ID required" }, { status: 400 });
+
+        // Backend expects DELETE /links/{id}
+        const response = await restClient.delete(BACKEND_ENDPOINTS.LINKS.BY_ID(id));
+        return NextResponse.json(response.data, { status: response.status });
+    } catch (error) {
+        return NextResponse.json(
+            { success: false, error: "Failed to delete link" },
+            { status: error.response?.status || 500 }
+        );
     }
 }

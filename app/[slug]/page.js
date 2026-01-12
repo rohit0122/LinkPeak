@@ -1,72 +1,84 @@
 import { cache } from "react";
-import dbConnect from "@/lib/db";
-import BioPage from "@/models/BioPage";
-import UserModel from "@/models/User";
-import LinkModel from "@/models/Link";
+import restClient from "@/lib/restClient";
+import { BACKEND_ENDPOINTS } from "@/constants/endpoints";
 import PublicBio from "./PublicBio";
 import BioNotFound from "@/components/bio-templates/BioNotFound";
 import { CONFIG } from "@/constants/config";
 
-// Memoize the data fetch to avoid duplicate queries in generateMetadata and Page
+// Memoize the data fetch
 const getBioPage = cache(async (slug) => {
-    await dbConnect();
-    return await BioPage.findOne({ slug: slug.toLowerCase() })
-        .populate("userId", "plan")
-        .lean();
+  try {
+    //console.log('slug =>>>>>>>>>>>>>>>>>>>', slug);
+    const response = await restClient.get(
+      BACKEND_ENDPOINTS.PUBLIC.GET_PAGE(slug)
+    );
+    //console.log('slug data =>>>>>>>>>>>>>>>>>>>', response.data);
+    if (response.data?.success) {
+      return response.data.data.page;
+    }
+  } catch (error) {
+    console.error("Failed to fetch bio page", error);
+  }
+  return null;
 });
 
 export async function generateMetadata({ params }) {
-    const { slug } = await params;
-    const page = await getBioPage(slug);
+  const { slug } = await params;
+  const rawPage = await getBioPage(slug);
 
-    if (!page) return { title: "Page Not Found" };
+  if (!rawPage) return { title: "Page Not Found" };
 
-    // Use currentUser's profile image if available, otherwise use site banner
-    const ogImage = page.profileImage || `${CONFIG.SITE_URL}/linkpeakk-home.webp`;
+  const page = rawPage;
 
-    return {
-        title: page.seo?.title || `${page.title} | ${CONFIG.SITE_NAME}`,
-        description: page.seo?.description || page.bio || `Check out ${page.title}'s links on ${CONFIG.SITE_NAME}.`,
-        keywords: page.seo?.keywords || "link in bio, creator, social links, linkpeak",
-        openGraph: {
-            type: 'profile',
-            url: `${CONFIG.SITE_URL}/${slug}`,
-            siteName: CONFIG.SITE_NAME,
-            title: page.seo?.title || page.title,
-            description: page.seo?.description || page.bio,
-            images: [
-                {
-                    url: ogImage,
-                    width: 1200,
-                    height: 630,
-                    alt: `${page.title}'s Bio Page`,
-                }
-            ],
+  // Use page profile image or default
+  const ogImage =
+    page.profile_image || `${CONFIG.SITE_URL}/linkpeakk-home.webp`;
+
+  return {
+    title: page.seo?.title || `${page.title} | ${CONFIG.SITE_NAME}`,
+    description:
+      page.seo?.description ||
+      page.bio ||
+      `Check out ${page.title}'s links on ${CONFIG.SITE_NAME}.`,
+    keywords:
+      page.seo?.keywords || "link in bio, creator, social links, linkpeak",
+    openGraph: {
+      type: "profile",
+      url: `${CONFIG.SITE_URL}/${slug}`,
+      siteName: CONFIG.SITE_NAME,
+      title: page.seo?.title || page.title,
+      description: page.seo?.description || page.bio,
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: `${page.title}'s Bio Page`,
         },
-        twitter: {
-            card: "summary_large_image",
-            title: page.seo?.title || page.title,
-            description: page.seo?.description || page.bio,
-            images: [ogImage],
-        }
-    };
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: page.seo?.title || page.title,
+      description: page.seo?.description || page.bio,
+      images: [ogImage],
+    },
+  };
 }
 
 export default async function Page({ params }) {
-    const { slug } = await params;
-    const page = await getBioPage(slug);
+  const { slug } = await params;
+  const rawPage = await getBioPage(slug);
 
-    if (!page) {
-        return <BioNotFound />;
-    }
+  if (!rawPage) {
+    return <BioNotFound />;
+  }
 
-    const links = await LinkModel.find({ pageId: page._id, isActive: true })
-        .sort({ order: 1 })
-        .lean();
+  const normalizedPage = rawPage; //normalizePage(rawPage);
+  const normalizedLinks = rawPage.links; // normalizeLinks(rawPage.links);
 
-    // Convert ObjectIds to strings for serialization
-    const serializedPage = JSON.parse(JSON.stringify(page));
-    const serializedLinks = JSON.parse(JSON.stringify(links));
+  // Serialize? Not needed if they are just objects, but good practice if passing to Client Component
+  // Since we manually constructed them from JSON, they are serializable.
 
-    return <PublicBio page={serializedPage} links={serializedLinks} />;
+  return <PublicBio page={normalizedPage} links={normalizedLinks} />;
 }

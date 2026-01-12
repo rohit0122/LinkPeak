@@ -1,20 +1,15 @@
 "use client";
+import "@/lib/axiosClientInterceptors";
 
-import { LoaderProvider, useLoader } from "@/context/LoaderContext";
+import { useLoaderStore } from "@/stores/loaderStore";
 import { Toaster } from "react-hot-toast";
-import { AuthProvider } from "@/context/AuthContext";
 import CookieConsent from "@/components/shared/CookieConsent";
 import GlobalLoading from "@/components/shared/GlobalLoading";
 
-function FullScreenLoaderWrapper() {
-    const { loading } = useLoader();
-    return <GlobalLoading show={loading} />;
-}
-
 export default function ClientProvider({ children }) {
+    const { loading } = useLoaderStore();
     return (
-        <LoaderProvider>
-            <AuthProvider>
+        <>
                 {children}
                 <Toaster
                     position="top-center"
@@ -30,9 +25,8 @@ export default function ClientProvider({ children }) {
                         },
                     }}
                 />
-            </AuthProvider>
-            <FullScreenLoaderWrapper />
             <CookieConsent />
-        </LoaderProvider>
+            <GlobalLoading show={loading} />
+        </>
     );
 }

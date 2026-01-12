@@ -1,7 +1,7 @@
 import { RiCheckFill, RiCloseFill } from "react-icons/ri";
 import { CONFIG } from "@/constants/config";
 import { useState } from "react";
-import axios from "@/lib/axios";
+import axios from "@/lib/httpClient";
 import { ENDPOINTS } from "@/constants/endpoints";
 import { toast } from "react-hot-toast";
 import Link from "next/link";

@@ -8,16 +8,23 @@ import {
     Tooltip,
     Legend,
 } from "recharts";
+import { useState } from "react";
 import ChartRangeSelector from "@/components/shared/charts/ChartRangeSelector";
 import { RiBarChartGroupedLine } from "react-icons/ri";
 
 /**
  * linkChart = [
- *   { label: "Dec 30", "Link A": 1, "Link B": 2 }
+ *   {
+ *     "label": "Jan 03",
+ *     "My Website": { "clicks": 14, "uniqueClicks": 9 },
+ *     "Latest Blog Post": { "clicks": 23, "uniqueClicks": 16 }
+ *   }
  * ]
  */
 
 export default function LinkPerformanceChart({ plan, linkChart, onRangeChange, currentRange }) {
+    const [metric, setMetric] = useState("clicks"); // "clicks" or "uniqueClicks"
+
     if (plan === "FREE") return (
         <div className="card bg-slate-900 text-white shadow-xl border border-slate-700/50 group overflow-hidden relative">
             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 blur-[100px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2"></div>
@@ -41,43 +48,34 @@ export default function LinkPerformanceChart({ plan, linkChart, onRangeChange, c
             </div>
         </div>);
 
-    const hasLinkData = linkChart?.length ? linkChart.some(row => Object.values(row).some(v => typeof v === "number" && v > 0)) : false;
+    const transformedData = linkChart?.map(row => {
+        const transformed = { label: row.label };
+        Object.keys(row).forEach(key => {
+            if (key !== "label" && row[key]?.[metric] !== undefined) {
+                transformed[key] = row[key][metric];
+            }
+        });
+        return transformed;
+    }) || [];
 
-    // ---------------------------
-    // Derive link keys dynamically
-    // ---------------------------
-    const rawKeys = linkChart?.length ? Object.keys(linkChart[0]).filter(
-        (key) => key !== "label"
-    ) : [];
+    const hasLinkData = transformedData.length > 0 && transformedData.some(row =>
+        Object.values(row).some(v => typeof v === "number" && v > 0)
+    );
 
-    // ---------------------------
-    // Remove links with zero clicks
-    // ---------------------------
-    const linkKeys = rawKeys?.length ? rawKeys.filter((key) =>
-        linkChart.some((row) => row[key] > 0)
-    ) : [];
+    // Derive link keys and filter out links with zero clicks
+    const linkKeys = transformedData.length
+        ? Object.keys(transformedData[0])
+            .filter((key) => key !== "label")
+            .filter((key) => transformedData.some((row) => row[key] > 0))
+        : [];
 
-    // ---------------------------
     // Sort links by total clicks
-    // ---------------------------
     linkKeys.sort((a, b) => {
-        const sum = (key) =>
-            linkChart.reduce((t, r) => t + (r[key] || 0), 0);
+        const sum = (key) => transformedData.reduce((t, r) => t + (r[key] || 0), 0);
         return sum(b) - sum(a);
     });
 
-    // ---------------------------
-    // Color palette (cycled)
-    // ---------------------------
-    const COLORS = [
-        "#6366f1", // indigo
-        "#9333ea", // purple
-        "#ec4899", // pink
-        "#f59e0b", // amber
-        "#10b981", // emerald
-    ];
-
-    {/* Link Performance Chart */ }
+    const COLORS = ["#6366f1", "#9333ea", "#ec4899", "#f59e0b", "#10b981"];
     return (
         plan !== "FREE" && (
             <div className="card bg-base-100 shadow-sm border border-base-300 p-6">
@@ -89,12 +87,33 @@ export default function LinkPerformanceChart({ plan, linkChart, onRangeChange, c
                         onRangeChange={onRangeChange}
                         currentRange={currentRange}
                     />
+
+                    {/* Metric Toggle */}
+                    <div className="flex justify-end mb-4">
+                        <div className="join">
+                            <button
+                                className={`join-item btn btn-sm ${metric === "clicks" ? "btn-primary" : "btn-ghost"} tooltip tooltip-bottom`}
+                                onClick={() => setMetric("clicks")}
+                                data-tip="Total Clicks"
+                            >
+                                Total Clicks
+                            </button>
+                            <button
+                                className={`join-item btn btn-sm ${metric === "uniqueClicks" ? "btn-primary" : "btn-ghost"} tooltip tooltip-bottom`}
+                                onClick={() => setMetric("uniqueClicks")}
+                                data-tip="Unique Clicks"
+                            >
+                                Unique Clicks
+                            </button>
+                        </div>
+                    </div>
+
                     {
                         hasLinkData ? (
                             <div className="w-full h-[360px]">
                                 <ResponsiveContainer width="100%" height={360}>
                                     <BarChart
-                                        data={linkChart}
+                                        data={transformedData}
                                         margin={{ top: 20, right: 30, left: 10, bottom: 40 }}
                                     >
                                         <CartesianGrid strokeDasharray="3 3" vertical={false} />
@@ -125,13 +144,7 @@ export default function LinkPerformanceChart({ plan, linkChart, onRangeChange, c
                                                 key={key}
                                                 dataKey={key}
                                                 name={key}
-                                                fill={[
-                                                    "#6366f1",
-                                                    "#9333ea",
-                                                    "#ec4899",
-                                                    "#f59e0b",
-                                                    "#10b981",
-                                                ][index % 5]}
+                                                fill={COLORS[index % COLORS.length]}
                                                 radius={[6, 6, 0, 0]}
                                             />
                                         ))}

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
-import axios from "@/lib/axios";
+import axios from "@/lib/httpClient";
 import { RiSecurePaymentLine, RiCheckLine, RiCloseLine, RiTimeLine } from "react-icons/ri";
 
 export default function MockPaymentPage() {

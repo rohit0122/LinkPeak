@@ -1,200 +1,83 @@
 import { NextResponse } from "next/server";
-import dbConnect from "@/lib/db";
-import BioPage from "@/models/BioPage";
-import { getAuthUser } from "@/lib/auth";
+import restClient from "@/lib/restClient";
+import { BACKEND_ENDPOINTS } from "@/constants/endpoints";
 
-export async function GET() {
+// GET: List all pages
+export async function GET(req) {
     try {
-        const session = await getAuthUser();
-        if (!session) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
-        //console.log('session ===== pages ', session)
-        await dbConnect();
-        const pages = await BioPage.find({ userId: session.id });
-
-        // --- Plan-Based Data Filtering (Handle Downgrades) ---
-        const User = (await import("@/models/User")).default;
-        const { CONFIG } = await import("@/constants/config");
-        const currentUser = await User.findById(session.id);
-        const plan = currentUser?.plan || "FREE";
-        const limits = CONFIG.PLAN_LIMITS[plan];
-
-        // Filter each page's data based on current plan
-        const filteredPages = pages.map(page => {
-            const pageObj = page.toObject();
-
-            // Reset template if not allowed by current plan
-            const allowedTemplates = limits.allowedTemplates;
-            if (allowedTemplates !== "ALL" && !allowedTemplates.includes(pageObj.template)) {
-                pageObj.template = "classic"; // Default to FREE template
-            }
-
-            // Reset theme if not allowed by current plan
-            const allowedThemes = limits.themes;
-            if (allowedThemes !== "ALL" && !allowedThemes.includes(pageObj.theme)) {
-                pageObj.theme = "light"; // Default to FREE theme
-            }
-
-            // Clear SEO data for FREE users (preserve in DB, hide in response)
-            if (plan === 'FREE' && pageObj.seo) {
-                pageObj.seo = { title: "", description: "", keywords: "" };
-            }
-
-            // Clear branding for non-AGENCY users (preserve in DB, hide in response)
-            if (plan !== 'AGENCY' && pageObj.branding) {
-                pageObj.branding = { removeWatermark: false, customText: "", customUrl: "" };
-            }
-
-            return pageObj;
-        });
-        // -----------------------------------------------------
-
-        return NextResponse.json({ success: true, data: filteredPages });
+        const response = await restClient.get(BACKEND_ENDPOINTS.PAGES.BASE);
+        
+        return NextResponse.json(response.data, { status: response.status });
     } catch (error) {
-        return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+        return NextResponse.json(
+            { success: false, message: error.response?.data?.message || "Failed to fetch pages" },
+            { status: error.response?.status || 500 }
+        );
     }
 }
 
+// POST: Create a new page
 export async function POST(req) {
     try {
-        const session = await getAuthUser();
-        if (!session) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
-
-        await dbConnect();
-        const { slug, title, bio } = await req.json();
-
-        // Page Limit Check
-        const User = (await import("@/models/User")).default;
-        const { CONFIG } = await import("@/constants/config");
-        const currentUser = await User.findById(session.id);
-        const limit = CONFIG.PLAN_LIMITS[currentUser.plan || "FREE"].pages;
-        const count = await BioPage.countDocuments({ userId: session.id });
-
-        if (count >= limit) {
-            return NextResponse.json({
-                success: false,
-                error: `Limit reached! Your ${currentUser.plan} plan allows up to ${limit} page(s). Please upgrade for more.`
-            }, { status: 403 });
-        }
-
-        const existingPage = await BioPage.findOne({ slug: slug.toLowerCase() });
-        if (existingPage) {
-            return NextResponse.json({ success: false, error: "Slug already taken" }, { status: 400 });
-        }
-
-        const page = await BioPage.create({
-            userId: session.id,
-            slug: slug.toLowerCase(),
-            title,
-            bio,
-        });
-
-        return NextResponse.json({ success: true, data: page });
+        const body = await req.json();
+        const response = await restClient.post(BACKEND_ENDPOINTS.PAGES.BASE, body);
+        return NextResponse.json(response.data, { status: response.status });
     } catch (error) {
-        return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+        return NextResponse.json(
+            { success: false, error: error.response?.data?.message || "Failed to create page" },
+            { status: error.response?.status || 500 }
+        );
     }
 }
 
+// PATCH: Update a page (Proxies to Backend PUT /pages/{id})
 export async function PATCH(req) {
     try {
-        const session = await getAuthUser();
-        if (!session) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+        const contentType = req.headers.get("content-type") || "";
 
-        await dbConnect();
-        const { id, ...updates } = await req.json();
+        if (contentType.includes("multipart/form-data")) {
+            const formData = await req.formData();
+            const id = formData.get("id");
 
-        // --- RBAC & Security Check ---
-        const User = (await import("@/models/User")).default;
-        const { CONFIG } = await import("@/constants/config");
-        const currentUser = await User.findById(session.id);
-        const plan = currentUser?.plan || "FREE";
-        const limits = CONFIG.PLAN_LIMITS[plan];
-
-        if (!plan) {
-            return NextResponse.json({
-                success: false,
-                error: "User not found or plan not specified."
-            }, { status: 404 });
-        }
-        if (!updates.title && updates.title.length < 3) {
-            return NextResponse.json({
-                success: false,
-                error: "Title must be at least 3 characters long. Refer Settings tab."
-            }, { status: 400 });
-        }
-        if (!updates.slug || updates.slug.length < 3) {
-            return NextResponse.json({
-                success: false,
-                error: "Slug must be at least 3 characters long. Refer Settings tab."
-            }, { status: 400 });
-        }
-        // check if slug is not used by other currentUser
-        const existingPage = await BioPage.findOne({ slug: updates.slug.toLowerCase() });
-        //console.log('existingPage ', existingPage)
-        if (existingPage && existingPage._id.toString() !== id) {
-            return NextResponse.json({
-                success: false,
-                error: "This slug already taken. Please try another slug."
-            }, { status: 400 });
-        }
-        // 1. Validate Template
-        if (updates.template) {
-            const allowed = limits.allowedTemplates;
-            if (allowed !== "ALL" && !allowed.includes(updates.template)) {
-                return NextResponse.json({
-                    success: false,
-                    error: `Template '${updates.template}' requires an upgrade to PRO plan.`
-                }, { status: 403 });
+            if (!id) {
+                return NextResponse.json({ success: false, error: "Page ID is required" }, { status: 400 });
             }
-        }
 
-        // 2. Validate Theme
-        if (updates.theme) {
-            const allowed = limits.themes;
-            if (allowed !== "ALL" && !allowed.includes(updates.theme)) {
-                return NextResponse.json({
-                    success: false,
-                    error: `Theme '${updates.theme}' requires an upgrade to PRO plan.`
-                }, { status: 403 });
+            // Laravel often struggles with PUT multipart, so we use POST with _method spoofing
+            // formData.append("_method", "PUT");
+
+            // We must create a new axios request for multipart
+            // Note: axios with FormData in Node environment might require specific headers
+            // But restClient is configured. We just need to post to the ID URL.
+            // Actually, we should post to the resource URL? No, PUT is to /pages/{id}
+            // But if we use POST with _method, we post to /pages/{id}
+            //console.log('formData ', formData);
+            //console.log('PUT URL ', BACKEND_ENDPOINTS.PAGES.BY_ID(id))
+            const response = await restClient.post(BACKEND_ENDPOINTS.PAGES.BY_ID(id), formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                }
+            });
+            //console.log('response.data ', response.data);
+            return NextResponse.json(response.data, { status: response.status });
+
+        } else {
+            // JSON fallback
+            const body = await req.json();
+            const { id, ...updates } = body;
+
+            if (!id) {
+                return NextResponse.json({ success: false, error: "Page ID is required" }, { status: 400 });
             }
+
+            const response = await restClient.put(BACKEND_ENDPOINTS.PAGES.BY_ID(id), updates);
+            return NextResponse.json(response.data, { status: response.status });
         }
 
-        // 3. Validate SEO (Block for FREE users)
-        // We check if 'seo' key exists in updates. Even empty object update is blocked for Free.
-        if (updates.seo && (updates.seo.title || updates.seo.description || updates.seo.keywords) && plan === 'FREE') {
-            return NextResponse.json({
-                success: false,
-                error: "SEO Optimization is a PRO feature."
-            }, { status: 403 });
-        }
-
-        // 4. Validate Branding removewatermark, edit customText & edit customUrl (Agency Only)
-        if (updates.branding && plan !== 'AGENCY') {
-            if ((updates.branding.customText || updates.branding.customUrl)) {
-                return NextResponse.json({
-                    success: false,
-                    error: "White-labeling is a AGENCY feature."
-                }, { status: 403 });
-            } else if (updates.branding.removeWatermark && plan !== 'PRO') {
-                return NextResponse.json({
-                    success: false,
-                    error: "White-labeling is a PRO feature."
-                }, { status: 403 });
-            }
-        }
-        // -----------------------------
-
-        const page = await BioPage.findOneAndUpdate(
-            { _id: id, userId: session.id },
-            updates,
-            { new: true }
-        );
-
-        if (!page) {
-            return NextResponse.json({ success: false, error: "Page not found" }, { status: 404 });
-        }
-
-        return NextResponse.json({ success: true, data: page });
     } catch (error) {
-        return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+        return NextResponse.json(
+            { success: false, error: error.response?.data?.message || "Failed to update page" },
+            { status: error.response?.status || 500 }
+        );
     }
 }

@@ -1,7 +1,37 @@
+import { BACKEND_ENDPOINTS } from "@/constants/endpoints";
+import restClient from "@/lib/restClient";
 import { NextResponse } from "next/server";
-import { getAuthUser } from "@/lib/auth";
+
 
 export async function POST(req) {
+
+    const { url, plan } = await req.json();
+
+    // Feature gating: PRO or AGENCY only
+    if (plan === "FREE") {
+        return NextResponse.json({
+            success: false,
+            error: "AI Features require a PRO or AGENCY plan."
+        }, { status: 403 });
+    }
+
+    if (!url) {
+        return NextResponse.json({ success: false, error: "URL is required" }, { status: 400 });
+    }
+
+    try {
+        const response = await restClient.post(BACKEND_ENDPOINTS.AI.GENERATE_LINK_TITLE, { url });
+        return NextResponse.json(response.data);
+    } catch (error) {
+        console.error('Error generating title:', error);
+        return NextResponse.json({ success: false, error: "Failed to generate title" }, { status: 500 });
+    }
+    /*
+    ### AI Helpers
+- `POST /ai/generate-link-title`: Generate AI-powered title suggestions for a URL.
+    - **Request:** `{ "url": "https://github.com/username" }`
+    - **Response:** `{ "brand": "GitHub", "suggestions": ["Title 1", "Title 2", "Title 3"] }`
+    
     try {
         const currentUser = await getAuthUser();
         if (!currentUser) {
@@ -148,5 +178,7 @@ export async function POST(req) {
         });
     } catch (error) {
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });
-    }
+    }*/
+
+
 }

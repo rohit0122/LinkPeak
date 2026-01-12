@@ -18,7 +18,7 @@ export default function ThemeSelector({ currentTheme, plan, onSelect }) {
 
                 // Check if plan allows widespread "ALL" or specific list
                 const isLocked = !isAllUnlocked && !allowedThemes.includes(themeId);
-                const isActive = currentTheme === themeId;
+                const is_active = currentTheme === themeId;
 
                 return (
                     <button
@@ -29,7 +29,7 @@ export default function ThemeSelector({ currentTheme, plan, onSelect }) {
                             relative group flex flex-col items-center gap-3 p-4 
                             border-2 transition-all duration-300 rounded-xl
                             hover:scale-105 active:scale-95 bg-base-100
-                            ${isActive
+                            ${is_active
                                 ? "border-primary bg-base-100 shadow-inner ring-2 ring-primary ring-offset-2"
                                 : isLocked
                                     ? "border-base-200 opacity-50 grayscale cursor-not-allowed"

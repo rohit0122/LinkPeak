@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import crypto from "crypto";
-import { getAuthUser } from "@/lib/auth";
+// Removed legacy getAuthUser
 
 /**
  * POST /api/upload/profile
@@ -11,13 +11,8 @@ import { getAuthUser } from "@/lib/auth";
  */
 export async function POST(req) {
     try {
-        const session = await getAuthUser();
-        if (!session) {
-            return NextResponse.json(
-                { success: false, error: "Unauthorized" },
-                { status: 401 }
-            );
-        }
+        // We skip strict server-side auth check here as it is a stateless utility.
+        // The actual saving of the image URL occurs in the Backend which enforces Auth.
 
         const body = await req.json();
         const { dataURI } = body;
@@ -43,7 +38,7 @@ export async function POST(req) {
         // Calculate size
         const sizeKB = (buffer.length / 1024).toFixed(2);
 
-        console.log(`Profile image uploaded: ${sizeKB}KB, hash: ${hash}`);
+        // console.log(`Profile image uploaded: ${sizeKB}KB, hash: ${hash}`);
 
         return NextResponse.json({
             success: true,

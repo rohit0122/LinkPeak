@@ -1,59 +1,21 @@
 import { NextResponse } from "next/server";
-import dbConnect from "@/lib/db";
-import NewsletterUser from "@/models/NewsletterUser";
+import restClient from "@/lib/restClient";
+import { BACKEND_ENDPOINTS } from "@/constants/endpoints";
 
 export async function POST(req) {
     try {
-        await dbConnect();
-        const { email } = await req.json();
+        const body = await req.json();
+        // Proxy to Laravel Backend
+        // Ensure BACKEND_ENDPOINTS.NEWSLETTER is defined, or use configured path
+        // In endpoints.js I had NEWSLETTER.SUBSCRIBE.
+        // I need to be sure the path matches NEW_API.md: POST /newsletter/subscribe
 
-        if (!email || !email.includes("@")) {
-            return NextResponse.json(
-                { error: "Please provide a valid email address." },
-                { status: 400 }
-            );
-        }
-
-        // Check if email already exists
-        const existingUser = await NewsletterUser.findOne({ email });
-
-        if (existingUser) {
-            if (!existingUser.isActive) {
-                // Reactivate subscription if previously unsubscribed
-                existingUser.isActive = true;
-                await existingUser.save();
-                return NextResponse.json(
-                    { message: "Welcome back! You've successfully resubscribed to our newsletter." },
-                    { status: 200 }
-                );
-            }
-            return NextResponse.json(
-                { error: "This email is already subscribed to our newsletter." },
-                { status: 409 } // Conflict
-            );
-        }
-
-        // Create new newsletter currentUser
-        await NewsletterUser.create({ email });
-
-        return NextResponse.json(
-            { message: "Thank you for subscribing! You've been added to our newsletter." },
-            { status: 201 }
-        );
+        const response = await restClient.post(BACKEND_ENDPOINTS.NEWSLETTER.SUBSCRIBE, body);
+        return NextResponse.json(response.data, { status: response.status });
     } catch (error) {
-        console.error("Newsletter subscription error:", error);
-
-        // Handle duplicate key error (if race condition occurs)
-        if (error.code === 11000) {
-            return NextResponse.json(
-                { error: "This email is already subscribed." },
-                { status: 409 }
-            );
-        }
-
         return NextResponse.json(
-            { error: "Something went wrong. Please try again later." },
-            { status: 500 }
+            { error: error.response?.data?.message || "Subscription failed" },
+            { status: error.response?.status || 500 }
         );
     }
 }

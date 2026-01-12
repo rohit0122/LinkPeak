@@ -1,46 +1,14 @@
 import { NextResponse } from "next/server";
-import dbConnect from "@/lib/db";
-import Link from "@/models/Link";
-import Analytics from "@/models/Analytics";
-import { startOfDay } from "date-fns";
+import restClient from "@/lib/restClient";
+import { BACKEND_ENDPOINTS } from "@/constants/endpoints";
 
 export async function POST(req) {
     try {
-        const { linkId, pageId } = await req.json();
-        if (!linkId || !pageId) return NextResponse.json({ success: false }, { status: 400 });
-
-        await dbConnect();
-        const today = startOfDay(new Date());
-
-        // Atomic increment for Link
-        await Link.findByIdAndUpdate(linkId, { $inc: { clicks: 1 } });
-
-        // Atomic increment for daily Analytics record
-        await Analytics.findOneAndUpdate(
-            { pageId, date: today },
-            {
-                $inc: { clicks: 1 },
-                $set: { updatedAt: new Date() } // Ensure timestamp update
-            },
-            { upsert: true, new: true }
-        );
-
-        // Update or Push link-specific clicks in Analytics
-        const analyticsUpdate = await Analytics.findOneAndUpdate(
-            { pageId, date: today, "linkStats.linkId": linkId },
-            { $inc: { "linkStats.$.clicks": 1 } },
-            { new: true }
-        );
-
-        if (!analyticsUpdate) {
-            await Analytics.findOneAndUpdate(
-                { pageId, date: today },
-                { $push: { linkStats: { linkId, clicks: 1 } } }
-            );
-        }
-
-        return NextResponse.json({ success: true });
+        const body = await req.json();
+        const response = await restClient.post(BACKEND_ENDPOINTS.TRACK.CLICK, body);
+        return NextResponse.json(response.data, { status: 200 });
     } catch (error) {
-        return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+        console.error("Track Click Error:", error);
+        return NextResponse.json({ success: false }, { status: 500 });
     }
 }

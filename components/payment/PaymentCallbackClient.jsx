@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import axios from "@/lib/axios";
+import axios from "@/lib/httpClient";
 import { ENDPOINTS } from "@/constants/endpoints";
 
 export default function PaymentCallbackClient() {

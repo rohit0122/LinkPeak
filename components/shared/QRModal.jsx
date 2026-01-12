@@ -20,7 +20,7 @@ export default function QRModal({ slug, isOpen, onClose, plan = "FREE" }) {
         const pngUrl = canvas.toDataURL("image/png");
         const downloadLink = document.createElement("a");
         downloadLink.href = pngUrl;
-        downloadLink.download = `${CONFIG.SITE_NAME.replace(" ", "-").toLowerCase()}-qr-${slug || 'profile'}.png`;
+        downloadLink.download = `${CONFIG.SITE_NAME.replace(".", "").toLowerCase()}-qr-${slug || 'profile'}.png`;
         document.body.appendChild(downloadLink);
         downloadLink.click();
         document.body.removeChild(downloadLink);

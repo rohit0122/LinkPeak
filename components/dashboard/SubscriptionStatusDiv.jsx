@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import axios from "@/lib/axios";
+import axios from "@/lib/httpClient";
 import toast from "react-hot-toast";
 import { CONFIG } from "@/constants/config";
 import { ENDPOINTS } from "@/constants/endpoints";

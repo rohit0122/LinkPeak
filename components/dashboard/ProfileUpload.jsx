@@ -2,17 +2,17 @@
 
 import { useState } from "react";
 import { RiUploadCloud2Line, RiUser3Line, RiRefreshLine } from "react-icons/ri";
-import axios from "@/lib/axios";
+import axios from "@/lib/httpClient";
 import { toast } from "react-hot-toast";
 import imageCompression from "browser-image-compression";
 import { ENDPOINTS } from "@/constants/endpoints";
 import { setCachedImage, invalidateUserCache } from "@/lib/imageCache";
 
-export default function ProfileUpload({ currentImage, onUploadSuccess, userId }) {
+export default function ProfileUpload({ currentImage, onUpload, userId }) {
     const [uploading, setUploading] = useState(false);
     const [preview, setPreview] = useState(currentImage);
 
-    const handleFileChange = async (e) => {
+    const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (!file) return;
 
@@ -23,63 +23,18 @@ export default function ProfileUpload({ currentImage, onUploadSuccess, userId })
         }
 
         try {
-            setUploading(true);
+            // Create preview directly from raw file
+            const previewUrl = URL.createObjectURL(file);
+            setPreview(previewUrl);
 
-            // Client-side compression and optimization
-            const options = {
-                maxSizeMB: 0.015, // Target 15KB max
-                maxWidthOrHeight: 200, // Resize to 200x200
-                useWebWorker: true,
-                fileType: "image/webp",
-                initialQuality: 0.75
-            };
-
-            toast.loading("Optimizing image...", { id: "compress" });
-            const compressedFile = await imageCompression(file, options);
-
-            // Convert to base64 data URI
-            const reader = new FileReader();
-            reader.onloadend = async () => {
-                const dataURI = reader.result;
-                setPreview(dataURI);
-                toast.dismiss("compress");
-
-                try {
-                    // Send pre-processed image to server
-                    toast.loading("Uploading...", { id: "upload" });
-                    const { data } = await axios.post(ENDPOINTS.UPLOAD.PROFILE, { dataURI });
-                    toast.dismiss("upload");
-
-                    if (data.success) {
-                        const { url, hash, sizeKB } = data.data;
-
-                        // Cache the optimized image
-                        if (userId && hash) {
-                            invalidateUserCache(userId);
-                            setCachedImage(userId, hash, url);
-                        }
-
-                        toast.success(`Profile updated! (${sizeKB}KB)`, {
-                            icon: "✨",
-                            duration: 3000
-                        });
-
-                        onUploadSuccess(url, hash);
-                    }
-                } catch (error) {
-                    console.error("Upload error:", error);
-                    toast.error("Upload failed. Please try again.");
-                    setPreview(currentImage);
-                }
-            };
-            reader.readAsDataURL(compressedFile);
-
+            // Trigger immediate upload
+            if (onUpload) {
+                onUpload(file);
+            }
         } catch (error) {
-            console.error("Compression error:", error);
-            toast.error("Image processing failed. Please try again.");
+            console.error("File processing error:", error);
+            toast.error("Failed to process image.");
             setPreview(currentImage);
-        } finally {
-            setUploading(false);
         }
     };
 

@@ -1,41 +1,47 @@
 import { NextResponse } from "next/server";
-import dbConnect from "@/lib/db";
-import User from "@/models/User";
-import { sendVerificationEmail } from "@/lib/mailer";
-import { v4 as uuidv4 } from "uuid";
+import restClient from "@/lib/restClient";
+import { BACKEND_ENDPOINTS } from "@/constants/endpoints";
 
 export async function POST(req) {
-    try {
-        await dbConnect();
-        const { name, email, password, plan } = await req.json();
+  try {
+    const body = await req.json();
 
-        // Validate plan if provided
-        const validPlans = ["FREE", "PRO", "AGENCY"];
-        const userPlan = plan && validPlans.includes(plan.toUpperCase()) ? plan.toUpperCase() : "FREE";
-
-        const userExists = await User.findOne({ email });
-        if (userExists) {
-            return NextResponse.json({ success: false, error: "User already exists" }, { status: 400 });
-        }
-
-        const verificationToken = uuidv4();
-
-        const currentUser = await User.create({
-            name,
-            email,
-            password,
-            plan: userPlan,
-            verificationToken,
-            isActive: false,
-        });
-
-        await sendVerificationEmail(email, verificationToken);
-
-        return NextResponse.json({
-            success: true,
-            message: "Registration successful. Please check your email to verify your account.",
-        });
-    } catch (error) {
-        return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    // 1. Call Laravel Backend
+    console.log("sdasfsdf ", {
+      ...body,
+      password_confirmation: body.password,
+    });
+    const response = await restClient.post(BACKEND_ENDPOINTS.AUTH.REGISTER, {
+      ...body,
+      password_confirmation: body.password,
+    });
+    const { data, status } = response;
+    // 2. Handle Errors
+    if (status >= 400 || !data.success) {
+      return NextResponse.json(data, { status: status });
     }
+
+    // 3. Create Next.js Response
+    const nextResponse = NextResponse.json(data, { status: 200 });
+
+    // 4. Set HTTP-Only Cookie (if token provided on register)
+    /*const token = data.data?.token || data.token;
+        if (token) {
+            nextResponse.cookies.set("lpkSiteToken", token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "lax",
+                path: "/",
+                maxAge: 60 * 60 * 24 * 30, // 30 Days
+            });
+        }*/
+
+    return nextResponse;
+  } catch (error) {
+    console.error("Register Proxy Error:", error);
+    return NextResponse.json(
+      { success: false, message: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
 }

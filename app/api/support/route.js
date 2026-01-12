@@ -1,39 +1,36 @@
 import { NextResponse } from "next/server";
-import dbConnect from "@/lib/db";
-import SupportTicket from "@/models/SupportTicket";
-import { getAuthUser } from "@/lib/auth";
+import restClient from "@/lib/restClient";
+import { BACKEND_ENDPOINTS } from "@/constants/endpoints";
 
-export async function GET() {
-    try {
-        const session = await getAuthUser();
-        if (!session) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
-
-        await dbConnect();
-        const tickets = await SupportTicket.find({ userId: session.id }).sort({ createdAt: -1 });
-        return NextResponse.json({ success: true, data: tickets });
-    } catch (error) {
-        return NextResponse.json({ success: false, error: error.message }, { status: 500 });
-    }
+export async function GET(req) {
+  try {
+    console.log(
+      "BACKEND_ENDPOINTS.SUPPORT.BASE ",
+      BACKEND_ENDPOINTS.SUPPORT.BASE
+    );
+    const response = await restClient.get(BACKEND_ENDPOINTS.SUPPORT.BASE);
+    console.log("response.dataresponse.dataresponse.data ", response.data);
+    return NextResponse.json(response.data);
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, message: "Failed to fetch tickets" },
+      { status: error.response?.status || 500 }
+    );
+  }
 }
 
 export async function POST(req) {
-    try {
-        const session = await getAuthUser();
-        if (!session) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
-
-        await dbConnect();
-        const { subject, message, priority, category } = await req.json();
-
-        const ticket = await SupportTicket.create({
-            userId: session.id,
-            subject,
-            message,
-            priority,
-            category,
-        });
-
-        return NextResponse.json({ success: true, data: ticket });
-    } catch (error) {
-        return NextResponse.json({ success: false, error: error.message }, { status: 500 });
-    }
+  try {
+    const body = await req.json();
+    const response = await restClient.post(
+      BACKEND_ENDPOINTS.SUPPORT.BASE,
+      body
+    );
+    return NextResponse.json(response.data, { status: response.status });
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, message: "Failed to create ticket" },
+      { status: error.response?.status || 500 }
+    );
+  }
 }

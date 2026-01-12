@@ -4,7 +4,7 @@ import { useState } from "react";
 import { CONFIG } from "@/constants/config";
 import { ENDPOINTS } from "@/constants/endpoints";
 import { RiGithubFill, RiInstagramFill, RiTwitterFill, RiLoader4Line, RiFacebookBoxFill, RiXboxFill, RiTwitterXFill, RiFacebookBoxLine } from "react-icons/ri";
-import axios from "@/lib/axios";
+import axios from "@/lib/httpClient";
 import toast from "react-hot-toast";
 import Logo from "./Logo";
 import { SocialIcons } from "../shared/SocialIcons";

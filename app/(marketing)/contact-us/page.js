@@ -10,7 +10,7 @@ import {
     RiChat4Line,
     RiGlobalLine
 } from "react-icons/ri";
-import axios from "@/lib/axios";
+import axios from "@/lib/httpClient";
 import { ENDPOINTS } from "@/constants/endpoints";
 import { toast } from "react-hot-toast";
 import { CONFIG } from "@/constants/config";

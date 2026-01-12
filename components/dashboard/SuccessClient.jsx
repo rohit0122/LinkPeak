@@ -9,7 +9,7 @@ import {
     RiSparklingLine,
     RiShieldStarLine,
 } from "react-icons/ri";
-import axios from "@/lib/axios";
+import axios from "@/lib/httpClient";
 import { toast } from "react-hot-toast";
 import { ENDPOINTS } from "@/constants/endpoints";
 
