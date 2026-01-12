@@ -33,7 +33,7 @@ export default function DangerZone() {
     };
 
     return (
-        <div className="card bg-error/5 border border-error/20 shadow-sm mt-12">
+        <div className="card bg-error/5 border border-error/20 shadow-sm">
             <div className="card-body">
                 <h3 className="card-title text-error flex items-center gap-2">
                     <RiAlertFill />

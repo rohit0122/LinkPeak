@@ -1,16 +1,15 @@
 "use client";
 import { PiWarningCircle } from "react-icons/pi";
-import { useAuthStore } from "@/stores/useAuthStore";
 import UpgradePlanModal from "./UpgradePlanModal";
 import { useState } from "react";
 import { ENDPOINTS } from "@/constants/endpoints";
 import axios from "@/lib/httpClient";
 import toast from "react-hot-toast";
+import { loadRazorpay } from "@/lib/razorpayClient";
+import { CONFIG } from "@/constants/config";
 
 export default function TrialExpiryBanner() {
-  const currentSubscription = useAuthStore(
-    (state) => state.currentSubscription
-  );
+
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   if (!currentSubscription) return null;
@@ -37,20 +36,63 @@ export default function TrialExpiryBanner() {
     setShowUpgradeModal(true);
   };
 
-  const onSelectPlan = (plan) => {
+  const onSelectPlan = async (plan) => {
     console.log("Selected plan:", plan);
+
+    const res = await loadRazorpay();
+
+    if (!res) {
+      toast.error("Razorpay SDK failed to load. Are you online?");
+      return;
+    }
+
     // 🔥 Call your API here
     axios.post(`${ENDPOINTS.SUBSCRIPTION.CHANGE_PLAN}`, {
       new_plan: plan,
     })
       .then((response) => {
-        toast.success("Plan changed successfully! Redirecting for payment.");
-        setTimeout(() => {
-          window.location.href = '/dashboard/subscription';
-        }, 2000);
+        // Handle response wrapped in data key if present
+        const apiData = response.data.data || response.data;
+
+        const {
+          razorpay_subscription_id,
+          razorpay_key,
+          plan: planDetails,
+          prefill
+        } = apiData;
+
+        if (!razorpay_subscription_id) {
+          toast.error("Failed to initiate subscription. Please try again.");
+          return;
+        }
+
+        const options = {
+          key: PROCESS.env.NEXT_PUBLIC_RAZORPAY_KEY,
+          subscription_id: razorpay_subscription_id,
+          name: CONFIG.SITE_NAME,
+          description: `Upgrade to ${planDetails?.name || plan} Plan`,
+          image: "https://linkpeak.io/logo.png",
+          handler: function (response) {
+            toast.success("Plan changed successfully! Payment verified.");
+            setTimeout(() => {
+              window.location.href = '/dashboard/subscription';
+            }, 2000);
+          },
+          prefill: {
+            name: prefill?.name || user?.name,
+            email: prefill?.email || user?.email
+          },
+          theme: {
+            color: "#422AD5",
+          },
+        };
+
+        const razorpay = new window.Razorpay(options);
+        razorpay.open();
       })
       .catch((error) => {
-        toast.error("Error changing plan!");
+        console.error(error);
+        toast.error(error?.response?.data?.message || "Error changing plan!");
       });
   };
 
@@ -107,7 +149,7 @@ export default function TrialExpiryBanner() {
             className="btn btn-warning btn-sm sm:btn-md text-base-content font-semibold"
             onClick={onUpgradeContact}
           >
-            Contact Support to Upgrade
+            Upgrade for more features
           </button>
         ) : (
           <button

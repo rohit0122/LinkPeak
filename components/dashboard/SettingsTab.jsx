@@ -3,7 +3,6 @@
 import ProfileUpload from "./ProfileUpload";
 import BrandingEditor from "./BrandingEditor";
 import DangerZone from "./DangerZone";
-import { toast } from "react-hot-toast";
 import {
   RiUserLine,
   RiLinksLine,
@@ -18,7 +17,7 @@ import {
   RiMagicLine,
   RiLockLine,
 } from "react-icons/ri";
-// useAuthStore import removed
+import SubscriptionDetails from "@/components/dashboard/Subscription/SubscriptionDetails";
 
 export default function SettingsTab({
   currentBioPage,
@@ -30,6 +29,8 @@ export default function SettingsTab({
   CONFIG,
   onImageUpload,
 }) {
+  const currentSubscription = useAuthStore((state) => state.currentSubscription);
+
   const mergedBioPage = {
     ...currentBioPage,
     ...tempBioPageConfig,
@@ -331,11 +332,10 @@ export default function SettingsTab({
               <button
                 onClick={onSeoAiMagic}
                 disabled={isSeoAiLoading}
-                className={`btn btn-sm md:btn-md border-0 shadow-2xl relative overflow-hidden group/btn ${
-                  isSeoAiLoading
-                    ? "bg-white/10 text-white cursor-wait"
-                    : "bg-white text-slate-900 hover:scale-105 active:scale-95"
-                }`}
+                className={`btn btn-sm md:btn-md border-0 shadow-2xl relative overflow-hidden group/btn ${isSeoAiLoading
+                  ? "bg-white/10 text-white cursor-wait"
+                  : "bg-white text-slate-900 hover:scale-105 active:scale-95"
+                  }`}
               >
                 {isSeoAiLoading && (
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12 animate-shimmer"></div>
@@ -368,11 +368,10 @@ group-hover:text-secondary"
 
           {/* Inputs Section */}
           <div
-            className={`grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/5 p-4 border border-white/5 backdrop-blur-sm relative ${
-              currentUser?.plan === "FREE"
-                ? "opacity-50 grayscale cursor-not-allowed"
-                : ""
-            }`}
+            className={`grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/5 p-4 border border-white/5 backdrop-blur-sm relative ${currentUser?.plan === "FREE"
+              ? "opacity-50 grayscale cursor-not-allowed"
+              : ""
+              }`}
           >
             <div className="space-y-6">
               <div className="form-control">
@@ -382,9 +381,8 @@ group-hover:text-secondary"
                 <input
                   type="text"
                   placeholder="e.g. John Doe | Creative Director & Bio"
-                  className={`input bg-slate-900/50 border-white/10 text-white placeholder-white/20 focus:border-primary/50 focus:bg-slate-900/80 transition-all font-medium text-sm h-10 ${
-                    currentUser?.plan === "FREE" ? "pointer-events-none" : ""
-                  } w-full`}
+                  className={`input bg-slate-900/50 border-white/10 text-white placeholder-white/20 focus:border-primary/50 focus:bg-slate-900/80 transition-all font-medium text-sm h-10 ${currentUser?.plan === "FREE" ? "pointer-events-none" : ""
+                    } w-full`}
                   value={mergedBioPage?.seo?.title || ""}
                   onChange={(e) => {
                     if (currentUser?.plan === "FREE") return;
@@ -403,9 +401,8 @@ group-hover:text-secondary"
                 <input
                   type="text"
                   placeholder="design, photography, links, bio"
-                  className={`input bg-slate-900/50 border-white/10 text-white placeholder-white/20  focus:border-primary/50 focus:bg-slate-900/80 transition-all font-medium text-sm h-10 ${
-                    currentUser?.plan === "FREE" ? "pointer-events-none" : ""
-                  } w-full`}
+                  className={`input bg-slate-900/50 border-white/10 text-white placeholder-white/20  focus:border-primary/50 focus:bg-slate-900/80 transition-all font-medium text-sm h-10 ${currentUser?.plan === "FREE" ? "pointer-events-none" : ""
+                    } w-full`}
                   value={mergedBioPage?.seo?.keywords || ""}
                   onChange={(e) => {
                     if (currentUser?.plan === "FREE") return;
@@ -473,6 +470,7 @@ group-hover:text-secondary"
         </div>
       </div>
 
+      <SubscriptionDetails />
       <DangerZone />
     </div>
   );
