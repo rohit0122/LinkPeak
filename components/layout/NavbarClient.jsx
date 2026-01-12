@@ -53,7 +53,7 @@ const publicLinks = [
 
 export default function NavbarClient({
   currentUser,
-  currentPage,
+
   pages = [],
   onSelectPage,
   onCreatePage,
@@ -62,6 +62,7 @@ export default function NavbarClient({
   const loading = useAuthStore((state) => state.loading);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const logout = useAuthStore((state) => state.logout);
+  const currentPage = useAuthStore((state) => state.currentBioPage);
   const [mobileOpen, setMobileOpen] = useState(false);
   const router = useRouter();
   const handleLogout = async () => {
@@ -107,19 +108,17 @@ export default function NavbarClient({
                       {console.log("p ", p)}
                       <button
                         onClick={() => onSelectPage && onSelectPage(p.id)}
-                        className={`flex items-center justify-between py-2.5 px-3 ${
-                          currentPage?.id === p.id
-                            ? "bg-primary/10 text-primary font-bold my-1"
-                            : ""
-                        }`}
+                        className={`flex items-center justify-between py-2.5 px-3 ${currentPage?.id === p.id
+                          ? "bg-primary/10 text-primary font-bold my-1"
+                          : ""
+                          }`}
                       >
                         <div className="flex items-center gap-2 overflow-hidden">
                           <div
-                            className={`w-1.5 h-1.5 rounded-full ${
-                              currentPage?.id === p.id
-                                ? "bg-primary"
-                                : "bg-base-300"
-                            }`}
+                            className={`w-1.5 h-1.5 rounded-full ${currentPage?.id === p.id
+                              ? "bg-primary"
+                              : "bg-base-300"
+                              }`}
                           ></div>
                           <span className="truncate text-xs">/{p.slug}</span>
                         </div>
@@ -134,19 +133,19 @@ export default function NavbarClient({
                       CONFIG.PLAN_LIMITS[currentUser?.plan] ||
                       CONFIG.PLAN_LIMITS.FREE
                     ).pages && (
-                    <>
-                      <div className="divider my-1 opacity-10"></div>
-                      <li>
-                        <button
-                          onClick={onCreatePage}
-                          className="flex items-center gap-3 py-2.5 px-3 text-primary font-bold hover:bg-primary/5 text-xs"
-                        >
-                          <RiAddCircleLine className="text-base flex-shrink-0" />
-                          Add New Page
-                        </button>
-                      </li>
-                    </>
-                  )}
+                      <>
+                        <div className="divider my-1 opacity-10"></div>
+                        <li>
+                          <button
+                            onClick={onCreatePage}
+                            className="flex items-center gap-3 py-2.5 px-3 text-primary font-bold hover:bg-primary/5 text-xs"
+                          >
+                            <RiAddCircleLine className="text-base flex-shrink-0" />
+                            Add New Page
+                          </button>
+                        </li>
+                      </>
+                    )}
                 </ul>
               </div>
             )}

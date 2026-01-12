@@ -59,6 +59,9 @@ export const ENDPOINTS = {
     REPLY: (id) => `/support/${id}/reply`,
   },
   LEADS: (pageId) => `/pages/${pageId}/leads`,
+  SUBSCRIPTION: {
+    CHANGE_PLAN: `/subscriptions/change-plan`,
+  }
 };
 
 // 2. Backend Endpoints (Next.js API Proxy -> Laravel API)
@@ -121,4 +124,7 @@ export const BACKEND_ENDPOINTS = {
     BY_ID: (id) => `${BACKEND_URL}/api/v1/tickets/${id}`,
     REPLY: (id) => `${BACKEND_URL}/api/v1/tickets/${id}/reply`,
   },
+  SUBSCRIPTION: {
+    CHANGE_PLAN: `${BACKEND_URL}/api/v1/subscriptions/select-plan`,
+  }
 };
