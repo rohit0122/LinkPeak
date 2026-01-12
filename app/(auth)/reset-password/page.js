@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, Suspense, use } from "react";
+import { useState, useEffect, Suspense } from "react";
 import axios from "@/lib/httpClient";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -54,7 +54,7 @@ function ResetPasswordForm() {
     } catch (err) {
       setError(
         err.response?.data?.error ||
-          "Failed to reset password. Please try again."
+        "Failed to reset password. Please try again."
       );
     } finally {
       setLoading(false);
@@ -162,8 +162,7 @@ function ResetPasswordForm() {
 }
 
 export default function ResetPasswordPage(props) {
-  const searchParams = use(props.searchParams);
-  const params = use(props.params);
+
   return (
     <Suspense
       fallback={

@@ -2,11 +2,10 @@ import { NextResponse } from "next/server";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
-import { getAuthUser } from "@/lib/auth";
 
 export async function POST(req) {
     try {
-        const session = await getAuthUser();
+        const session = null;
         if (!session) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
 
         const formData = await req.formData();

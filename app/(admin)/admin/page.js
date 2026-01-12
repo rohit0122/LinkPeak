@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, use } from "react";
+import { useEffect, useState } from "react";
 import axios from "@/lib/httpClient";
 import { ENDPOINTS } from "@/constants/endpoints";
 import DashboardLayout from "@/components/layout/DashboardLayout";
@@ -31,7 +31,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { useAuth } from "@/context/AuthContext";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 // useSupportStore removed
 
@@ -63,9 +63,8 @@ function StatCard({ title, value, icon: Icon, colorClass, trend }) {
   );
 }
 
-export default function AdminDashboard(props) {
-  const searchParams = use(props.searchParams);
-  const params = use(props.params);
+export default function AdminDashboard() {
+
   const [activeTab, setActiveTab] = useState("OVERVIEW");
   const [stats, setStats] = useState(null);
   const [users, setUsers] = useState([]);
@@ -82,7 +81,7 @@ export default function AdminDashboard(props) {
   });
 
   const [search, setSearch] = useState("");
-  const { currentUser } = useAuth();
+  const { currentUser } = useAuthStore();
   const router = useRouter();
 
   // Plan prices for reference (matching backend)
@@ -170,7 +169,7 @@ export default function AdminDashboard(props) {
     } catch (error) {
       toast.error(
         error.response?.data?.error ||
-          "Could not update currentUser. Please try again."
+        "Could not update currentUser. Please try again."
       );
     }
   };
@@ -203,11 +202,10 @@ export default function AdminDashboard(props) {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-6 py-3  font-medium text-xs transition-all ${
-                  activeTab === tab
-                    ? "bg-primary text-primary-content shadow-lg shadow-primary/20"
-                    : "hover:bg-base-200 opacity-60"
-                }`}
+                className={`px-6 py-3  font-medium text-xs transition-all ${activeTab === tab
+                  ? "bg-primary text-primary-content shadow-lg shadow-primary/20"
+                  : "hover:bg-base-200 opacity-60"
+                  }`}
               >
                 {tab}
               </button>
@@ -446,11 +444,10 @@ export default function AdminDashboard(props) {
                         {currentUser.role !== "admin" ? (
                           <select
                             disabled={currentUser.role === "admin"}
-                            className={`select select-xs select-bordered font-medium text-[10px] ${
-                              currentUser.plan === "AGENCY"
-                                ? "border-primary text-primary"
-                                : ""
-                            }`}
+                            className={`select select-xs select-bordered font-medium text-[10px] ${currentUser.plan === "AGENCY"
+                              ? "border-primary text-primary"
+                              : ""
+                              }`}
                             value={currentUser.plan}
                             onChange={(e) =>
                               handleUserUpdate(currentUser.id, {
@@ -470,11 +467,10 @@ export default function AdminDashboard(props) {
                       </td>
                       <td>
                         <div
-                          className={`badge badge-sm font-medium gap-1 py-3 px-4 ${
-                            currentUser.is_active
-                              ? "badge-success text-success-content"
-                              : "badge-error text-error-content"
-                          }`}
+                          className={`badge badge-sm font-medium gap-1 py-3 px-4 ${currentUser.is_active
+                            ? "badge-success text-success-content"
+                            : "badge-error text-error-content"
+                            }`}
                         >
                           {currentUser.is_active ? "ACTIVE" : "SUSPENDED"}
                         </div>
@@ -488,11 +484,10 @@ export default function AdminDashboard(props) {
                                 is_active: !currentUser.is_active,
                               })
                             }
-                            className={`btn btn-xs font-medium ${
-                              currentUser.is_active
-                                ? "btn-error"
-                                : "btn-success"
-                            }`}
+                            className={`btn btn-xs font-medium ${currentUser.is_active
+                              ? "btn-error"
+                              : "btn-success"
+                              }`}
                           >
                             {currentUser.is_active ? "Deactivate" : "Activate"}
                           </button>

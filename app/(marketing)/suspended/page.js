@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { RiErrorWarningLine, RiCustomerService2Line } from "react-icons/ri";
 import SubscriptionStatusDiv from "@/components/dashboard/SubscriptionStatusDiv";
-import { useAuth } from "@/context/AuthContext";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 export default function SuspendedPage() {
-    const { currentUser } = useAuth();
-    // We fetch currentUser client-side here or just rely on SubscriptionStatus to fetch its own data
+    const { isAuthenticated } = useAuthStore();
+    // We fetch isAuthenticated client-side here or just rely on SubscriptionStatus to fetch its own data
     // For simplicity, we just render the structure
 
     return (
@@ -21,7 +21,7 @@ export default function SuspendedPage() {
                     <h1 className="text-2xl font-bold mb-2">Access Suspended</h1>
                     <p className="text-base-content/70 mb-6">
                         Your free trial has expired and we haven&apos;t received a subscription payment.
-                        To continue using your bio page and dashboard, {currentUser ? "please select a plan below." : "connect support with your account details."}
+                        To continue using your bio page and dashboard, {isAuthenticated ? "please select a plan below." : "connect support with your account details."}
                     </p>
 
                     <div className="w-full mb-6">

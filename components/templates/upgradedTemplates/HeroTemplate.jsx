@@ -8,9 +8,7 @@ export default function HeroTemplate({ links, handleLinkClick }) {
     return (
       <div className="text-center p-8 border-2 border-dashed border-base-300 rounded-3xl bg-base-100/50">
         <div className="text-4xl mb-2 opacity-50">⭐</div>
-        <p className="text-base-content/60 font-medium">
-          Highlight your most important link here!
-        </p>
+        <p className="text-base-content/60 font-medium">Highlight your most important link here!</p>
       </div>
     );
   }
@@ -27,7 +25,7 @@ export default function HeroTemplate({ links, handleLinkClick }) {
         href={heroLink.url}
         target="_blank"
         rel="noopener noreferrer"
-        onClick={() => handleLinkClick?.(heroLink.id)}
+        onClick={() => handleLinkClick?.(heroLink._id)}
         className="
                     block w-full
                     relative overflow-hidden
@@ -43,16 +41,14 @@ export default function HeroTemplate({ links, handleLinkClick }) {
         </div>
 
         <div className="relative p-8 flex flex-col items-center text-center gap-4">
-          <div
-            className="
+          <div className="
                         w-16 h-16 
                         rounded-2xl 
                         bg-white/20 backdrop-blur-sm
                         flex items-center justify-center
                         text-3xl
                         shadow-inner
-                    "
-          >
+                    ">
             {heroLink.icon || "⭐"}
           </div>
 
@@ -65,8 +61,7 @@ export default function HeroTemplate({ links, handleLinkClick }) {
             </p>
           </div>
 
-          <div
-            className="
+          <div className="
                         mt-2
                         bg-white/20 hover:bg-white/30 
                         backdrop-blur-md
@@ -74,8 +69,7 @@ export default function HeroTemplate({ links, handleLinkClick }) {
                         text-sm font-bold
                         flex items-center gap-2
                         transition-colors
-                    "
-          >
+                    ">
             Open Now <RiArrowRightLine />
           </div>
         </div>
@@ -85,14 +79,14 @@ export default function HeroTemplate({ links, handleLinkClick }) {
       <div className="space-y-3">
         {otherLinks.map((link, idx) => (
           <motion.a
-            key={link.id}
+            key={link._id}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: idx * 0.1 + 0.2 }}
             href={link.url}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => handleLinkClick?.(link.id)}
+            onClick={() => handleLinkClick?.(link._id)}
             className="
                             group
                             flex items-center gap-4

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, use } from "react";
+import { useState } from "react";
 import dynamic from "next/dynamic";
 import axios from "@/lib/httpClient";
 import DashboardLayout from "@/components/layout/DashboardLayout";
@@ -59,9 +59,7 @@ const SupportView = dynamic(
 
 // No more useDashboardStore import
 
-export default function DashboardPage(props) {
-  const searchParams = use(props.searchParams);
-  const params = use(props.params);
+export default function DashboardPage() {
   const {
     currentUser,
     loading,
@@ -95,11 +93,11 @@ export default function DashboardPage(props) {
   const unsavedChanges = Object.keys(dirtyFields).length > 0;
   const router = useRouter();
 
-  useEffect(() => {
-    if (currentBioPage?.id) {
-      fetchPageData(currentBioPage.id);
-    }
-  }, [currentBioPage?.id]);
+  /* useEffect(() => {
+     if (currentBioPage?.id) {
+       fetchPageData(currentBioPage.id);
+     }
+   }, [currentBioPage?.id]);*/
 
   const fetchPageData = async (pageId) => {
     try {
@@ -290,7 +288,7 @@ export default function DashboardPage(props) {
     } catch (error) {
       toast.error(
         error.response?.data?.error ||
-          "AI Optimization failed. Please try again."
+        "AI Optimization failed. Please try again."
       );
     } finally {
       setIsSeoAiLoading(false);
@@ -402,11 +400,10 @@ export default function DashboardPage(props) {
                 items-center justify-center
                 gap-1 md:gap-2
                 transition-all
-                ${
-                  activeTab === key
+                ${activeTab === key
                     ? "btn-active !bg-primary !text-primary-content"
                     : ""
-                }
+                  }
             `}
               >
                 {/* Icon */}
@@ -525,11 +522,10 @@ export default function DashboardPage(props) {
 
       {/* Global Save Button (Floating) */}
       <div
-        className={`fixed bottom-8 right-8 z-50 transition-all duration-300 transform ${
-          unsavedChanges
-            ? "translate-y-0 opacity-100"
-            : "translate-y-20 opacity-0 pointer-events-none"
-        }`}
+        className={`fixed bottom-8 right-8 z-50 transition-all duration-300 transform ${unsavedChanges
+          ? "translate-y-0 opacity-100"
+          : "translate-y-20 opacity-0 pointer-events-none"
+          }`}
       >
         <button
           onClick={handleGlobalSave}

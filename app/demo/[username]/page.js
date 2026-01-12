@@ -69,7 +69,7 @@ export default async function DemoBioPage({ params }) {
     bio: "Sustainable living & ethical travel tips for the modern soul.",
     profile_image: "/avatars/avatar-generic-eco.svg",
     template: "classic",
-    theme: "light", // Note: The LiveDemo component has dynamic theme switching, here we default to light
+    theme: "bumblebee", // Note: The LiveDemo component has dynamic theme switching, here we default to light
     views: 890,
     likes: 124,
     social_links: {

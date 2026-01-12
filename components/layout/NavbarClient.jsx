@@ -70,7 +70,7 @@ export default function NavbarClient({
     router.push("/login");
   };
 
-  console.log(" isAuthenticated ", isAuthenticated);
+  //console.log(" isAuthenticated ", isAuthenticated);
   return (
     <nav className="sticky top-0 z-50 bg-base-100/90 backdrop-blur border-b">
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">

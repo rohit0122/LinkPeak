@@ -8,7 +8,7 @@ import { CONFIG } from "@/constants/config";
 import Link from "next/link";
 
 export default function LiveDemo() {
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState("bumblebee");
 
   const demoPage = {
     theme: theme,

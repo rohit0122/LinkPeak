@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, Suspense, use } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import axios from "@/lib/httpClient";
 import Link from "next/link";
@@ -33,7 +33,7 @@ function VerifyContent() {
         setStatus("error");
         setMessage(
           err.response?.data?.error ||
-            "Verification failed. The link may be expired."
+          "Verification failed. The link may be expired."
         );
       }
     };
@@ -117,9 +117,8 @@ function VerifyContent() {
   );
 }
 
-export default function VerifyPage(props) {
-  const searchParams = use(props.searchParams);
-  const params = use(props.params);
+export default function VerifyPage() {
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-base-200 px-4 py-12">
       <Suspense

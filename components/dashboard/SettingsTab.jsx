@@ -116,13 +116,15 @@ export default function SettingsTab({
             <label className="label">
               <span className="label-text">Bio / Description</span>
             </label>
+            {console.log("mergedBio Page ", mergedBioPage?.bio)}
             <textarea
               className="textarea textarea-bordered h-24 resize-none w-full"
               placeholder="Tell the world who you are..."
               value={mergedBioPage?.bio || ""}
               onChange={(e) => {
-                updateTempBioPageConfigSession({ bio: e.target.value });
+                setTempPageData({ bio: e.target.value });
               }}
+              autoComplete="off"
             />
           </div>
 

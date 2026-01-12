@@ -357,9 +357,8 @@ function RegisterForm() {
   );
 }
 
-export default function RegisterPage(props) {
-  const searchParams = use(props.searchParams);
-  const params = use(props.params);
+export default function RegisterPage() {
+
   return (
     <Suspense
       fallback={
