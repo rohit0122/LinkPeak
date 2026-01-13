@@ -105,21 +105,23 @@ export default function AnalyticsView() {
   };
 
   return (
-    <div className="space-y-2 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
       {/* Header */}
-      <div className="flex justify-between items-center bg-base-100 p-4 border border-base-300 shadow-sm">
-        <div>
-          <h2 className="text-lg font-bold">Analytics Overview</h2>
-          <p className="text-xs opacity-60">Real-time performance metrics</p>
+      <div className="card bg-base-100 shadow-sm border border-base-300">
+        <div className="card-body p-6 flex-row items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold">Analytics Overview</h2>
+            <p className="text-xs opacity-60 mt-1">Real-time performance metrics</p>
+          </div>
+          <button
+            onClick={handleRefresh}
+            disabled={isLoading}
+            className="btn btn-sm btn-neutral btn-outline gap-2"
+          >
+            <RiRefreshLine className={isLoading ? "animate-spin" : ""} />
+            Refresh Data
+          </button>
         </div>
-        <button
-          onClick={handleRefresh}
-          disabled={isLoading}
-          className="btn btn-sm btn-neutral btn-outline gap-2"
-        >
-          <RiRefreshLine className={isLoading ? "animate-spin" : ""} />
-          Refresh Data
-        </button>
       </div>
 
       {/* Error Message */}
@@ -132,6 +134,8 @@ export default function AnalyticsView() {
       {/* Stat Cards */}
       <StatsCards totals={activeTotals} />
 
+      <div className="divider"></div>
+
       {/* Summary Engagement Chart */}
       {isLoading ? (
         <SkeletonTable />
@@ -143,6 +147,8 @@ export default function AnalyticsView() {
           currentRange={currentRange}
         />
       )}
+
+      <div className="divider"></div>
 
       {/* Link Performance Chart */}
       {isLoading ? (

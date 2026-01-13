@@ -37,11 +37,11 @@ export default function SettingsTab({
     ...tempBioPageConfig,
   };
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-6">
       {/* Identity Section (Profile + Details) */}
-      <div className="card bg-base-100 shadow-sm border border-base-300 lg:col-span-2">
-        <div className="card-body p-8 lg:p-10">
-          <div className="flex flex-col md:flex-row gap-10">
+      <div className="card bg-base-100 shadow-sm border border-base-300 rounded-lg">
+        <div className="card-body p-6">
+          <div className="flex flex-col md:flex-row gap-8">
             {/* Left: Profile Image */}
             <div className="flex-none flex flex-col items-center gap-4">
               <div className="relative group">
@@ -56,11 +56,11 @@ export default function SettingsTab({
             {/* Right: Inputs */}
             <div className="flex-1 space-y-6">
               <div>
-                <h2 className="text-xl font-medium tracking-tight flex items-center gap-2 mb-1">
+                <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2 mb-1">
                   <RiUserLine className="text-primary" />
                   Identity & Details
                 </h2>
-                <p className="text-xs font-medium opacity-50">
+                <p className="text-xs opacity-60">
                   Manage your public profile information.
                 </p>
               </div>

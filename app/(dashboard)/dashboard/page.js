@@ -361,27 +361,26 @@ export default function DashboardPage() {
         />
       )}
 
-      <div className="flex flex-col lg:flex-row gap-8 min-h-full">
+      <div className="flex flex-col lg:flex-row gap-6 min-h-full">
         <div className="flex-1 w-full max-w-5xl mx-auto">
           {/* Admin Indicator */}
           {currentUser?.role === "admin" && (
             <div className="alert bg-base-100 border-l-4 border-primary shadow-sm mb-6 rounded-l-none">
-              <RiAdminLine className="text-2xl text-primary" />
+              <RiAdminLine className="text-2xl text-primary shrink-0" />
               <div>
-                <h3 className="font-bold flex items-center gap-2">
+                <h3 className="text-sm font-bold flex items-center gap-2">
                   Admin Dashboard
                   <span className="badge badge-xs badge-neutral">SU</span>
                 </h3>
-                <div className="text-xs opacity-60">
-                  You have full system access. Manage tickets in the Support
-                  tab.
-                </div>
+                <p className="text-xs opacity-60 mt-0.5">
+                  You have full system access. Manage tickets in the Support tab.
+                </p>
               </div>
             </div>
           )}
 
-          {/* Responsive Tabs Grid */}
-          <div className="grid grid-cols-3 md:grid-cols-6 gap-2 bg-base-100 p-2 mb-2 shadow-sm">
+          {/* Responsive Tabs */}
+          <div role="tablist" className="tabs tabs-boxed bg-base-100 p-2 mb-6 shadow-sm gap-2">
             {[
               { key: "links", label: "Links", icon: RiLayoutLine },
               { key: "analytics", label: "Stats", icon: RiBarChartLine },
@@ -392,30 +391,12 @@ export default function DashboardPage() {
             ].map(({ key, label, icon: Icon }) => (
               <button
                 key={key}
+                role="tab"
                 onClick={() => handleTabSwitch(key)}
-                className={`
-                btn btn-ghost
-                h-14 md:h-10
-                flex flex-col md:flex-row
-                items-center justify-center
-                gap-1 md:gap-2
-                transition-all
-                ${activeTab === key
-                    ? "btn-active !bg-primary !text-primary-content"
-                    : ""
-                  }
-            `}
+                className={`tab h-14 md:h-10 flex flex-col md:flex-row items-center justify-center gap-1 md:gap-2 transition-all ${activeTab === key ? "tab-active" : ""
+                  }`}
               >
-                {/* Icon */}
-                <Icon
-                  className="
-                    text-2xl md:text-lg
-                    transition-transform
-                    group-hover:scale-110
-                "
-                />
-
-                {/* Label */}
+                <Icon className="text-2xl md:text-lg" />
                 <span className="text-[10px] md:text-sm font-medium md:font-normal">
                   {label}
                 </span>

@@ -231,9 +231,8 @@ export default function SupportView({
                   {selectedTicket.created_at}
                 </div>
                 <div
-                  className={`chat-bubble whitespace-pre-wrap ${
-                    isMyTicket ? "chat-bubble-primary" : "chat-bubble-neutral"
-                  }`}
+                  className={`chat-bubble whitespace-pre-wrap ${isMyTicket ? "chat-bubble-primary" : "chat-bubble-neutral"
+                    }`}
                 >
                   {selectedTicket.message}
                 </div>
@@ -251,11 +250,10 @@ export default function SupportView({
               >
                 <div className="chat-image avatar placeholder">
                   <div
-                    className={`rounded-full w-10 flex items-center justify-center ${
-                      reply.role === "admin"
-                        ? "bg-primary text-primary-content"
-                        : "bg-neutral text-neutral-content"
-                    }`}
+                    className={`rounded-full w-10 flex items-center justify-center ${reply.role === "admin"
+                      ? "bg-primary text-primary-content"
+                      : "bg-neutral text-neutral-content"
+                      }`}
                   >
                     <span className="text-sm font-bold">
                       {getInitials(reply.senderName)}
@@ -272,9 +270,8 @@ export default function SupportView({
                   </time>
                 </div>
                 <div
-                  className={`chat-bubble whitespace-pre-wrap ${
-                    isMe ? "chat-bubble-primary" : "chat-bubble-base-200"
-                  }`}
+                  className={`chat-bubble whitespace-pre-wrap ${isMe ? "chat-bubble-primary" : "chat-bubble-base-200"
+                    }`}
                 >
                   {reply.message}
                 </div>
@@ -314,16 +311,16 @@ export default function SupportView({
       {!isAdmin && (
         <div className="card bg-base-100 shadow-sm border border-base-300 h-fit">
           <div className="card-body">
-            <h2 className="card-title mb-6 grid items-center gap-2">
+            <h2 className="card-title mb-6 flex items-center gap-2">
               <RiMessage2Line className="text-primary" />
               New Support Ticket
             </h2>
             <form
               onSubmit={handleCreateTicket}
-              className="grid grid-cols-1 lg:grid-cols-2 gap-4"
+              className="grid grid-cols-1 md:grid-cols-4 gap-4"
             >
               {/* Compact Form */}
-              <div className="form-control grid col-span-2 md:col-span-1">
+              <div className="form-control">
                 <label className="label py-1">
                   <span className="label-text">Category</span>
                 </label>
@@ -341,7 +338,7 @@ export default function SupportView({
                   ))}
                 </select>
               </div>
-              <div className="form-control grid col-span-2 md:col-span-1">
+              <div className="form-control">
                 <label className="label py-1">
                   <span className="label-text">Priority</span>
                 </label>
@@ -357,7 +354,7 @@ export default function SupportView({
                   <option value="HIGH">High</option>
                 </select>
               </div>
-              <div className="form-control grid col-span-2">
+              <div className="form-control md:col-span-2">
                 <label className="label py-1">
                   <span className="label-text">Subject</span>
                 </label>
@@ -372,7 +369,7 @@ export default function SupportView({
                   placeholder="Brief issue summary"
                 />
               </div>
-              <div className="form-control grid col-span-2">
+              <div className="form-control md:col-span-4">
                 <label className="label py-1">
                   <span className="label-text">Message</span>
                 </label>
@@ -386,7 +383,7 @@ export default function SupportView({
                   placeholder="Details..."
                 />
               </div>
-              <div className="col-span-2">
+              <div className="md:col-span-4">
                 <button type="submit" className="btn btn-primary btn-block">
                   Create Ticket
                 </button>
