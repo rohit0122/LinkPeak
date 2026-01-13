@@ -33,9 +33,10 @@ export default function UpgradePlanModal({
                             <h4 className="font-semibold text-lg">PRO</h4>
                         </div>
 
-                        <p className="text-sm text-base-content/70 mb-3">
-                            Perfect for creators & professionals
-                        </p>
+                        <div className="text-xs text-base-content/70 mb-3 space-y-1">
+                            <p>✅ 5 Pro Templates & 10 Themes</p>
+                            <p>✅ 1000 Links & 90 Days Analytics</p>
+                        </div>
 
                         <div className="font-bold text-2xl">$9/month</div>
 
@@ -57,9 +58,10 @@ export default function UpgradePlanModal({
                             <h4 className="font-semibold text-lg">AGENCY</h4>
                         </div>
 
-                        <p className="text-sm text-base-content/70 mb-3">
-                            Built for teams, businesses & agencies
-                        </p>
+                        <div className="text-xs text-base-content/70 mb-3 space-y-1">
+                            <p>✅ All 15+ Templates & Themes</p>
+                            <p>✅ Lifetime Analytics & White Label</p>
+                        </div>
 
                         <div className="font-bold text-2xl">$49/month</div>
                         <div className="mt-4">
