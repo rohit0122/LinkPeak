@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import PreviewPhone from "@/components/shared/PreviewPhone";
+import PreviewPhoneNew from "@/components/shared/PreviewPhoneNew";
 import ThemeSelector from "@/components/dashboard/ThemeSelector";
 import { RiPaletteLine, RiMagicLine, RiArrowRightUpLine } from "react-icons/ri";
 import { CONFIG } from "@/constants/config";
@@ -16,34 +16,33 @@ export default function LiveDemo() {
     bio: "Sustainable living & ethical travel tips for the modern soul.",
     profile_image: "/avatars/avatar-generic-eco.svg",
     template: "classic",
-    total_views: "890",
+    total_views: 890,
     social_links: {
       instagram: "instagram.com",
       facebook: "facebook.com",
       linkedin: "linkedin.com",
     },
+    links: [
+      {
+        id: 1,
+        title: "Zero Waste Guide 🌍",
+        url: `${CONFIG.SITE_URL}/demo/eco-wanderer?theme=${theme}`,
+        is_active: true,
+      },
+      {
+        id: 2,
+        title: "My Ethical Kit 👜",
+        url: `${CONFIG.SITE_URL}/demo/eco-wanderer?theme=${theme}`,
+        is_active: true,
+      },
+      {
+        id: 3,
+        title: "Eco-stays in Bali 🛖",
+        url: `${CONFIG.SITE_URL}/demo/eco-wanderer?theme=${theme}`,
+        is_active: true,
+      },
+    ],
   };
-
-  const demoLinks = [
-    {
-      id: 1,
-      title: "Zero Waste Guide 🌍",
-      url: `${CONFIG.SITE_URL}/demo/eco-wanderer?theme=${theme}`,
-      is_active: true,
-    },
-    {
-      id: 2,
-      title: "My Ethical Kit 👜",
-      url: `${CONFIG.SITE_URL}/demo/eco-wanderer?theme=${theme}`,
-      is_active: true,
-    },
-    {
-      id: 3,
-      title: "Eco-stays in Bali 🛖",
-      url: `${CONFIG.SITE_URL}/demo/eco-wanderer?theme=${theme}`,
-      is_active: true,
-    },
-  ];
 
   return (
     <section id="demo" className="py-24 bg-base-200">
@@ -51,9 +50,10 @@ export default function LiveDemo() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
           <div className="order-2 lg:order-1 flex justify-center">
             <div className="scale-90 lg:scale-110 transform-gpu origin-center will-change-transform">
-              <PreviewPhone
-                demoData={{ ...demoPage, links: demoLinks }}
-                key={demoLinks.map((l) => l.id).join("-")}
+              <PreviewPhoneNew
+                demoData={demoPage}
+                isDemo={true}
+                key={theme}
               />
             </div>
           </div>

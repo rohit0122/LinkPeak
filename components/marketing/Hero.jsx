@@ -5,7 +5,7 @@ import {
   RiPlayCircleLine,
 } from "react-icons/ri";
 import { CONFIG } from "@/constants/config";
-import PreviewPhone from "@/components/shared/PreviewPhone";
+import PreviewPhoneNew from "@/components/shared/PreviewPhoneNew";
 import Link from "next/link";
 
 export default function Hero() {
@@ -15,34 +15,33 @@ export default function Hero() {
     bio: "Digital Creator & Traveler 🏔️ | Sharing my latest journeys and gear.",
     profile_image: "/avatars/avatar-female-eliza.svg",
     template: "classic",
-    total_views: "12450",
+    total_views: 12450,
     social_links: {
       instagram: "instagram.com",
       twitter: "twitter.com",
       tiktok: "tiktok.com",
     },
+    links: [
+      {
+        id: 1,
+        title: "My Travel Guide 🌍",
+        url: `${CONFIG.SITE_URL}/demo/eliza-miller`,
+        is_active: true,
+      },
+      {
+        id: 2,
+        title: "Latest Vlog 📹",
+        url: `${CONFIG.SITE_URL}/demo/eliza-miller`,
+        is_active: true,
+      },
+      {
+        id: 3,
+        title: "Photography Gear 📸",
+        url: `${CONFIG.SITE_URL}/demo/eliza-miller`,
+        is_active: true,
+      },
+    ],
   };
-
-  const demoLinks = [
-    {
-      id: 1,
-      title: "My Travel Guide 🌍",
-      url: `${CONFIG.SITE_URL}/demo/eliza-miller`,
-      is_active: true,
-    },
-    {
-      id: 2,
-      title: "Latest Vlog 📹",
-      url: `${CONFIG.SITE_URL}/demo/eliza-miller`,
-      is_active: true,
-    },
-    {
-      id: 3,
-      title: "Photography Gear 📸",
-      url: `${CONFIG.SITE_URL}/demo/eliza-miller`,
-      is_active: true,
-    },
-  ];
 
   return (
     <header className="relative min-h-screen pt-16 md:pt-12 pb-20 overflow-hidden bg-base-100">
@@ -138,10 +137,7 @@ export default function Hero() {
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-primary/20 rounded-full blur-[80px]"></div>
 
             <div className="relative hover:rotate-3 transition-transform duration-700 transform-gpu origin-center">
-              <PreviewPhone
-                demoData={{ ...demoPage, links: demoLinks }}
-                key={demoLinks.map((l) => l.id).join("-")}
-              />
+              <PreviewPhoneNew demoData={demoPage} isDemo={true} />
             </div>
 
             {/* Float Cards */}

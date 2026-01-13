@@ -25,15 +25,17 @@ const GradientMeshTemplate = dynamic(() => import("@/components/templates/upgrad
 const ClassicTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/templatesWithBio/ClassicTemplate"), { ssr: false });
 const HeroTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/templatesWithBio/HeroTemplate"), { ssr: false });
 
-export default function PreviewPhoneNew({ demoData = {} }) {
+export default function PreviewPhoneNew({ demoData = {}, isDemo = false }) {
     const { currentBioPage, tempBioPageConfig } = useAuthStore();
 
-    // Merge state for live preview
-    const mergedBioPage = {
-        ...demoData,
-        ...currentBioPage,
-        ...tempBioPageConfig,
-    };
+    // Merge state for live preview - but only if NOT in demo mode
+    const mergedBioPage = isDemo
+        ? demoData
+        : {
+            ...demoData,
+            ...currentBioPage,
+            ...tempBioPageConfig,
+        };
 
     const { theme, template, links } = mergedBioPage;
 
