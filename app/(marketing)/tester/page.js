@@ -5,14 +5,14 @@ import DarkNeonTemplate from "@/components/templates/upgradedTemplates/templates
 import ElegantSerifTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/ElegantSerifTemplate";
 import GlassmorphismTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/GlassmorphismTemplate";
 import GradientMeshTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/GradientMeshTemplate";
-import GridTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/GridTemplate";
-import GridTilesTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/GridTilesTemplate";
+import BentoTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/BentoTemplate";
+import TilesTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/TilesTemplate";
 import HeroTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/HeroTemplate";
 import MinimalistTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/MinimalistTemplate";
-import ModernCardsTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/ModernCardsTemplate";
-import ModernTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/ModernTemplate";
+import StackTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/StackTemplate";
+import SleekTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/SleekTemplate";
 import NeoBrutalismTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/NeoBrutalismTemplate";
-import SocialTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/SocialTemplate";
+import InfluencerTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/InfluencerTemplate";
 import SoftPastelTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/SoftPastelTemplate";
 import Head from "next/head";
 /* Import all templates */
@@ -105,15 +105,15 @@ export default function PreviewPage() {
         <hr />
 
         <section id="maker">
-          <h2 className="text-2xl font-bold mb-4">Maker Template</h2>
-          <GridTilesTemplate page={bioInfo} links={links} />
+          <h2 className="text-2xl font-bold mb-4">Maker Template (Tiles)</h2>
+          <TilesTemplate page={bioInfo} links={links} />
         </section>
 
         <hr />
 
         <section id="musician">
-          <h2 className="text-2xl font-bold mb-4">Musician Template</h2>
-          <ModernCardsTemplate page={bioInfo} links={links} />
+          <h2 className="text-2xl font-bold mb-4">Musician Template (Stack)</h2>
+          <StackTemplate page={bioInfo} links={links} />
         </section>
 
         <hr />
@@ -141,18 +141,18 @@ export default function PreviewPage() {
         </section>
 
         <section id="grid">
-          <h2 className="text-2xl font-bold mb-4">Grid</h2>
-          <GridTemplate page={bioInfo} links={links} />
+          <h2 className="text-2xl font-bold mb-4">Bento</h2>
+          <BentoTemplate page={bioInfo} links={links} />
         </section>
 
         <section id="modern">
-          <h2 className="text-2xl font-bold mb-4">Modern</h2>
-          <ModernTemplate page={bioInfo} links={links} />
+          <h2 className="text-2xl font-bold mb-4">Sleek</h2>
+          <SleekTemplate page={bioInfo} links={links} />
         </section>
 
         <section id="social">
-          <h2 className="text-2xl font-bold mb-4">Social</h2>
-          <SocialTemplate page={bioInfo} links={links} />
+          <h2 className="text-2xl font-bold mb-4">Influencer</h2>
+          <InfluencerTemplate page={bioInfo} links={links} />
         </section>
       </main>
     </>

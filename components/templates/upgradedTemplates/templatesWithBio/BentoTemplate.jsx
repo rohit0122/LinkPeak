@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { RiArrowRightUpLine, RiEyeFill, RiLinkM } from "react-icons/ri";
 
-export default function GridTemplate({ page, links, handleLinkClick }) {
+export default function BentoTemplate({ page, links, handleLinkClick }) {
     const container = {
         hidden: { opacity: 0 },
         show: {

@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { RiLinkM, RiEyeFill } from "react-icons/ri";
 
-export default function GridTilesTemplate({ page, links, handleLinkClick }) {
+export default function TilesTemplate({ page, links, handleLinkClick }) {
     const container = {
         hidden: { opacity: 0 },
         show: {

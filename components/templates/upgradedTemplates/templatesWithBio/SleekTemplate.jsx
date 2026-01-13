@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { RiExternalLinkLine, RiEyeFill } from "react-icons/ri";
 
-export default function ModernTemplate({ page, links, handleLinkClick }) {
+export default function SleekTemplate({ page, links, handleLinkClick }) {
     const container = {
         hidden: { opacity: 0 },
         show: {

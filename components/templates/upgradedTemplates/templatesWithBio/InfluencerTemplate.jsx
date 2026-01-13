@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { RiArrowRightLine, RiShareForwardFill, RiVerifiedBadgeFill, RiMoreFill } from "react-icons/ri";
 
-export default function SocialTemplate({ page, links, handleLinkClick }) {
+export default function InfluencerTemplate({ page, links, handleLinkClick }) {
     const container = {
         hidden: { opacity: 0 },
         show: {
