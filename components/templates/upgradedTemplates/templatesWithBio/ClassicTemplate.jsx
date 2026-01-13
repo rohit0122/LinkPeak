@@ -41,7 +41,7 @@ export default function ClassicTemplate({ page, links, handleLinkClick }) {
                 )}
                 <div className="mt-3 flex justify-center">
                     <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-base-200 text-xs font-semibold text-base-content/60">
-                        <RiEyeFill /> {page.views}
+                        <RiEyeFill /> {page.total_views || 0}
                     </div>
                 </div>
             </div>
@@ -66,13 +66,10 @@ export default function ClassicTemplate({ page, links, handleLinkClick }) {
                         "
                         aria-label={link.title}
                     >
-                        {/* Icon Positioned Absolute Left for Classic Balance */}
-                        {link.icon || <RiLinkM className="absolute left-6 top-1/2 -translate-y-1/2 text-xl text-base-content/40 group-hover:text-base-content/80 transition-colors" />}
-                        {link.icon && (
-                            <span className="absolute left-6 top-1/2 -translate-y-1/2 text-xl text-base-content/40 group-hover:text-base-content/80 transition-colors">
-                                {link.icon}
-                            </span>
-                        )}
+                        {/* Unified Icon Rendering */}
+                        <span className="absolute left-6 top-1/2 -translate-y-1/2 text-xl text-base-content/40 group-hover:text-base-content/80 transition-colors flex items-center justify-center">
+                            {link.icon || <RiLinkM />}
+                        </span>
 
                         <span className="font-semibold text-base-content group-hover:text-base-content/90">
                             {link.title}

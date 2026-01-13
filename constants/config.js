@@ -22,8 +22,8 @@ export const CONFIG = {
     // RBAC & Plan Limits
     PLAN_LIMITS: {
         DEMO: { links: 5, pages: 1, allowedTemplates: ["classic"], themes: "ALL", analyticsDays: 7, customQR: false },
-        FREE: { links: 5, pages: 1, allowedTemplates: ["classic"], themes: ["light", "dark"], analyticsDays: 7, customQR: false },
-        PRO: { links: 1000, pages: 1, allowedTemplates: ["classic", "grid", "hero"], themes: "ALL", analyticsDays: 90, customQR: true },
+        FREE: { links: 5, pages: 1, allowedTemplates: ["classic", "bento", "hero", "minimalist"], themes: ["light", "dark"], analyticsDays: 7, customQR: false },
+        PRO: { links: 1000, pages: 1, allowedTemplates: ["classic", "bento", "hero", "minimalist", "influencer", "sleek", "elegantserif", "glassmorphism", "stack"], themes: "ALL", analyticsDays: 90, customQR: true },
         AGENCY: { links: 1000, pages: 10, allowedTemplates: "ALL", themes: "ALL", analyticsDays: 9999, customQR: true }
     },
     // UI Settings
@@ -39,7 +39,13 @@ export const CONFIG = {
         { id: "valentine", label: "Romance" },
         { id: "luxury", label: "Premium Gold" },
         { id: "dracula", label: "Dark Pro" },
-        { id: "coffee", label: "Cozy Roast" }
+        { id: "coffee", label: "Cozy Roast" },
+        { id: "cyberglow", label: "Cyber Glow" },
+        { id: "indigomist", label: "Indigo Mist" },
+        { id: "mossycode", label: "Mossy Code" },
+        { id: "velvetgold", label: "Velvet Gold" },
+        { id: "hyperbubble", label: "Hyper Bubble" },
+        { id: "sandsofzen", label: "Sands of Zen" }
     ],
 
     SUPPORT_CATEGORIES: ["Billing", "Technical", "Feedback", "General"],

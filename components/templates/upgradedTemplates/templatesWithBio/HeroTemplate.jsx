@@ -26,7 +26,7 @@ export default function HeroTemplate({ page, links, handleLinkClick }) {
                         <h1 className="font-bold text-lg leading-none">{page.title}</h1>
                     </div>
                     <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-base-100 border border-base-content/10 text-xs font-bold text-base-content/60">
-                        <RiEyeLine /> {page.views}
+                        <RiEyeLine /> {page.total_views || 0}
                     </div>
                 </div>
                 {page.bio && (

@@ -39,7 +39,7 @@ export default function GlassmorphismTemplate({ page, links, handleLinkClick }) 
                 <h1 className="text-2xl font-bold mb-2">{page.title}</h1>
                 <p className="text-sm opacity-80 mb-4 font-medium max-w-[80%] mx-auto">{page.bio}</p>
                 <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-base-100/50 backdrop-blur-md border border-base-content/5 text-xs font-bold uppercase tracking-wider text-primary">
-                    <RiEyeLine /> {page.views}
+                    <RiEyeLine /> {page.total_views || 0}
                 </div>
             </div>
 

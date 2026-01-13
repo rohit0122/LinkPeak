@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import axios from "@/lib/httpClient";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import LinkEditor from "@/components/dashboard/LinkEditor";
-import PreviewPhone from "@/components/shared/PreviewPhone";
+import PreviewPhoneNew from "@/components/shared/PreviewPhoneNew";
 import UnsavedChangesModal from "@/components/dashboard/UnsavedChangesModal";
 import ThemeTab from "@/components/dashboard/ThemeTab";
 import SettingsTab from "@/components/dashboard/SettingsTab";
@@ -511,7 +511,7 @@ export default function DashboardPage() {
 
         <div className="w-full lg:w-[400px] mt-20 lg:mt-0">
           <div className="lg:sticky top-8 transform-gpu scale-[0.8] sm:scale-95 lg:scale-90 lg:translate-x-4 origin-top flex justify-center lg:block">
-            <PreviewPhone
+            <PreviewPhoneNew
               key={`${currentBioPage?.id}-${currentBioPage?.links
                 .map((l) => l.id + l.is_active)
                 .join("|")}-${unsavedChanges}`}

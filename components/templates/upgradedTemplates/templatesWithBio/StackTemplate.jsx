@@ -44,7 +44,7 @@ export default function StackTemplate({ page, links, handleLinkClick }) {
                 <h1 className="text-2xl font-black text-base-content mb-2 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-base-content to-base-content/60">{page?.title || "Untitled"}</h1>
                 <p className="text-sm font-medium text-base-content/70 mb-5 max-w-lg mx-auto leading-relaxed">{page?.bio || ""}</p>
                 <div className="inline-flex items-center gap-2 px-5 py-2 bg-base-100 rounded-full text-xs font-bold text-primary shadow-sm border border-primary/10 hover:shadow-md hover:shadow-primary/10 transition-all cursor-default">
-                    <RiEyeFill className="text-lg" /> {page?.views || 0}
+                    <RiEyeFill className="text-lg" /> {page?.total_views || 0}
                 </div>
             </div>
 

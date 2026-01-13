@@ -1,7 +1,7 @@
 import { cache } from "react";
 import restClient from "@/lib/restClient";
 import { BACKEND_ENDPOINTS } from "@/constants/endpoints";
-import PublicBio from "./PublicBio";
+import PublicBioNew from "./PublicBioNew";
 import BioNotFound from "@/components/bio-templates/BioNotFound";
 import { CONFIG } from "@/constants/config";
 
@@ -12,7 +12,7 @@ const getBioPage = cache(async (slug) => {
     const response = await restClient.get(
       BACKEND_ENDPOINTS.PUBLIC.GET_PAGE(slug)
     );
-    //console.log('slug data =>>>>>>>>>>>>>>>>>>>', response.data);
+    // console.log('slug data =>>>>>>>>>>>>>>>>>>>', response.data);
     if (response.data?.success) {
       return response.data.data.page;
     }
@@ -80,5 +80,5 @@ export default async function Page({ params }) {
   // Serialize? Not needed if they are just objects, but good practice if passing to Client Component
   // Since we manually constructed them from JSON, they are serializable.
 
-  return <PublicBio page={normalizedPage} links={normalizedLinks} />;
+  return <PublicBioNew page={normalizedPage} links={normalizedLinks} />;
 }

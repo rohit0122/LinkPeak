@@ -76,7 +76,7 @@ export default function InfluencerTemplate({ page, links, handleLinkClick }) {
                         <div className="w-px h-8 bg-base-content/10"></div>
                         <div className="text-center">
                             <span className="block font-bold text-xl text-base-content">
-                                {page.views > 999 ? (page.views / 1000).toFixed(1) + 'k' : page.views}
+                                {page.total_views > 999 ? (page.total_views / 1000).toFixed(1) + 'k' : page.total_views || 0}
                             </span>
                             <span className="text-[10px] text-base-content/40 font-bold uppercase tracking-wider">Views</span>
                         </div>

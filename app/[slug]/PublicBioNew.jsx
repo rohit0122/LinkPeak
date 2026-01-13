@@ -31,6 +31,7 @@ const ClassicTemplate = dynamic(() => import("@/components/templates/upgradedTem
 const HeroTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/templatesWithBio/HeroTemplate"), { ssr: true });
 
 export default function PublicBioNew({ page, links, isDemo = false }) {
+  const [totalViews, setTotalViews] = useState(page.total_views || 0);
   const [likes, setLikes] = useState(page.likes || 0);
   const [isLiked, setIsLiked] = useState(false);
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
@@ -48,7 +49,12 @@ export default function PublicBioNew({ page, links, isDemo = false }) {
     const templateKey = (page.template || "mnml").toLowerCase();
 
     // Props to pass to every template
-    const commonProps = { page, links, handleLinkClick };
+    // Overriding views and likes with local state for real-time updates
+    const commonProps = {
+      page: { ...page, total_views: totalViews, likes: likes },
+      links,
+      handleLinkClick
+    };
 
     // Map template keys to Components
     // Legacy keys might need mapping if they exist in DB
@@ -101,7 +107,10 @@ export default function PublicBioNew({ page, links, isDemo = false }) {
     if (checkUnique(viewedKey)) {
       const timer = setTimeout(() => {
         axios.post(ENDPOINTS.TRACK.VIEW, { pageId: page.id }, { skipLoader: true })
-          .then(() => localStorage.setItem(viewedKey, new Date().getTime().toString()))
+          .then(() => {
+            localStorage.setItem(viewedKey, new Date().getTime().toString());
+            setTotalViews(prev => prev + 1);
+          })
           .catch(console.error);
       }, 3000);
       return () => clearTimeout(timer);

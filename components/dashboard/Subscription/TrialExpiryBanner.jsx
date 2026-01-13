@@ -7,10 +7,12 @@ import axios from "@/lib/httpClient";
 import toast from "react-hot-toast";
 import { loadRazorpay } from "@/lib/razorpayClient";
 import { CONFIG } from "@/constants/config";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 export default function TrialExpiryBanner() {
 
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const { currentSubscription } = useAuthStore();
 
   if (!currentSubscription) return null;
 

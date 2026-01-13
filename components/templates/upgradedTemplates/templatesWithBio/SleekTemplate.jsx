@@ -38,7 +38,7 @@ export default function SleekTemplate({ page, links, handleLinkClick }) {
                     />
                     <div className="absolute -bottom-3 -right-3 bg-base-100 p-1.5 rounded-xl shadow-md">
                         <div className="bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-lg flex items-center gap-1.5">
-                            <RiEyeFill /> {page.views}
+                            <RiEyeFill /> {page.total_views || 0}
                         </div>
                     </div>
                 </div>

@@ -29,7 +29,7 @@ export default function NeoBrutalismTemplate({ page, links, handleLinkClick }) {
             {/* Profile Header */}
             <div className="bg-secondary text-secondary-content p-6 border-2 border-base-content shadow-[8px_8px_0px_0px_currentColor] rounded-xl mb-8 text-center relative overflow-hidden group">
                 <div className="absolute top-3 right-3 flex items-center gap-1 text-xs font-black border-2 border-base-content px-2 py-1 bg-base-100 text-base-content rotate-[-5deg] shadow-[2px_2px_0px_0px_currentColor] group-hover:rotate-0 transition-transform">
-                    <RiEyeFill /> {page.views}
+                    <RiEyeFill /> {page.total_views || 0}
                 </div>
 
                 <div className="relative inline-block mb-4">

@@ -40,48 +40,60 @@ export default function ThemeTab({
         </div>
       </div>
 
-      {/* Template Selection */}
-      <section>
-        <h2 className="text-xl font-bold tracking-tight flex items-center gap-3 mb-6">
-          <div className="p-2 bg-primary/10 text-primary">
-            <RiLayoutMasonryLine className="text-xl" />
-          </div>
-          1. Choose Template
-        </h2>
-        <TemplateSelector
-          currentTemplate={mergedBioPage?.template}
-          plan={currentUser?.plan}
-          onSelect={(t) => setTempPageData({ template: t })}
-        />
-      </section>
+      <div className="join join-vertical bg-base-100 w-full">
+        {/* Template Selection */}
+        <section className="collapse collapse-arrow join-item border-base-300 border">
+          <input type="radio" name="my-accordion-4" />
 
-      {/* Theme Selection */}
-      <section>
-        <h2 className="text-xl font-bold tracking-tight flex items-center gap-3 mb-6">
-          <div className="p-2 bg-primary/10  text-primary">
-            <RiPaletteLine className="text-xl" />
+          <h2 className="text-xl font-bold tracking-tight flex items-center gap-3 collapse-title">
+            <div className="p-2 bg-primary/10 text-primary">
+              <RiLayoutMasonryLine className="text-xl" />
+            </div>
+            1. Choose Template
+          </h2>
+          <div className="collapse-content">
+            <TemplateSelector
+              currentTemplate={mergedBioPage?.template}
+              plan={currentUser?.plan}
+              onSelect={(t) => setTempPageData({ template: t })}
+            />
           </div>
-          2. Choose Identity Theme
-        </h2>
-        <div className="bg-base-100 p-2 border border-base-300 shadow-sm overflow-hidden">
-          <ThemeSelector
-            currentTheme={mergedBioPage?.theme}
-            plan={currentUser?.plan}
-            onSelect={(theme) => setTempPageData({ theme })}
-          />
-        </div>
-      </section>
+        </section>
 
-      {/* Branding / White Labeling (Moved from Settings) */}
-      <section>
-        <h2 className="text-xl font-bold tracking-tight flex items-center gap-3 mb-6">
-          <div className="p-2 bg-primary/10 text-primary">
-            <RiShieldStarLine className="text-xl" />
+        {/* Theme Selection */}
+        <section className="collapse collapse-arrow join-item border-base-300 border">
+          <input type="radio" name="my-accordion-4" defaultChecked />
+
+          <h2 className="text-xl font-bold tracking-tight flex items-center gap-3 collapse-title">
+            <div className="p-2 bg-primary/10  text-primary">
+              <RiPaletteLine className="text-xl" />
+            </div>
+            2. Choose Identity Theme
+          </h2>
+          <div className="bg-base-100 p-2 border border-base-300 shadow-sm overflow-hidden collapse-content">
+            <ThemeSelector
+              currentTheme={mergedBioPage?.theme}
+              plan={currentUser?.plan}
+              onSelect={(theme) => setTempPageData({ theme })}
+            />
           </div>
-          3. Branding & White Labeling
-        </h2>
-        <BrandingEditor />
-      </section>
+        </section>
+
+        {/* Branding / White Labeling (Moved from Settings) */}
+        <section className="collapse collapse-arrow join-item border-base-300 border">
+          <input type="radio" name="my-accordion-4" />
+
+          <h2 className="text-xl font-bold tracking-tight flex items-center gap-3 collapse-title">
+            <div className="p-2 bg-primary/10 text-primary">
+              <RiShieldStarLine className="text-xl" />
+            </div>
+            3. Branding & White Labeling
+          </h2>
+          <div className="collapse-content">
+            <BrandingEditor />
+          </div>
+        </section>
+      </div>
     </div>
   );
 }

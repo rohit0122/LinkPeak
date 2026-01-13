@@ -18,6 +18,7 @@ import {
   RiLockLine,
 } from "react-icons/ri";
 import SubscriptionDetails from "@/components/dashboard/Subscription/SubscriptionDetails";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 export default function SettingsTab({
   currentBioPage,

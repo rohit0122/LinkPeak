@@ -1,10 +1,16 @@
-import { Outfit, Plus_Jakarta_Sans } from "next/font/google";
+import {
+  Outfit,
+  Plus_Jakarta_Sans,
+  Space_Grotesk,
+  Playfair_Display,
+  JetBrains_Mono,
+  Fredoka
+} from "next/font/google";
 import "./globals.css";
 import { CONFIG } from "@/constants/config";
 import ClientProvider from "@/components/providers/ClientProvider";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import "@/lib/axiosClientInterceptors";
-
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -15,6 +21,30 @@ const outfit = Outfit({
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
+  display: "swap",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-cyber",
+  display: "swap",
+});
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-serif",
+  display: "swap",
+});
+
+const mono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+});
+
+const fredoka = Fredoka({
+  subsets: ["latin"],
+  variable: "--font-pop",
   display: "swap",
 });
 
@@ -55,9 +85,9 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" data-theme="linkPeakTheme">
+    <html lang="en" data-theme="linkpeak">
       <body
-        className={`${outfit.variable} ${jakarta.variable} antialiased`}
+        className={`${outfit.variable} ${jakarta.variable} ${spaceGrotesk.variable} ${playfair.variable} ${mono.variable} ${fredoka.variable} antialiased`}
         suppressHydrationWarning
       >
         <ClientProvider>

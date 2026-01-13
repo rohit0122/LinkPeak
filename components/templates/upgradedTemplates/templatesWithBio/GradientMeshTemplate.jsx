@@ -43,7 +43,7 @@ export default function GradientMeshTemplate({ page, links, handleLinkClick }) {
                     <p className="text-sm font-medium text-base-content/80 mb-6 max-w-xs mx-auto leading-relaxed">{page.bio}</p>
 
                     <div className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-primary border border-primary/20 px-4 py-1.5 rounded-full bg-primary/5">
-                        <RiEyeLine /> {page.views} Views
+                        <RiEyeLine /> {page.total_views || 0} Views
                     </div>
                 </div>
             </div>

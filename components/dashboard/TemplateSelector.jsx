@@ -5,10 +5,20 @@ import { CONFIG } from "@/constants/config";
 
 const TEMPLATES = [
     { id: "classic", name: "Classic", emoji: "📄", description: "Clean list view" },
-    { id: "grid", name: "Grid", emoji: "🔳", description: "Bento-style grid" },
-    { id: "hero", name: "Hero", emoji: "⭐", description: "Highlighted feature" },
-    { id: "social", name: "Social", emoji: "📱", description: "Influencer layout" },
-    { id: "modern", name: "Modern", emoji: "✨", description: "Sleek & minimal" },
+    { id: "bento", name: "Bento", emoji: "🔳", description: "Bento-style grid" }, // Renamed from grid
+    { id: "hero", name: "Hero", emoji: "⭐", description: "Visual header focus" },
+    { id: "influencer", name: "Influencer", emoji: "📱", description: "Social-first layout" }, // Renamed from social
+    { id: "sleek", name: "Sleek", emoji: "✨", description: "Modern polished look" }, // Renamed from modern
+    { id: "minimalist", name: "Minimalist", emoji: "🌿", description: "Simple & airy" },
+    { id: "glassmorphism", name: "Glass", emoji: "💎", description: "Frosted blur effect" },
+    { id: "brutalist", name: "Brutalist", emoji: "🏗️", description: "Bold raw style" },
+    { id: "neobrutalism", name: "NeoPop", emoji: "🎨", description: "Vibrant high contrast" },
+    { id: "darkneon", name: "Cyber", emoji: "🌃", description: "Matrix glow effect" },
+    { id: "elegantserif", name: "Serif", emoji: "🖋️", description: "Classy & formal" },
+    { id: "tiles", name: "Tiles", emoji: "🖼️", description: "Grid of uniform cells" }, // Renamed from gridtiles
+    { id: "softpastel", name: "Pastel", emoji: "🌸", description: "Gentle soft tones" },
+    { id: "gradientmesh", name: "Liquid", emoji: "🌊", description: "Animated mesh colors" },
+    { id: "stack", name: "Stack", emoji: "📚", description: "Physical card layer" }, // Renamed from modernCards
 ];
 
 export default function TemplateSelector({ currentTemplate, plan, onSelect }) {

@@ -39,7 +39,7 @@ export default function TilesTemplate({ page, links, handleLinkClick }) {
                 </div>
                 <div className="flex flex-col items-center justify-center bg-base-100 w-12 h-12 rounded-lg text-xs font-bold text-primary shadow-sm border border-base-content/5">
                     <RiEyeFill className="text-sm mb-0.5" />
-                    {page.views}
+                    {page.total_views || 0}
                 </div>
             </div>
 

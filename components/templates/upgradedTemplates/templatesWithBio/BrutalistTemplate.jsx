@@ -38,7 +38,7 @@ export default function BrutalistTemplate({ page, links, handleLinkClick }) {
                         <h1 className="text-4xl font-black uppercase tracking-tighter leading-none mb-3 break-words">{page.title}</h1>
                         <p className="text-sm font-bold uppercase border-t-4 border-base-content pt-3 mb-3 tracking-wide">{page.bio}</p>
                         <div className="inline-flex items-center gap-2 bg-primary text-primary-content px-3 py-1 text-xs font-bold uppercase border-2 border-base-content">
-                            <RiEyeLine /> {page.views} VIEWS
+                            <RiEyeLine /> {page.total_views || 0} VIEWS
                         </div>
                     </div>
                 </div>

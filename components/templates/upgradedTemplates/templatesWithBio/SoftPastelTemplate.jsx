@@ -39,7 +39,7 @@ export default function SoftPastelTemplate({ page, links, handleLinkClick }) {
                 <h1 className="text-2xl font-bold text-base-content mb-2">{page.title}</h1>
                 <p className="text-sm text-base-content/60 mb-4 bg-base-100/50 inline-block px-4 py-2 rounded-2xl border border-base-content/5">{page.bio}</p>
                 <div className="inline-flex items-center gap-2 text-xs font-bold text-base-content/50 bg-base-content/5 px-3 py-1 rounded-full">
-                    <RiEyeLine /> {page.views}
+                    <RiEyeLine /> {page.total_views || 0}
                 </div>
             </div>
 

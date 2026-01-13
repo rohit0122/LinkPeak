@@ -45,7 +45,7 @@ export default function MinimalistTemplate({ page, links, handleLinkClick }) {
                     <p className="text-sm text-base-content/60 max-w-md mx-auto leading-relaxed font-light">{page.bio}</p>
                 </div>
                 <div className="flex items-center justify-center gap-2 text-[10px] text-base-content/40 uppercase tracking-[0.2em]">
-                    <RiEyeLine /> <span>{page.views} Views</span>
+                    <RiEyeLine /> <span>{page.total_views || 0} Views</span>
                 </div>
             </div>
 
