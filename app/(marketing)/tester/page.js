@@ -1,13 +1,18 @@
 "use client";
 import BrutalistTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/BrutalistTemplate";
+import ClassicTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/ClassicTemplate";
 import DarkNeonTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/DarkNeonTemplate";
 import ElegantSerifTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/ElegantSerifTemplate";
 import GlassmorphismTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/GlassmorphismTemplate";
 import GradientMeshTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/GradientMeshTemplate";
+import GridTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/GridTemplate";
 import GridTilesTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/GridTilesTemplate";
+import HeroTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/HeroTemplate";
 import MinimalistTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/MinimalistTemplate";
 import ModernCardsTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/ModernCardsTemplate";
+import ModernTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/ModernTemplate";
 import NeoBrutalismTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/NeoBrutalismTemplate";
+import SocialTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/SocialTemplate";
 import SoftPastelTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/SoftPastelTemplate";
 import Head from "next/head";
 /* Import all templates */
@@ -56,7 +61,7 @@ export default function PreviewPage() {
         <meta name="description" content={bioInfo.description} />
       </Head>
 
-      <main className="space-y-24 bg-base-100 text-base-content px-6 py-12 max-w-3xl mx-auto" data-theme="retro">
+      <main className="space-y-24 bg-base-100 text-base-content px-6 py-12 max-w-3xl mx-auto" data-theme="dark">
         <section id="designer">
           <h2 className="text-2xl font-bold mb-4">Designer Template</h2>
           <MinimalistTemplate page={bioInfo} links={links} />
@@ -123,6 +128,31 @@ export default function PreviewPage() {
         <section id="enterprise">
           <h2 className="text-2xl font-bold mb-4">Enterprise Template</h2>
           <SoftPastelTemplate page={bioInfo} links={links} />
+        </section>
+
+        <section id="classsinc">
+          <h2 className="text-2xl font-bold mb-4">Classic</h2>
+          <ClassicTemplate page={bioInfo} links={links} />
+        </section>
+
+        <section id="hero">
+          <h2 className="text-2xl font-bold mb-4">Hero</h2>
+          <HeroTemplate page={bioInfo} links={links} />
+        </section>
+
+        <section id="grid">
+          <h2 className="text-2xl font-bold mb-4">Grid</h2>
+          <GridTemplate page={bioInfo} links={links} />
+        </section>
+
+        <section id="modern">
+          <h2 className="text-2xl font-bold mb-4">Modern</h2>
+          <ModernTemplate page={bioInfo} links={links} />
+        </section>
+
+        <section id="social">
+          <h2 className="text-2xl font-bold mb-4">Social</h2>
+          <SocialTemplate page={bioInfo} links={links} />
         </section>
       </main>
     </>

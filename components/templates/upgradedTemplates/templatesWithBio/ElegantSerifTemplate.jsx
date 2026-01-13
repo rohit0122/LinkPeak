@@ -42,7 +42,7 @@ export default function ElegantSerifTemplate({ page, links, handleLinkClick }) {
                 <h1 className="text-4xl italic font-medium text-base-content mb-3">{page.title}</h1>
                 <p className="text-base text-base-content/70 leading-relaxed font-sans max-w-sm mx-auto mb-4">{page.bio}</p>
 
-                <div className="text-xs uppercase tracking-[0.3em] opacity-40 font-sans font-bold">
+                <div className="text-xs uppercase tracking-[0.3em] opacity-60 font-sans font-bold">
                     {page.views} Views
                 </div>
             </div>

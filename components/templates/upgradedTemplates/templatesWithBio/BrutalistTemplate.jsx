@@ -27,7 +27,7 @@ export default function BrutalistTemplate({ page, links, handleLinkClick }) {
             className="w-full max-w-3xl mx-auto space-y-6 pb-12 px-4 font-mono"
         >
             {/* Profile Header */}
-            <div className="border-4 border-base-content p-6 bg-base-100 mb-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.2)]">
+            <header className="border-4 border-base-content p-6 bg-base-100 mb-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.2)]">
                 <div className="flex flex-col md:flex-row items-center gap-6">
                     <img
                         src={page.profile_image || "https://via.placeholder.com/150"}
@@ -42,7 +42,7 @@ export default function BrutalistTemplate({ page, links, handleLinkClick }) {
                         </div>
                     </div>
                 </div>
-            </div>
+            </header>
 
             {safeLinks.map((link, i) => (
                 <motion.a

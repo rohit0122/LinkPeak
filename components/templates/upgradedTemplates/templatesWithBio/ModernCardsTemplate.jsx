@@ -75,7 +75,7 @@ export default function ModernCardsTemplate({ page, links, handleLinkClick }) {
                             flex-shrink-0 w-14 h-14 rounded-2xl
                             bg-base-200 text-base-content
                             flex items-center justify-center
-                            group-hover:bg-gradient-to-br group-hover:from-primary group-hover:to-secondary group-hover:text-white
+                            group-hover:bg-gradient-to-br group-hover:from-primary group-hover:to-secondary group-hover:text-primary-content
                             group-hover:scale-110 group-hover:rotate-3
                             transition-all duration-300 shadow-inner
                         ">

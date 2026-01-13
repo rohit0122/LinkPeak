@@ -78,7 +78,7 @@ export default function DarkNeonTemplate({ page, links, handleLinkClick }) {
                             <div className="text-primary group-hover:text-accent transition-colors drop-shadow-[0_0_5px_currentColor]">
                                 {link.icon ? <span className="text-xl">{link.icon}</span> : <RiFlashlightLine className="text-xl" />}
                             </div>
-                            <span className="font-bold text-lg tracking-wider uppercase text-base-content group-hover:text-white group-hover:drop-shadow-[0_0_3px_rgba(255,255,255,0.5)] transition-all">
+                            <span className="font-bold text-lg tracking-wider uppercase text-base-content group-hover:text-primary group-hover:drop-shadow-[0_0_3px_currentColor] transition-all">
                                 {link.title}
                             </span>
                         </div>
