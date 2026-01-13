@@ -7,7 +7,6 @@ import TrialExpiryBanner from "@/components/dashboard/Subscription/TrialExpiryBa
 
 export default function DashboardLayout({
   children,
-  currentUser,
   page,
   pages = [],
   onSelectPage,
@@ -19,7 +18,6 @@ export default function DashboardLayout({
         <TrialExpiryBanner />
         {/* Unified Navbar */}
         <NavbarClient
-          currentUser={currentUser}
           currentPage={{ id: page?.id, slug: page?.slug }}
           pages={pages}
           onSelectPage={onSelectPage}

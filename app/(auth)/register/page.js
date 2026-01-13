@@ -16,6 +16,9 @@ import {
   RiCheckLine,
   RiCloseLine,
   RiFileTextFill,
+  RiMailCheckLine,
+  RiCustomerService2Line,
+  RiInformationLine,
 } from "react-icons/ri";
 import { useAuthStore } from "@/stores/useAuthStore";
 
@@ -29,7 +32,8 @@ function RegisterForm() {
   const [agreed, setAgreed] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  // const [success, setSuccess] = useState(""); // Removed string state
+  const [isSuccess, setIsSuccess] = useState(false); // Added boolean state for UI switching
   const [loading, setLoading] = useState(false);
   const params = useParams();
   const router = useRouter();
@@ -46,7 +50,7 @@ function RegisterForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setSuccess("");
+    // setSuccess("");
 
     if (formData.password !== formData.confirmPassword) {
       return setError("Passwords do not match");
@@ -70,7 +74,7 @@ function RegisterForm() {
       );
 
       if (result.success) {
-        setSuccess("Registration successful! Redirecting...");
+        setIsSuccess(true);
         setFormData({ name: "", email: "", password: "", confirmPassword: "" });
         setAgreed(false);
       } else {
@@ -90,146 +94,195 @@ function RegisterForm() {
       <div className="card w-full max-w-sm bg-base-200">
         <div className="h-2 bg-primary w-full"></div>
         <div className="card-body">
-          <h2 className="card-title text-2xl font-bold justify-center mb-4">
-            Join {CONFIG.SITE_NAME}
-          </h2>
-
-          {selectedPlan && (
-            <div className="alert alert-info text-sm py-3 mb-4">
-              <div>
-                <div className="font-bold">Selected Plan: {selectedPlan}</div>
-                <div className="text-xs opacity-70">
-                  Create your account to continue with {selectedPlan} plan
+          {isSuccess ? (
+            <div className="text-center py-2">
+              <div className="flex justify-center mb-2">
+                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center animate-bounce">
+                  <RiMailCheckLine className="text-4xl text-green-600" />
                 </div>
               </div>
-            </div>
-          )}
 
-          {error && (
-            <div className="alert alert-error text-sm py-2">
-              <span>{error}</span>
-            </div>
-          )}
+              <h2 className="text-2xl font-bold mb-2">Account Created Successfully!</h2>
 
-          {success && (
-            <div className="alert alert-success text-sm py-2">
-              <span>{success}</span>
-            </div>
-          )}
-
-          {!success && (
-            <form onSubmit={handleSubmit}>
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text">Full Name</span>
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="John Doe"
-                  className="input input-bordered"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              <div className="form-control mt-2">
-                <label className="label">
-                  <span className="label-text">Email</span>
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="email@example.com"
-                  className="input input-bordered"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  autoComplete="new-email"
-                />
-              </div>
-
-              <div className="form-control mt-2">
-                <label className="label">
-                  <span className="label-text">Password</span>
-                </label>
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="min 6 characters"
-                  className="input input-bordered"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                  autoComplete="new-password"
-                />
-              </div>
-
-              <div className="form-control mt-2">
-                <label className="label">
-                  <span className="label-text">Confirm Password</span>
-                </label>
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  placeholder="repeat password"
-                  className="input input-bordered"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  required
-                  autoComplete="new-password"
-                />
-              </div>
-
-              <div className="form-control mt-4">
-                <label className="label cursor-pointer justify-start items-start gap-3">
-                  <input
-                    type="checkbox"
-                    className="checkbox checkbox-primary checkbox-xs shrink-0 mt-0.5"
-                    checked={agreed}
-                    onChange={(e) => setAgreed(e.target.checked)}
-                  />
-                  <span className="label-text text-left leading-tight text-xs md:text-sm">
-                    I agree to the{" "}
-                    <button
-                      type="button"
-                      onClick={() => setShowTerms(true)}
-                      className="link link-primary"
-                    >
-                      Terms of Service
-                    </button>{" "}
-                    and{" "}
-                    <button
-                      type="button"
-                      onClick={() => setShowTerms(true)}
-                      className="link link-primary"
-                    >
-                      Privacy Policy
-                    </button>
+              <p className="text-base-content/80 mb-2">
+                Welcome to {CONFIG.SITE_NAME}! We&apos;ve sent a verification link to <br />
+                <span className="font-semibold text-base-content">{formData.email}</span>
+                <br />
+                <div className="mt-2 p-3 bg-base-200/50 border border-base-300 text-sm flex items-center justify-center gap-2 mx-auto text-left">
+                  <RiInformationLine className="text-lg text-info shrink-0" />
+                  <span className="opacity-80">
+                    Note: Please check your spam or junk folder if you don&apos;t see it.
                   </span>
-                </label>
+                </div>
+              </p>
+
+              <div className="alert bg-base-100 border-base-300 text-left mb-2">
+                <div className="w-full">
+                  <h4 className="font-bold text-sm mb-2 flex items-center gap-2">
+                    <RiCheckLine className="text-primary" /> Next Steps:
+                  </h4>
+                  <ul className="list-disc list-inside text-sm space-y-1 text-base-content/70 pl-1">
+                    <li>Open your email inbox</li>
+                    <li>Click the verification link</li>
+                    <li>Log in to access your dashboard</li>
+                  </ul>
+                </div>
               </div>
 
-              <div className="form-control mt-4 ">
-                <button className="btn btn-primary w-full" disabled={loading}>
-                  {loading && <span className="loading loading-spinner"></span>}
-                  {loading ? "Registering..." : "Register"}
-                </button>
+              <div className="bg-base-200/50 rounded-lg p-4 text-sm mb-2">
+                <p className="font-semibold mb-1">Still haven&apos;t received it?</p>
+                <p className="opacity-75">
+                  If the email doesn&apos;t arrive within a few minutes, please contact our support team.
+                </p>
               </div>
-            </form>
+
+              <div className="flex flex-col gap-3">
+                <Link href="/login" className="btn btn-primary w-full">
+                  Proceed to Login
+                </Link>
+
+                <Link href="/contact-us" className="btn btn-neutral btn-outline btn-sm gap-2">
+                  <RiCustomerService2Line />
+                  Contact Support
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <>
+              <h2 className="card-title text-2xl font-bold justify-center mb-4">
+                Join {CONFIG.SITE_NAME}
+              </h2>
+
+              <form onSubmit={handleSubmit}>
+                {selectedPlan && (
+                  <div className="alert alert-info text-sm py-3 mb-4 rounded-lg">
+                    <div>
+                      <div className="font-bold">Selected Plan: {selectedPlan}</div>
+                      <div className="text-xs opacity-70">
+                        Create your account to continue with {selectedPlan} plan
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {error && (
+                  <div className="alert alert-error text-sm py-2 rounded-lg mb-4">
+                    <span>{error}</span>
+                  </div>
+                )}
+
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text">Full Name</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="John Doe"
+                    className="input input-bordered"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                <div className="form-control mt-2">
+                  <label className="label">
+                    <span className="label-text">Email</span>
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="email@example.com"
+                    className="input input-bordered"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    autoComplete="new-email"
+                  />
+                </div>
+
+                <div className="form-control mt-2">
+                  <label className="label">
+                    <span className="label-text">Password</span>
+                  </label>
+                  <input
+                    type="password"
+                    name="password"
+                    placeholder="min 6 characters"
+                    className="input input-bordered"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                    autoComplete="new-password"
+                  />
+                </div>
+
+                <div className="form-control mt-2">
+                  <label className="label">
+                    <span className="label-text">Confirm Password</span>
+                  </label>
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    placeholder="repeat password"
+                    className="input input-bordered"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    required
+                    autoComplete="new-password"
+                  />
+                </div>
+
+                <div className="form-control mt-4">
+                  <label className="label cursor-pointer justify-start items-start gap-3">
+                    <input
+                      type="checkbox"
+                      className="checkbox checkbox-primary checkbox-xs shrink-0 mt-0.5"
+                      checked={agreed}
+                      onChange={(e) => setAgreed(e.target.checked)}
+                    />
+                    <span className="label-text text-left leading-tight text-xs md:text-sm">
+                      I agree to the{" "}
+                      <button
+                        type="button"
+                        onClick={() => setShowTerms(true)}
+                        className="link link-primary"
+                      >
+                        Terms of Service
+                      </button>{" "}
+                      and{" "}
+                      <button
+                        type="button"
+                        onClick={() => setShowTerms(true)}
+                        className="link link-primary"
+                      >
+                        Privacy Policy
+                      </button>
+                    </span>
+                  </label>
+                </div>
+
+                <div className="form-control mt-4 ">
+                  <button className="btn btn-primary w-full" disabled={loading}>
+                    {loading && <span className="loading loading-spinner"></span>}
+                    {loading ? "Registering..." : "Register"}
+                  </button>
+                </div>
+
+                <p className="text-center mt-6 text-sm">
+                  Already have an account?{" "}
+                  <Link
+                    href="/login"
+                    title="login"
+                    className="link link-primary font-semibold"
+                  >
+                    Login here
+                  </Link>
+                </p>
+              </form>
+            </>
           )}
-
-          <p className="text-center mt-4 text-sm">
-            Already have an account?{" "}
-            <Link
-              href="/login"
-              title="login"
-              className="link link-primary font-semibold"
-            >
-              Login here
-            </Link>
-          </p>
         </div>
       </div>
 
@@ -254,7 +307,7 @@ function RegisterForm() {
                 </h4>
                 <p className="mb-0 text-base-content/80 pl-7">
                   By registering, you agree to comply with{" "}
-                  <strong>{CONFIG.SITE_NAME}'s</strong> Terms of Service. You
+                  <strong>{CONFIG.SITE_NAME}&apos;s</strong> Terms of Service. You
                   are responsible for maintaining the confidentiality of your
                   account credentials.
                 </p>

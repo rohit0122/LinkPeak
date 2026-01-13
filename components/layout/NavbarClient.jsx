@@ -52,8 +52,6 @@ const publicLinks = [
 ];
 
 export default function NavbarClient({
-  currentUser,
-
   pages = [],
   onSelectPage,
   onCreatePage,
@@ -63,6 +61,7 @@ export default function NavbarClient({
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const logout = useAuthStore((state) => state.logout);
   const currentPage = useAuthStore((state) => state.currentBioPage);
+  const currentUser = useAuthStore((state) => state.currentUser);
   const [mobileOpen, setMobileOpen] = useState(false);
   const router = useRouter();
   const handleLogout = async () => {
