@@ -8,6 +8,7 @@ import {
     RiMailLine,
     RiTimeLine,
     RiChat4Line,
+    RiQuestionAnswerLine,
     RiGlobalLine
 } from "react-icons/ri";
 import axios from "@/lib/httpClient";
@@ -108,11 +109,11 @@ export default function ContactUsPage() {
                             </div>
                             <div className="flex gap-4 items-start">
                                 <div className="w-12 h-12 bg-accent/10 flex items-center justify-center text-accent flex-shrink-0">
-                                    <RiChat4Line className="w-6 h-6" />
+                                    <RiQuestionAnswerLine className="w-6 h-6" />
                                 </div>
                                 <div>
-                                    <h4 className="font-bold text-lg mb-1">Live Chat</h4>
-                                    <p className="text-base-content/60 font-medium">Available for Agency accounts</p>
+                                    <h4 className="font-bold text-lg mb-1">FAQs</h4>
+                                    <p className="text-base-content/60 font-medium">Find answers to common questions</p>
                                 </div>
                             </div>
                             <div className="flex gap-4 items-start">
