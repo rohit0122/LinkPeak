@@ -48,13 +48,15 @@ export default function SupportView({
         : ENDPOINTS.SUPPORT.TICKETS;
       const { data } = await axios.get(endpoint);
       if (data.success) {
+        // Handle both simple array and Laravel paginated structure
+        const ticketData = data.data.data || data.data;
         if (isControlled) {
-          propSetTickets(data.data);
+          propSetTickets(ticketData);
         } else {
-          setTickets(data.data);
+          setTickets(ticketData);
         }
         if (selectedTicket) {
-          const updated = data.data.find((t) => t.id === selectedTicket.id);
+          const updated = ticketData.find((t) => t.id === selectedTicket.id);
           if (updated) setSelectedTicket(updated);
         }
       }
@@ -125,7 +127,7 @@ export default function SupportView({
     }
   };
 
-  const getStatusBadge = (status) => {
+  const getStatusBadge = (status = "") => {
     switch (status.toUpperCase()) {
       case "OPEN":
         return (
@@ -139,10 +141,11 @@ export default function SupportView({
             <RiTimeLine /> Pending
           </span>
         );
+      case "RESOLVED":
       case "CLOSED":
         return (
-          <span className="badge badge-ghost gap-1 text-xs">
-            <RiCheckboxCircleLine /> Closed
+          <span className="badge badge-neutral gap-1 text-xs border-none bg-base-300">
+            <RiCheckboxCircleLine /> Resolved
           </span>
         );
       default:
@@ -186,10 +189,10 @@ export default function SupportView({
                 <div className="flex items-center gap-2 ml-2">
                   <div className="badge badge-sm badge-neutral">
                     <RiUserSmileLine className="mr-1 text-xs" />
-                    {selectedTicket.user_id?.name || "Unknown"}
+                    {selectedTicket.user?.name || "Unknown"}
                   </div>
                   <span className="text-xs opacity-50">
-                    ({selectedTicket.user_id?.email || "No Email"})
+                    ({selectedTicket.user?.email || "No Email"})
                   </span>
                 </div>
               )}
@@ -451,7 +454,7 @@ export default function SupportView({
                       {isAdmin && (
                         <td>
                           <span className="text-xs font-medium">
-                            {"Support Team"}
+                            {ticket.user?.name || "Support Team"}
                           </span>
                         </td>
                       )}

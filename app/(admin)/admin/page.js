@@ -30,6 +30,8 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  AreaChart,
+  Area,
 } from "recharts";
 import { useAuthStore } from "@/stores/useAuthStore";
 
@@ -131,8 +133,14 @@ export default function AdminDashboard() {
         `${ENDPOINTS.ADMIN.USERS}?page=${page}&limit=${pagination.limit}&search=${searchQuery}`
       );
       if (data.success) {
-        setUsers(data.data.users);
-        setPagination(data.data.pagination);
+        const { data: usersData, current_page, last_page, total, per_page } = data.data;
+        setUsers(usersData);
+        setPagination({
+          total: total,
+          page: current_page,
+          limit: per_page,
+          totalPages: last_page,
+        });
         setIsLoaded((prev) => ({ ...prev, users: true }));
       }
     } catch (error) {
@@ -220,26 +228,26 @@ export default function AdminDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <StatCard
                 title="Monthly Revenue"
-                value={`$${stats?.mrr || 0}`}
+                value={`$${stats?.metrics?.mrr || 0}`}
                 icon={RiMoneyDollarCircleLine}
                 colorClass="bg-green-500/10 text-green-600"
-                trend={stats?.growthRate}
+                trend={stats?.metrics?.growth_rate}
               />
               <StatCard
                 title="Annual Revenue"
-                value={`$${stats?.arr || 0}`}
+                value={`$${stats?.metrics?.annual_revenue || 0}`}
                 icon={RiBarChartGroupedLine}
                 colorClass="bg-blue-500/10 text-blue-600"
               />
               <StatCard
                 title="Conversion Rate"
-                value={`${stats?.conversionRate || 0}%`}
+                value={`${stats?.metrics?.conversion_rate || 0}%`}
                 icon={RiArrowUpSLine}
                 colorClass="bg-purple-500/10 text-purple-600"
               />
               <StatCard
                 title="Paid Users"
-                value={stats?.paidUsers || 0}
+                value={stats?.metrics?.paid_users || 0}
                 icon={RiUserFollowLine}
                 colorClass="bg-orange-500/10 text-orange-600"
               />
@@ -249,26 +257,26 @@ export default function AdminDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <StatCard
                 title="Total Users"
-                value={stats?.totalUsers}
+                value={stats?.metrics?.total_users || 0}
                 icon={RiGroupLine}
                 colorClass="bg-blue-500/10 text-blue-600"
-                trend={stats?.growthRate}
+                trend={stats?.metrics?.growth_rate}
               />
               <StatCard
                 title="New Users (30d)"
-                value={stats?.recentUsers || 0}
+                value={stats?.metrics?.new_users_30d || 0}
                 icon={RiHistoryLine}
                 colorClass="bg-green-500/10 text-green-600"
               />
               <StatCard
                 title="Bio Views"
-                value={stats?.totalViews?.toLocaleString()}
+                value={stats?.metrics?.total_views?.toLocaleString() || 0}
                 icon={RiEyeLine}
                 colorClass="bg-purple-500/10 text-purple-600"
               />
               <StatCard
                 title="Global Links"
-                value={stats?.totalLinks}
+                value={stats?.metrics?.total_links || 0}
                 icon={RiLinksLine}
                 colorClass="bg-orange-500/10 text-orange-600"
               />
@@ -283,26 +291,26 @@ export default function AdminDashboard() {
                     Plan Distribution
                   </h2>
                   <div className="space-y-6">
-                    {stats?.planDistribution?.map((p) => (
-                      <div key={p.id} className="space-y-2">
+                    {stats?.charts?.plan_distribution?.map((p) => (
+                      <div key={p.label} className="space-y-2">
                         <div className="flex justify-between items-end">
                           <div>
                             <span className="text-xs font-medium opacity-40 uppercase tracking-widest block">
-                              {p.id}
+                              {p.label}
                             </span>
                             <span className="text-lg font-medium">
-                              {p.total} Users
+                              {p.value} Users
                             </span>
                           </div>
                           <span className="text-sm font-bold opacity-60">
-                            {((p.total / stats.totalUsers) * 100).toFixed(1)}%
+                            {((p.value / stats.metrics.total_users) * 100).toFixed(1)}%
                           </span>
                         </div>
                         <div className="h-2 w-full bg-base-200 rounded-full overflow-hidden">
                           <div
                             className={`h-full bg-primary/20`}
                             style={{
-                              width: `${(p.total / stats.totalUsers) * 100}%`,
+                              width: `${(p.value / stats.metrics.total_users) * 100}%`,
                             }}
                           ></div>
                         </div>
@@ -312,17 +320,17 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              {/* Active Subscriptions */}
+              {/* User Distribution */}
               <div className="lg:col-span-2 card bg-base-100 shadow-sm border border-base-200 ">
                 <div className="card-body p-8">
                   <h2 className="text-sm font-medium uppercase tracking-widest opacity-40 mb-6 flex items-center gap-2">
                     <RiGroupLine className="text-primary text-lg" />
-                    User Distribution (Active vs Inactive)
+                    User Status (Active vs Inactive)
                   </h2>
                   <div className="w-full mt-4">
                     <ResponsiveContainer width="100%" height={300}>
                       <BarChart
-                        data={stats?.planDistribution || []}
+                        data={stats?.charts?.user_distribution || []}
                         margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
                       >
                         <CartesianGrid
@@ -331,7 +339,7 @@ export default function AdminDashboard() {
                           stroke="rgba(255,255,255,0.05)"
                         />
                         <XAxis
-                          dataKey="_id"
+                          dataKey="label"
                           axisLine={false}
                           tickLine={false}
                           tick={{ fontSize: 10, fontWeight: 500 }}
@@ -349,28 +357,66 @@ export default function AdminDashboard() {
                             fontSize: "12px",
                           }}
                         />
-                        <Legend
-                          iconType="circle"
-                          wrapperStyle={{
-                            fontSize: "10px",
-                            paddingTop: "20px",
-                          }}
-                        />
                         <Bar
-                          name="Active"
-                          dataKey="active"
+                          dataKey="value"
                           fill="#10b981"
                           radius={[4, 4, 0, 0]}
-                          barSize={30}
-                        />
-                        <Bar
-                          name="Inactive"
-                          dataKey="inactive"
-                          fill="#ef4444"
-                          radius={[4, 4, 0, 0]}
-                          barSize={30}
+                          barSize={50}
                         />
                       </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+              </div>
+
+              {/* User Growth Chart */}
+              <div className="lg:col-span-3 card bg-base-100 shadow-sm border border-base-200 ">
+                <div className="card-body p-8">
+                  <h2 className="text-sm font-medium uppercase tracking-widest opacity-40 mb-6 flex items-center gap-2">
+                    <RiHistoryLine className="text-primary text-lg" />
+                    User Growth (New Registrations)
+                  </h2>
+                  <div className="w-full mt-4">
+                    <ResponsiveContainer width="100%" height={350}>
+                      <AreaChart
+                        data={stats?.charts?.user_growth || []}
+                        margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                      >
+                        <defs>
+                          <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
+                            <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+                        <XAxis
+                          dataKey="label"
+                          axisLine={false}
+                          tickLine={false}
+                          tick={{ fontSize: 10 }}
+                        />
+                        <YAxis
+                          axisLine={false}
+                          tickLine={false}
+                          tick={{ fontSize: 10 }}
+                        />
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: "#1a1a1a",
+                            border: "1px solid #333",
+                            borderRadius: "8px",
+                            fontSize: "12px",
+                          }}
+                        />
+                        <Area
+                          type="monotone"
+                          dataKey="count"
+                          stroke="#10b981"
+                          fillOpacity={1}
+                          fill="url(#colorCount)"
+                          strokeWidth={3}
+                        />
+                      </AreaChart>
                     </ResponsiveContainer>
                   </div>
                 </div>
@@ -409,10 +455,10 @@ export default function AdminDashboard() {
                       User
                     </th>
                     <th className="font-medium uppercase text-[10px] tracking-widest">
-                      Plan
+                      Subscription
                     </th>
                     <th className="font-medium uppercase text-[10px] tracking-widest">
-                      Status
+                      User Status
                     </th>
                     <th className="font-medium uppercase text-[10px] tracking-widest text-right">
                       Actions
@@ -420,76 +466,71 @@ export default function AdminDashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {users.map((currentUser) => (
+                  {users.map((user) => (
                     <tr
-                      key={currentUser.id}
+                      key={user.id}
                       className="hover:bg-base-200/20 transition-colors"
                     >
                       <td>
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 bg-base-300 flex items-center justify-center font-medium text-xs">
-                            {currentUser.name[0]}
+                            {user.name?.[0] || 'U'}
                           </div>
                           <div>
                             <div className="font-medium text-sm">
-                              {currentUser.name}
+                              {user.name}
                             </div>
-                            <div className="text-xs opacity-40 font-medium">
-                              {currentUser.email}
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs opacity-40 font-medium">{user.email}</span>
+                              <span className={`text-[9px] px-1.5 rounded-sm font-bold uppercase ${user.role === 'admin' ? 'bg-primary/10 text-primary' : 'bg-base-300 text-base-content/50'}`}>
+                                {user.role}
+                              </span>
                             </div>
                           </div>
                         </div>
                       </td>
                       <td>
-                        {currentUser.role !== "admin" ? (
-                          <select
-                            disabled={currentUser.role === "admin"}
-                            className={`select select-xs select-bordered font-medium text-[10px] ${currentUser.plan === "AGENCY"
-                              ? "border-primary text-primary"
-                              : ""
-                              }`}
-                            value={currentUser.plan}
-                            onChange={(e) =>
-                              handleUserUpdate(currentUser.id, {
-                                plan: e.target.value,
-                              })
-                            }
-                          >
-                            <option value="FREE">FREE</option>
-                            <option value="PRO">PRO</option>
-                            <option value="AGENCY">AGENCY</option>
-                          </select>
+                        {user.active_subscription ? (
+                          <div className="space-y-0.5">
+                            <div className={`badge badge-sm font-bold text-[10px] uppercase border-none ${user.active_subscription.plan?.slug === 'agency' ? 'bg-secondary text-secondary-content' : user.active_subscription.plan?.slug === 'pro' ? 'bg-primary text-primary-content' : 'badge-outline opacity-50'}`}>
+                              {user.active_subscription.plan?.name || "Free"}
+                            </div>
+                            {user.active_subscription.current_period_end && (
+                              <div className="text-[10px] opacity-40 font-medium">
+                                Renew: {user.active_subscription.current_period_end}
+                              </div>
+                            )}
+                          </div>
                         ) : (
-                          <div className="font-medium text-[10px]">
-                            {currentUser.plan}
+                          <div className="text-[10px] opacity-30 italic font-medium">
+                            {user.role === 'admin' ? 'System Admin' : 'No Active Plan'}
                           </div>
                         )}
                       </td>
                       <td>
                         <div
-                          className={`badge badge-sm font-medium gap-1 py-3 px-4 ${currentUser.is_active
+                          className={`badge badge-sm font-medium gap-1 py-3 px-4 ${user.is_active
                             ? "badge-success text-success-content"
                             : "badge-error text-error-content"
                             }`}
                         >
-                          {currentUser.is_active ? "ACTIVE" : "SUSPENDED"}
+                          {user.is_active ? "ACTIVE" : "SUSPENDED"}
                         </div>
                       </td>
                       <td className="text-right flex justify-end gap-2">
-                        {currentUser.role !== "admin" ? (
+                        {user.role !== "admin" ? (
                           <button
-                            disabled={currentUser.role === "admin"}
                             onClick={() =>
-                              handleUserUpdate(currentUser.id, {
-                                is_active: !currentUser.is_active,
+                              handleUserUpdate(user.id, {
+                                is_active: !user.is_active,
                               })
                             }
-                            className={`btn btn-xs font-medium ${currentUser.is_active
+                            className={`btn btn-xs font-medium ${user.is_active
                               ? "btn-error"
                               : "btn-success"
                               }`}
                           >
-                            {currentUser.is_active ? "Deactivate" : "Activate"}
+                            {user.is_active ? "Deactivate" : "Activate"}
                           </button>
                         ) : (
                           <span className="badge badge-success badge-sm text-success-content font-medium py-3 px-4">
@@ -519,7 +560,7 @@ export default function AdminDashboard() {
                   Open Tickets
                 </p>
                 <p className="text-4xl font-medium tracking-tighter mt-2">
-                  {tickets.filter((t) => t.status === "OPEN").length}
+                  {tickets.filter((t = {}) => String(t.status).toLowerCase() === "open").length}
                 </p>
               </div>
               <div className="p-6 bg-base-100  border border-base-200 flex flex-col justify-between">
@@ -527,7 +568,7 @@ export default function AdminDashboard() {
                   Total Resolved
                 </p>
                 <p className="text-4xl font-medium tracking-tighter mt-2">
-                  {tickets.filter((t) => t.status === "CLOSED").length}
+                  {tickets.filter((t = {}) => String(t.status).toLowerCase() === "resolved").length}
                 </p>
               </div>
               <div className="p-6 bg-base-100  border border-base-200 flex flex-col justify-between">

@@ -4,7 +4,6 @@ import { BACKEND_ENDPOINTS } from "@/constants/endpoints";
 
 export async function GET(req) {
     try {
-        // Pass query params (pagination etc)
         const { search } = new URL(req.url);
         const response = await restClient.get(`${BACKEND_ENDPOINTS.ADMIN.USERS}${search}`);
         return NextResponse.json(response.data, { status: response.status });
