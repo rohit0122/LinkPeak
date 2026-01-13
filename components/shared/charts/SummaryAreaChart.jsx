@@ -17,10 +17,10 @@ import ChartRangeSelector from "@/components/shared/charts/ChartRangeSelector";
  * summaryChart = [
  *   {
  *     "label": "Jan 03",
- *     "views": "151",
- *     "uniqueViews": "90",
- *     "clicks": "0",
- *     "uniqueClicks": "0"
+ *     "total_views": "151",
+ *     "unique_views": "90",
+ *     "total_clicks": "0",
+ *     "unique_clicks": "0"
  *   }
  * ]
  */
@@ -30,8 +30,8 @@ export default function SummaryAreaChart({ summaryChart, plan, onRangeChange, cu
 
     const transformedData = summaryChart?.map(row => ({
         label: row.label,
-        views: showUnique ? parseInt(row.uniqueViews) : parseInt(row.views),
-        clicks: showUnique ? parseInt(row.uniqueClicks) : parseInt(row.clicks),
+        views: showUnique ? parseInt(row.unique_views || 0) : parseInt(row.total_views || 0),
+        clicks: showUnique ? parseInt(row.unique_clicks || 0) : parseInt(row.total_clicks || 0),
     })) || [];
 
     return (

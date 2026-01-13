@@ -21,10 +21,13 @@ export default function AnalyticsView() {
   const { currentBioPage, currentUser } = useAuthStore();
 
   const [activeTotals, setActiveTotals] = useState({
-    views: 0,
-    clicks: 0,
-    likes: 0,
-    avgCTR: 0,
+    total_views: 0,
+    unique_views: 0,
+    total_clicks: 0,
+    unique_clicks: 0,
+    total_likes: 0,
+    total_active_links: 0,
+    avg_ctr: 0,
   });
 
   // Fetch chart data from API (single call for both charts)
@@ -66,10 +69,13 @@ export default function AnalyticsView() {
 
       if (result.success && result.data.lifetime) {
         setActiveTotals({
-          views: result.data.lifetime.totalViews || 0,
-          clicks: result.data.lifetime.totalClicks || 0,
-          likes: result.data.lifetime.totalLikes || 0,
-          avgCTR: result.data.lifetime.avgCTR || 0,
+          total_views: result.data.lifetime.total_views || 0,
+          unique_views: result.data.lifetime.unique_views || 0,
+          total_clicks: result.data.lifetime.total_clicks || 0,
+          unique_clicks: result.data.lifetime.unique_clicks || 0,
+          total_likes: result.data.lifetime.total_likes || 0,
+          total_active_links: result.data.lifetime.total_active_links || 0,
+          avg_ctr: result.data.lifetime.avg_ctr || 0,
         });
       }
     } catch (err) {

@@ -11,7 +11,7 @@ export default function ThemeSelector({ currentTheme, plan, onSelect }) {
     //console.log(' allowedThemes', allowedThemes);
 
     return (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-base-100 p-2 border border-base-300 shadow-sm rounded-xl overflow-hidden">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-base-100 p-2 overflow-hidden">
             {CONFIG.DAISY_THEMES.map((themeObj) => {
                 const themeId = themeObj.id;
                 const themeLabel = themeObj.label;

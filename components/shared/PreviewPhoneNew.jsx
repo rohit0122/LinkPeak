@@ -71,7 +71,7 @@ export default function PreviewPhoneNew({ demoData = {} }) {
     };
 
     return (
-        <div className="mockup-phone border-primary shadow-2xl sticky top-10 transform-gpu origin-top will-change-transform overflow-hidden min-w-[322px] min-h-[660px]">
+        <div className="mockup-phone border-primary shadow-2xl transform-gpu origin-top will-change-transform overflow-hidden min-w-[322px] min-h-[660px]">
             <div className="mockup-phone-camera"></div>
             <div className="mockup-phone-display">
                 <div

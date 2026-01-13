@@ -27,7 +27,7 @@ export default function TemplateSelector({ currentTemplate, plan, onSelect }) {
     const isAllUnlocked = allowed === "ALL";
 
     return (
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 bg-base-100 p-2 border border-base-300 shadow-sm rounded-xl overflow-hidden">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 p-2 overflow-hidden">
             {TEMPLATES.map((template) => {
                 const isLocked = !isAllUnlocked && !allowed.includes(template.id);
                 const is_active = currentTemplate === template.id;

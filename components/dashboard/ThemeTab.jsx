@@ -40,57 +40,60 @@ export default function ThemeTab({
         </div>
       </div>
 
-      <div className="join join-vertical bg-base-100 w-full">
+      <div className="join join-vertical bg-base-100 w-full border border-base-300">
         {/* Template Selection */}
-        <section className="collapse collapse-arrow join-item border-base-300 border">
-          <input type="radio" name="my-accordion-4" />
-
-          <h2 className="text-xl font-bold tracking-tight flex items-center gap-3 collapse-title">
-            <div className="p-2 bg-primary/10 text-primary">
-              <RiLayoutMasonryLine className="text-xl" />
+        <section className="collapse collapse-arrow join-item border-b border-base-300">
+          <input type="checkbox" className="peer" />
+          <div className="collapse-title text-base sm:text-lg md:text-xl font-bold tracking-tight flex items-center gap-2 sm:gap-3 hover:bg-base-200/50 transition-colors cursor-pointer py-3 md:py-4">
+            <div className="p-1.5 md:p-2 bg-primary/10 text-primary shrink-0">
+              <RiLayoutMasonryLine className="text-lg md:text-xl" />
             </div>
             1. Choose Template
-          </h2>
-          <div className="collapse-content">
-            <TemplateSelector
-              currentTemplate={mergedBioPage?.template}
-              plan={currentUser?.plan}
-              onSelect={(t) => setTempPageData({ template: t })}
-            />
+          </div>
+          <div className="collapse-content px-4 md:px-6">
+            <div className="pt-4 md:pt-6">
+              <TemplateSelector
+                currentTemplate={mergedBioPage?.template}
+                plan={currentUser?.plan}
+                onSelect={(t) => setTempPageData({ template: t })}
+              />
+            </div>
           </div>
         </section>
 
         {/* Theme Selection */}
-        <section className="collapse collapse-arrow join-item border-base-300 border">
-          <input type="radio" name="my-accordion-4" defaultChecked />
-
-          <h2 className="text-xl font-bold tracking-tight flex items-center gap-3 collapse-title">
-            <div className="p-2 bg-primary/10  text-primary">
-              <RiPaletteLine className="text-xl" />
+        <section className="collapse collapse-arrow join-item border-b border-base-300">
+          <input type="checkbox" className="peer" defaultChecked />
+          <div className="collapse-title text-base sm:text-lg md:text-xl font-bold tracking-tight flex items-center gap-2 sm:gap-3 hover:bg-base-200/50 transition-colors cursor-pointer py-3 md:py-4">
+            <div className="p-1.5 md:p-2 bg-primary/10 text-primary shrink-0">
+              <RiPaletteLine className="text-lg md:text-xl" />
             </div>
             2. Choose Identity Theme
-          </h2>
-          <div className="bg-base-100 p-2 border border-base-300 shadow-sm overflow-hidden collapse-content">
-            <ThemeSelector
-              currentTheme={mergedBioPage?.theme}
-              plan={currentUser?.plan}
-              onSelect={(theme) => setTempPageData({ theme })}
-            />
+          </div>
+          <div className="collapse-content px-4 md:px-6">
+            <div className="pt-4 md:pt-6">
+              <ThemeSelector
+                currentTheme={mergedBioPage?.theme}
+                plan={currentUser?.plan}
+                onSelect={(theme) => setTempPageData({ theme })}
+              />
+            </div>
           </div>
         </section>
 
         {/* Branding / White Labeling (Moved from Settings) */}
-        <section className="collapse collapse-arrow join-item border-base-300 border">
-          <input type="radio" name="my-accordion-4" />
-
-          <h2 className="text-xl font-bold tracking-tight flex items-center gap-3 collapse-title">
-            <div className="p-2 bg-primary/10 text-primary">
-              <RiShieldStarLine className="text-xl" />
+        <section className="collapse collapse-arrow join-item">
+          <input type="checkbox" className="peer" />
+          <div className="collapse-title text-base sm:text-lg md:text-xl font-bold tracking-tight flex items-center gap-2 sm:gap-3 hover:bg-base-200/50 transition-colors cursor-pointer py-3 md:py-4">
+            <div className="p-1.5 md:p-2 bg-primary/10 text-primary shrink-0">
+              <RiShieldStarLine className="text-lg md:text-xl" />
             </div>
             3. Branding & White Labeling
-          </h2>
-          <div className="collapse-content">
-            <BrandingEditor />
+          </div>
+          <div className="collapse-content px-4 md:px-6">
+            <div className="pt-4 md:pt-6">
+              <BrandingEditor />
+            </div>
           </div>
         </section>
       </div>

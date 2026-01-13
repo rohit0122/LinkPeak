@@ -514,7 +514,7 @@ export default function DashboardPage() {
             <PreviewPhoneNew
               key={`${currentBioPage?.id}-${currentBioPage?.links
                 .map((l) => l.id + l.is_active)
-                .join("|")}-${unsavedChanges}`}
+                .join("|")}`}
             />
           </div>
         </div>

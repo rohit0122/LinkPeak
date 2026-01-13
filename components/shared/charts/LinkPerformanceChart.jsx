@@ -16,14 +16,14 @@ import { RiBarChartGroupedLine } from "react-icons/ri";
  * linkChart = [
  *   {
  *     "label": "Jan 03",
- *     "My Website": { "clicks": 14, "uniqueClicks": 9 },
- *     "Latest Blog Post": { "clicks": 23, "uniqueClicks": 16 }
+ *     "My Website": { "total_clicks": 14, "unique_clicks": 9 },
+ *     "Latest Blog Post": { "total_clicks": 23, "unique_clicks": 16 }
  *   }
  * ]
  */
 
 export default function LinkPerformanceChart({ plan, linkChart, onRangeChange, currentRange }) {
-    const [metric, setMetric] = useState("clicks"); // "clicks" or "uniqueClicks"
+    const [metric, setMetric] = useState("total_clicks"); // "total_clicks" or "unique_clicks"
 
     if (plan === "FREE") return (
         <div className="card bg-slate-900 text-white shadow-xl border border-slate-700/50 group overflow-hidden relative">
@@ -92,15 +92,15 @@ export default function LinkPerformanceChart({ plan, linkChart, onRangeChange, c
                     <div className="flex justify-end mb-4">
                         <div className="join">
                             <button
-                                className={`join-item btn btn-sm ${metric === "clicks" ? "btn-primary" : "btn-ghost"} tooltip tooltip-bottom`}
-                                onClick={() => setMetric("clicks")}
+                                className={`join-item btn btn-sm ${metric === "total_clicks" ? "btn-primary" : "btn-ghost"} tooltip tooltip-bottom`}
+                                onClick={() => setMetric("total_clicks")}
                                 data-tip="Total Clicks"
                             >
                                 Total Clicks
                             </button>
                             <button
-                                className={`join-item btn btn-sm ${metric === "uniqueClicks" ? "btn-primary" : "btn-ghost"} tooltip tooltip-bottom`}
-                                onClick={() => setMetric("uniqueClicks")}
+                                className={`join-item btn btn-sm ${metric === "unique_clicks" ? "btn-primary" : "btn-ghost"} tooltip tooltip-bottom`}
+                                onClick={() => setMetric("unique_clicks")}
                                 data-tip="Unique Clicks"
                             >
                                 Unique Clicks
