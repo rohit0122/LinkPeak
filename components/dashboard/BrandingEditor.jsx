@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 
 import { RiShieldStarLine, RiGlobeLine, RiText, RiLinkM } from "react-icons/ri";
 import { useAuthStore } from "@/stores/useAuthStore";
+import UpgradeBadge from "./UpgradeBadge";
 
 export default function BrandingEditor() {
   const {
@@ -69,28 +70,19 @@ export default function BrandingEditor() {
                 <span className="label-text font-bold text-sm md:text-lg">
                   Remove &quot;Powered by {CONFIG.SITE_NAME}&quot;
                 </span>
-                {!isPro && (
-                  <span className="badge badge-xs badge-neutral ml-2 font-semibold uppercase tracking-wider">
-                    PRO Feature
-                  </span>
-                )}
+                {!isPro && <UpgradeBadge type="PRO" inline={true} />}
               </div>
             </label>
           </div>
 
           {/* Agency Custom Branding */}
           <div
-            className={`p-4 bg-base-200/50  border ${
-              isAgency ? "border-base-300" : "border-base-200 opacity-60"
-            }`}
+            className={`p-4 bg-base-200/50  border ${isAgency ? "border-base-300" : "border-base-200 opacity-60"
+              }`}
           >
             <div className="flex items-center gap-2 mb-4">
               <h3 className="font-medium text-sm md:text-lg">Agency Footer</h3>
-              {!isAgency && (
-                <span className="badge badge-primary badge-xs md:badge-sm badge-outline font-medium uppercase tracking-widest">
-                  AGENCY ONLY
-                </span>
-              )}
+              {!isAgency && <UpgradeBadge type="AGENCY" inline={true} />}
             </div>
 
             <div className="grid gap-4">
@@ -98,28 +90,34 @@ export default function BrandingEditor() {
                 <label className="label">
                   <span className="label-text">Footer Text</span>
                 </label>
-                <input
-                  type="text"
-                  disabled={!isAgency}
-                  placeholder="e.g. Crafted by Creative Agency"
-                  className="input input-bordered w-full"
-                  value={localBranding.customText || ""}
-                  onChange={(e) => handleChange("customText", e.target.value)}
-                />
+                <div className="relative group">
+                  <input
+                    type="text"
+                    disabled={!isAgency}
+                    placeholder="e.g. Crafted by Creative Agency"
+                    className="input input-bordered w-full disabled:cursor-not-allowed"
+                    value={localBranding.customText || ""}
+                    onChange={(e) => handleChange("customText", e.target.value)}
+                  />
+                  {!isAgency && <UpgradeBadge type="AGENCY" />}
+                </div>
               </div>
 
               <div className="form-control w-full">
                 <label className="label">
                   <span className="label-text">Footer Link URL</span>
                 </label>
-                <input
-                  type="text"
-                  disabled={!isAgency}
-                  placeholder="https://myagency.com"
-                  className="input input-bordered w-full"
-                  value={localBranding.customUrl || ""}
-                  onChange={(e) => handleChange("customUrl", e.target.value)}
-                />
+                <div className="relative group">
+                  <input
+                    type="text"
+                    disabled={!isAgency}
+                    placeholder="https://myagency.com"
+                    className="input input-bordered w-full disabled:cursor-not-allowed"
+                    value={localBranding.customUrl || ""}
+                    onChange={(e) => handleChange("customUrl", e.target.value)}
+                  />
+                  {!isAgency && <UpgradeBadge type="AGENCY" />}
+                </div>
               </div>
             </div>
           </div>

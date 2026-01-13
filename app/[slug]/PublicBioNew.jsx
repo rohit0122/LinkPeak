@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { RiQrCodeLine } from "react-icons/ri";
-import axios from "@/lib/httpClient";
+import axios from "axios";
 import { ENDPOINTS } from "@/constants/endpoints";
 
 // Shared Components
@@ -153,7 +153,7 @@ export default function PublicBioNew({ page, links, isDemo = false }) {
   };
 
   return (
-    <div className="min-h-screen bg-base-200 flex flex-col items-center justify-center">
+    <div className="min-h-screen bg-base-200 flex flex-col items-center justify-center" data-theme={activeTheme}>
       <div className="transform-gpu w-full h-full">
         {/* Note: Removed 'phone-1' artboard constraint here to allow full responsiveness based on template needs, 
              but kept container styles. Re-add specific constraints if strictly required. 
@@ -161,7 +161,6 @@ export default function PublicBioNew({ page, links, isDemo = false }) {
          */}
         <div
           className="overflow-y-auto no-scrollbar pt-12 pb-8 flex flex-col items-center w-full min-h-screen relative bg-base-100"
-          data-theme={activeTheme}
         >
           {/* Share / QR Button */}
           <button

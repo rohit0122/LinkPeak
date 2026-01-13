@@ -33,9 +33,9 @@ export default function DangerZone() {
     };
 
     return (
-        <div className="card bg-error/5 border border-error/20 shadow-sm">
+        <div className="card bg-base-100 shadow-sm border border-error/20">
             <div className="card-body">
-                <h3 className="card-title text-error flex items-center gap-2">
+                <h3 className="card-title text-error flex items-center gap-2 text-xl font-bold">
                     <RiAlertFill />
                     Danger Zone
                 </h3>
@@ -45,13 +45,13 @@ export default function DangerZone() {
 
                 <div className="flex items-center justify-between mt-4">
                     <div className="text-sm">
-                        <strong className="block text-base-content">Delete Account</strong>
+                        <strong className="block text-base-content font-bold">Delete Account</strong>
                         <span className="opacity-60">
                             Permanently delete your account and all associated data.
                         </span>
                     </div>
                     <button
-                        className="btn btn-error btn-outline"
+                        className="btn btn-error btn-outline btn-sm font-bold"
                         onClick={() => setShowModal(true)}
                     >
                         <RiDeleteBinLine className="text-lg" />

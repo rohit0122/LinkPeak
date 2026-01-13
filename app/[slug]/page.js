@@ -12,7 +12,7 @@ const getBioPage = cache(async (slug) => {
     const response = await restClient.get(
       BACKEND_ENDPOINTS.PUBLIC.GET_PAGE(slug)
     );
-    // console.log('slug data =>>>>>>>>>>>>>>>>>>>', response.data);
+    //console.log('slug data =>>>>>>>>>>>>>>>>>>>', response.data);
     if (response.data?.success) {
       return response.data.data.page;
     }

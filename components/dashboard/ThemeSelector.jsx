@@ -2,10 +2,11 @@
 
 import { CONFIG } from "@/constants/config";
 import { RiLockLine } from "react-icons/ri";
+import UpgradeBadge from "./UpgradeBadge";
 
 export default function ThemeSelector({ currentTheme, plan, onSelect }) {
 
-    const allowedThemes = CONFIG.PLAN_LIMITS[plan || 'FREE'].themes;
+    const allowedThemes = CONFIG.PLAN_LIMITS[plan || 'FREE'].allowedThemes;
     const isAllUnlocked = allowedThemes === "ALL";
 
     //console.log(' allowedThemes', allowedThemes);
@@ -65,11 +66,10 @@ export default function ThemeSelector({ currentTheme, plan, onSelect }) {
 
                         {/* Plan Badge for Locked Items */}
                         {isLocked && (
-                            <div className="absolute inset-x-0 bottom-3 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                                <span className="badge badge-xs badge-neutral font-bold uppercase tracking-widest px-2 py-2">
-                                    PRO
-                                </span>
-                            </div>
+                            <UpgradeBadge
+                                type={(CONFIG.PLAN_LIMITS['PRO'].allowedThemes === "ALL" || CONFIG.PLAN_LIMITS['PRO'].allowedThemes.includes(themeId)) ? 'PRO' : 'AGENCY'}
+                                rounded={true}
+                            />
                         )}
                     </button>
                 );

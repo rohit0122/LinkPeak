@@ -21,10 +21,38 @@ export const CONFIG = {
 
     // RBAC & Plan Limits
     PLAN_LIMITS: {
-        DEMO: { links: 5, pages: 1, allowedTemplates: ["classic"], themes: "ALL", analyticsDays: 7, customQR: false },
-        FREE: { links: 5, pages: 1, allowedTemplates: ["classic", "bento", "hero", "minimalist"], themes: ["light", "dark"], analyticsDays: 7, customQR: false },
-        PRO: { links: 1000, pages: 1, allowedTemplates: ["classic", "bento", "hero", "minimalist", "influencer", "sleek", "elegantserif", "glassmorphism", "stack"], themes: "ALL", analyticsDays: 90, customQR: true },
-        AGENCY: { links: 1000, pages: 10, allowedTemplates: "ALL", themes: "ALL", analyticsDays: 9999, customQR: true }
+        DEMO: {
+            links: 5,
+            pages: 1,
+            allowedTemplates: ["classic"],
+            allowedThemes: "ALL",
+            analyticsDays: 7,
+            customQR: false
+        },
+        FREE: {
+            links: 5,
+            pages: 1,
+            allowedTemplates: ["classic"],
+            allowedThemes: ["light", "dark"],
+            analyticsDays: 7,
+            customQR: false
+        },
+        PRO: {
+            links: 1000,
+            pages: 1,
+            allowedTemplates: ["classic", "bento", "hero", "influencer", "sleek"],
+            allowedThemes: ["light", "dark", "cupcake", "bumblebee", "emerald", "corporate", "retro", "cyberpunk", "valentine", "coffee"],
+            analyticsDays: 90,
+            customQR: true
+        },
+        AGENCY: {
+            links: 1000,
+            pages: 10,
+            allowedTemplates: "ALL",
+            allowedThemes: "ALL",
+            analyticsDays: 9999,
+            customQR: true
+        }
     },
     // UI Settings
     DAISY_THEMES: [
@@ -37,9 +65,9 @@ export const CONFIG = {
         { id: "retro", label: "Vintage Warmth" },
         { id: "cyberpunk", label: "Neon Future" },
         { id: "valentine", label: "Romance" },
+        { id: "coffee", label: "Cozy Roast" },
         { id: "luxury", label: "Premium Gold" },
         { id: "dracula", label: "Dark Pro" },
-        { id: "coffee", label: "Cozy Roast" },
         { id: "cyberglow", label: "Cyber Glow" },
         { id: "indigomist", label: "Indigo Mist" },
         { id: "mossycode", label: "Mossy Code" },

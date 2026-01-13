@@ -2,6 +2,7 @@
 
 import { RiLockLine } from "react-icons/ri";
 import { CONFIG } from "@/constants/config";
+import UpgradeBadge from "./UpgradeBadge";
 
 const TEMPLATES = [
     { id: "classic", name: "Classic", emoji: "📄", description: "Clean list view" },
@@ -75,11 +76,10 @@ export default function TemplateSelector({ currentTemplate, plan, onSelect }) {
 
                         {/* Plan Badge for Locked Items */}
                         {isLocked && (
-                            <div className="absolute inset-x-0 bottom-3 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                                <span className="badge badge-xs badge-neutral font-bold uppercase tracking-widest px-2 py-2">
-                                    {plan === 'FREE' ? 'PRO' : 'AGENCY'}
-                                </span>
-                            </div>
+                            <UpgradeBadge
+                                type={(CONFIG.PLAN_LIMITS['PRO'].allowedTemplates === "ALL" || CONFIG.PLAN_LIMITS['PRO'].allowedTemplates.includes(template.id)) ? 'PRO' : 'AGENCY'}
+                                rounded={false}
+                            />
                         )}
                     </button>
                 );
