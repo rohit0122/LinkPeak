@@ -1,25 +1,26 @@
 "use client";
+import BrutalistTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/BrutalistTemplate";
+import DarkNeonTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/DarkNeonTemplate";
+import ElegantSerifTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/ElegantSerifTemplate";
+import GlassmorphismTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/GlassmorphismTemplate";
+import GradientMeshTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/GradientMeshTemplate";
+import GridTilesTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/GridTilesTemplate";
+import MinimalistTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/MinimalistTemplate";
+import ModernCardsTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/ModernCardsTemplate";
+import NeoBrutalismTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/NeoBrutalismTemplate";
+import SoftPastelTemplate from "@/components/templates/upgradedTemplates/templatesWithBio/SoftPastelTemplate";
 import Head from "next/head";
 /* Import all templates */
-import DesignerBio from "@/components/bio-templates/Designer/DesignerBio";
-import { DeveloperBio } from "@/components/bio-templates/DeveloperBio";
-import { CoachBio } from "@/components/bio-templates/CoachBio";
-import { PhotographerBio } from "@/components/bio-templates/PhotographerBio";
-import { WriterBio } from "@/components/bio-templates/WriterBio";
-import { AgencyBio } from "@/components/bio-templates/AgencyBio";
-import { MakerBio } from "@/components/bio-templates/MakerBio";
-import { MusicianBio } from "@/components/bio-templates/MusicianBio";
-import { StreamerBio } from "@/components/bio-templates/StreamerBio";
-import { EnterpriseBio } from "@/components/bio-templates/EnterpriseBio";
 
 const bioInfo = {
   pageId: "demo",
-  profilePic: "https://img.daisyui.com/images/daisyui/mark-rotating.svg",
-  name: "John Doe",
-  role: "Freelancer Extraordinaire",
-  description: "I help brands build beautiful digital products.",
-  totalViews: 12345,
-  socialHandles: [
+  profile_image: "https://img.daisyui.com/images/daisyui/mark-rotating.svg",
+  title: "John Doe",
+  role: "user",
+  plan: "pro",
+  bio: "I help brands build beautiful digital products.",
+  views: 12345,
+  social_links: [
     { label: "Twitter", href: "https://twitter.com" },
     { label: "LinkedIn", href: "https://linkedin.com" },
   ],
@@ -55,76 +56,73 @@ export default function PreviewPage() {
         <meta name="description" content={bioInfo.description} />
       </Head>
 
-      <main className="space-y-24 bg-base-100 text-base-content px-6 py-12 max-w-3xl mx-auto">
+      <main className="space-y-24 bg-base-100 text-base-content px-6 py-12 max-w-3xl mx-auto" data-theme="retro">
         <section id="designer">
           <h2 className="text-2xl font-bold mb-4">Designer Template</h2>
-          <DesignerBio variant="A" bio={bioInfo} links={links} />
-          <DesignerBio variant="B" bio={bioInfo} links={links} />
-          <DesignerBio variant="C" bio={bioInfo} links={links} />
-          <DesignerBio variant="D" bio={bioInfo} links={links} />
+          <MinimalistTemplate page={bioInfo} links={links} />
         </section>
 
         <hr />
 
         <section id="developer">
           <h2 className="text-2xl font-bold mb-4">Developer Template</h2>
-          <DeveloperBio bio={bioInfo} links={links} />
+          <BrutalistTemplate page={bioInfo} links={links} />
         </section>
 
         <hr />
 
         <section id="coach">
           <h2 className="text-2xl font-bold mb-4">Coach Template</h2>
-          <CoachBio bio={bioInfo} links={links} />
+          <DarkNeonTemplate page={bioInfo} links={links} />
         </section>
 
         <hr />
 
         <section id="photographer">
           <h2 className="text-2xl font-bold mb-4">Photographer Template</h2>
-          <PhotographerBio bio={bioInfo} links={links} />
+          <ElegantSerifTemplate page={bioInfo} links={links} />
         </section>
 
         <hr />
 
         <section id="writer">
           <h2 className="text-2xl font-bold mb-4">Writer Template</h2>
-          <WriterBio bio={bioInfo} links={links} />
+          <GlassmorphismTemplate page={bioInfo} links={links} />
         </section>
 
         <hr />
 
         <section id="agency">
           <h2 className="text-2xl font-bold mb-4">Agency Template</h2>
-          <AgencyBio bio={bioInfo} links={links} />
+          <GradientMeshTemplate page={bioInfo} links={links} />
         </section>
 
         <hr />
 
         <section id="maker">
           <h2 className="text-2xl font-bold mb-4">Maker Template</h2>
-          <MakerBio bio={bioInfo} links={links} />
+          <GridTilesTemplate page={bioInfo} links={links} />
         </section>
 
         <hr />
 
         <section id="musician">
           <h2 className="text-2xl font-bold mb-4">Musician Template</h2>
-          <MusicianBio bio={bioInfo} links={links} />
+          <ModernCardsTemplate page={bioInfo} links={links} />
         </section>
 
         <hr />
 
         <section id="streamer">
           <h2 className="text-2xl font-bold mb-4">Streamer Template</h2>
-          <StreamerBio bio={bioInfo} links={links} />
+          <NeoBrutalismTemplate page={bioInfo} links={links} />
         </section>
 
         <hr />
 
         <section id="enterprise">
           <h2 className="text-2xl font-bold mb-4">Enterprise Template</h2>
-          <EnterpriseBio bio={bioInfo} links={links} />
+          <SoftPastelTemplate page={bioInfo} links={links} />
         </section>
       </main>
     </>
