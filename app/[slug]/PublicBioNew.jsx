@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { RiQrCodeLine } from "react-icons/ri";
-import axios from "axios";
+import axios from "@/lib/httpClient";
 import { ENDPOINTS } from "@/constants/endpoints";
 
 // Shared Components
