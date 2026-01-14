@@ -14,6 +14,17 @@ const nextConfig = {
   },
   // Compress pages for better performance
   compress: true,
+  experimental: {
+    optimizePackageImports: [
+      "react-icons",
+      "framer-motion",
+      "lodash",
+      "recharts",
+      "@dnd-kit/core",
+      "@dnd-kit/sortable",
+      "date-fns"
+    ],
+  },
 };
 
 export default nextConfig;
