@@ -7,6 +7,8 @@ import {
 import { CONFIG } from "@/constants/config";
 import PreviewPhoneNew from "@/components/shared/PreviewPhoneNew";
 import Link from "next/link";
+import Image from "next/image";
+import Avatar from "@/components/shared/Avatar";
 
 export default function Hero() {
   const demoPage = {
@@ -89,24 +91,24 @@ export default function Hero() {
           <div className="mt-16 pt-8 border-t border-base-300 w-full flex flex-col sm:flex-row items-center gap-8 md:justify-start justify-center">
             <div className="flex items-center gap-2">
               <div className="avatar-group -space-x-4 rtl:space-x-reverse">
-                <div className="avatar">
-                  <div className="w-10">
-                    <img src="/avatars/avatar-female.svg" alt="currentUser" />
-                  </div>
-                </div>
-                <div className="avatar">
-                  <div className="w-10">
-                    <img src="/avatars/avatar-male.svg" alt="currentUser" />
-                  </div>
-                </div>
-                <div className="avatar">
-                  <div className="w-10">
-                    <img
-                      src="/avatars/avatar-generic-eco.svg"
-                      alt="currentUser"
-                    />
-                  </div>
-                </div>
+                <Avatar
+                  src="/avatars/avatar-female.svg"
+                  alt="Creator 1"
+                  size="sm"
+                  className="ring-2 ring-base-100"
+                />
+                <Avatar
+                  src="/avatars/avatar-male.svg"
+                  alt="Creator 2"
+                  size="sm"
+                  className="ring-2 ring-base-100"
+                />
+                <Avatar
+                  src="/avatars/avatar-generic-eco.svg"
+                  alt="Creator 3"
+                  size="sm"
+                  className="ring-2 ring-base-100"
+                />
               </div>
               <div className="text-left leading-none">
                 <p className="font-bold text-lg">500+</p>

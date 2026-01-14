@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Avatar from "@/components/shared/Avatar";
 import { RiLinkM, RiEyeFill } from "react-icons/ri";
 
 export default function TilesTemplate({ page, links, handleLinkClick }) {
@@ -28,10 +29,12 @@ export default function TilesTemplate({ page, links, handleLinkClick }) {
         >
             {/* Profile Header */}
             <div className="flex items-center gap-4 bg-base-200/50 p-4 rounded-2xl border border-base-content/5 shadow-sm mb-6 backdrop-blur-sm">
-                <img
-                    src={page.profile_image || "https://via.placeholder.com/150"}
-                    className="w-16 h-16 rounded-xl object-cover bg-base-300 shadow-sm"
+                <Avatar
+                    src={page.profile_image}
                     alt={page.title}
+                    size={64}
+                    shape="rounded-xl"
+                    className="bg-base-300 shadow-sm"
                 />
                 <div className="flex-1 min-w-0">
                     <h1 className="text-lg font-bold truncate leading-tight text-base-content">{page.title}</h1>

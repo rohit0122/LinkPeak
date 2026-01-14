@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Avatar from "@/components/shared/Avatar";
 import { RiExternalLinkLine, RiLinkM, RiEyeLine } from "react-icons/ri";
 
 export default function GlassmorphismTemplate({ page, links, handleLinkClick }) {
@@ -30,10 +31,11 @@ export default function GlassmorphismTemplate({ page, links, handleLinkClick }) 
             <div className="text-center p-6 rounded-3xl bg-base-100/30 backdrop-blur-xl border border-base-content/10 shadow-lg mb-6 text-base-content">
                 <div className="relative w-24 h-24 mx-auto mb-4">
                     <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl"></div>
-                    <img
-                        src={page.profile_image || "https://via.placeholder.com/150"}
+                    <Avatar
+                        src={page.profile_image}
                         alt={page.title}
-                        className="relative w-full h-full rounded-full object-cover border-2 border-base-100 ring-2 ring-base-content/5"
+                        size={96}
+                        className="relative border-2 border-base-100 ring-2 ring-base-content/5"
                     />
                 </div>
                 <h1 className="text-2xl font-bold mb-2">{page.title}</h1>

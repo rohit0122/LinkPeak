@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Avatar from "@/components/shared/Avatar";
 import { RiArrowRightLine, RiEyeLine } from "react-icons/ri";
 
 export default function BrutalistTemplate({ page, links, handleLinkClick }) {
@@ -29,10 +30,12 @@ export default function BrutalistTemplate({ page, links, handleLinkClick }) {
             {/* Profile Header */}
             <header className="border-4 border-base-content p-6 bg-base-100 mb-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.2)]">
                 <div className="flex flex-col md:flex-row items-center gap-6">
-                    <img
-                        src={page.profile_image || "https://via.placeholder.com/150"}
-                        className="w-24 h-24 object-cover border-4 border-base-content"
+                    <Avatar
+                        src={page.profile_image}
                         alt={page.title}
+                        size={100}
+                        shape="square"
+                        className="border-4 border-base-content"
                     />
                     <div className="flex-1 text-center md:text-left w-full">
                         <h1 className="text-4xl font-black uppercase tracking-tighter leading-none mb-3 break-words">{page.title}</h1>

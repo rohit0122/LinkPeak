@@ -1,9 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Avatar from "@/components/shared/Avatar";
 import { RiArrowRightUpLine, RiEyeFill, RiLinkM } from "react-icons/ri";
 
-export default function BentoTemplate({ page, links, handleLinkClick }) {
+export default function BentoTemplate({ page, links, handleLinkClick, isLCP = false }) {
     const container = {
         hidden: { opacity: 0 },
         show: {
@@ -28,10 +29,13 @@ export default function BentoTemplate({ page, links, handleLinkClick }) {
         >
             {/* Profile Header - Compact for Grid */}
             <div className="flex items-end gap-4 mb-6 px-2">
-                <img
-                    src={page.profile_image || "https://via.placeholder.com/150"}
+                <Avatar
+                    src={page.profile_image}
                     alt={page.title}
-                    className="w-20 h-20 rounded-lg object-cover shadow-sm bg-base-200"
+                    size={80}
+                    shape="rounded-lg"
+                    priority={isLCP}
+                    className="shadow-sm bg-base-200"
                 />
                 <div className="mb-1 flex-1 min-w-0">
                     <h1 className="text-2xl font-black text-base-content leading-none mb-1">{page.title}</h1>

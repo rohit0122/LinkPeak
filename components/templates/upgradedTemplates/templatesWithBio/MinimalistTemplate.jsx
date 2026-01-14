@@ -1,9 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Avatar from "@/components/shared/Avatar";
 import { RiArrowRightUpLine, RiLinkM, RiEyeLine } from "react-icons/ri";
 
-export default function MinimalistTemplate({ page, links, handleLinkClick }) {
+export default function MinimalistTemplate({ page, links, handleLinkClick, isLCP = false }) {
     const container = {
         hidden: { opacity: 0 },
         show: {
@@ -33,10 +34,12 @@ export default function MinimalistTemplate({ page, links, handleLinkClick }) {
                     <div className="absolute -inset-1 rounded-full border border-base-content/5 group-hover:border-primary/30 transition-colors duration-500 scale-110"></div>
                     <div className="absolute -inset-2 rounded-full border border-dashed border-base-content/5 group-hover:border-primary/20 transition-all duration-700 animate-[spin_10s_linear_infinite] opacity-0 group-hover:opacity-100"></div>
 
-                    <img
-                        src={page.profile_image || "https://via.placeholder.com/150"}
+                    <Avatar
+                        src={page.profile_image}
                         alt={page.title}
-                        className="w-28 h-28 rounded-full mx-auto object-cover border-4 border-base-100 shadow-xl relative z-10"
+                        size={112}
+                        priority={isLCP}
+                        className="mx-auto border-4 border-base-100 shadow-xl relative z-10"
                     />
                 </div>
                 <div>

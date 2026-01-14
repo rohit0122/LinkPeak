@@ -1,9 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Avatar from "@/components/shared/Avatar";
 import { RiExternalLinkLine, RiEyeFill } from "react-icons/ri";
 
-export default function SleekTemplate({ page, links, handleLinkClick }) {
+export default function SleekTemplate({ page, links, handleLinkClick, isLCP = false }) {
     const container = {
         hidden: { opacity: 0 },
         show: {
@@ -31,10 +32,13 @@ export default function SleekTemplate({ page, links, handleLinkClick }) {
                 <div className="relative mb-6 group">
                     {/* Modern square-ish avatar with rounded corners */}
                     <div className="absolute -inset-1 bg-gradient-to-tr from-primary to-secondary rounded-[2.2rem] opacity-70 blur-md group-hover:opacity-100 transition duration-500"></div>
-                    <img
-                        src={page.profile_image || "https://via.placeholder.com/150"}
+                    <Avatar
+                        src={page.profile_image}
                         alt={page.title}
-                        className="relative w-28 h-28 rounded-[2rem] object-cover shadow-lg border-4 border-base-100 group-hover:scale-[1.02] transition-transform duration-300"
+                        size={112}
+                        shape="rounded-[2rem]"
+                        priority={isLCP}
+                        className="relative shadow-lg border-4 border-base-100 group-hover:scale-[1.02] transition-transform duration-300"
                     />
                     <div className="absolute -bottom-3 -right-3 bg-base-100 p-1.5 rounded-xl shadow-md">
                         <div className="bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-lg flex items-center gap-1.5">

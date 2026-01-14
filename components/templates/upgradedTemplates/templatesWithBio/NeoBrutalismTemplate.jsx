@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Avatar from "@/components/shared/Avatar";
 import { RiEyeFill } from "react-icons/ri";
 
 export default function NeoBrutalismTemplate({ page, links, handleLinkClick }) {
@@ -34,10 +35,11 @@ export default function NeoBrutalismTemplate({ page, links, handleLinkClick }) {
 
                 <div className="relative inline-block mb-4">
                     <div className="absolute inset-0 bg-base-content translate-x-1 translate-y-1 rounded-full"></div>
-                    <img
-                        src={page.profile_image || "https://via.placeholder.com/150"}
-                        className="relative w-24 h-24 rounded-full border-2 border-base-content bg-base-100 object-cover"
+                    <Avatar
+                        src={page.profile_image}
                         alt={page.title}
+                        size={96}
+                        className="relative border-2 border-base-content bg-base-100"
                     />
                 </div>
 

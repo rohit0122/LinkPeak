@@ -70,7 +70,7 @@ export default function NavbarClient({
     router.push("/login");
   };
 
-  //console.log(" isAuthenticated ", isAuthenticated);
+  // console.log(" isAuthenticated ", isAuthenticated);
   return (
     <nav className="sticky top-0 z-50 bg-base-100/90 backdrop-blur border-b">
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -104,7 +104,6 @@ export default function NavbarClient({
                   </li>
                   {pages.map((p) => (
                     <li key={p.id}>
-                      {console.log("p ", p)}
                       <button
                         onClick={() => onSelectPage && onSelectPage(p.id)}
                         className={`flex items-center justify-between py-2.5 px-3 ${currentPage?.id === p.id
@@ -228,38 +227,40 @@ export default function NavbarClient({
             </>
           )}
         </div>
-      </div>
+      </div >
 
       {/* Mobile Menu */}
-      {!isAuthenticated && mobileOpen && (
-        <div className="md:hidden bg-base-100 border-t p-4 space-y-3 animate-slideDown">
-          {publicLinks.map((l) => (
-            <div key={l.name} className="flex items-center gap-2">
-              <span className={`text-lg ${l.color}`}>{l.icon}</span>
-              <Link
-                href={l.href}
-                className="block font-medium"
-                onClick={() => setMobileOpen(false)}
-              >
-                {l.name}
-              </Link>
-            </div>
-          ))}
-          <Link
-            href="/login"
-            className="btn btn-neutral btn-outline font-medium w-full"
-          >
-            Login
-          </Link>
-          <Link
-            href="/register"
-            className="btn btn-primary btn-outline font-medium w-full"
-          >
-            Get Started
-          </Link>
-        </div>
-      )}
-    </nav>
+      {
+        !isAuthenticated && mobileOpen && (
+          <div className="md:hidden bg-base-100 border-t p-4 space-y-3 animate-slideDown">
+            {publicLinks.map((l) => (
+              <div key={l.name} className="flex items-center gap-2">
+                <span className={`text-lg ${l.color}`}>{l.icon}</span>
+                <Link
+                  href={l.href}
+                  className="block font-medium"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {l.name}
+                </Link>
+              </div>
+            ))}
+            <Link
+              href="/login"
+              className="btn btn-neutral btn-outline font-medium w-full"
+            >
+              Login
+            </Link>
+            <Link
+              href="/register"
+              className="btn btn-primary btn-outline font-medium w-full"
+            >
+              Get Started
+            </Link>
+          </div>
+        )
+      }
+    </nav >
   );
 }
 

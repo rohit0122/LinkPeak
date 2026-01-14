@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Avatar from "@/components/shared/Avatar";
 import { RiHeart3Line, RiEyeLine } from "react-icons/ri";
 
 export default function SoftPastelTemplate({ page, links, handleLinkClick }) {
@@ -30,10 +31,11 @@ export default function SoftPastelTemplate({ page, links, handleLinkClick }) {
             <div className="text-center bg-base-200/50 backdrop-blur-md p-8 rounded-[3rem] mb-6 border border-base-content/5 shadow-sm">
                 <div className="relative inline-block mb-4">
                     <div className="absolute inset-0 bg-primary/10 rounded-full scale-110 blur-md"></div>
-                    <img
-                        src={page.profile_image || "https://via.placeholder.com/150"}
-                        className="relative w-24 h-24 rounded-full mx-auto border-4 border-base-100 shadow-sm object-cover"
+                    <Avatar
+                        src={page.profile_image}
                         alt={page.title}
+                        size={96}
+                        className="relative mx-auto border-4 border-base-100 shadow-sm"
                     />
                 </div>
                 <h1 className="text-2xl font-bold text-base-content mb-2">{page.title}</h1>

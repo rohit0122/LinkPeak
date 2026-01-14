@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Avatar from "@/components/shared/Avatar";
 import { RiEyeLine } from "react-icons/ri";
 
 export default function ElegantSerifTemplate({ page, links, handleLinkClick }) {
@@ -29,10 +30,11 @@ export default function ElegantSerifTemplate({ page, links, handleLinkClick }) {
             {/* Profile Header */}
             <div className="text-center mb-10 pt-4 border-b border-base-content/10 pb-8">
                 <div className="relative inline-block mb-6">
-                    <img
-                        src={page.profile_image || "https://via.placeholder.com/150"}
-                        className="w-28 h-28 rounded-full object-cover shadow-xl sepia-[.2] border border-base-content/10"
+                    <Avatar
+                        src={page.profile_image}
                         alt={page.title}
+                        size={112}
+                        className="shadow-xl sepia-[.2] border border-base-content/10"
                     />
                     <div className="absolute -bottom-2 -right-2 bg-base-100 p-2 rounded-full border border-base-content/5 shadow-sm">
                         <RiEyeLine className="w-4 h-4 text-base-content/50" />

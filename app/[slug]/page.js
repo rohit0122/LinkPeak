@@ -5,6 +5,9 @@ import PublicBioNew from "./PublicBioNew";
 import BioNotFound from "@/components/bio-templates/BioNotFound";
 import { CONFIG } from "@/constants/config";
 
+// Revalidate every 60 seconds (ISR)
+export const revalidate = 60;
+
 // Memoize the data fetch
 const getBioPage = cache(async (slug) => {
   try {

@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Avatar from "@/components/shared/Avatar";
 import { RiFlashlightLine, RiEyeLine } from "react-icons/ri";
 
 export default function DarkNeonTemplate({ page, links, handleLinkClick }) {
@@ -33,10 +34,11 @@ export default function DarkNeonTemplate({ page, links, handleLinkClick }) {
 
                 <div className="relative inline-block mb-4">
                     <div className="absolute inset-0 rounded-full bg-primary blur-md opacity-50 animate-pulse"></div>
-                    <img
-                        src={page.profile_image || "https://via.placeholder.com/150"}
-                        className="relative w-24 h-24 rounded-full border-2 border-primary object-cover bg-neutral"
+                    <Avatar
+                        src={page.profile_image}
                         alt={page.title}
+                        size={96}
+                        className="relative border-2 border-primary bg-neutral"
                     />
                 </div>
 

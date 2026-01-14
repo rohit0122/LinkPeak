@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Avatar from "@/components/shared/Avatar";
 import { RiArrowRightLine, RiShareForwardFill, RiVerifiedBadgeFill, RiMoreFill } from "react-icons/ri";
 
 export default function InfluencerTemplate({ page, links, handleLinkClick }) {
@@ -44,10 +45,11 @@ export default function InfluencerTemplate({ page, links, handleLinkClick }) {
                         <div className="absolute -inset-1.5 bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 rounded-full animate-spin-slow opacity-80 group-hover:opacity-100 transition-opacity duration-300"></div>
                         <div className="absolute -inset-1 bg-base-100 rounded-full"></div>
 
-                        <img
-                            src={page.profile_image || "https://via.placeholder.com/150"}
+                        <Avatar
+                            src={page.profile_image}
                             alt={page.title}
-                            className="relative w-28 h-28 rounded-full object-cover border-4 border-base-100 shadow-sm"
+                            size={112}
+                            className="relative border-4 border-base-100 shadow-sm"
                         />
                         {/* Live/Story Badge */}
                         <div className="absolute bottom-1 right-1 bg-primary text-primary-content text-[10px] font-bold px-1.5 py-0.5 rounded-md border-2 border-base-100 shadow-sm flex items-center gap-0.5">

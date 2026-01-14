@@ -14,21 +14,38 @@ import SocialFooter from "@/components/shared/SocialFooter";
 import BrandingFooter from "@/components/shared/BrandingFooter";
 
 // Dynamic Template Imports (15 Templates)
-const MinimalistTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/templatesWithBio/MinimalistTemplate"), { ssr: true });
-const SleekTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/templatesWithBio/SleekTemplate"), { ssr: true }); // Renamed from Modern
-const StackTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/templatesWithBio/StackTemplate"), { ssr: true }); // Renamed from ModernCards
-const BentoTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/templatesWithBio/BentoTemplate"), { ssr: true }); // Renamed from Grid
-const TilesTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/templatesWithBio/TilesTemplate"), { ssr: true }); // Renamed from GridTiles
-const InfluencerTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/templatesWithBio/InfluencerTemplate"), { ssr: true }); // Renamed from Social
-const BrutalistTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/templatesWithBio/BrutalistTemplate"), { ssr: true });
-const NeoBrutalismTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/templatesWithBio/NeoBrutalismTemplate"), { ssr: true });
-const DarkNeonTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/templatesWithBio/DarkNeonTemplate"), { ssr: true });
-const ElegantSerifTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/templatesWithBio/ElegantSerifTemplate"), { ssr: true });
-const GlassmorphismTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/templatesWithBio/GlassmorphismTemplate"), { ssr: true });
-const SoftPastelTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/templatesWithBio/SoftPastelTemplate"), { ssr: true });
-const GradientMeshTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/templatesWithBio/GradientMeshTemplate"), { ssr: true });
-const ClassicTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/templatesWithBio/ClassicTemplate"), { ssr: true });
-const HeroTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/templatesWithBio/HeroTemplate"), { ssr: true });
+const MinimalistTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/templatesWithBio/MinimalistTemplate"), { ssr: true, loading: () => <TemplatePlaceholder /> });
+const SleekTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/templatesWithBio/SleekTemplate"), { ssr: true, loading: () => <TemplatePlaceholder /> });
+const StackTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/templatesWithBio/StackTemplate"), { ssr: true, loading: () => <TemplatePlaceholder /> });
+const BentoTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/templatesWithBio/BentoTemplate"), { ssr: true, loading: () => <TemplatePlaceholder /> });
+const TilesTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/templatesWithBio/TilesTemplate"), { ssr: true, loading: () => <TemplatePlaceholder /> });
+const InfluencerTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/templatesWithBio/InfluencerTemplate"), { ssr: true, loading: () => <TemplatePlaceholder /> });
+const BrutalistTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/templatesWithBio/BrutalistTemplate"), { ssr: true, loading: () => <TemplatePlaceholder /> });
+const NeoBrutalismTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/templatesWithBio/NeoBrutalismTemplate"), { ssr: true, loading: () => <TemplatePlaceholder /> });
+const DarkNeonTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/templatesWithBio/DarkNeonTemplate"), { ssr: true, loading: () => <TemplatePlaceholder /> });
+const ElegantSerifTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/templatesWithBio/ElegantSerifTemplate"), { ssr: true, loading: () => <TemplatePlaceholder /> });
+const GlassmorphismTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/templatesWithBio/GlassmorphismTemplate"), { ssr: true, loading: () => <TemplatePlaceholder /> });
+const SoftPastelTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/templatesWithBio/SoftPastelTemplate"), { ssr: true, loading: () => <TemplatePlaceholder /> });
+const GradientMeshTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/templatesWithBio/GradientMeshTemplate"), { ssr: true, loading: () => <TemplatePlaceholder /> });
+const ClassicTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/templatesWithBio/ClassicTemplate"), { ssr: true, loading: () => <TemplatePlaceholder /> });
+const HeroTemplate = dynamic(() => import("@/components/templates/upgradedTemplates/templatesWithBio/HeroTemplate"), { ssr: true, loading: () => <TemplatePlaceholder /> });
+
+function TemplatePlaceholder() {
+  return (
+    <div className="w-full max-w-3xl mx-auto px-6 py-12 space-y-8 animate-pulse">
+      <div className="flex flex-col items-center space-y-4">
+        <div className="w-24 h-24 bg-base-300 rounded-full"></div>
+        <div className="h-6 w-48 bg-base-300 rounded"></div>
+        <div className="h-4 w-64 bg-base-300 rounded"></div>
+      </div>
+      <div className="space-y-4">
+        <div className="h-16 w-full bg-base-300 rounded-xl"></div>
+        <div className="h-16 w-full bg-base-300 rounded-xl"></div>
+        <div className="h-16 w-full bg-base-300 rounded-xl"></div>
+      </div>
+    </div>
+  );
+}
 
 export default function PublicBioNew({ page, links, isDemo = false }) {
   const [totalViews, setTotalViews] = useState(page.total_views || 0);
@@ -53,7 +70,8 @@ export default function PublicBioNew({ page, links, isDemo = false }) {
     const commonProps = {
       page: { ...page, total_views: totalViews, likes: likes },
       links,
-      handleLinkClick
+      handleLinkClick,
+      isLCP: !isDemo
     };
 
     // Map template keys to Components
@@ -92,10 +110,16 @@ export default function PublicBioNew({ page, links, isDemo = false }) {
     }
   };
 
-  // Analytics & Like Logic (Copied from Original)
+  // Analytics & Like Logic
   useEffect(() => {
     if (isDemo || !page?.id) return;
 
+    // 1. Initial Local State Logic
+    if (localStorage.getItem(`liked_${page.id}`)) {
+      setIsLiked(true);
+    }
+
+    // 2. Views Tracking (Delayed)
     const checkUnique = (key) => {
       const lastTracked = localStorage.getItem(key);
       if (!lastTracked) return true;
@@ -114,10 +138,6 @@ export default function PublicBioNew({ page, links, isDemo = false }) {
           .catch(console.error);
       }, 3000);
       return () => clearTimeout(timer);
-    }
-
-    if (localStorage.getItem(`liked_${page.id}`)) {
-      setIsLiked(true);
     }
   }, [page?.id, isDemo]);
 

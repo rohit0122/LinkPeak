@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Avatar from "@/components/shared/Avatar";
 import { RiLinkM, RiEyeFill } from "react-icons/ri";
 
 export default function StackTemplate({ page, links, handleLinkClick }) {
@@ -35,10 +36,12 @@ export default function StackTemplate({ page, links, handleLinkClick }) {
 
                 <div className="relative inline-block mb-4">
                     <div className="absolute inset-0 bg-gradient-to-tr from-primary to-secondary rounded-2xl blur opacity-40 group-hover:opacity-60 transition-opacity duration-500 animate-pulse"></div>
-                    <img
-                        src={page?.profile_image || "https://via.placeholder.com/150"}
+                    <Avatar
+                        src={page?.profile_image}
                         alt={page?.title || "Profile"}
-                        className="relative w-28 h-28 rounded-2xl object-cover shadow-lg border-2 border-base-100 mx-auto transform group-hover:scale-105 transition-transform duration-500"
+                        size={112}
+                        shape="rounded"
+                        className="relative shadow-lg border-2 border-base-100 mx-auto transform group-hover:scale-105 transition-transform duration-500"
                     />
                 </div>
                 <h1 className="text-2xl font-black text-base-content mb-2 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-base-content to-base-content/60">{page?.title || "Untitled"}</h1>

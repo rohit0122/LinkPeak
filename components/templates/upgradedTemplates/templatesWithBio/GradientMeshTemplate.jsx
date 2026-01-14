@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Avatar from "@/components/shared/Avatar";
 import { RiArrowRightSLine, RiEyeLine } from "react-icons/ri";
 
 export default function GradientMeshTemplate({ page, links, handleLinkClick }) {
@@ -33,10 +34,11 @@ export default function GradientMeshTemplate({ page, links, handleLinkClick }) {
 
                 <div className="relative bg-base-100 rounded-[21px] p-8 z-10 w-full h-full backdrop-blur-3xl bg-opacity-90">
                     <div className="w-24 h-24 rounded-full p-[3px] bg-gradient-to-tr from-primary to-secondary mx-auto mb-4 shadow-lg shadow-primary/20">
-                        <img
-                            src={page.profile_image || "https://via.placeholder.com/150"}
-                            className="w-full h-full rounded-full object-cover border-4 border-base-100"
+                        <Avatar
+                            src={page.profile_image}
                             alt={page.title}
+                            size={96}
+                            className="border-4 border-base-100"
                         />
                     </div>
                     <h1 className="text-3xl font-black bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent mb-2 inline-block tracking-tight">{page.title}</h1>

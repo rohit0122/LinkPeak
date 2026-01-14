@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Avatar from "@/components/shared/Avatar";
 import { RiStarFill, RiArrowRightLine, RiEyeLine } from "react-icons/ri";
 
 export default function HeroTemplate({ page, links, handleLinkClick }) {
@@ -18,10 +19,11 @@ export default function HeroTemplate({ page, links, handleLinkClick }) {
             <header className="flex flex-col gap-4 mb-4 px-2">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <img
-                            src={page.profile_image || "https://via.placeholder.com/150"}
+                        <Avatar
+                            src={page.profile_image}
                             alt={page.title}
-                            className="w-12 h-12 rounded-full object-cover border-2 border-base-content/10"
+                            size={48}
+                            className="border-2 border-base-content/10"
                         />
                         <h1 className="font-bold text-lg leading-none">{page.title}</h1>
                     </div>

@@ -1,9 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Avatar from "@/components/shared/Avatar";
 import { RiArrowRightLine, RiLinkM, RiEyeFill } from "react-icons/ri";
 
-export default function ClassicTemplate({ page, links, handleLinkClick }) {
+export default function ClassicTemplate({ page, links, handleLinkClick, isLCP = false }) {
     const container = {
         hidden: { opacity: 0 },
         show: {
@@ -29,10 +30,12 @@ export default function ClassicTemplate({ page, links, handleLinkClick }) {
             {/* Profile Header */}
             <div className="text-center mb-10">
                 <div className="relative inline-block mb-4">
-                    <img
-                        src={page.profile_image || "https://via.placeholder.com/150"}
+                    <Avatar
+                        src={page.profile_image}
                         alt={page.title}
-                        className="w-24 h-24 rounded-full object-cover border-2 border-base-content/10 shadow-sm mx-auto p-1 bg-base-100"
+                        size={96}
+                        priority={isLCP}
+                        className="mx-auto p-1 bg-base-100 border-2 border-base-content/10 shadow-sm"
                     />
                 </div>
                 <h1 className="text-2xl font-bold text-base-content tracking-tight mb-2">{page.title}</h1>

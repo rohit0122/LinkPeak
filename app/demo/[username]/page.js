@@ -1,4 +1,4 @@
-import PublicBio from "@/app/[slug]/PublicBio";
+import PublicBioNew from "@/app/[slug]/PublicBioNew";
 import { notFound } from "next/navigation";
 import { CONFIG } from "@/constants/config";
 
@@ -114,5 +114,5 @@ export default async function DemoBioPage({ params }) {
     return notFound();
   }
 
-  return <PublicBio page={pageData} links={linksData} isDemo={true} />;
+  return <PublicBioNew page={pageData} links={linksData} isDemo={true} />;
 }
