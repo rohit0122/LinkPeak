@@ -320,7 +320,7 @@ export default function SettingsTab({
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <h2 className="text-lg font-medium tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70">
-                    AI Optimization Engine to gain SEO Ranking
+                    AI SEO & Ranking Engine
                   </h2>
                 </div>
                 <p className="text-sm font-medium text-white/50 mt-1 max-w-sm">

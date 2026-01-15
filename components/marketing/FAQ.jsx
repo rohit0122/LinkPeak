@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { RiQuestionLine } from "react-icons/ri";
 // constants/faq.js
 import { CONFIG } from "@/constants/config";
@@ -68,6 +71,8 @@ const faqs = [
 ];*/
 
 export default function FAQ() {
+    const [openIndex, setOpenIndex] = useState(0);
+
     return (
         <section id="faq" className="py-24 bg-base-100">
             <div className="max-w-3xl mx-auto px-6">
@@ -80,7 +85,12 @@ export default function FAQ() {
                 <div className="space-y-4">
                     {faqs.map((faq, i) => (
                         <div key={i} className="collapse collapse-plus bg-base-200/50  border border-base-300">
-                            <input type="radio" name="my-accordion-3" defaultChecked={i === 0} />
+                            <input
+                                type="checkbox"
+                                name="my-accordion-3"
+                                checked={openIndex === i}
+                                onChange={() => setOpenIndex(openIndex === i ? null : i)}
+                            />
                             <div className="collapse-title text-xl font-bold p-6">
                                 {faq.q}
                             </div>
