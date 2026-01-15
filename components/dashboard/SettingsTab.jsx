@@ -470,9 +470,6 @@ group-hover:text-secondary"
           </div>
         </div>
       </div>
-
-      <SubscriptionDetails />
-      <DangerZone />
     </div>
   );
 }

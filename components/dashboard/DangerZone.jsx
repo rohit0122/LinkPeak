@@ -6,6 +6,7 @@ import { RiAlertFill, RiDeleteBinLine, RiErrorWarningLine } from "react-icons/ri
 import axios from "@/lib/httpClient";
 import { toast } from "react-hot-toast";
 import { ENDPOINTS } from "@/constants/endpoints";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 export default function DangerZone() {
     const router = useRouter();
@@ -13,6 +14,7 @@ export default function DangerZone() {
     const [isDeleting, setIsDeleting] = useState(false);
     const [confirmationText, setConfirmationText] = useState("");
     const CONFIRMATION_KEYWORD = "DELETE PERMANENTLY";
+    const { resetAuthStore } = useAuthStore();
 
     const handleDelete = async () => {
         if (confirmationText !== CONFIRMATION_KEYWORD) return;
@@ -22,12 +24,14 @@ export default function DangerZone() {
             const { data } = await axios.delete(ENDPOINTS.AUTH.DELETE_ACCOUNT);
 
             if (data.success) {
-                // Hard redirect to clear client state
-                window.location.href = "/account-deleted";
+                resetAuthStore();
+                useAuthStore.persist.clearStorage();
+                toast.success(data.message || "Account deleted successfully");
+                router.replace("/account-deleted");
             }
         } catch (error) {
             console.error("Deletion failed:", error);
-            toast.error(error.response?.data?.error || "Failed to delete account. Please try again.");
+            toast.error(error.response?.data?.message || "Failed to delete account. Please try again.");
             setIsDeleting(false);
         }
     };

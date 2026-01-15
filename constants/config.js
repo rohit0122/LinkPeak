@@ -40,7 +40,7 @@ export const CONFIG = {
         PRO: {
             links: 1000,
             pages: 1,
-            allowedTemplates: ["classic", "bento", "hero", "influencer", "sleek"],
+            allowedTemplates: ["classic", "bento", "hero", "influencer", "sleek", "minimalist", "glassmorphism", "stack"],
             allowedThemes: ["light", "dark", "cupcake", "bumblebee", "emerald", "corporate", "retro", "cyberpunk", "valentine", "coffee"],
             analyticsDays: 90,
             customQR: true

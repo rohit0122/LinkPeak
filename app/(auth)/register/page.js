@@ -105,12 +105,12 @@ function RegisterForm() {
               <h2 className="text-2xl font-bold mb-2">Account Created Successfully!</h2>
 
               <p className="text-base-content/80 mb-2">
-                Welcome to {CONFIG.SITE_NAME}! We&apos;ve sent a verification link to <br />
-                <span className="font-semibold text-base-content">{formData.email}</span>
+                Welcome to {CONFIG.SITE_NAME}! We&apos;ve sent a verification link to&nbsp;
+                <span className="font-semibold text-base-content">your registered email id.</span>
                 <br />
-                <div className="mt-2 p-3 bg-base-200/50 border border-base-300 text-sm flex items-center justify-center gap-2 mx-auto text-left">
-                  <RiInformationLine className="text-lg text-info shrink-0" />
-                  <span className="opacity-80">
+                <div className="mt-2 alert alert-info alert-outline text-info-content flex items-center justify-center gap-2">
+                  <RiInformationLine className="text-lg shrink-0" />
+                  <span className="">
                     Note: Please check your spam or junk folder if you don&apos;t see it.
                   </span>
                 </div>

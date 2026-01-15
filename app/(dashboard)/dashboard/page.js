@@ -25,12 +25,15 @@ import {
   RiEyeLine,
   RiHeartLine,
   RiAdminLine,
+  RiUserLine,
 } from "react-icons/ri";
 import { CONFIG } from "@/constants/config";
 import { ENDPOINTS } from "@/constants/endpoints";
 import { useRouter } from "next/navigation";
 import SubscriptionStatusDiv from "@/components/dashboard/SubscriptionStatusDiv";
 import { useAuthStore } from "@/stores/useAuthStore";
+import SubscriptionDetails from "@/components/dashboard/Subscription/SubscriptionDetails";
+import DangerZone from "@/components/dashboard/DangerZone";
 
 // Lazy load heavy components
 const AnalyticsView = dynamic(
@@ -383,17 +386,18 @@ export default function DashboardPage() {
           <div role="tablist" className="tabs tabs-boxed bg-base-100 p-2 mb-6 shadow-sm gap-2">
             {[
               { key: "links", label: "Links", icon: RiLayoutLine },
-              { key: "analytics", label: "Stats", icon: RiBarChartLine },
-              { key: "qr", label: "QR", icon: RiQrCodeLine },
               { key: "theme", label: "Style", icon: RiPaletteLine },
+              { key: "settings", label: "Page Settings", icon: RiSettingsLine },
+              { key: "qr", label: "QR", icon: RiQrCodeLine },
+              { key: "analytics", label: "Stats", icon: RiBarChartLine },
+              { key: "account", label: "Account", icon: RiUserLine },
               { key: "support", label: "Help", icon: RiCustomerService2Line },
-              { key: "settings", label: "Settings", icon: RiSettingsLine },
             ].map(({ key, label, icon: Icon }) => (
               <button
                 key={key}
                 role="tab"
                 onClick={() => handleTabSwitch(key)}
-                className={`tab h-14 md:h-10 flex flex-col md:flex-row items-center justify-center gap-1 md:gap-2 transition-all ${activeTab === key ? "tab-active" : ""
+                className={`tab h-14 md:h-10 flex flex-col md:flex-row items-center justify-center gap-1 md:gap-2 transition-all ${activeTab === key ? "tab-active bg-primary text-primary-content" : ""
                   }`}
               >
                 <Icon className="text-2xl md:text-lg" />
@@ -486,6 +490,13 @@ export default function DashboardPage() {
                 CONFIG={CONFIG}
                 onImageUpload={handleImageUpload}
               />
+            )}
+
+            {activeTab === "account" && (
+              <div className="space-y-4">
+                <SubscriptionDetails />
+                <DangerZone />
+              </div>
             )}
           </div>
         </div>

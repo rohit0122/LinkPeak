@@ -28,11 +28,11 @@ const plans = [
         popular: true,
         features: [
             { name: `${CONFIG.PLAN_LIMITS.PRO.pages} Bio Page`, included: true },
-            { name: "5 Pro Templates (Classic, Bento, Hero...)", included: true },
+            { name: "8 Designer Templates (Bento, Hero, Glass...)", included: true },
             { name: "Unlimited Links", included: true },
             { name: `${CONFIG.PLAN_LIMITS.PRO.analyticsDays} Days Analytics`, included: true },
             { name: "Custom QR Code (Logo, Color)", included: true },
-            { name: "10 Premium Themes", included: true },
+            { name: "10 Curated Identity Themes", included: true },
             { name: "AI Link Title Suggestions", included: true },
             { name: "AI SEO Optimization", included: true },
             { name: "Enjoy a generous 7-day free trial — no credit card required.", included: true },

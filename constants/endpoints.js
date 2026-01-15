@@ -18,6 +18,7 @@ export const ENDPOINTS = {
     FORGOT_PASSWORD: "/auth/forgot-password",
     RESET_PASSWORD: "/auth/reset-password",
     LOGOUT: "/auth/logout",
+    DELETE_ACCOUNT: "/auth/delete-account",
   },
   AI: {
     GENERATE_LINK_TITLE: "/ai/generate-title",
@@ -75,6 +76,7 @@ export const BACKEND_ENDPOINTS = {
     RESET_PASSWORD: `${BACKEND_URL}/api/v1/auth/reset-password`,
     LOGOUT: `${BACKEND_URL}/api/v1/auth/logout`,
     ME: `${BACKEND_URL}/api/v1/auth/me`, // If applicable
+    DELETE_ACCOUNT: `${BACKEND_URL}/api/v1/settings/account`,
   },
   PUBLIC: {
     GET_PAGE: (slug) => `${BACKEND_URL}/api/v1/public/pages/${slug}`,

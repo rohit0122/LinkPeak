@@ -90,7 +90,7 @@ export const useAuthStore = create(
 
             if (res.data?.success) {
               toast.success("Registration successful! Please login.");
-              if (router) router.push("/login");
+              // if (router) router.push("/login");
               return { success: true };
             }
           } catch (error) {
@@ -146,6 +146,21 @@ export const useAuthStore = create(
             },
             false,
             "auth/updateUser"
+          ),
+        resetAuthStore: () =>
+          set(
+            {
+              currentUser: null,
+              currentBioPage: null,
+              currentSubscription: null,
+              allBioPages: null,
+              isAuthenticated: false,
+              loading: false,
+              tempBioPageConfig: {},
+              dirtyFields: {},
+            },
+            false,
+            "auth/reset"
           ),
 
         updateCurrentBioPageSession: (page) =>

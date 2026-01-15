@@ -27,8 +27,7 @@ export default function TrialExpiryBanner() {
 
   const isPaidTrial =
     is_trial === true &&
-    (plan_name === "PRO" || plan_name === "AGENCY") &&
-    !!razorpay_subscription_id;
+    (plan_name === "PRO" || plan_name === "AGENCY");
 
   // ❌ Do not render banner if not FREE and not trialing paid plan
   if (!isFreePlan && !isPaidTrial) return null;
@@ -69,11 +68,11 @@ export default function TrialExpiryBanner() {
         }
 
         const options = {
-          key: PROCESS.env.NEXT_PUBLIC_RAZORPAY_KEY,
+          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
           subscription_id: razorpay_subscription_id,
           name: CONFIG.SITE_NAME,
           description: `Upgrade to ${planDetails?.name || plan} Plan`,
-          image: "https://linkpeak.io/logo.png",
+          image: "https://www.linkpeakk.com/linkpeakk-social.webp",
           handler: function (response) {
             toast.success("Plan changed successfully! Payment verified.");
             setTimeout(() => {
@@ -98,8 +97,42 @@ export default function TrialExpiryBanner() {
       });
   };
 
-  const onExtend = () => {
-    // example: open Razorpay renewal flow
+  const onExtend = async () => {
+    const res = await loadRazorpay();
+
+    if (!res) {
+      toast.error("Razorpay SDK failed to load. Are you online?");
+      return;
+    }
+
+    if (!razorpay_subscription_id) {
+      toast.error("No active subscription ID found for renewal.");
+      return;
+    }
+
+    const options = {
+      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
+      subscription_id: razorpay_subscription_id,
+      name: CONFIG.SITE_NAME,
+      description: `Extend / Renew ${plan_name} Plan`,
+      image: "https://www.linkpeakk.com/linkpeakk-social.webp",
+      handler: function (response) {
+        toast.success("Subscription extended successfully!");
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      },
+      prefill: {
+        name: currentSubscription?.prefill?.name,
+        email: currentSubscription?.prefill?.email,
+      },
+      theme: {
+        color: "#422AD5",
+      },
+    };
+
+    const razorpay = new window.Razorpay(options);
+    razorpay.open();
   };
 
   return (
@@ -155,7 +188,7 @@ export default function TrialExpiryBanner() {
           </button>
         ) : (
           <button
-            className="btn btn-warning btn-sm sm:btn-md text-base-content font-semibold"
+            className={`btn btn-warning btn-sm sm:btn-md text-base-content font-semibold ${!razorpay_subscription_id ? 'hidden' : ''}`}
             onClick={onExtend}
           >
             Renew / Extend
@@ -167,6 +200,6 @@ export default function TrialExpiryBanner() {
         onClose={() => setShowUpgradeModal(false)}
         onSelectPlan={onSelectPlan}
       />
-    </div>
+    </div >
   );
 }

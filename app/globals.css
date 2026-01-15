@@ -150,3 +150,8 @@ h6 {
   --radius-box: 1rem;
   --border: 0px;
 }
+
+/* Smooth Scrolling for Bio Pages */
+html {
+  scroll-behavior: smooth;
+}
