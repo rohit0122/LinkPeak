@@ -48,7 +48,21 @@ h6 {
   --radius-selector: 0rem;
   --radius-field: 0rem;
   --radius-box: 0rem;
+  --radius-btn: 0rem;
+  --radius-badge: 0rem;
   --border: 1px;
+}
+
+/* Force Sharp Borders for Site UI when using LinkPeak theme */
+/* This ensures buttons, cards, and inputs are sharp regardless of utility classes */
+/* We EXEMPT the .avatar component so profile pictures remain circular */
+[data-theme="linkpeak"] :where(.btn, .card, .input, .textarea, .select, .badge, .alert, .collapse, .tab, input, textarea, select):not(.avatar, .avatar *) {
+  border-radius: 0px !important;
+}
+
+/* Target Tailwind rounded utilities - but ONLY for platform UI (exclude templates/previews and avatars) */
+[data-theme="linkpeak"] :where(.rounded, .rounded-sm, .rounded-md, .rounded-lg, .rounded-xl, .rounded-2xl, .rounded-3xl, .rounded-full):not([data-theme]:not([data-theme="linkpeak"]) *):not(.avatar, .avatar *) {
+  border-radius: 0px !important;
 }
 
 /* Midnight Noir - USP: Shadow Elegance for Tech/Devs */

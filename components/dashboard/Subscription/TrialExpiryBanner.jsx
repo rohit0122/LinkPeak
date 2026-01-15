@@ -1,6 +1,7 @@
 "use client";
 import { PiWarningCircle } from "react-icons/pi";
 import UpgradePlanModal from "./UpgradePlanModal";
+import Link from "next/link";
 import { useState } from "react";
 import { ENDPOINTS } from "@/constants/endpoints";
 import axios from "@/lib/httpClient";
@@ -12,13 +13,14 @@ import { useAuthStore } from "@/stores/useAuthStore";
 export default function TrialExpiryBanner() {
 
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
-  const { currentSubscription } = useAuthStore();
+  const { currentSubscription, updateCurrentSubscriptionSession } = useAuthStore();
 
   if (!currentSubscription) return null;
 
   const {
     plan_name,
     is_trial,
+    is_paid,
     expiry_date,
     razorpay_subscription_id,
     status
@@ -27,12 +29,17 @@ export default function TrialExpiryBanner() {
 
   const isFreePlan = plan_name === "FREE";
 
-  const isPaidTrial =
-    is_trial === true && status === "trialing" &&
-    (plan_name === "PRO" || plan_name === "AGENCY");
+  // 1. Standard Paid User: No banner needed
+  if (!is_trial && is_paid && !isFreePlan) return null;
 
-  // ❌ Do not render banner if not FREE and not trialing paid plan
-  if (!isFreePlan && !isPaidTrial) return null;
+  // 2. Authorized Trial (Auto-charge): Informational banner
+  const isAuthorizedTrial = is_trial && is_paid;
+
+  // 3. Unauthorized Trial (Needs action): Warning banner
+  const isUnauthorizedTrial = is_trial && !is_paid;
+
+  // Do not render if none of above (though usually one will hit)
+  if (!isFreePlan && !isAuthorizedTrial && !isUnauthorizedTrial) return null;
 
 
   const onUpgradeContact = () => {
@@ -40,7 +47,6 @@ export default function TrialExpiryBanner() {
   };
 
   const onSelectPlan = async (plan) => {
-    console.log("Selected plan:", plan);
 
     const res = await loadRazorpay();
 
@@ -128,14 +134,16 @@ export default function TrialExpiryBanner() {
           razorpay_subscription_id: response.razorpay_subscription_id,
           razorpay_signature: response.razorpay_signature
         }).then((res) => {
+          console.log('res ', res);
+          updateCurrentSubscriptionSession(res.data.data);
           toast.success("Subscription extended successfully!");
         }).catch((error) => {
           toast.error(error?.response?.data?.message || "Error extending subscription!");
         });
       },
       prefill: {
-        name: currentSubscription?.prefill?.name,
-        email: currentSubscription?.prefill?.email,
+        name: currentUser?.name,
+        email: currentUser?.email,
       },
       theme: {
         color: "#422AD5",
@@ -148,69 +156,113 @@ export default function TrialExpiryBanner() {
 
   return (
     <div
-      className="alert shadow-lg border-2 border-warning bg-warning/20 text-warning-content w-full 
-                 flex flex-col sm:flex-row items-start sm:items-center gap-4 px-5 mb-6"
-      role="alert"
+      className={`relative overflow-hidden group mb-8 border border-base-200/50 shadow-2xl transition-all duration-500 
+        ${isAuthorizedTrial
+          ? "bg-slate-50/40 dark:bg-slate-900/40 border-l-[6px] border-l-info"
+          : "bg-amber-50/40 dark:bg-amber-950/20 border-l-[6px] border-l-warning"
+        } backdrop-blur-xl p-0 animate-in fade-in slide-in-from-top-4 duration-1000`}
     >
-      {/* Icon */}
-      <div className="flex-shrink-0">
-        <PiWarningCircle className="w-8 h-8 text-warning" />
+      {/* Subtle Corner Glow */}
+      <div className={`absolute -top-12 -right-12 w-24 h-24 rounded-full blur-[60px] opacity-20 pointer-events-none ${isAuthorizedTrial ? "bg-info" : "bg-warning"}`}></div>
+
+      <div className="flex flex-col lg:flex-row items-stretch lg:items-center">
+        {/* Left: Status Icon & Badge */}
+        <div className={`flex flex-col items-center justify-center p-6 lg:p-8 shrink-0 border-b lg:border-b-0 lg:border-r border-base-200/30 gap-3 
+          ${isAuthorizedTrial ? "bg-info/5 text-info" : "bg-warning/5 text-warning"}`}>
+          <div className={`p-4 rounded-none border-2 ${isAuthorizedTrial ? "border-info/20 bg-info/10" : "border-warning/20 bg-warning/10"}`}>
+            <PiWarningCircle className="w-8 h-8 lg:w-10 lg:h-10" />
+          </div>
+          <span className="text-[10px] font-black uppercase tracking-[0.3em] opacity-80 whitespace-nowrap">
+            {isAuthorizedTrial ? "Verified" : "Attention"}
+          </span>
+        </div>
+
+        {/* Center: Intelligence Message */}
+        <div className="flex-grow p-6 lg:p-8 lg:px-10">
+          <div className="flex flex-col gap-2">
+            <h3 className={`text-lg lg:text-xl font-black uppercase tracking-widest font-heading 
+              ${isAuthorizedTrial ? "text-info" : "text-warning"}`}>
+              {isFreePlan ? "Basic Access Deployed" : (isAuthorizedTrial ? "Premium Status Secured" : "Critical: Subscription Authorization")}
+            </h3>
+
+            <div className="max-w-2xl space-y-2">
+              {isFreePlan ? (
+                <>
+                  <p className="text-sm lg:text-base font-medium leading-relaxed">
+                    You are currently utilizing the <strong>FREE</strong> tier with a basic feature set.
+                  </p>
+                  <p className="text-base-content/60 text-xs lg:text-sm italic">
+                    Unlock the full potential of LinkPeakK. &mdash; deploy unique themes, deep-dive analytics, and advanced AI SEO ranking.
+                  </p>
+                </>
+              ) : isAuthorizedTrial ? (
+                <>
+                  <p className="text-sm lg:text-base font-medium leading-relaxed">
+                    Your <strong>{plan_name}</strong> Plan is active and transition is authorized.
+                  </p>
+                  <p className="text-base-content/60 text-xs lg:text-sm">
+                    Your full membership will activate automatically on <strong>{expiry_date}</strong>, immediately following your trial completion.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className="text-sm lg:text-base font-medium leading-relaxed">
+                    Your premium <strong>{plan_name}</strong> trial concludes on <strong>{expiry_date}</strong>.
+                  </p>
+                  <p className="text-base-content/70 text-xs lg:text-sm font-medium border-l-2 border-warning/30 pl-3 py-1 bg-warning/5">
+                    Action required to preserve your custom themes, advanced insights, and active bio projects from suspension.
+                  </p>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Right: Actions */}
+        <div className="flex flex-col items-stretch lg:items-end justify-center p-6 lg:p-8 lg:pt-10 shrink-0 gap-3">
+          {isFreePlan ? (
+            <>
+              <button
+                className="btn btn-warning btn-md lg:btn-lg rounded-none font-black uppercase tracking-widest text-sm shadow-xl px-10 transition-all hover:scale-[1.02] active:scale-95 border-none"
+                onClick={onUpgradeContact}
+              >
+                Upgrade Now
+              </button>
+              <Link href="/#features" className="text-[10px] font-bold uppercase tracking-widest opacity-40 hover:opacity-100 hover:text-warning text-center transition-all underline decoration-warning/20">
+                Compare Feature Sets
+              </Link>
+            </>
+          ) : isAuthorizedTrial ? (
+            <div className="flex flex-col items-center lg:items-end gap-2">
+              <span className="text-[9px] font-black uppercase tracking-widest text-info/60 mb-1">Status: Fully Operational</span>
+              <Link href="/dashboard/subscription" className="btn btn-info btn-outline btn-sm rounded-none font-bold tracking-widest px-8 border-2 hover:bg-info hover:text-white transition-all">
+                Member Settings
+              </Link>
+            </div>
+          ) : (
+            <>
+              <button
+                className="btn btn-warning btn-md lg:btn-lg rounded-none font-black uppercase tracking-widest text-sm shadow-xl px-10 animate-pulse hover:animate-none transition-all hover:scale-[1.02] active:scale-95 border-none"
+                onClick={onExtend}
+              >
+                Authorize Payment
+              </button>
+              <button
+                onClick={() => setShowUpgradeModal(true)}
+                className="text-[10px] font-bold uppercase tracking-widest opacity-40 hover:opacity-100 text-center transition-all underline decoration-warning/20"
+              >
+                Review Plan Options
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
-      {/* Message */}
-      <div className="flex-grow space-y-1 text-sm sm:text-base">
-        <p className="font-bold uppercase text-warning">
-          {isFreePlan
-            ? "You are on Free Plan"
-            : `${plan_name} Trial Ending Soon`}
-        </p>
-
-        {isFreePlan ? (
-          <>
-            <p>
-              You are currently using the <strong>FREE</strong> plan with limited
-              features.
-            </p>
-            <p className="text-base-content/70 text-sm">
-              Upgrade to PRO or AGENCY to unlock advanced features and analytics.
-            </p>
-          </>
-        ) : (
-          <>
-            <p>
-              Your trial for the <strong>{plan_name}</strong> plan will expire on{" "}
-              <strong>{expiry_date}</strong>.
-            </p>
-            <p className="text-base-content/70 text-sm">
-              Renew now to avoid any interruption in service.
-            </p>
-          </>
-        )}
-      </div>
-
-      {/* Action */}
-      <div className="flex flex-col sm:flex-row gap-2 mt-2 sm:mt-0">
-        {isFreePlan ? (
-          <button
-            className="btn btn-warning btn-sm sm:btn-md text-base-content font-semibold"
-            onClick={onUpgradeContact}
-          >
-            Upgrade for more features
-          </button>
-        ) : (
-          <button
-            className={`btn btn-warning btn-sm sm:btn-md text-base-content font-semibold ${!razorpay_subscription_id ? 'hidden' : ''}`}
-            onClick={onExtend}
-          >
-            Renew / Extend
-          </button>
-        )}
-      </div>
       <UpgradePlanModal
         isOpen={showUpgradeModal}
         onClose={() => setShowUpgradeModal(false)}
         onSelectPlan={onSelectPlan}
       />
-    </div >
+    </div>
   );
 }

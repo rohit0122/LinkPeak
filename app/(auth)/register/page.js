@@ -106,6 +106,7 @@ function RegisterForm() {
       features: ["Unlimited Links", "10+ Pro Themes", "90-Day Insights", "Custom QR Share"],
       color: "primary",
       recommended: true,
+      trial: "7 Days Free Trial"
     },
     {
       id: "AGENCY",
@@ -114,12 +115,13 @@ function RegisterForm() {
       description: "For professional brands",
       features: ["10 Bio Projects", "All Premium Themes", "Lifetime Insights", "Priority Support"],
       color: "secondary",
+      trial: "7 Days Free Trial"
     },
   ];
 
   return (
     <div className="flex justify-center items-center min-h-screen px-4 py-12 bg-base-300/30">
-      <div className={`w-full ${isSuccess ? 'max-w-sm' : 'max-w-4xl'} transition-all duration-500`}>
+      <div className={`w-full ${isSuccess ? 'max-w-sm' : 'max-w-4xl'} transition-all`}>
         {isSuccess ? (
           <div className="card bg-base-100 shadow-xl border border-base-300">
             <div className="h-2 bg-success w-full"></div>
@@ -140,7 +142,7 @@ function RegisterForm() {
                 <Link href="/login" className="btn btn-primary w-full shadow-lg">
                   Proceed to Login
                 </Link>
-                <Link href="/contact-us" className="btn btn-ghost btn-sm gap-2 opacity-60">
+                <Link href="/contact-us" className="btn btn-neutral btn-outline btn-sm gap-2">
                   <RiCustomerService2Line />
                   Contact Support
                 </Link>
@@ -162,28 +164,39 @@ function RegisterForm() {
                     key={plan.id}
                     type="button"
                     onClick={() => setSelectedPlan(plan.id)}
-                    className={`flex flex-col p-4 rounded-2xl border-2 transition-all text-left relative overflow-hidden group ${selectedPlan === plan.id
+                    className={`flex flex-col p-4 border-2 transition-all text-left relative overflow-hidden group ${selectedPlan === plan.id
                       ? `border-${plan.color} bg-base-100 ring-4 ring-${plan.color}/10 shadow-xl`
                       : "border-base-300 bg-base-100/50 hover:border-base-content/20"
                       }`}
                   >
-                    {plan.recommended && (
-                      <div className="absolute top-0 right-0 pt-1 flex items-center bg-primary text-primary-content px-3 py-1 rounded-bl-xl text-[10px] font-black uppercase tracking-tighter">
-                        Most Popular
-                      </div>
-                    )}
+                    <div className="flex flex-col w-full">
+                      {plan.recommended && (
+                        <div className="inline-flex self-start px-1.5 py-0.5 bg-primary text-primary-content text-[7px] font-black uppercase tracking-[0.2em] font-heading mb-1.5 shadow-sm">
+                          MOST POPULAR
+                        </div>
+                      )}
 
-                    <div className="flex items-center justify-between mb-2">
-                      <span className={`text-xs font-bold uppercase tracking-widest text-${plan.color}`}>
-                        {plan.name}
-                      </span>
-                      <div className="flex items-baseline gap-1">
-                        <span className="text-xl font-black">${plan.price}</span>
-                        <span className="text-[10px] opacity-40">/mo</span>
+                      <div className="flex items-center justify-between w-full">
+                        <div className="flex flex-col">
+                          <span className={`text-xs font-black uppercase tracking-widest text-${plan.color} font-heading`}>
+                            {plan.name}
+                          </span>
+                          <p className="text-[10px] opacity-40 font-medium leading-tight">{plan.description}</p>
+                        </div>
+                        <div className="flex flex-col items-end">
+                          <div className="flex items-baseline gap-0.5">
+                            <span className="text-2xl font-medium tracking-tighter font-heading text-base-content">${plan.price}</span>
+                            <span className="text-[9px] opacity-40 font-bold uppercase">/mo</span>
+                          </div>
+                          {plan.trial && (
+                            <span className={`text-[8px] font-black text-${plan.color} animate-pulse bg-${plan.color}/10 px-1.5 py-0.5 mt-0.5`}>
+                              {plan.trial}
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
 
-                    <p className="text-xs opacity-60 mb-4 font-medium">{plan.description}</p>
 
                     <div className="flex flex-wrap gap-x-4 gap-y-2">
                       {plan.features.map((feature, idx) => (
@@ -209,7 +222,12 @@ function RegisterForm() {
               <div className="card bg-base-100 shadow-2xl border border-base-300 sticky top-12">
                 <div className="h-2 bg-primary w-full"></div>
                 <div className="card-body p-8">
-                  <h2 className="card-title text-2xl font-bold mb-6">Create Account</h2>
+                  <div className="flex justify-between items-center mb-6">
+                    <h2 className="card-title text-2xl font-bold">Create Account</h2>
+                    <div className="badge badge-success badge-sm gap-1 py-3 px-3 rounded-none font-bold text-[10px]">
+                      <RiShieldCheckLine /> NO CC REQUIRED
+                    </div>
+                  </div>
 
                   <form onSubmit={handleSubmit} className="space-y-4">
                     {error && (
@@ -226,7 +244,7 @@ function RegisterForm() {
                         type="text"
                         name="name"
                         placeholder="e.g. John Doe"
-                        className="input input-bordered focus:input-primary transition-all rounded-xl"
+                        className="input input-bordered focus:input-primary transition-all"
                         value={formData.name}
                         onChange={handleChange}
                         required
@@ -241,7 +259,7 @@ function RegisterForm() {
                         type="email"
                         name="email"
                         placeholder="you@example.com"
-                        className="input input-bordered focus:input-primary transition-all rounded-xl"
+                        className="input input-bordered focus:input-primary transition-all"
                         value={formData.email}
                         onChange={handleChange}
                         required
@@ -257,7 +275,7 @@ function RegisterForm() {
                         type="password"
                         name="password"
                         placeholder="••••••••"
-                        className="input input-bordered focus:input-primary transition-all rounded-xl"
+                        className="input input-bordered focus:input-primary transition-all"
                         value={formData.password}
                         onChange={handleChange}
                         required
@@ -273,7 +291,7 @@ function RegisterForm() {
                         type="password"
                         name="confirmPassword"
                         placeholder="••••••••"
-                        className="input input-bordered focus:input-primary transition-all rounded-xl"
+                        className="input input-bordered focus:input-primary transition-all"
                         value={formData.confirmPassword}
                         onChange={handleChange}
                         required
@@ -285,7 +303,7 @@ function RegisterForm() {
                       <label className="label cursor-pointer justify-start items-start gap-3">
                         <input
                           type="checkbox"
-                          className="checkbox checkbox-primary checkbox-sm shrink-0 rounded-md"
+                          className="checkbox checkbox-primary checkbox-sm shrink-0"
                           checked={agreed}
                           onChange={(e) => setAgreed(e.target.checked)}
                         />
@@ -298,7 +316,7 @@ function RegisterForm() {
                       </label>
                     </div>
 
-                    <button className="btn btn-primary w-full mt-4 h-12 shadow-lg shadow-primary/20 rounded-xl font-bold" disabled={loading}>
+                    <button className="btn btn-primary btn-md w-full mt-4 shadow-lg shadow-primary/20 font-bold text-base h-12" disabled={loading}>
                       {loading ? (
                         <span className="loading loading-spinner"></span>
                       ) : (
