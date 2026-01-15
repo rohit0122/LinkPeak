@@ -119,7 +119,9 @@ export default function AdminDashboard() {
     try {
       const { data } = await axios.get(ENDPOINTS.ADMIN.TICKETS);
       if (data.success) {
-        setTickets(data.data);
+        // Handle both simple array and Laravel paginated structure
+        const ticketData = data.data.data || data.data || [];
+        setTickets(ticketData);
         setIsLoaded((prev) => ({ ...prev, tickets: true }));
       }
     } catch (error) {
@@ -560,7 +562,7 @@ export default function AdminDashboard() {
                   Open Tickets
                 </p>
                 <p className="text-4xl font-medium tracking-tighter mt-2">
-                  {tickets.filter((t = {}) => String(t.status).toLowerCase() === "open").length}
+                  {Array.isArray(tickets) ? tickets.filter((t = {}) => String(t.status).toLowerCase() === "open").length : 0}
                 </p>
               </div>
               <div className="p-6 bg-base-100  border border-base-200 flex flex-col justify-between">
@@ -568,7 +570,7 @@ export default function AdminDashboard() {
                   Total Resolved
                 </p>
                 <p className="text-4xl font-medium tracking-tighter mt-2">
-                  {tickets.filter((t = {}) => String(t.status).toLowerCase() === "resolved").length}
+                  {Array.isArray(tickets) ? tickets.filter((t = {}) => String(t.status).toLowerCase() === "resolved").length : 0}
                 </p>
               </div>
               <div className="p-6 bg-base-100  border border-base-200 flex flex-col justify-between">
@@ -583,7 +585,11 @@ export default function AdminDashboard() {
 
             <div className="bg-base-100 border border-base-200 shadow-sm overflow-hidden rounded-xl">
               {/* Integrating the shared SupportView for full interactivity */}
-              <SupportView currentUser={currentUser} />
+              <SupportView
+                currentUser={currentUser}
+                tickets={tickets}
+                setTickets={setTickets}
+              />
             </div>
           </div>
         )}
