@@ -43,7 +43,7 @@ export default function DarkNeonTemplate({ page, links, handleLinkClick }) {
                 </div>
 
                 <h1 className="text-2xl font-bold uppercase tracking-[0.2em] text-primary drop-shadow-[0_0_5px_rgba(var(--p),0.8)] mb-2 relative z-10">{page.title}</h1>
-                <p className="text-sm font-mono text-base-content/70 mb-5 relative z-10">{page.bio}</p>
+                <p className="text-sm font-mono text-base-content mb-5 relative z-10">{page.bio}</p>
 
                 <div className="inline-flex items-center gap-2 border border-primary text-primary px-4 py-1.5 rounded-none text-xs uppercase tracking-widest font-bold bg-primary/5 hover:bg-primary/20 transition-colors">
                     <RiEyeLine /> <span className="drop-shadow-[0_0_2px_currentColor]">{page.total_views || 0}</span>

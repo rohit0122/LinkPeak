@@ -85,6 +85,7 @@ h6 {
   color-scheme: "dark";
   --color-base-100: oklch(10% 0.05 280);
   --color-base-200: oklch(7% 0.04 285);
+  --color-base-300: oklch(5% 0.03 290);
   --color-base-content: oklch(98% 0.01 280);
   --color-primary: oklch(75% 0.3 320); 
   --color-secondary: oklch(85% 0.25 150); 
@@ -98,6 +99,7 @@ h6 {
   color-scheme: "dark";
   --color-base-100: oklch(15% 0.02 40);
   --color-base-200: oklch(10% 0.02 40);
+  --color-base-300: oklch(7% 0.02 40);
   --color-base-content: oklch(92% 0.05 70);
   --color-primary: oklch(82% 0.12 85); 
   --color-secondary: oklch(30% 0.05 40);
@@ -111,6 +113,7 @@ h6 {
   color-scheme: "light";
   --color-base-100: oklch(100% 0 0);
   --color-base-200: oklch(95% 0.05 340);
+  --color-base-300: oklch(90% 0.06 340);
   --color-base-content: oklch(20% 0.15 340);
   --color-primary: oklch(65% 0.25 350); 
   --color-secondary: oklch(85% 0.2 180);
@@ -124,6 +127,7 @@ h6 {
   color-scheme: "light";
   --color-base-100: oklch(98% 0.01 75);
   --color-base-200: oklch(94% 0.02 75);
+  --color-base-300: oklch(90% 0.03 75);
   --color-base-content: oklch(25% 0.05 75);
   --color-primary: oklch(45% 0.08 60); 
   --color-secondary: oklch(85% 0.05 85);
@@ -137,6 +141,7 @@ h6 {
   color-scheme: "dark";
   --color-base-100: oklch(18% 0.06 285);
   --color-base-200: oklch(14% 0.05 285);
+  --color-base-300: oklch(10% 0.04 285);
   --color-base-content: oklch(95% 0.02 285);
   --color-primary: oklch(70% 0.2 290); 
   --color-secondary: oklch(85% 0.1 240);
@@ -150,6 +155,7 @@ h6 {
   color-scheme: "light";
   --color-base-100: oklch(98% 0.02 120);
   --color-base-200: oklch(94% 0.04 125);
+  --color-base-300: oklch(90% 0.05 130);
   --color-base-content: oklch(25% 0.08 120);
   --color-primary: oklch(65% 0.15 135); 
   --color-secondary: oklch(85% 0.12 90);
@@ -163,6 +169,7 @@ h6 {
   color-scheme: "dark";
   --color-base-100: oklch(10% 0.05 280);
   --color-base-200: oklch(8% 0.04 290);
+  --color-base-300: oklch(6% 0.03 300);
   --color-base-content: oklch(95% 0.02 280);
   --color-primary: oklch(60% 0.25 300); 
   --color-secondary: oklch(50% 0.2 240);
@@ -176,6 +183,7 @@ h6 {
   color-scheme: "light";
   --color-base-100: oklch(95% 0.03 80);
   --color-base-200: oklch(90% 0.05 75);
+  --color-base-300: oklch(85% 0.06 70);
   --color-base-content: oklch(25% 0.1 60);
   --color-primary: oklch(65% 0.15 45); 
   --color-secondary: oklch(85% 0.1 70);
