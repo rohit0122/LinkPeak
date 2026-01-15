@@ -33,27 +33,48 @@ export default function SubscriptionDetails() {
                         {/* Status */}
                         <div className="bg-base-200/50 p-4 rounded-xl border border-base-200">
                             <div className="text-xs uppercase font-bold tracking-wider opacity-60 mb-1">
-                                Status
+                                Status: Account(Payment)
                             </div>
-                            <div className={`text-lg font-extrabold ${useAuthStore.getState().currentSubscription?.formatted_status === "Active"
+                            <div className={`text-lg font-bold ${currentSubscription?.formatted_status === "Active"
                                 ? "text-success"
                                 : "text-warning"
                                 }`}>
-                                {useAuthStore.getState().currentSubscription?.formatted_status || "Inactive"}
+                                {currentSubscription?.formatted_status || "Inactive"} ({currentSubscription?.status})
                             </div>
                         </div>
 
                         {/* Expiry Date */}
-                        <div className="bg-base-200/50 p-4 rounded-xl border border-base-200">
+                        {currentSubscription?.is_trial && <div className="bg-base-200/50 p-4 rounded-xl border border-base-200">
                             <div className="text-xs uppercase font-bold tracking-wider opacity-60 mb-1">
                                 Renews / Expires On
                             </div>
                             <div className="text-lg font-bold opacity-80">
                                 {currentSubscription?.expiry_date || "N/A"}
                             </div>
-                        </div>
+                        </div>}
                     </div>
                 </div>
+                <div className="alert alert-info flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+                    <RiSparklingLine className="text-2xl shrink-0" />
+
+                    <div className="flex-1 space-y-1">
+                        <p className="font-bold">Trial Access Active</p>
+
+                        <p className="text-sm leading-relaxed">
+                            Your trial access is active until{" "}
+                            <span className="font-semibold">
+                                {currentSubscription?.expiry_date || "N/A"}
+                            </span>.
+                        </p>
+
+                        {currentSubscription?.is_paid && (
+                            <span className="badge badge-warning badge-sm italic w-fit">
+                                Auto-charge & activation after trial expiry
+                            </span>
+                        )}
+                    </div>
+                </div>
+
             </div>
         </div>
     );
