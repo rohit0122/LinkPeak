@@ -41,7 +41,7 @@ export const CONFIG = {
             links: 1000,
             pages: 1,
             allowedTemplates: ["classic", "bento", "hero", "influencer", "sleek", "minimalist", "glassmorphism", "stack"],
-            allowedThemes: ["light", "dark", "cupcake", "bumblebee", "emerald", "corporate", "retro", "cyberpunk", "valentine", "coffee"],
+            allowedThemes: ["light", "dark", "midnight", "aurora", "cyberglow", "hyperpop", "zenstone", "matcha", "nebula"],
             analyticsDays: 90,
             customQR: true
         },
@@ -49,31 +49,25 @@ export const CONFIG = {
             links: 1000,
             pages: 10,
             allowedTemplates: "ALL",
-            allowedThemes: "ALL",
+            allowedThemes: "ALL", // includes Velvet Gold and Royal Amethyst
             analyticsDays: 9999,
             customQR: true
         }
     },
     // UI Settings
     DAISY_THEMES: [
-        { id: "light", label: "Classic Light" },
-        { id: "dark", label: "Night Mode" },
-        { id: "cupcake", label: "Soft & Sweet" },
-        { id: "bumblebee", label: "Bold Contrast" },
-        { id: "emerald", label: "Elegant Green" },
-        { id: "corporate", label: "Professional" },
-        { id: "retro", label: "Vintage Warmth" },
-        { id: "cyberpunk", label: "Neon Future" },
-        { id: "valentine", label: "Romance" },
-        { id: "coffee", label: "Cozy Roast" },
-        { id: "luxury", label: "Premium Gold" },
-        { id: "dracula", label: "Dark Pro" },
-        { id: "cyberglow", label: "Cyber Glow" },
-        { id: "indigomist", label: "Indigo Mist" },
-        { id: "mossycode", label: "Mossy Code" },
-        { id: "velvetgold", label: "Velvet Gold" },
-        { id: "hyperbubble", label: "Hyper Bubble" },
-        { id: "sandsofzen", label: "Sands of Zen" }
+        { id: "light", label: "Pure Light" },
+        { id: "dark", label: "Onyx Night" },
+        { id: "midnight", label: "Midnight Noir (Pro)" },
+        { id: "aurora", label: "Aurora Prism (Pro)" },
+        { id: "cyberglow", label: "Cyber Glow (Pro)" },
+        { id: "matcha", label: "Matcha Brew (Pro)" },
+        { id: "nebula", label: "Cosmic Nebula (Pro)" },
+        { id: "hyperpop", label: "Hyper Pop (Pro)" },
+        { id: "zenstone", label: "Zen Stone (Pro)" },
+        { id: "royal", label: "Royal Amethyst (Agency)" },
+        { id: "velvetgold", label: "Velvet Gold (Agency)" },
+        { id: "oasis", label: "Desert Oasis (Agency)" },
     ],
 
     SUPPORT_CATEGORIES: ["Billing", "Technical", "Feedback", "General"],

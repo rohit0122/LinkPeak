@@ -17,7 +17,7 @@ h6 {
 
 
 @plugin "daisyui" {
-  themes: light, dark, cupcake, bumblebee, emerald, corporate, retro, cyberpunk, valentine, luxury, dracula, coffee, cyberglow, indigomist, mossycode, velvetgold, hyperbubble, sandsofzen, linkpeak;
+  themes: light, dark, midnight, aurora, cyberglow, velvetgold, hyperpop, zenstone, royal, matcha, nebula, oasis, linkpeak;
 }
 
 @plugin "daisyui/theme" {
@@ -51,107 +51,323 @@ h6 {
   --border: 1px;
 }
 
+/* Midnight Noir - USP: Shadow Elegance for Tech/Devs */
 @plugin "daisyui/theme" {
-  name: "cyberglow";
+  name: "midnight";
   color-scheme: "dark";
-  --font-sans: var(--font-cyber);
-  --font-heading: var(--font-cyber);
-  --color-base-100: oklch(15% 0.05 280);
-  --color-base-200: oklch(12% 0.04 285);
-  --color-base-300: oklch(10% 0.03 290);
-  --color-base-content: oklch(98% 0.01 280);
-  --color-primary: oklch(70% 0.3 320); 
-  --color-secondary: oklch(75% 0.3 40); 
-  --radius-selector: 0.2rem;
-  --radius-field: 0.2rem;
-  --radius-box: 0.4rem;
-  --border: 2px;
-}
-
-@plugin "daisyui/theme" {
-  name: "indigomist";
-  color-scheme: "dark";
-  --color-base-100: oklch(25% 0.08 260);
-  --color-base-200: oklch(20% 0.07 260);
-  --color-base-300: oklch(15% 0.06 260);
-  --color-base-content: oklch(95% 0.02 260);
-  --color-primary: oklch(68% 0.2 260); 
-  --color-secondary: oklch(82% 0.15 190);
-  --radius-selector: 2rem;
-  --radius-field: 1rem;
-  --radius-box: 2.5rem;
+  --color-base-100: oklch(12% 0 0);
+  --color-base-200: oklch(8% 0 0);
+  --color-base-300: oklch(5% 0 0);
+  --color-base-content: oklch(95% 0 0);
+  --color-primary: oklch(65% 0.25 260); 
+  --color-secondary: oklch(45% 0.2 260);
+  --radius-box: 0.5rem;
   --border: 1px;
 }
 
+/* Aurora Prism - USP: Frosted Aesthetic for Lifestyle */
 @plugin "daisyui/theme" {
-  name: "mossycode";
+  name: "aurora";
   color-scheme: "dark";
-  --font-sans: var(--font-mono);
-  --font-heading: var(--font-mono);
-  --color-base-100: oklch(12% 0.02 150);
-  --color-base-200: oklch(10% 0.02 155);
-  --color-base-300: oklch(8% 0.02 160);
-  --color-base-content: oklch(85% 0.02 150);
-  --color-primary: oklch(88% 0.25 145); 
-  --color-secondary: oklch(75% 0.15 100);
-  --radius-selector: 0.1rem;
-  --radius-field: 0.1rem;
-  --radius-box: 0.1rem;
-  --border: 3px;
+  --color-base-100: oklch(20% 0.05 240);
+  --color-base-200: oklch(15% 0.04 245);
+  --color-base-300: oklch(12% 0.03 250);
+  --color-base-content: oklch(98% 0.01 240);
+  --color-primary: oklch(80% 0.15 190); 
+  --color-secondary: oklch(75% 0.2 300);
+  --radius-box: 1.5rem;
+  --border: 0px;
 }
 
+/* Cyber Glow - USP: Gamer Elite High-Vibrancy */
+@plugin "daisyui/theme" {
+  name: "cyberglow";
+  color-scheme: "dark";
+  --color-base-100: oklch(10% 0.05 280);
+  --color-base-200: oklch(7% 0.04 285);
+  --color-base-content: oklch(98% 0.01 280);
+  --color-primary: oklch(75% 0.3 320); 
+  --color-secondary: oklch(85% 0.25 150); 
+  --radius-box: 0.2rem;
+  --border: 2px;
+}
+
+/* Velvet Gold - USP: Prestige Luxury for Brands */
 @plugin "daisyui/theme" {
   name: "velvetgold";
   color-scheme: "dark";
-  --font-sans: var(--font-serif);
-  --font-heading: var(--font-serif);
-  --color-base-100: oklch(10% 0.01 40);
-  --color-base-200: oklch(8% 0.01 40);
-  --color-base-300: oklch(6% 0.01 40);
-  --color-base-content: oklch(92% 0.02 40);
-  --color-primary: oklch(78% 0.15 75); 
-  --color-secondary: oklch(35% 0.08 40);
-  --radius-selector: 0.2rem;
-  --radius-field: 0.2rem;
-  --radius-box: 0.2rem;
+  --color-base-100: oklch(15% 0.02 40);
+  --color-base-200: oklch(10% 0.02 40);
+  --color-base-content: oklch(92% 0.05 70);
+  --color-primary: oklch(82% 0.12 85); 
+  --color-secondary: oklch(30% 0.05 40);
+  --radius-box: 0rem;
   --border: 0.5px;
 }
 
+/* Hyper Pop - USP: Influencer Energy & Boldness */
 @plugin "daisyui/theme" {
-  name: "hyperbubble";
+  name: "hyperpop";
   color-scheme: "light";
-  --font-sans: var(--font-pop);
-  --font-heading: var(--font-pop);
   --color-base-100: oklch(100% 0 0);
-  --color-base-200: oklch(97% 0.04 330);
-  --color-base-300: oklch(94% 0.06 330);
-  --color-base-content: oklch(30% 0.1 330);
-  --color-primary: oklch(78% 0.22 345); 
-  --color-secondary: oklch(82% 0.2 200);
-  --radius-selector: 2.5rem;
-  --radius-field: 1.5rem;
-  --radius-box: 3rem;
+  --color-base-200: oklch(95% 0.05 340);
+  --color-base-content: oklch(20% 0.15 340);
+  --color-primary: oklch(65% 0.25 350); 
+  --color-secondary: oklch(85% 0.2 180);
+  --radius-box: 2rem;
+  --border: 4px;
+}
+
+/* Zen Stone - USP: High-End Minimalist for Coaches */
+@plugin "daisyui/theme" {
+  name: "zenstone";
+  color-scheme: "light";
+  --color-base-100: oklch(98% 0.01 75);
+  --color-base-200: oklch(94% 0.02 75);
+  --color-base-content: oklch(25% 0.05 75);
+  --color-primary: oklch(45% 0.08 60); 
+  --color-secondary: oklch(85% 0.05 85);
+  --radius-box: 0.75rem;
   --border: 0px;
 }
 
+/* Royal Amethyst - USP: Magical & Deep Artisan */
 @plugin "daisyui/theme" {
-  name: "sandsofzen";
+  name: "royal";
+  color-scheme: "dark";
+  --color-base-100: oklch(18% 0.06 285);
+  --color-base-200: oklch(14% 0.05 285);
+  --color-base-content: oklch(95% 0.02 285);
+  --color-primary: oklch(70% 0.2 290); 
+  --color-secondary: oklch(85% 0.1 240);
+  --radius-box: 1.25rem;
+  --border: 1px;
+}
+
+/* Matcha Brew - USP: Organic & Holistic Vibes */
+@plugin "daisyui/theme" {
+  name: "matcha";
   color-scheme: "light";
-  --font-sans: var(--font-heading);
-  --font-heading: var(--font-heading);
-  --color-base-100: oklch(97% 0.01 75);
-  --color-base-200: oklch(94% 0.02 75);
-  --color-base-300: oklch(90% 0.03 75);
-  --color-base-content: oklch(25% 0.05 75);
-  --color-primary: oklch(52% 0.12 45); 
-  --color-secondary: oklch(78% 0.08 85);
-  --radius-selector: 0.5rem;
-  --radius-field: 0.5rem;
+  --color-base-100: oklch(98% 0.02 120);
+  --color-base-200: oklch(94% 0.04 125);
+  --color-base-content: oklch(25% 0.08 120);
+  --color-primary: oklch(65% 0.15 135); 
+  --color-secondary: oklch(85% 0.12 90);
   --radius-box: 1rem;
   --border: 0px;
+}
+
+/* Cosmic Nebula - USP: Deep Space Shifting Gradients */
+@plugin "daisyui/theme" {
+  name: "nebula";
+  color-scheme: "dark";
+  --color-base-100: oklch(10% 0.05 280);
+  --color-base-200: oklch(8% 0.04 290);
+  --color-base-content: oklch(95% 0.02 280);
+  --color-primary: oklch(60% 0.25 300); 
+  --color-secondary: oklch(50% 0.2 240);
+  --radius-box: 1rem;
+  --border: 0px;
+}
+
+/* Desert Oasis - USP: Warm Earthy Mirage Aesthetics */
+@plugin "daisyui/theme" {
+  name: "oasis";
+  color-scheme: "light";
+  --color-base-100: oklch(95% 0.03 80);
+  --color-base-200: oklch(90% 0.05 75);
+  --color-base-content: oklch(25% 0.1 60);
+  --color-primary: oklch(65% 0.15 45); 
+  --color-secondary: oklch(85% 0.1 70);
+  --radius-box: 0.75rem;
+  --border: 1px;
 }
 
 /* Smooth Scrolling for Bio Pages */
 html {
   scroll-behavior: smooth;
 }
+
+/* --- Premium WOW Effects --- */
+
+.glass-card {
+  background: rgba(var(--color-base-100), 0.1);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(var(--color-base-content), 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+}
+
+.neon-glow {
+  box-shadow: 0 0 15px var(--color-primary), 0 0 30px var(--color-primary);
+  transition: all 0.3s ease;
+}
+
+.neon-glow:hover {
+  box-shadow: 0 0 25px var(--color-primary), 0 0 50px var(--color-primary);
+  transform: translateY(-2px);
+}
+
+.premium-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.premium-shimmer::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transform: rotate(45deg);
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) rotate(45deg); }
+}
+
+.bouncy-element {
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.bouncy-element:hover {
+  transform: scale(1.05) rotate(1deg);
+}
+
+[data-theme="midnight"] .btn-primary {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  border: none;
+}
+
+[data-theme="aurora"] .btn-primary {
+  background: linear-gradient(135deg, oklch(80% 0.1 200), oklch(70% 0.2 300));
+  border: none;
+  box-shadow: 0 4px 15px oklch(80% 0.1 200 / 0.3);
+}
+
+[data-theme="velvetgold"] .btn-primary {
+  background: linear-gradient(135deg, oklch(82% 0.12 85), oklch(60% 0.1 80));
+  border: 1px solid oklch(90% 0.05 85 / 0.2);
+  color: oklch(15% 0.02 40);
+}
+
+[data-theme="cyberglow"] .btn-primary {
+  background: transparent;
+  border: 2px solid var(--color-primary);
+  color: var(--color-primary);
+  text-shadow: 0 0 10px var(--color-primary);
+  box-shadow: inset 0 0 10px color-mix(in oklch, var(--color-primary), transparent 80%);
+}
+
+[data-theme="hyperpop"] .btn-primary {
+  box-shadow: 6px 6px 0px var(--color-base-content);
+  transition: all 0.1s;
+}
+
+[data-theme="hyperpop"] .btn-primary:active {
+  transform: translate(3px, 3px);
+  box-shadow: 3px 3px 0px var(--color-base-content);
+}
+
+/* --- Global Bio Page Enhancements --- */
+
+/* Apply Wow Effects to ALL Templates globally using the 'group' class on links */
+
+[data-theme="cyberglow"] a.group {
+  box-shadow: 0 0 10px color-mix(in oklch, var(--color-primary), transparent 70%);
+  transition: all 0.3s ease;
+}
+
+[data-theme="cyberglow"] a.group:hover {
+  box-shadow: 0 0 20px color-mix(in oklch, var(--color-primary), transparent 40%);
+  transform: translateY(-2px);
+}
+
+[data-theme="velvetgold"] a.group, 
+[data-theme="royal"] a.group {
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="velvetgold"] a.group::after,
+[data-theme="royal"] a.group::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.05),
+    transparent
+  );
+  transform: rotate(45deg);
+  animation: shimmer 4s infinite linear;
+  pointer-events: none;
+}
+
+[data-theme="aurora"] a.group {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="hyperpop"] a.group {
+  box-shadow: 4px 4px 0px var(--color-base-content);
+  transition: transform 0.1s;
+}
+
+[data-theme="hyperpop"] a.group:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px var(--color-base-content);
+}
+
+[data-theme="midnight"] a.group:hover {
+  border-color: var(--color-primary);
+  background: linear-gradient(to right, var(--color-base-100), oklch(20% 0.1 260));
+}
+
+[data-theme="nebula"] a.group {
+  background: linear-gradient(135deg, oklch(15% 0.05 280), oklch(12% 0.04 300));
+  border: 1px solid oklch(60% 0.25 300 / 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="nebula"] a.group::before {
+  content: "";
+  position: absolute;
+  inset: -100%;
+  background: radial-gradient(circle at center, oklch(60% 0.25 300 / 0.1), transparent 70%);
+  animation: nebula-float 10s infinite alternate linear;
+  pointer-events: none;
+}
+
+@keyframes nebula-float {
+  from { transform: translate(-10%, -10%) scale(1); }
+  to { transform: translate(10%, 10%) scale(1.1); }
+}
+
+[data-theme="oasis"] a.group {
+  background: oklch(97% 0.02 85);
+  border: 1px solid oklch(65% 0.15 45 / 0.1);
+  box-shadow: 0 4px 20px oklch(65% 0.15 45 / 0.05);
+}
+
+[data-theme="oasis"] a.group:hover {
+  background: white;
+  border-color: var(--color-primary);
+  box-shadow: 0 10px 30px oklch(65% 0.15 45 / 0.1);
+}
+
+

@@ -83,11 +83,13 @@ export default function BentoTemplate({ page, links, handleLinkClick, isLCP = fa
                                 overflow-hidden
                                 rounded-3xl
                                 ${colSpan} ${rowSpan}
-                                bg-base-100 hover:bg-base-200
+                                ${page.theme === 'aurora' ? 'glass-card' : 'bg-base-100 hover:bg-base-200'}
                                 border border-base-content/5
                                 shadow-sm hover:shadow-xl hover:shadow-primary/10
                                 transition-all duration-300
                                 hover:scale-[0.98]
+                                ${page.theme === 'cyberglow' ? 'neon-glow' : ''}
+                                ${['velvetgold', 'royal'].includes(page.theme) ? 'premium-shimmer' : ''}
                             `}
                         >
                             {/* 1. Large Decorative Watermark Icon (Fills space) */}

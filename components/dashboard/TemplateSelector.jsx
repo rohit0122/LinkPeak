@@ -12,6 +12,7 @@ const TEMPLATES = [
     { id: "sleek", name: "Sleek", emoji: "✨", description: "Modern polished look" }, // Renamed from modern
     { id: "minimalist", name: "Minimalist", emoji: "🌿", description: "Simple & airy" },
     { id: "glassmorphism", name: "Glass", emoji: "💎", description: "Frosted blur effect" },
+    { id: "stack", name: "Stack", emoji: "📚", description: "Physical card layer" }, // Renamed from modernCards
     { id: "brutalist", name: "Brutalist", emoji: "🏗️", description: "Bold raw style" },
     { id: "neobrutalism", name: "NeoPop", emoji: "🎨", description: "Vibrant high contrast" },
     { id: "darkneon", name: "Cyber", emoji: "🌃", description: "Matrix glow effect" },
@@ -19,7 +20,6 @@ const TEMPLATES = [
     { id: "tiles", name: "Tiles", emoji: "🖼️", description: "Grid of uniform cells" }, // Renamed from gridtiles
     { id: "softpastel", name: "Pastel", emoji: "🌸", description: "Gentle soft tones" },
     { id: "gradientmesh", name: "Liquid", emoji: "🌊", description: "Animated mesh colors" },
-    { id: "stack", name: "Stack", emoji: "📚", description: "Physical card layer" }, // Renamed from modernCards
 ];
 
 export default function TemplateSelector({ currentTemplate, plan, onSelect }) {

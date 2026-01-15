@@ -59,12 +59,14 @@ export default function SleekTemplate({ page, links, handleLinkClick, isLCP = fa
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={() => handleLinkClick?.(link.id)}
-                        className="
+                        className={`
                             group relative block w-full
                             rounded-2xl
                             transition-transform duration-300
                             hover:-translate-y-1
-                        "
+                            ${page.theme === 'cyberglow' ? 'neon-glow' : ''}
+                            ${['velvetgold', 'royal'].includes(page.theme) ? 'premium-shimmer' : ''}
+                        `}
                         aria-label={link.title}
                     >
                         {/* Bold Gradient Border Wrapper */}
@@ -78,14 +80,18 @@ export default function SleekTemplate({ page, links, handleLinkClick, isLCP = fa
                         "></div>
 
                         {/* Content Container (Solid Background for Contrast) */}
-                        <div className="
+                        <div className={`
                             relative flex items-center justify-between
                             w-full px-5 py-4
-                            bg-base-100 rounded-2xl
-                            border border-base-100
+                            rounded-2xl
                             transition-all duration-300
-                            group-hover:bg-base-100/95
-                        ">
+                            ${page.theme === 'aurora' ? 'glass-card border-none' :
+                                ['cyberglow', 'velvetgold', 'royal', 'midnight', 'hyperpop', 'zenstone', 'matcha'].includes(page.theme) ?
+                                    'bg-base-100/40 backdrop-blur-md border border-base-content/5' :
+                                    'bg-base-100 border border-base-100 group-hover:bg-base-100/95'}
+                            ${page.theme === 'cyberglow' ? 'neon-glow' : ''}
+                            ${['velvetgold', 'royal'].includes(page.theme) ? 'premium-shimmer' : ''}
+                        `}>
                             <div className="flex items-center gap-5 min-w-0">
                                 <div className="
                                     flex items-center justify-center

@@ -53,15 +53,17 @@ export default function GlassmorphismTemplate({ page, links, handleLinkClick }) 
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => handleLinkClick?.(link.id)}
-                    className="
+                    className={`
                         group flex items-center justify-between w-full p-4
                         rounded-2xl
-                        bg-base-100/40 backdrop-blur-md
+                        ${page.theme === 'aurora' ? 'glass-card' : 'bg-base-100/40 backdrop-blur-md'}
                         border border-base-content/5
                         hover:bg-base-100/60 hover:border-primary/50 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)]
                         text-base-content
                         transition-all duration-300 ease-out
-                    "
+                        ${page.theme === 'cyberglow' ? 'neon-glow' : ''}
+                        ${['velvetgold', 'royal'].includes(page.theme) ? 'premium-shimmer' : ''}
+                    `}
                     aria-label={link.title}
                 >
                     <div className="flex items-center gap-4">
