@@ -29,7 +29,7 @@ export default function ThemeTab({
           </div>
           <div>
             <h4 className="font-medium text-sm mb-1 uppercase tracking-wider">
-              Style Preview
+              Vibe Preview
             </h4>
             <p className="text-xs opacity-60 leading-relaxed font-medium">
               All changes are saved automatically reflected in the live preview
@@ -48,7 +48,7 @@ export default function ThemeTab({
             <div className="p-1.5 md:p-2 bg-primary/10 text-primary shrink-0">
               <RiLayoutMasonryLine className="text-lg md:text-xl" />
             </div>
-            1. Choose Template
+            1. Select Bio Layout
           </div>
           <div className="collapse-content px-4 md:px-6">
             <div className="pt-4 md:pt-6">
@@ -68,7 +68,7 @@ export default function ThemeTab({
             <div className="p-1.5 md:p-2 bg-primary/10 text-primary shrink-0">
               <RiPaletteLine className="text-lg md:text-xl" />
             </div>
-            2. Choose Identity Theme
+            2. Apply Hero Theme
           </div>
           <div className="collapse-content px-4 md:px-6">
             <div className="pt-4 md:pt-6">

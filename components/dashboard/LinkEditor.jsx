@@ -59,11 +59,10 @@ function SortableItem({ link, onEdit, onDelete, onToggle }) {
     <div
       ref={setNodeRef}
       style={style}
-      className={`card bg-base-100 border-2 ${
-        link.is_active
+      className={`card bg-base-100 border-2 ${link.is_active
           ? "border-base-300"
           : "border-dashed border-base-200 opacity-60"
-      } mb-4 transition-all hover:shadow-lg`}
+        } mb-4 transition-all hover:shadow-lg`}
     >
       <div className="card-body p-5 flex-row items-center gap-4">
         {/* Drag Handle */}
@@ -99,9 +98,8 @@ function SortableItem({ link, onEdit, onDelete, onToggle }) {
         <div className="flex items-center gap-2">
           <button
             onClick={() => onToggle(link.id, !link.is_active)}
-            className={`btn btn-sm btn-ghost btn-circle ${
-              link.is_active ? "text-success" : "text-base-content/20"
-            }`}
+            className={`btn btn-sm btn-ghost btn-circle ${link.is_active ? "text-success" : "text-base-content/20"
+              }`}
             title={link.is_active ? "Deactivate" : "Activate"}
           >
             {link.is_active ? (
@@ -312,7 +310,7 @@ export default function LinkEditor({
           <div className="p-2 bg-primary/10 text-primary">
             <RiLink className="text-xl" />
           </div>
-          Dynamic Links
+          Content Stack
         </h2>
         <div className="flex items-center gap-4">
           {isLimitReached && (
@@ -324,11 +322,10 @@ export default function LinkEditor({
             <button
               onClick={handleAddClick}
               disabled={isLimitReached}
-              className={`btn btn-primary btn-sm ${
-                isLimitReached ? "grayscale cursor-not-allowed" : ""
-              }`}
+              className={`btn btn-primary btn-sm ${isLimitReached ? "grayscale cursor-not-allowed" : ""
+                }`}
             >
-              <RiAddLine className="text-lg" /> Add New Link
+              <RiAddLine className="text-lg" /> Add Bio Link
             </button>
           )}
         </div>
@@ -362,7 +359,7 @@ export default function LinkEditor({
                 <div className="w-20 h-20 bg-base-200 flex items-center justify-center mx-auto mb-6">
                   <RiLink className="text-4xl opacity-10" />
                 </div>
-                <h3 className="font-medium text-xl mb-2">No Links Yet</h3>
+                <h3 className="font-medium text-xl mb-2">Empty Stack</h3>
                 <p className="text-base-content/40 max-w-xs mx-auto text-sm">
                   Create your first link and watch it appear on your bio page
                   instantly!
@@ -379,7 +376,7 @@ export default function LinkEditor({
           <div className="bg-base-100 w-full max-w-md  shadow-2xl overflow-hidden border border-white/10 animate-in zoom-in-95 duration-300">
             <div className="p-6">
               <h3 className="font-medium text-2xl mb-8 tracking-tight">
-                {editingLink ? "Edit Link" : "Add New Link"}
+                {editingLink ? "Edit Bio Link" : "Create Bio Link"}
               </h3>
               <form onSubmit={handleSubmit} className="space-y-2">
                 <div className="form-control">
@@ -503,9 +500,8 @@ export default function LinkEditor({
                           : "Select Icon"}
                       </span>
                       <div
-                        className={`transition-transform duration-300 ${
-                          isEmojiPickerOpen ? "rotate-180" : ""
-                        }`}
+                        className={`transition-transform duration-300 ${isEmojiPickerOpen ? "rotate-180" : ""
+                          }`}
                       >
                         {isEmojiPickerOpen ? (
                           <RiSubtractLine className="text-xl" />
@@ -516,11 +512,10 @@ export default function LinkEditor({
                     </button>
 
                     <div
-                      className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${
-                        isEmojiPickerOpen
+                      className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${isEmojiPickerOpen
                           ? "grid-rows-[1fr]"
                           : "grid-rows-[0fr]"
-                      }`}
+                        }`}
                     >
                       <div className="overflow-hidden">
                         <div className="p-4 border-t border-base-300">
@@ -530,11 +525,10 @@ export default function LinkEditor({
                                 key={cat.name}
                                 type="button"
                                 onClick={() => setActiveEmojiTab(cat.name)}
-                                className={`px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all flex-shrink-0 ${
-                                  activeEmojiTab === cat.name
+                                className={`px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all flex-shrink-0 ${activeEmojiTab === cat.name
                                     ? "bg-white text-primary shadow-sm ring-1 ring-base-200"
                                     : "text-base-content/50 hover:text-base-content hover:bg-base-200/50"
-                                }`}
+                                  }`}
                               >
                                 {cat.name}
                               </button>
@@ -551,11 +545,10 @@ export default function LinkEditor({
                                 onClick={() =>
                                   setFormData({ ...formData, icon: emoji })
                                 }
-                                className={`w-10 h-10 flex items-center justify-center text-2xl hover:ring-secondary hover:ring-2 transition-all rounded-md ${
-                                  formData.icon === emoji
+                                className={`w-10 h-10 flex items-center justify-center text-2xl hover:ring-secondary hover:ring-2 transition-all rounded-md ${formData.icon === emoji
                                     ? "bg-primary/10 text-primary ring-2 ring-primary ring-offset-1 ring-offset-base-100 shadow-sm"
                                     : "bg-base-100/50"
-                                }`}
+                                  }`}
                               >
                                 {emoji}
                               </button>
@@ -582,7 +575,7 @@ export default function LinkEditor({
                     type="submit"
                     className="btn btn-primary flex-1  font-medium shadow-lg shadow-primary/20"
                   >
-                    {editingLink ? "Save Changes" : "Create Link"}
+                    {editingLink ? "Update Link" : "Add to Stack"}
                   </button>
                 </div>
               </form>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { RiRefreshLine } from "react-icons/ri";
 import StatsCards from "../shared/charts/StatsCards";
 import SummaryAreaChart from "../shared/charts/SummaryAreaChart";
@@ -31,7 +31,7 @@ export default function AnalyticsView() {
   });
 
   // Fetch chart data from API (single call for both charts)
-  const fetchChartData = async (range) => {
+  const fetchChartData = useCallback(async (range) => {
     if (!currentBioPage?.id) return;
 
     setIsLoading(true);
@@ -55,10 +55,10 @@ export default function AnalyticsView() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [currentBioPage?.id]);
 
   // Fetch fresh lifetime stats
-  const fetchLifetimeStats = async () => {
+  const fetchLifetimeStats = useCallback(async () => {
     if (!currentBioPage?.id) return;
 
     try {
@@ -81,7 +81,7 @@ export default function AnalyticsView() {
     } catch (err) {
       console.error("Error fetching lifetime stats:", err);
     }
-  };
+  }, [currentBioPage?.id]);
 
   // Fetch initial data on mount (Reset to 7 days as requested)
   useEffect(() => {
@@ -90,7 +90,7 @@ export default function AnalyticsView() {
       fetchLifetimeStats();
       fetchChartData(7);
     }
-  }, [currentBioPage?.id]);
+  }, [currentBioPage?.id, fetchChartData, fetchLifetimeStats, setCurrentRange]);
 
   // Handle range change (updates both charts)
   const handleRangeChange = (newRange) => {
@@ -110,8 +110,8 @@ export default function AnalyticsView() {
       <div className="card bg-base-100 shadow-sm border border-base-300">
         <div className="card-body p-6 flex-row items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold">Analytics Overview</h2>
-            <p className="text-xs opacity-60 mt-1">Real-time performance metrics</p>
+            <h2 className="text-2xl font-bold">Bio Growth Insights</h2>
+            <p className="text-xs opacity-60 mt-1">Track your bio engagement and performance.</p>
           </div>
           <button
             onClick={handleRefresh}

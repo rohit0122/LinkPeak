@@ -58,7 +58,7 @@ export default function SettingsTab({
               <div>
                 <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2 mb-1">
                   <RiUserLine className="text-primary" />
-                  Identity & Details
+                  Bio Profile Identity
                 </h2>
                 <p className="text-xs opacity-60">
                   Manage your public profile information.
@@ -89,7 +89,7 @@ export default function SettingsTab({
                 <div className="form-control">
                   <label className="label">
                     <span className="label-text">
-                      Custom URL <span className="text-error">*</span>
+                      Digital Address (Slug) <span className="text-error">*</span>
                     </span>
                   </label>
                   <label className="input w-full">
@@ -320,11 +320,11 @@ export default function SettingsTab({
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <h2 className="text-lg font-medium tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70">
-                    AI Optimization Engine
+                    AI Optimization Engine to gain SEO Ranking
                   </h2>
                 </div>
                 <p className="text-sm font-medium text-white/50 mt-1 max-w-sm">
-                  Supercharge your discoverability with GPT-4 powered metadata.
+                  Skyrocket your search ranking with high-performance GPT-4 metadata.
                 </p>
               </div>
             </div>

@@ -99,7 +99,7 @@ export default function NavbarClient({
                 >
                   <li className="menu-title px-4 py-2 my-1">
                     <span className="text-[10px] font-black uppercase tracking-widest opacity-40">
-                      My Bio Pages
+                      My Bio Projects
                     </span>
                   </li>
                   {pages.map((p) => (
@@ -139,7 +139,7 @@ export default function NavbarClient({
                             className="flex items-center gap-3 py-2.5 px-3 text-primary font-bold hover:bg-primary/5 text-xs"
                           >
                             <RiAddCircleLine className="text-base flex-shrink-0" />
-                            Add New Page
+                            Create New Bio
                           </button>
                         </li>
                       </>
@@ -167,7 +167,7 @@ export default function NavbarClient({
               >
                 <div className="flex flex-col items-start leading-tight">
                   <span className="text-[9px] uppercase font-bold">
-                    Public Profile
+                    View Live Bio
                   </span>
                   <span className="text-xs tracking-tight font-medium">
                     {currentPage?.slug ? `/${currentPage.slug}` : "not-set"}

@@ -385,11 +385,11 @@ export default function DashboardPage() {
           {/* Responsive Tabs */}
           <div role="tablist" className="tabs tabs-boxed bg-base-100 p-2 mb-6 shadow-sm gap-2">
             {[
-              { key: "links", label: "Links", icon: RiLayoutLine },
-              { key: "theme", label: "Style", icon: RiPaletteLine },
-              { key: "settings", label: "Page Settings", icon: RiSettingsLine },
-              { key: "qr", label: "QR", icon: RiQrCodeLine },
-              { key: "analytics", label: "Stats", icon: RiBarChartLine },
+              { key: "links", label: "My Links", icon: RiLayoutLine },
+              { key: "theme", label: "Bio Design", icon: RiPaletteLine },
+              { key: "settings", label: "Bio Profile", icon: RiSettingsLine },
+              { key: "qr", label: "QR Share", icon: RiQrCodeLine },
+              { key: "analytics", label: "Insights", icon: RiBarChartLine },
               { key: "account", label: "Account", icon: RiUserLine },
               { key: "support", label: "Help", icon: RiCustomerService2Line },
             ].map(({ key, label, icon: Icon }) => (
