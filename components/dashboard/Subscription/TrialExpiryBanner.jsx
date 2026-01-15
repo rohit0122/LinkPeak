@@ -21,12 +21,14 @@ export default function TrialExpiryBanner() {
     is_trial,
     expiry_date,
     razorpay_subscription_id,
+    status
+
   } = currentSubscription;
 
   const isFreePlan = plan_name === "FREE";
 
   const isPaidTrial =
-    is_trial === true &&
+    is_trial === true && status === "trialing" &&
     (plan_name === "PRO" || plan_name === "AGENCY");
 
   // ❌ Do not render banner if not FREE and not trialing paid plan
@@ -117,10 +119,19 @@ export default function TrialExpiryBanner() {
       description: `Extend / Renew ${plan_name} Plan`,
       image: "https://www.linkpeakk.com/linkpeakk-social.webp",
       handler: function (response) {
-        toast.success("Subscription extended successfully!");
-        setTimeout(() => {
+        /*setTimeout(() => {
           window.location.reload();
-        }, 2000);
+        }, 2000);*/
+        console.log('response ', response)
+        axios.post(`${ENDPOINTS.SUBSCRIPTION.VERIFY_PAYMENT}`, {
+          razorpay_payment_id: response.razorpay_payment_id,
+          razorpay_subscription_id: response.razorpay_subscription_id,
+          razorpay_signature: response.razorpay_signature
+        }).then((res) => {
+          toast.success("Subscription extended successfully!");
+        }).catch((error) => {
+          toast.error(error?.response?.data?.message || "Error extending subscription!");
+        });
       },
       prefill: {
         name: currentSubscription?.prefill?.name,

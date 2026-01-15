@@ -89,204 +89,237 @@ function RegisterForm() {
     }
   };
 
+  const plans = [
+    {
+      id: "FREE",
+      name: "Free",
+      price: "0",
+      description: "Perfect for personal bios",
+      features: ["5 Bio Links", "Classic Layout", "7-Day Insights"],
+      color: "neutral",
+    },
+    {
+      id: "PRO",
+      name: "Pro",
+      price: "9",
+      description: "Best for creators",
+      features: ["Unlimited Links", "10+ Pro Themes", "90-Day Insights", "Custom QR Share"],
+      color: "primary",
+      recommended: true,
+    },
+    {
+      id: "AGENCY",
+      name: "Agency",
+      price: "49",
+      description: "For professional brands",
+      features: ["10 Bio Projects", "All Premium Themes", "Lifetime Insights", "Priority Support"],
+      color: "secondary",
+    },
+  ];
+
   return (
-    <div className="flex justify-center items-center min-h-screen px-4 mt-2">
-      <div className="card w-full max-w-sm bg-base-200">
-        <div className="h-2 bg-primary w-full"></div>
-        <div className="card-body">
-          {isSuccess ? (
-            <div className="text-center py-2">
-              <div className="flex justify-center mb-2">
+    <div className="flex justify-center items-center min-h-screen px-4 py-12 bg-base-300/30">
+      <div className={`w-full ${isSuccess ? 'max-w-sm' : 'max-w-4xl'} transition-all duration-500`}>
+        {isSuccess ? (
+          <div className="card bg-base-100 shadow-xl border border-base-300">
+            <div className="h-2 bg-success w-full"></div>
+            <div className="card-body text-center p-8">
+              <div className="flex justify-center mb-6">
                 <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center animate-bounce">
                   <RiMailCheckLine className="text-4xl text-green-600" />
                 </div>
               </div>
 
-              <h2 className="text-2xl font-bold mb-2">Account Created Successfully!</h2>
-
-              <p className="text-base-content/80 mb-2">
-                Welcome to {CONFIG.SITE_NAME}! We&apos;ve sent a verification link to&nbsp;
-                <span className="font-semibold text-base-content">your registered email id.</span>
-                <br />
-                <div className="mt-2 alert alert-info alert-outline text-info-content flex items-center justify-center gap-2">
-                  <RiInformationLine className="text-lg shrink-0" />
-                  <span className="">
-                    Note: Please check your spam or junk folder if you don&apos;t see it.
-                  </span>
-                </div>
+              <h2 className="text-2xl font-bold mb-4">Account Created!</h2>
+              <p className="text-base-content/70 mb-6 leading-relaxed">
+                Welcome to {CONFIG.SITE_NAME}! We&apos;ve sent a verification link to your registered email.
+                Please check your inbox (and spam folder) to activate your account.
               </p>
 
-              <div className="alert bg-base-100 border-base-300 text-left mb-2">
-                <div className="w-full">
-                  <h4 className="font-bold text-sm mb-2 flex items-center gap-2">
-                    <RiCheckLine className="text-primary" /> Next Steps:
-                  </h4>
-                  <ul className="list-disc list-inside text-sm space-y-1 text-base-content/70 pl-1">
-                    <li>Open your email inbox</li>
-                    <li>Click the verification link</li>
-                    <li>Log in to access your dashboard</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div className="bg-base-200/50 rounded-lg p-4 text-sm mb-2">
-                <p className="font-semibold mb-1">Still haven&apos;t received it?</p>
-                <p className="opacity-75">
-                  If the email doesn&apos;t arrive within a few minutes, please contact our support team.
-                </p>
-              </div>
-
               <div className="flex flex-col gap-3">
-                <Link href="/login" className="btn btn-primary w-full">
+                <Link href="/login" className="btn btn-primary w-full shadow-lg">
                   Proceed to Login
                 </Link>
-
-                <Link href="/contact-us" className="btn btn-neutral btn-outline btn-sm gap-2">
+                <Link href="/contact-us" className="btn btn-ghost btn-sm gap-2 opacity-60">
                   <RiCustomerService2Line />
                   Contact Support
                 </Link>
               </div>
             </div>
-          ) : (
-            <>
-              <h2 className="card-title text-2xl font-bold justify-center mb-4">
-                Join {CONFIG.SITE_NAME}
-              </h2>
+          </div>
+        ) : (
+          <div className="flex flex-col lg:flex-row gap-8 items-stretch">
+            {/* Left: Plan Selector */}
+            <div className="flex-1 space-y-4">
+              <div className="mb-6">
+                <h1 className="text-3xl font-bold tracking-tight mb-2">Choose Your Power</h1>
+                <p className="opacity-60 text-sm">Select the plan that fits your growth journey.</p>
+              </div>
 
-              <form onSubmit={handleSubmit}>
-                {selectedPlan && (
-                  <div className="alert alert-info text-sm py-3 mb-4 rounded-lg">
-                    <div>
-                      <div className="font-bold">Selected Plan: {selectedPlan}</div>
-                      <div className="text-xs opacity-70">
-                        Create your account to continue with {selectedPlan} plan
+              <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-1 gap-4">
+                {plans.map((plan) => (
+                  <button
+                    key={plan.id}
+                    type="button"
+                    onClick={() => setSelectedPlan(plan.id)}
+                    className={`flex flex-col p-4 rounded-2xl border-2 transition-all text-left relative overflow-hidden group ${selectedPlan === plan.id
+                      ? `border-${plan.color} bg-base-100 ring-4 ring-${plan.color}/10 shadow-xl`
+                      : "border-base-300 bg-base-100/50 hover:border-base-content/20"
+                      }`}
+                  >
+                    {plan.recommended && (
+                      <div className="absolute top-0 right-0 pt-1 flex items-center bg-primary text-primary-content px-3 py-1 rounded-bl-xl text-[10px] font-black uppercase tracking-tighter">
+                        Most Popular
+                      </div>
+                    )}
+
+                    <div className="flex items-center justify-between mb-2">
+                      <span className={`text-xs font-bold uppercase tracking-widest text-${plan.color}`}>
+                        {plan.name}
+                      </span>
+                      <div className="flex items-baseline gap-1">
+                        <span className="text-xl font-black">${plan.price}</span>
+                        <span className="text-[10px] opacity-40">/mo</span>
                       </div>
                     </div>
-                  </div>
-                )}
 
-                {error && (
-                  <div className="alert alert-error text-sm py-2 rounded-lg mb-4">
-                    <span>{error}</span>
-                  </div>
-                )}
+                    <p className="text-xs opacity-60 mb-4 font-medium">{plan.description}</p>
 
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text">Full Name</span>
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    placeholder="John Doe"
-                    className="input input-bordered"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
+                    <div className="flex flex-wrap gap-x-4 gap-y-2">
+                      {plan.features.map((feature, idx) => (
+                        <div key={idx} className="flex items-center gap-1.5">
+                          <RiCheckLine className={`text-sm text-${plan.color}`} />
+                          <span className="text-[10px] font-bold opacity-80">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
 
-                <div className="form-control mt-2">
-                  <label className="label">
-                    <span className="label-text">Email</span>
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="email@example.com"
-                    className="input input-bordered"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    autoComplete="new-email"
-                  />
-                </div>
-
-                <div className="form-control mt-2">
-                  <label className="label">
-                    <span className="label-text">Password</span>
-                  </label>
-                  <input
-                    type="password"
-                    name="password"
-                    placeholder="min 6 characters"
-                    className="input input-bordered"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                    autoComplete="new-password"
-                  />
-                </div>
-
-                <div className="form-control mt-2">
-                  <label className="label">
-                    <span className="label-text">Confirm Password</span>
-                  </label>
-                  <input
-                    type="password"
-                    name="confirmPassword"
-                    placeholder="repeat password"
-                    className="input input-bordered"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    required
-                    autoComplete="new-password"
-                  />
-                </div>
-
-                <div className="form-control mt-4">
-                  <label className="label cursor-pointer justify-start items-start gap-3">
-                    <input
-                      type="checkbox"
-                      className="checkbox checkbox-primary checkbox-xs shrink-0 mt-0.5"
-                      checked={agreed}
-                      onChange={(e) => setAgreed(e.target.checked)}
-                    />
-                    <span className="label-text text-left leading-tight text-xs md:text-sm">
-                      I agree to the{" "}
-                      <button
-                        type="button"
-                        onClick={() => setShowTerms(true)}
-                        className="link link-primary"
-                      >
-                        Terms of Service
-                      </button>{" "}
-                      and{" "}
-                      <button
-                        type="button"
-                        onClick={() => setShowTerms(true)}
-                        className="link link-primary"
-                      >
-                        Privacy Policy
-                      </button>
-                    </span>
-                  </label>
-                </div>
-
-                <div className="form-control mt-4 ">
-                  <button className="btn btn-primary w-full" disabled={loading}>
-                    {loading && <span className="loading loading-spinner"></span>}
-                    {loading ? "Registering..." : "Register"}
+                    {/* Radio Indicator */}
+                    <div className={`absolute bottom-4 right-4 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${selectedPlan === plan.id ? `bg-${plan.color} border-${plan.color}` : "border-base-300"
+                      }`}>
+                      {selectedPlan === plan.id && <div className="w-2 h-2 rounded-full bg-white"></div>}
+                    </div>
                   </button>
-                </div>
+                ))}
+              </div>
+            </div>
 
-                <p className="text-center mt-6 text-sm">
-                  Already have an account?{" "}
-                  <Link
-                    href="/login"
-                    title="login"
-                    className="link link-primary font-semibold"
-                  >
-                    Login here
-                  </Link>
-                </p>
-              </form>
-            </>
-          )}
-        </div>
+            {/* Right: Registration Form */}
+            <div className="w-full lg:w-[400px] shrink-0">
+              <div className="card bg-base-100 shadow-2xl border border-base-300 sticky top-12">
+                <div className="h-2 bg-primary w-full"></div>
+                <div className="card-body p-8">
+                  <h2 className="card-title text-2xl font-bold mb-6">Create Account</h2>
+
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    {error && (
+                      <div className="alert alert-error text-xs py-3 rounded-xl">
+                        <span>{error}</span>
+                      </div>
+                    )}
+
+                    <div className="form-control">
+                      <label className="label py-1">
+                        <span className="label-text font-bold text-xs opacity-60">Full Name</span>
+                      </label>
+                      <input
+                        type="text"
+                        name="name"
+                        placeholder="e.g. John Doe"
+                        className="input input-bordered focus:input-primary transition-all rounded-xl"
+                        value={formData.name}
+                        onChange={handleChange}
+                        required
+                      />
+                    </div>
+
+                    <div className="form-control">
+                      <label className="label py-1">
+                        <span className="label-text font-bold text-xs opacity-60">Professional Email</span>
+                      </label>
+                      <input
+                        type="email"
+                        name="email"
+                        placeholder="you@example.com"
+                        className="input input-bordered focus:input-primary transition-all rounded-xl"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                        autoComplete="new-email"
+                      />
+                    </div>
+
+                    <div className="form-control">
+                      <label className="label py-1">
+                        <span className="label-text font-bold text-xs opacity-60">Secret Password</span>
+                      </label>
+                      <input
+                        type="password"
+                        name="password"
+                        placeholder="••••••••"
+                        className="input input-bordered focus:input-primary transition-all rounded-xl"
+                        value={formData.password}
+                        onChange={handleChange}
+                        required
+                        autoComplete="new-password"
+                      />
+                    </div>
+
+                    <div className="form-control">
+                      <label className="label py-1">
+                        <span className="label-text font-bold text-xs opacity-60">Confirm Password</span>
+                      </label>
+                      <input
+                        type="password"
+                        name="confirmPassword"
+                        placeholder="••••••••"
+                        className="input input-bordered focus:input-primary transition-all rounded-xl"
+                        value={formData.confirmPassword}
+                        onChange={handleChange}
+                        required
+                        autoComplete="new-password"
+                      />
+                    </div>
+
+                    <div className="form-control pt-2">
+                      <label className="label cursor-pointer justify-start items-start gap-3">
+                        <input
+                          type="checkbox"
+                          className="checkbox checkbox-primary checkbox-sm shrink-0 rounded-md"
+                          checked={agreed}
+                          onChange={(e) => setAgreed(e.target.checked)}
+                        />
+                        <span className="label-text text-left leading-tight text-xs">
+                          I agree to the{" "}
+                          <button type="button" onClick={() => setShowTerms(true)} className="link link-primary font-bold">Terms</button>
+                          {" "}and{" "}
+                          <button type="button" onClick={() => setShowTerms(true)} className="link link-primary font-bold">Privacy Policy</button>
+                        </span>
+                      </label>
+                    </div>
+
+                    <button className="btn btn-primary w-full mt-4 h-12 shadow-lg shadow-primary/20 rounded-xl font-bold" disabled={loading}>
+                      {loading ? (
+                        <span className="loading loading-spinner"></span>
+                      ) : (
+                        `Join with ${selectedPlan} Plan`
+                      )}
+                    </button>
+
+                    <p className="text-center mt-6 text-xs font-medium opacity-60">
+                      Already using {CONFIG.SITE_NAME}?{" "}
+                      <Link href="/login" className="link link-primary font-bold">
+                        Login here
+                      </Link>
+                    </p>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Terms Modal */}
       {showTerms && (
         <dialog id="terms_modal" className="modal modal-open" open>
           <div className="modal-box w-11/12 max-w-4xl max-h-[80vh] overflow-y-auto">

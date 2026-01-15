@@ -1,6 +1,6 @@
 // Frontend URL (Next.js App)
 export const APP_URL =
-  process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 // Backend URL (Laravel API)
 export const BACKEND_URL =
   process.env.LARAVEL_BACKEND_URL || "http://localhost:8000";
@@ -62,6 +62,7 @@ export const ENDPOINTS = {
   LEADS: (pageId) => `/pages/${pageId}/leads`,
   SUBSCRIPTION: {
     CHANGE_PLAN: `/subscriptions/change-plan`,
+    VERIFY_PAYMENT: `/subscriptions/verify-payment`,
   }
 };
 
@@ -128,5 +129,6 @@ export const BACKEND_ENDPOINTS = {
   },
   SUBSCRIPTION: {
     CHANGE_PLAN: `${BACKEND_URL}/api/v1/subscriptions/select-plan`,
+    VERIFY_PAYMENT: `${BACKEND_URL}/api/v1/subscriptions/verify`,
   }
 };

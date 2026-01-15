@@ -9,7 +9,7 @@ export async function GET(req) {
       BACKEND_ENDPOINTS.SUPPORT.BASE
     );
     const response = await restClient.get(BACKEND_ENDPOINTS.SUPPORT.BASE);
-    console.log("response.dataresponse.dataresponse.data ", response.data);
+    //console.log("response.dataresponse.dataresponse.data ", response.data);
     return NextResponse.json(response.data);
   } catch (error) {
     return NextResponse.json(
