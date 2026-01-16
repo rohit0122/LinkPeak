@@ -164,14 +164,22 @@ export default function DashboardPage() {
 
   const handleReorder = async (newLinks) => {
     try {
+      // Find only links that actually changed position
+      const oldLinks = currentBioPage?.links || [];
+      const reorderPayload = newLinks
+        .map((l, index) => ({ id: l.id, order: index }))
+        .filter((item, index) => {
+          const original = oldLinks.find((ol) => ol.id === item.id);
+          // Compare with its original index in the session links
+          return original && oldLinks.indexOf(original) !== index;
+        });
+
+      // Optimistic update for UI smoothness
       updateCurrentBioPageSession({ ...currentBioPage, links: newLinks });
-      const reorderPayload = newLinks.map((l, index) => ({
-        id: l.id,
-        order: index,
-      }));
+
+      if (reorderPayload.length === 0) return;
 
       await axios.put(ENDPOINTS.LINKS, { links: reorderPayload });
-      //updateCurrentBioPageSession({ ...currentBioPage, links: newLinks });
     } catch (error) {
       toast.error("Could not save link order. Please try again.");
       fetchPageData(currentBioPage.id);
@@ -195,7 +203,32 @@ export default function DashboardPage() {
 
   const handleUpdateLink = async (updatedLink) => {
     try {
-      const { data } = await axios.patch(ENDPOINTS.LINKS, updatedLink);
+      const originalLink = currentBioPage.links?.find((l) => l.id === updatedLink.id);
+      let payload = updatedLink;
+
+      if (originalLink) {
+        // Create minimized payload with only changed fields
+        payload = { id: updatedLink.id };
+        let hasChanges = false;
+
+        Object.keys(updatedLink).forEach((key) => {
+          // Normalize for comparison: treat null/undefined/"" as same blank state
+          const val1 = updatedLink[key] ?? "";
+          const val2 = originalLink[key] ?? "";
+
+          if (
+            updatedLink[key] !== undefined &&
+            val1 !== val2
+          ) {
+            payload[key] = updatedLink[key];
+            hasChanges = true;
+          }
+        });
+
+        if (!hasChanges) return;
+      }
+
+      const { data } = await axios.patch(ENDPOINTS.LINKS, payload);
 
       if (data.success) {
         updateCurrentBioPageSession({ ...currentBioPage, links: data.data });

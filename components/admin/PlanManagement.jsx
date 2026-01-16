@@ -100,8 +100,13 @@ export default function PlanManagement() {
                         if (featuresChanged) {
                             payload.features = formData.features;
                         }
-                    } else if (formData[key] !== editingPlan[key]) {
-                        payload[key] = formData[key];
+                    } else {
+                        // Normalize blank states for comparison
+                        const val1 = formData[key] ?? "";
+                        const val2 = editingPlan[key] ?? "";
+                        if (val1 !== val2) {
+                            payload[key] = formData[key];
+                        }
                     }
                 });
 
