@@ -99,7 +99,7 @@ export default function UsageMetrics() {
                                         {metric.label}
                                     </span>
                                     <span className={`text-xs font-bold ${isAtLimit ? 'text-error' : isNearLimit ? 'text-warning' : ''}`}>
-                                        {metric.current} / {metric.max === Infinity ? '∞' : metric.max}
+                                        {metric.current} / {metric.max > 999 ? 'Unlimited' : metric.max}
                                     </span>
                                 </div>
                                 <div className="w-full bg-base-300 rounded-full h-2">
