@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { RiArrowRightLine } from "react-icons/ri";
 
-export async function SpotLightBanner() {
+export default function SpotLightBanner() {
     return (
         <section className="py-24 bg-primary text-primary-content overflow-hidden relative">
             <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">

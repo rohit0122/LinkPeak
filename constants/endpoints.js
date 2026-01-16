@@ -49,6 +49,7 @@ export const ENDPOINTS = {
     GET_PAGE: (slug) => `/public/pages/${slug}`,
     LEADS: "/public/leads",
     QR_CODE: (id) => `/public/pages/${id}/qrcode`,
+    CONTACT_US: "/contact",
   },
   SETTINGS: {
     PROFILE: "/settings/profile",
@@ -83,6 +84,7 @@ export const BACKEND_ENDPOINTS = {
     GET_PAGE: (slug) => `${BACKEND_URL}/api/v1/public/pages/${slug}`,
     LEADS: `${BACKEND_URL}/api/v1/public/leads`,
     QR_CODE: (id) => `${BACKEND_URL}/api/v1/public/pages/${id}/qrcode`,
+    CONTACT_US: `${BACKEND_URL}/api/v1/public/contact`,
   },
   TRACK: {
     VIEW: `${BACKEND_URL}/api/v1/track/view`,

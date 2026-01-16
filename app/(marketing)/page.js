@@ -5,7 +5,7 @@ import Features from "@/components/marketing/Features";
 import LiveDemo from "@/components/marketing/LiveDemo";
 import Pricing from "@/components/marketing/Pricing";
 import FAQ from "@/components/marketing/FAQ";
-import { SpotLightBanner } from "@/components/marketing/SpotLightBanner";
+import SpotLightBanner from "@/components/marketing/SpotLightBanner";
 
 export default function MarketingPage() {
     return (

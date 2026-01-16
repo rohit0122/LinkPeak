@@ -32,7 +32,7 @@ export default function ContactUsPage() {
         setLoading(true);
 
         try {
-            const { data } = await axios.post(ENDPOINTS.CONTACT, formData);
+            const { data } = await axios.post(ENDPOINTS.PUBLIC.CONTACT_US, formData);
             if (data.success) {
                 setSuccess(true);
                 toast.success("Message sent successfully!");

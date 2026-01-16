@@ -1,48 +1,73 @@
 import { NextResponse } from "next/server";
-import { CONFIG } from "@/constants/config";
-import { sendContactReceiptEmail, sendContactAdminEmail } from "@/lib/mailer";
-
-// Force Node.js runtime for nodemailer
-export const runtime = 'nodejs';
+import restClient from "@/lib/restClient";
+import { BACKEND_ENDPOINTS } from "@/constants/endpoints";
 
 export async function POST(req) {
     try {
-        const body = await req.json();
-        const { name, email, subject, message } = body;
+        // 1️⃣ Parse body safely
+        let body;
+        try {
+            body = await req.json();
+        } catch {
+            return NextResponse.json(
+                { error: "Invalid JSON payload" },
+                { status: 400 }
+            );
+        }
 
-        // Basic validation
-        if (!name || !email || !message) {
+        const { name, email, subject = "", message } = body ?? {};
+        console.log('bodybody ', body)
+        // 2️⃣ Strong validation
+        if (
+            typeof name !== "string" ||
+            typeof email !== "string" ||
+            typeof message !== "string" ||
+            !name.trim() ||
+            !email.trim() ||
+            !message.trim()
+        ) {
             return NextResponse.json(
                 { error: "Name, email, and message are required." },
                 { status: 400 }
             );
         }
 
-        // 1. Send receipt to User
-        try {
-            await sendContactReceiptEmail(email, name, subject);
-        } catch (mailError) {
-            console.error("Contact receipt email failed:", mailError);
+        // 3️⃣ Basic email sanity check (lightweight)
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            return NextResponse.json(
+                { error: "Invalid email address." },
+                { status: 400 }
+            );
         }
 
-        // 2. Send notification to Admin
-        try {
-            const adminEmail = process.env.ADMIN_EMAIL || CONFIG.SUPPORT_EMAIL;
-            await sendContactAdminEmail(adminEmail, { name, email, subject, message });
-        } catch (mailError) {
-            console.error("Contact admin email failed:", mailError);
-        }
-
+        console.log('URL ', BACKEND_ENDPOINTS.PUBLIC.CONTACT_US)
+        // 4️⃣ Call backend (single responsibility)
+        const response = await restClient.post(
+            BACKEND_ENDPOINTS.PUBLIC.CONTACT_US,
+            { name, email, subject, message },
+            { timeout: 8000 } // prevents hanging requests
+        );
+        console.log('response ', response.data)
         return NextResponse.json(
-            { success: true, message: "Email sent successfully" },
-            { status: 200 }
+            { ...response.data },
+            { status: response.status }
         );
 
     } catch (error) {
-        console.error("Contact API Error:", error);
+        // 5️⃣ Normalize backend / axios errors
+        const status =
+            error?.response?.status >= 400 && error?.response?.status < 600
+                ? error.response.status
+                : 500;
+
+        console.error("Contact API Error:", {
+            status,
+            message: error?.message,
+        });
+
         return NextResponse.json(
             { error: "Failed to send message. Please try again later." },
-            { status: 500 }
+            { status }
         );
     }
 }
