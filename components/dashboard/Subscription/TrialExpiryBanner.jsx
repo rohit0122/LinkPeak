@@ -28,7 +28,7 @@ export default function TrialExpiryBanner() {
   const isFreePlan = plan_name === "FREE";
 
   const isPaidTrial =
-    is_trial === true && status === "trialing" &&
+    (is_trial === true || status === "trialing") &&
     (plan_name === "PRO" || plan_name === "AGENCY");
 
   // ❌ Do not render banner if not FREE and not trialing paid plan

@@ -5,6 +5,11 @@ export default function SubscriptionDetails() {
     const { currentSubscription } = useAuthStore(
         (state) => state
     );
+    const isFreePlan = currentSubscription?.plan_name === "FREE";
+    const isPaidTrialPlan = currentSubscription?.plan_name != "FREE" && (currentSubscription?.is_trial || currentSubscription?.status === "trialing");
+    const isActivePaidPlan = currentSubscription?.plan_name != "FREE" && !currentSubscription?.is_trial && currentSubscription?.status === "active";
+    const isSubscribedButPendingPayment = currentSubscription?.plan_name != "FREE" && !currentSubscription?.is_trial && currentSubscription?.status !== "trialing";
+
     return (
         <div className="card bg-base-100 shadow-sm border border-base-300">
             <div className="card-body">
@@ -57,7 +62,7 @@ export default function SubscriptionDetails() {
                 <div className="alert alert-info flex flex-col sm:flex-row gap-3 items-start sm:items-center">
                     <RiSparklingLine className="text-2xl shrink-0" />
 
-                    {(currentSubscription?.plan_name != 'FREE' && currentSubscription?.is_trial) && <div className="flex-1 space-y-1">
+                    {(isPaidTrialPlan) && <div className="flex-1 space-y-1">
                         <p className="font-bold">Trial Access Active</p>
                         <p className="text-sm leading-relaxed">
                             Your trial access is active until{" "}
@@ -73,7 +78,7 @@ export default function SubscriptionDetails() {
                             </span>
                         )}
                     </div>}
-                    {(currentSubscription?.plan_name != 'FREE' && !currentSubscription?.is_trial) && <div className="flex-1 space-y-1">
+                    {(isActivePaidPlan) && <div className="flex-1 space-y-1">
                         <p className="font-bold"> {currentSubscription?.plan_name} Active</p>
                         <p className="text-sm leading-relaxed">
                             Your plan is active until{" "}
@@ -88,8 +93,18 @@ export default function SubscriptionDetails() {
                             </span>
                         )}
                     </div>}
+                    {isSubscribedButPendingPayment && <div className="flex-1 space-y-1">
+                        <p className="font-bold">Pending Payment: {currentSubscription?.plan_name}</p>
+                        <p className="text-sm leading-relaxed">
+                            Your plan is active but payment is pending, and will expire automatically post {" "}
+                            <span className="font-semibold">
+                                {currentSubscription?.expiry_date || "N/A"}
+                            </span>.
+                            {" "}
+                        </p>
+                    </div>}
 
-                    {(currentSubscription?.plan_name == 'FREE' && <div className="flex-1 space-y-1">
+                    {(isFreePlan && <div className="flex-1 space-y-1">
                         <p className="font-bold">Free plan activated 🎉</p>
 
                         <p className="text-sm leading-relaxed">
