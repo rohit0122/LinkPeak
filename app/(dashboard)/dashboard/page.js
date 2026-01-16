@@ -34,6 +34,7 @@ import SubscriptionStatusDiv from "@/components/dashboard/SubscriptionStatusDiv"
 import { useAuthStore } from "@/stores/useAuthStore";
 import SubscriptionDetails from "@/components/dashboard/Subscription/SubscriptionDetails";
 import DangerZone from "@/components/dashboard/DangerZone";
+import UsageMetrics from "@/components/dashboard/UsageMetrics";
 
 // Lazy load heavy components
 const AnalyticsView = dynamic(
@@ -481,6 +482,7 @@ export default function DashboardPage() {
 
             {activeTab === "account" && (
               <div className="space-y-4">
+                <UsageMetrics />
                 <SubscriptionDetails />
                 <DangerZone />
               </div>

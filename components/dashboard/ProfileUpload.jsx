@@ -5,8 +5,6 @@ import { RiUploadCloud2Line, RiUser3Line, RiRefreshLine } from "react-icons/ri";
 import axios from "@/lib/httpClient";
 import { toast } from "react-hot-toast";
 import imageCompression from "browser-image-compression";
-import { ENDPOINTS } from "@/constants/endpoints";
-import { setCachedImage, invalidateUserCache } from "@/lib/imageCache";
 
 export default function ProfileUpload({ currentImage, onUpload, userId }) {
     const [uploading, setUploading] = useState(false);

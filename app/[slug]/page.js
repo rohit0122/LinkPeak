@@ -2,7 +2,7 @@ import { cache } from "react";
 import restClient from "@/lib/restClient";
 import { BACKEND_ENDPOINTS } from "@/constants/endpoints";
 import PublicBioNew from "./PublicBioNew";
-import BioNotFound from "@/components/bio-templates/BioNotFound";
+import BioNotFound from "@/components/templates/BioNotFound";
 import { CONFIG } from "@/constants/config";
 
 // Revalidate every 60 seconds (ISR)
