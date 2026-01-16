@@ -182,7 +182,7 @@ export default function TrialExpiryBanner() {
               <strong>{expiry_date}</strong>.
             </p>
             <p className="text-base-content/70 text-sm">
-              Renew now to avoid any interruption in service.
+              If you choose to subscribe during the trial, payment will be charged automatically after the trial ends. Renew now to avoid any interruption in service.
             </p>
           </>
         )}

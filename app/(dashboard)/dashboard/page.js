@@ -327,10 +327,6 @@ export default function DashboardPage() {
     }
   };
 
-  const trialEndDate = new Date(currentUser?.createdAt);
-  trialEndDate.setHours(trialEndDate.getHours() + 24);
-  const expiryDate = new Date(currentUser?.createdAt);
-  expiryDate.setDate(expiryDate.getDate() + 8);
 
   return (
     <DashboardLayout
@@ -354,15 +350,6 @@ export default function DashboardPage() {
         onDiscard={handleDiscardAndSwitch}
         onSave={handleSaveAndSwitch}
       />
-
-      {/* Subscription Status - Handles Trial & Renewal Alerts */}
-      {false && (
-        <SubscriptionStatusDiv
-          currentUser={currentUser}
-          initialData={subscriptionStatus}
-          redirectOnExpire={false}
-        />
-      )}
 
       <div className="flex flex-col lg:flex-row gap-6 min-h-full">
         <div className="flex-1 w-full max-w-5xl mx-auto">

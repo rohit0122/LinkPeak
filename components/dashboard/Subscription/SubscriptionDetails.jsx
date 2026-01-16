@@ -57,7 +57,7 @@ export default function SubscriptionDetails() {
                 <div className="alert alert-info flex flex-col sm:flex-row gap-3 items-start sm:items-center">
                     <RiSparklingLine className="text-2xl shrink-0" />
 
-                    <div className="flex-1 space-y-1">
+                    {currentSubscription?.plan_name != 'FREE' ? <div className="flex-1 space-y-1">
                         <p className="font-bold">Trial Access Active</p>
 
                         <p className="text-sm leading-relaxed">
@@ -65,14 +65,26 @@ export default function SubscriptionDetails() {
                             <span className="font-semibold">
                                 {currentSubscription?.expiry_date || "N/A"}
                             </span>.
+                            {" "}
                         </p>
+                        {currentSubscription?.status === 'trialing' && <p className="font-bold italic badge badge-info badge-outline text-info-content badge-sm">If you choose to subscribe during the trial, payment will be charged automatically after the trial ends.</p>}
 
-                        {currentSubscription?.is_paid && (
+
+                        {currentSubscription?.status != 'trialing' && (
                             <span className="badge badge-warning badge-sm italic w-fit">
-                                Auto-charge & activation after trial expiry
+                                Automatic billing starts after your trial ends
                             </span>
                         )}
-                    </div>
+                    </div> : (<div className="flex-1 space-y-1">
+                        <p className="font-bold">Free plan activated 🎉</p>
+
+                        <p className="text-sm leading-relaxed">
+                            Your free plan is currently active, giving you access to all free features.
+                            {" "}
+                        </p>
+                        <p className="font-bold italic badge badge-info badge-outline text-info-content badge-sm">Upgrade anytime for more advance features.</p>
+
+                    </div>)}
                 </div>
 
             </div>

@@ -1,5 +1,3 @@
-"use client";
-
 import Hero from "@/components/marketing/Hero";
 import Features from "@/components/marketing/Features";
 import LiveDemo from "@/components/marketing/LiveDemo";
