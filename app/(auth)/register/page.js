@@ -244,7 +244,7 @@ function RegisterForm() {
                         type="text"
                         name="name"
                         placeholder="e.g. John Doe"
-                        className="input input-bordered focus:input-primary transition-all"
+                        className="input input-bordered focus:input-primary transition-all w-full"
                         value={formData.name}
                         onChange={handleChange}
                         required
@@ -259,7 +259,7 @@ function RegisterForm() {
                         type="email"
                         name="email"
                         placeholder="you@example.com"
-                        className="input input-bordered focus:input-primary transition-all"
+                        className="input input-bordered focus:input-primary transition-all w-full"
                         value={formData.email}
                         onChange={handleChange}
                         required
@@ -275,7 +275,7 @@ function RegisterForm() {
                         type="password"
                         name="password"
                         placeholder="••••••••"
-                        className="input input-bordered focus:input-primary transition-all"
+                        className="input input-bordered focus:input-primary transition-all w-full"
                         value={formData.password}
                         onChange={handleChange}
                         required
@@ -291,7 +291,7 @@ function RegisterForm() {
                         type="password"
                         name="confirmPassword"
                         placeholder="••••••••"
-                        className="input input-bordered focus:input-primary transition-all"
+                        className="input input-bordered focus:input-primary transition-all w-full"
                         value={formData.confirmPassword}
                         onChange={handleChange}
                         required
