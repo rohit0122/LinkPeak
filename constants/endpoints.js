@@ -41,6 +41,8 @@ export const ENDPOINTS = {
     TICKETS: "/admin/tickets",
     PLANS: "/admin/plans",
     PLAN_BY_ID: (id) => `/admin/plans/${id}`,
+    NEWSLETTER: "/newsletter",
+    NEWSLETTER_BY_ID: (id) => `/newsletter/${id}`,
   },
   TRACK: {
     VIEW: "/track/view",
@@ -52,6 +54,7 @@ export const ENDPOINTS = {
     LEADS: "/public/leads",
     QR_CODE: (id) => `/public/pages/${id}/qrcode`,
     CONTACT_US: "/contact",
+    NEWSLETTER_SUBSCRIBE: "/newsletter",
   },
   SETTINGS: {
     PROFILE: "/settings/profile",
@@ -66,7 +69,11 @@ export const ENDPOINTS = {
   SUBSCRIPTION: {
     CHANGE_PLAN: `/subscriptions/change-plan`,
     VERIFY_PAYMENT: `/subscriptions/verify-payment`,
-  }
+  },
+  SUBSCRIPTION: {
+    CHANGE_PLAN: `/subscriptions/change-plan`,
+    VERIFY_PAYMENT: `/subscriptions/verify-payment`,
+  },
 };
 
 // 2. Backend Endpoints (Next.js API Proxy -> Laravel API)
@@ -87,6 +94,7 @@ export const BACKEND_ENDPOINTS = {
     LEADS: `${BACKEND_URL}/api/v1/public/leads`,
     QR_CODE: (id) => `${BACKEND_URL}/api/v1/public/pages/${id}/qrcode`,
     CONTACT_US: `${BACKEND_URL}/api/v1/public/contact`,
+    NEWSLETTER_SUBSCRIBE: `${BACKEND_URL}/api/v1/public/newsletter/subscribe`,
   },
   TRACK: {
     VIEW: `${BACKEND_URL}/api/v1/track/view`,
@@ -127,6 +135,8 @@ export const BACKEND_ENDPOINTS = {
     TICKET_BY_ID: (id) => `${BACKEND_URL}/api/v1/admin/tickets/${id}`,
     PLANS: `${BACKEND_URL}/api/v1/admin/plans`,
     PLAN_BY_ID: (id) => `${BACKEND_URL}/api/v1/admin/plans/${id}`,
+    NEWSLETTER: `${BACKEND_URL}/api/v1/admin/newsletter/subscribers`,
+    NEWSLETTER_BY_ID: (id) => `${BACKEND_URL}/api/v1/admin/newsletter/subscribers/${id}`,
   },
   SUPPORT: {
     BASE: `${BACKEND_URL}/api/v1/tickets`,

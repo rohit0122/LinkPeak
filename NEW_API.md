@@ -113,6 +113,14 @@ All image fields (e.g., `avatar_url`, `profile_image`) return **Absolute URLs** 
 
 - **Response:** SVG Image (Content-Type: image/svg+xml)
 
+### Newsletter Subscription
+
+`POST /v1/public/newsletter/subscribe`
+
+- **Fields:**
+  - `email`: string (required)
+- **Response:** Success message.
+
 ---
 
 ## 3. Tracking APIs
@@ -253,3 +261,8 @@ All image fields (e.g., `avatar_url`, `profile_image`) return **Absolute URLs** 
 - `GET /admin/tickets/{id}`: View any ticket details (includes user info).
 - `PUT /admin/tickets/{id}`: Update status (`open`, `pending`, `resolved`, `closed`) or priority.
 - `DELETE /admin/tickets/{id}`: Delete any ticket.
+
+### Newsletter Management (Admin)
+
+- `GET /admin/newsletter/subscribers`: List all newsletter subscribers.
+- `DELETE /admin/newsletter/subscribers/{id}`: Unsubscribe/Delete a subscriber.

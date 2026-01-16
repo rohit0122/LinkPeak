@@ -31,14 +31,14 @@ export default function Footer() {
 
     setLoading(true);
     try {
-      const { data } = await axios.post(ENDPOINTS.NEWSLETTER.SUBSCRIBE, {
+      const { data } = await axios.post(ENDPOINTS.PUBLIC.NEWSLETTER_SUBSCRIBE, {
         email,
       });
       toast.success(data.message);
       setEmail("");
     } catch (error) {
       toast.error(
-        error.response?.data?.error || "Subscription failed. Please try again."
+        error.response?.data?.message || "Subscription failed. Please try again."
       );
     } finally {
       setLoading(false);

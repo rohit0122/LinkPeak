@@ -35,6 +35,7 @@ import {
 } from "recharts";
 import { useAuthStore } from "@/stores/useAuthStore";
 import PlanManagement from "@/components/admin/PlanManagement";
+import NewsletterManagement from "@/components/admin/NewsletterManagement";
 
 // useSupportStore removed
 
@@ -208,7 +209,7 @@ export default function AdminDashboard() {
           </div>
 
           <div className="flex gap-2">
-            {["OVERVIEW", "USERS", "SUPPORT", "PLANS"].map((tab) => (
+            {["OVERVIEW", "USERS", "SUPPORT", "PLANS", "NEWSLETTER"].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -595,6 +596,8 @@ export default function AdminDashboard() {
         )}
 
         {activeTab === "PLANS" && <PlanManagement />}
+
+        {activeTab === "NEWSLETTER" && <NewsletterManagement />}
       </div>
     </DashboardLayout>
   );
