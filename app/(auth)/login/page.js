@@ -41,8 +41,8 @@ export default function LoginPage() {
         router
       );
 
-      if (!result.success) {
-        const errorMsg = result.error || "Invalid credentials";
+      if (!result?.success) {
+        const errorMsg = result?.message || "Invalid credentials";
         setError(errorMsg);
 
         // Override default toast for suspension with custom one

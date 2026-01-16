@@ -4,59 +4,31 @@ import { useState } from "react";
 import PreviewPhoneNew from "@/components/shared/PreviewPhoneNew";
 import ThemeSelector from "@/components/dashboard/ThemeSelector";
 import { RiPaletteLine, RiMagicLine, RiArrowRightUpLine } from "react-icons/ri";
-import { CONFIG } from "@/constants/config";
 import Link from "next/link";
+import { ecoDemoProfile } from "@/constants/demoProfile";
 
 export default function LiveDemo() {
   const [theme, setTheme] = useState("bumblebee");
 
-  const demoPage = {
-    theme: theme,
-    title: "Eco Wanderer 🌿",
-    bio: "Sustainable living & ethical travel tips for the modern soul.",
-    profile_image: "/avatars/avatar-generic-eco.svg",
-    template: "classic",
-    total_views: 890,
-    social_links: {
-      instagram: "instagram.com",
-      facebook: "facebook.com",
-      linkedin: "linkedin.com",
-    },
-    links: [
-      {
-        id: 1,
-        title: "Zero Waste Guide 🌍",
-        url: `${CONFIG.SITE_URL}/demo/eco-wanderer?theme=${theme}`,
-        is_active: true,
-      },
-      {
-        id: 2,
-        title: "My Ethical Kit 👜",
-        url: `${CONFIG.SITE_URL}/demo/eco-wanderer?theme=${theme}`,
-        is_active: true,
-      },
-      {
-        id: 3,
-        title: "Eco-stays in Bali 🛖",
-        url: `${CONFIG.SITE_URL}/demo/eco-wanderer?theme=${theme}`,
-        is_active: true,
-      },
-    ],
-  };
 
   return (
     <section id="demo" className="py-24 bg-base-200">
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-          <div className="order-2 lg:order-1 flex justify-center">
-            <div className="scale-90 lg:scale-110 transform-gpu origin-center will-change-transform">
-              <PreviewPhoneNew
-                demoData={demoPage}
-                isDemo={true}
-                key={theme}
-              />
+          <div className="order-2 lg:order-1 flex justify-center w-full">
+            {/* WIDTH OWNER */}
+            <div className="w-full max-w-md">
+              {/* TRANSFORM LAYER */}
+              <div className="scale-90 lg:scale-110 origin-center transition-transform">
+                <PreviewPhoneNew
+                  demoData={ecoDemoProfile(theme)}
+                  isDemo={true}
+                  key={theme}
+                />
+              </div>
             </div>
           </div>
+
 
           <div className="order-1 lg:order-2">
             <div className="badge badge-secondary gap-2 p-4 font-bold tracking-widest uppercase mb-8">

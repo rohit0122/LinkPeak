@@ -77,11 +77,5 @@ export default async function Page({ params }) {
     return <BioNotFound />;
   }
 
-  const normalizedPage = rawPage; //normalizePage(rawPage);
-  const normalizedLinks = rawPage.links; // normalizeLinks(rawPage.links);
-
-  // Serialize? Not needed if they are just objects, but good practice if passing to Client Component
-  // Since we manually constructed them from JSON, they are serializable.
-
-  return <PublicBioNew page={normalizedPage} links={normalizedLinks} />;
+  return <PublicBioNew page={rawPage} />;
 }

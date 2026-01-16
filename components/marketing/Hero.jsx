@@ -4,47 +4,12 @@ import {
   RiHeartFill,
   RiPlayCircleLine,
 } from "react-icons/ri";
-import { CONFIG } from "@/constants/config";
 import PreviewPhoneNew from "@/components/shared/PreviewPhoneNew";
 import Link from "next/link";
-import Image from "next/image";
 import Avatar from "@/components/shared/Avatar";
+import { elizaDemoProfile } from "@/constants/demoProfile";
 
 export default function Hero() {
-  const demoPage = {
-    theme: "light",
-    title: "Eliza Miller",
-    bio: "Digital Creator & Traveler 🏔️ | Sharing my latest journeys and gear.",
-    profile_image: "/avatars/avatar-female-eliza.svg",
-    template: "classic",
-    total_views: 12450,
-    social_links: {
-      instagram: "instagram.com",
-      twitter: "twitter.com",
-      tiktok: "tiktok.com",
-    },
-    links: [
-      {
-        id: 1,
-        title: "My Travel Guide 🌍",
-        url: `${CONFIG.SITE_URL}/demo/eliza-miller`,
-        is_active: true,
-      },
-      {
-        id: 2,
-        title: "Latest Vlog 📹",
-        url: `${CONFIG.SITE_URL}/demo/eliza-miller`,
-        is_active: true,
-      },
-      {
-        id: 3,
-        title: "Photography Gear 📸",
-        url: `${CONFIG.SITE_URL}/demo/eliza-miller`,
-        is_active: true,
-      },
-    ],
-  };
-
   return (
     <header className="relative min-h-screen pt-16 md:pt-12 pb-20 overflow-hidden bg-base-100">
       {/* Background Decor */}
@@ -134,16 +99,25 @@ export default function Hero() {
 
         {/* Mockup Side */}
         <div className="relative flex justify-center md:justify-end animate-in fade-in slide-in-from-right-10 duration-1000">
-          <div className="relative">
+          <div className="relative w-full max-w-md">
             {/* Phone Shadow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-primary/20 rounded-full blur-[80px]"></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
+                    w-[80%] h-[80%] bg-primary/20 rounded-full blur-[80px]" />
 
-            <div className="relative hover:rotate-3 transition-transform duration-700 transform-gpu origin-center">
-              <PreviewPhoneNew demoData={demoPage} isDemo={true} />
+            {/* WIDTH OWNER (important) */}
+            <div className="w-full">
+              {/* TRANSFORM LAYER */}
+              <div className="hover:rotate-3 transition-transform duration-700 origin-center">
+                <PreviewPhoneNew
+                  demoData={elizaDemoProfile}
+                  isDemo={true}
+                  className="w-full"
+                />
+              </div>
             </div>
 
             {/* Float Cards */}
-            <div className="absolute -left-20 top-40 bg-base-100 p-4  shadow-2xl border border-base-200 animate-bounce duration-[3000ms]">
+            <div className="absolute -left-20 top-40 bg-base-100 p-4 shadow-2xl border border-base-200 animate-bounce duration-[3000ms]">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-success/10 text-success flex items-center justify-center">
                   <RiCheckFill className="text-2xl" />
@@ -155,7 +129,7 @@ export default function Hero() {
               </div>
             </div>
 
-            <div className="absolute -right-10 bottom-20 bg-base-100 p-4  shadow-2xl border border-base-200 animate-bounce duration-[2500ms]">
+            <div className="absolute -right-10 bottom-20 bg-base-100 p-4 shadow-2xl border border-base-200 animate-bounce duration-[2500ms]">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-pink-100 text-pink-500 flex items-center justify-center">
                   <RiHeartFill className="text-xl" />
@@ -168,6 +142,7 @@ export default function Hero() {
             </div>
           </div>
         </div>
+
       </div>
     </header>
   );

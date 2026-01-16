@@ -2,7 +2,7 @@
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "LinkPeakK.";
 export const CONFIG = {
     SITE_NAME: siteName,
-    SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
+    SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || "https://www.linkpeakk.com",
     SUPPORT_EMAIL: "connect@linkpeakk.com",
 
     METATAGS: {
@@ -58,16 +58,16 @@ export const CONFIG = {
     DAISY_THEMES: [
         { id: "light", label: "Pure Light" },
         { id: "dark", label: "Onyx Night" },
-        { id: "midnight", label: "Midnight Noir (Pro)" },
-        { id: "aurora", label: "Aurora Prism (Pro)" },
-        { id: "cyberglow", label: "Cyber Glow (Pro)" },
-        { id: "matcha", label: "Matcha Brew (Pro)" },
-        { id: "nebula", label: "Cosmic Nebula (Pro)" },
-        { id: "hyperpop", label: "Hyper Pop (Pro)" },
-        { id: "zenstone", label: "Zen Stone (Pro)" },
-        { id: "royal", label: "Royal Amethyst (Agency)" },
-        { id: "velvetgold", label: "Velvet Gold (Agency)" },
-        { id: "oasis", label: "Desert Oasis (Agency)" },
+        { id: "midnight", label: "Midnight Noir" }, // (Pro)
+        { id: "aurora", label: "Aurora Prism" }, // (Pro)
+        { id: "cyberglow", label: "Cyber Glow" }, // (Pro)
+        { id: "matcha", label: "Matcha Brew" }, // (Pro)
+        { id: "nebula", label: "Cosmic Nebula" }, // (Pro)
+        { id: "hyperpop", label: "Hyper Pop" }, // (Pro)
+        { id: "zenstone", label: "Zen Stone" }, // (Pro)
+        { id: "royal", label: "Royal Amethyst" }, // (Agency)
+        { id: "velvetgold", label: "Velvet Gold" }, // (Agency)
+        { id: "oasis", label: "Desert Oasis" }, // (Agency)
     ],
 
     SUPPORT_CATEGORIES: ["Billing", "Technical", "Feedback", "General"],

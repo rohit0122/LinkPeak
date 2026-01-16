@@ -47,7 +47,7 @@ function TemplatePlaceholder() {
   );
 }
 
-export default function PublicBioNew({ page, links, isDemo = false }) {
+export default function PublicBioNew({ page, isDemo = false }) {
   const [totalViews, setTotalViews] = useState(page.total_views || 0);
   const [likes, setLikes] = useState(page.likes || 0);
   const [isLiked, setIsLiked] = useState(false);
@@ -69,7 +69,7 @@ export default function PublicBioNew({ page, links, isDemo = false }) {
     // Overriding views and likes with local state for real-time updates
     const commonProps = {
       page: { ...page, total_views: totalViews, likes: likes },
-      links,
+      links: page.links,
       handleLinkClick,
       isLCP: !isDemo
     };

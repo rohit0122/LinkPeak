@@ -35,15 +35,14 @@ export const useAuthStore = create(
               password,
             });
 
-            if (res.data?.success) {
+            if (res?.data?.success) {
               const { user, subscription, bio_page, all_page_ids } =
-                res.data.data;
+                res?.data?.data;
 
               const userObj = {
                 ...user,
                 plan: subscription?.plan_name,
               };
-              console.log("userObj ZUshand", userObj);
               set(
                 {
                   currentUser: userObj,
