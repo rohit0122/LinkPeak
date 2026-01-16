@@ -146,5 +146,6 @@ export const BACKEND_ENDPOINTS = {
   SUBSCRIPTION: {
     CHANGE_PLAN: `${BACKEND_URL}/api/v1/subscriptions/select-plan`,
     VERIFY_PAYMENT: `${BACKEND_URL}/api/v1/subscriptions/verify`,
+    WEBHOOK: `${BACKEND_URL}/api/v1/payment/callback`,
   }
 };
