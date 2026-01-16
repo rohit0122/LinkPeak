@@ -39,6 +39,8 @@ export const ENDPOINTS = {
     USERS: "/admin/users",
     SUSPEND_USER: "/admin/user/suspend",
     TICKETS: "/admin/tickets",
+    PLANS: "/admin/plans",
+    PLAN_BY_ID: (id) => `/admin/plans/${id}`,
   },
   TRACK: {
     VIEW: "/track/view",
@@ -123,6 +125,8 @@ export const BACKEND_ENDPOINTS = {
     SUSPEND: `${BACKEND_URL}/api/v1/admin/user/suspend`,
     TICKETS: `${BACKEND_URL}/api/v1/admin/tickets`,
     TICKET_BY_ID: (id) => `${BACKEND_URL}/api/v1/admin/tickets/${id}`,
+    PLANS: `${BACKEND_URL}/api/v1/admin/plans`,
+    PLAN_BY_ID: (id) => `${BACKEND_URL}/api/v1/admin/plans/${id}`,
   },
   SUPPORT: {
     BASE: `${BACKEND_URL}/api/v1/tickets`,

@@ -34,6 +34,7 @@ import {
   Area,
 } from "recharts";
 import { useAuthStore } from "@/stores/useAuthStore";
+import PlanManagement from "@/components/admin/PlanManagement";
 
 // useSupportStore removed
 
@@ -92,7 +93,6 @@ export default function AdminDashboard() {
   // Initial Load - Stats Only
   useEffect(() => {
     fetchStats();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Lazy Load Data on Tab Change
@@ -208,7 +208,7 @@ export default function AdminDashboard() {
           </div>
 
           <div className="flex gap-2">
-            {["OVERVIEW", "USERS", "SUPPORT"].map((tab) => (
+            {["OVERVIEW", "USERS", "SUPPORT", "PLANS"].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -593,6 +593,8 @@ export default function AdminDashboard() {
             </div>
           </div>
         )}
+
+        {activeTab === "PLANS" && <PlanManagement />}
       </div>
     </DashboardLayout>
   );
