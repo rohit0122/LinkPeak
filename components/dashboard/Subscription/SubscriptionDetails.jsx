@@ -97,7 +97,7 @@ export default function SubscriptionDetails() {
                     {isSubscribedButPendingPayment && <div className="flex-1 space-y-1">
                         <p className="font-bold">Pending Payment: {currentSubscription?.plan_name}</p>
                         <p className="text-sm leading-relaxed">
-                            Your plan is active but payment is pending, and will expire automatically post {" "}
+                            Your subscription remains active while payment is currently pending. If you have an active recurring subscription, the charge will be processed automatically after {" "}
                             <span className="font-semibold">
                                 {formatDate(currentSubscription?.expiry_date)}
                             </span>.
