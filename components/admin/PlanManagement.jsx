@@ -347,18 +347,18 @@ export default function PlanManagement() {
                                 {/* Features Section */}
                                 <div className="md:col-span-2 mt-4 p-6 bg-base-200/30 border border-base-200 space-y-4">
                                     <span className="text-xs font-bold uppercase tracking-widest opacity-40 block mb-2">Feature Limits & Access</span>
-                                    <div className="grid grid-cols-3 gap-6">
+                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
                                         <div className="form-control">
                                             <label className="label py-1"><span className="label-text text-[10px] font-bold opacity-60">Link Limit</span></label>
-                                            <input type="number" value={formData.features.links} onChange={(e) => handleFeatureChange('links', parseInt(e.target.value))} className="input input-sm input-bordered rounded-none" />
+                                            <input type="number" value={formData.features.links} onChange={(e) => handleFeatureChange('links', parseInt(e.target.value))} className="input input-sm input-bordered rounded-none w-full" />
                                         </div>
                                         <div className="form-control">
                                             <label className="label py-1"><span className="label-text text-[10px] font-bold opacity-60">Page Limit</span></label>
-                                            <input type="number" value={formData.features.pages} onChange={(e) => handleFeatureChange('pages', parseInt(e.target.value))} className="input input-sm input-bordered rounded-none" />
+                                            <input type="number" value={formData.features.pages} onChange={(e) => handleFeatureChange('pages', parseInt(e.target.value))} className="input input-sm input-bordered rounded-none w-full" />
                                         </div>
                                         <div className="form-control">
                                             <label className="label py-1"><span className="label-text text-[10px] font-bold opacity-60">Analytics Days</span></label>
-                                            <input type="number" value={formData.features.analyticsDays} onChange={(e) => handleFeatureChange('analyticsDays', parseInt(e.target.value))} className="input input-sm input-bordered rounded-none" />
+                                            <input type="number" value={formData.features.analyticsDays} onChange={(e) => handleFeatureChange('analyticsDays', parseInt(e.target.value))} className="input input-sm input-bordered rounded-none w-full" />
                                         </div>
                                     </div>
                                     <div className="flex gap-8 pt-2">

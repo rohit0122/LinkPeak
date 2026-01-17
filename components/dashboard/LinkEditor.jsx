@@ -60,42 +60,42 @@ function SortableItem({ link, onEdit, onDelete, onToggle }) {
       ref={setNodeRef}
       style={style}
       className={`card bg-base-100 border-2 ${link.is_active
-          ? "border-base-300"
-          : "border-dashed border-base-200 opacity-60"
+        ? "border-base-300"
+        : "border-dashed border-base-200 opacity-60"
         } mb-4 transition-all hover:shadow-lg`}
     >
-      <div className="card-body p-5 flex-row items-center gap-4">
+      <div className="card-body p-3 sm:p-5 flex-row items-center gap-2 sm:gap-4">
         {/* Drag Handle */}
         <div
           {...attributes}
           {...listeners}
-          className="cursor-grab active:cursor-grabbing p-2 text-primary/30 hover:text-primary transition-all touch-none"
+          className="cursor-grab active:cursor-grabbing p-1 sm:p-2 text-primary/30 hover:text-primary transition-all touch-none"
           style={{ touchAction: "none" }}
         >
-          <RiDragMove2Fill className="text-2xl" />
+          <RiDragMove2Fill className="text-xl sm:text-2xl" />
         </div>
 
-        <div className="flex-1 min-w-0 flex items-center gap-3">
+        <div className="flex-1 min-w-0 flex items-center gap-2 sm:gap-3">
           {link.icon ? (
-            <div className="text-2xl w-12 h-12 flex items-center justify-center bg-base-200 shadow-inner group-hover:scale-110 transition-transform">
+            <div className="text-xl sm:text-2xl w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center bg-base-200 shadow-inner group-hover:scale-110 transition-transform">
               {link.icon}
             </div>
           ) : (
-            <div className="w-12 h-12 flex items-center justify-center bg-base-200 opacity-20 group-hover:opacity-40 transition-opacity">
-              <RiLink className="text-xl" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center bg-base-200 opacity-20 group-hover:opacity-40 transition-opacity">
+              <RiLink className="text-lg sm:text-xl" />
             </div>
           )}
           <div className="flex-1 min-w-0">
-            <h3 className="font-medium text-lg tracking-tight truncate">
+            <h3 className="font-medium text-sm sm:text-lg tracking-tight truncate">
               {link.title}
             </h3>
-            <p className="text-xs opacity-40 truncate flex items-center gap-1 font-medium mt-0.5">
+            <p className="text-[10px] sm:text-xs opacity-40 truncate flex items-center gap-1 font-medium mt-0.5">
               <RiLink className="text-primary" /> {link.url}
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
           <button
             onClick={() => onToggle(link.id, !link.is_active)}
             className={`btn btn-sm btn-ghost btn-circle ${link.is_active ? "text-success" : "text-base-content/20"
@@ -103,9 +103,9 @@ function SortableItem({ link, onEdit, onDelete, onToggle }) {
             title={link.is_active ? "Deactivate" : "Activate"}
           >
             {link.is_active ? (
-              <RiToggleFill className="text-2xl" />
+              <RiToggleFill className="text-xl sm:text-2xl" />
             ) : (
-              <RiToggleLine className="text-2xl" />
+              <RiToggleLine className="text-xl sm:text-2xl" />
             )}
           </button>
           <button
@@ -113,19 +113,19 @@ function SortableItem({ link, onEdit, onDelete, onToggle }) {
             className="btn btn-sm btn-ghost btn-circle hover:bg-primary/10 hover:text-primary"
             title="Edit Link"
           >
-            <RiEditLine className="text-xl" />
+            <RiEditLine className="text-lg sm:text-xl" />
           </button>
           <button
             onClick={() => onDelete(link.id)}
             className="btn btn-sm btn-ghost btn-circle hover:bg-error/10 hover:text-error"
             title="Delete Link"
           >
-            <RiDeleteBin6Line className="text-xl" />
+            <RiDeleteBin6Line className="text-lg sm:text-xl" />
           </button>
         </div>
       </div>
-      <div className="px-5 py-2 bg-base-200/30 flex items-center justify-between border-t border-base-200">
-        <div className="flex items-center gap-6">
+      <div className="px-3 sm:px-5 py-2 bg-base-200/30 flex flex-col sm:flex-row md:items-center justify-between border-t border-base-200 gap-y-2">
+        <div className="flex items-center gap-3 sm:gap-6">
           <div
             className="flex tooltip tooltip-top items-center gap-1.5 text-[10px] uppercase tracking-widest font-bold text-base-content/40"
             data-tip="Total Clicks"
@@ -142,13 +142,13 @@ function SortableItem({ link, onEdit, onDelete, onToggle }) {
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
           <div
             className="flex items-center tooltip tooltip-top gap-1.5 text-[10px] uppercase tracking-widest font-bold text-base-content/40"
             data-tip="Last Update"
           >
             <RiCalendarLine className="text-secondary text-sm" />
-            <span>Updated: {link.updated_at}</span>
+            <span className="">Last Updated: {link.updated_at}</span>
           </div>
 
           {!link.is_active && (
@@ -513,8 +513,8 @@ export default function LinkEditor({
 
                     <div
                       className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${isEmojiPickerOpen
-                          ? "grid-rows-[1fr]"
-                          : "grid-rows-[0fr]"
+                        ? "grid-rows-[1fr]"
+                        : "grid-rows-[0fr]"
                         }`}
                     >
                       <div className="overflow-hidden">
@@ -526,8 +526,8 @@ export default function LinkEditor({
                                 type="button"
                                 onClick={() => setActiveEmojiTab(cat.name)}
                                 className={`px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all flex-shrink-0 ${activeEmojiTab === cat.name
-                                    ? "bg-white text-primary shadow-sm ring-1 ring-base-200"
-                                    : "text-base-content/50 hover:text-base-content hover:bg-base-200/50"
+                                  ? "bg-white text-primary shadow-sm ring-1 ring-base-200"
+                                  : "text-base-content/50 hover:text-base-content hover:bg-base-200/50"
                                   }`}
                               >
                                 {cat.name}
@@ -546,8 +546,8 @@ export default function LinkEditor({
                                   setFormData({ ...formData, icon: emoji })
                                 }
                                 className={`w-10 h-10 flex items-center justify-center text-2xl hover:ring-secondary hover:ring-2 transition-all rounded-md ${formData.icon === emoji
-                                    ? "bg-primary/10 text-primary ring-2 ring-primary ring-offset-1 ring-offset-base-100 shadow-sm"
-                                    : "bg-base-100/50"
+                                  ? "bg-primary/10 text-primary ring-2 ring-primary ring-offset-1 ring-offset-base-100 shadow-sm"
+                                  : "bg-base-100/50"
                                   }`}
                               >
                                 {emoji}
