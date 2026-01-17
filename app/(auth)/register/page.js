@@ -222,7 +222,7 @@ function RegisterForm() {
               <div className="card bg-base-100 shadow-2xl border border-base-300 sticky top-12">
                 <div className="h-2 bg-primary w-full"></div>
                 <div className="card-body p-8">
-                  <div className="flex justify-between items-center mb-6">
+                  <div className="flex flex-col mb-2 md:flex-row md:justify-between md:items-center md:mb-6">
                     <h2 className="card-title text-2xl font-bold">Create Account</h2>
                     <div className="badge badge-success badge-sm gap-1 py-3 px-3 rounded-none font-bold text-[10px]">
                       <RiShieldCheckLine /> NO CC REQUIRED
