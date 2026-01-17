@@ -42,6 +42,11 @@ export function useRazorpay() {
                 new_plan: planName,
             });
 
+            if (!response.data.success) {
+                toast.error(response.data.message || "Failed to initiate subscription.", { id: toastId });
+                setIsProcessing(false);
+                return;
+            }
             const apiData = response.data.data.subscription || response.data.subscription;
             const { razorpay_subscription_id, plan_name, prefill } = apiData;
             if (apiData) {
