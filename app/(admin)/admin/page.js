@@ -36,6 +36,7 @@ import {
 import { useAuthStore } from "@/stores/useAuthStore";
 import PlanManagement from "@/components/admin/PlanManagement";
 import NewsletterManagement from "@/components/admin/NewsletterManagement";
+import SubscriptionManagement from "@/components/admin/SubscriptionManagement";
 
 // useSupportStore removed
 
@@ -193,13 +194,13 @@ export default function AdminDashboard() {
     >
       <div className="max-w-[1400px] mx-auto py-10 px-4 space-y-8">
         {/* Minimal Global Header */}
-        <div className="flex flex-col md:flex-row items-center justify-between bg-base-100 p-6  border border-base-200 shadow-sm gap-2">
-          <div className="flex items-center gap-4">
+        <div className="flex flex-col items-start justify-between bg-base-100 p-6 border border-base-200 shadow-sm gap-4">
+          <div className="flex items-center gap-4 w-full">
             <div className="w-10 h-10 md:w-14 md:h-14 bg-primary flex items-center justify-center text-primary-content shadow-lg shadow-primary/20">
               <RiShieldUserLine className="text-xl md:text-2xl" />
             </div>
             <div>
-              <h1 className="md:text-2xl text-xl font-medium tracking-tighter">
+              <h1 className="text-lg md:text-2xl font-medium tracking-tighter">
                 Control Center
               </h1>
               <p className="text-[10px] font-bold uppercase tracking-widest opacity-40">
@@ -208,12 +209,12 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          <div className="flex gap-2">
-            {["OVERVIEW", "USERS", "SUPPORT", "PLANS", "NEWSLETTER"].map((tab) => (
+          <div className="flex flex-wrap gap-2 w-full">
+            {["OVERVIEW", "USERS", "SUPPORT", "PLANS", "SUBSCRIPTIONS", "NEWSLETTER"].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-6 py-3  font-medium text-xs transition-all ${activeTab === tab
+                className={`px-4 md:px-6 py-2 md:py-3 font-medium text-xs transition-all ${activeTab === tab
                   ? "bg-primary text-primary-content shadow-lg shadow-primary/20"
                   : "hover:bg-base-200 opacity-60"
                   }`}
@@ -596,6 +597,8 @@ export default function AdminDashboard() {
         )}
 
         {activeTab === "PLANS" && <PlanManagement />}
+
+        {activeTab === "SUBSCRIPTIONS" && <SubscriptionManagement />}
 
         {activeTab === "NEWSLETTER" && <NewsletterManagement />}
       </div>

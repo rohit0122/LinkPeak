@@ -43,6 +43,8 @@ export const ENDPOINTS = {
     PLAN_BY_ID: (id) => `/admin/plans/${id}`,
     NEWSLETTER: "/newsletter",
     NEWSLETTER_BY_ID: (id) => `/newsletter/${id}`,
+    SUBSCRIPTION_LIST: "/admin/subscriptions",
+    SUBSCRIPTION_SYNC: "/admin/subscriptions/sync",
   },
   TRACK: {
     VIEW: "/track/view",
@@ -137,6 +139,8 @@ export const BACKEND_ENDPOINTS = {
     PLAN_BY_ID: (id) => `${BACKEND_URL}/api/v1/admin/plans/${id}`,
     NEWSLETTER: `${BACKEND_URL}/api/v1/admin/newsletter/subscribers`,
     NEWSLETTER_BY_ID: (id) => `${BACKEND_URL}/api/v1/admin/newsletter/subscribers/${id}`,
+    SUBSCRIPTION_LIST: `${BACKEND_URL}/api/v1/admin/subscriptions`,
+    SUBSCRIPTION_SYNC: `${BACKEND_URL}/api/v1/admin/subscriptions/sync`,
   },
   SUPPORT: {
     BASE: `${BACKEND_URL}/api/v1/tickets`,
