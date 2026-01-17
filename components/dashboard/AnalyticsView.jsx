@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { RiRefreshLine } from "react-icons/ri";
+import { RiRefreshLine, RiQuestionLine } from "react-icons/ri";
 import StatsCards from "../shared/charts/StatsCards";
 import SummaryAreaChart from "../shared/charts/SummaryAreaChart";
 import LinkPerformanceChart from "../shared/charts/LinkPerformanceChart";
 import { SkeletonTable } from "../shared/SkeletonLoaders";
+import AnalyticsGuideModal from "./AnalyticsGuideModal";
 
 import { API_PREFIX, ENDPOINTS } from "@/constants/endpoints";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -18,6 +19,7 @@ export default function AnalyticsView() {
   const { currentRange, setCurrentRange } = useAnalyticsStore();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [showGuide, setShowGuide] = useState(false);
   const { currentBioPage, currentUser } = useAuthStore();
 
   const [activeTotals, setActiveTotals] = useState({
@@ -113,14 +115,23 @@ export default function AnalyticsView() {
             <h2 className="text-2xl font-bold">Bio Growth Insights</h2>
             <p className="text-xs opacity-60 mt-1">Track your bio engagement and performance.</p>
           </div>
-          <button
-            onClick={handleRefresh}
-            disabled={isLoading}
-            className="btn btn-sm btn-neutral btn-outline gap-2"
-          >
-            <RiRefreshLine className={isLoading ? "animate-spin" : ""} />
-            Refresh Data
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowGuide(true)}
+              className="btn btn-sm btn-ghost gap-2 text-primary"
+            >
+              <RiQuestionLine />
+              How to read this?
+            </button>
+            <button
+              onClick={handleRefresh}
+              disabled={isLoading}
+              className="btn btn-sm btn-neutral btn-outline gap-2"
+            >
+              <RiRefreshLine className={isLoading ? "animate-spin" : ""} />
+              Refresh Data
+            </button>
+          </div>
         </div>
       </div>
 
@@ -161,6 +172,8 @@ export default function AnalyticsView() {
           currentRange={currentRange}
         />
       )}
+
+      <AnalyticsGuideModal isOpen={showGuide} onClose={() => setShowGuide(false)} />
     </div>
   );
 }

@@ -2,17 +2,14 @@
 import { PiWarningCircle } from "react-icons/pi";
 import UpgradePlanModal from "./UpgradePlanModal";
 import { useState } from "react";
-import { ENDPOINTS } from "@/constants/endpoints";
-import axios from "@/lib/httpClient";
-import toast from "react-hot-toast";
-import { loadRazorpay } from "@/lib/razorpayClient";
-import { CONFIG } from "@/constants/config";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { useRazorpay } from "@/hooks/useRazorpay";
 
 export default function TrialExpiryBanner() {
 
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
-  const { currentSubscription, updateCurrentSubscriptionSession } = useAuthStore();
+  const { currentSubscription } = useAuthStore();
+  const { upgradePlan, renewSubscription, isProcessing } = useRazorpay();
 
   if (!currentSubscription) return null;
 
@@ -39,127 +36,41 @@ export default function TrialExpiryBanner() {
     setShowUpgradeModal(true);
   };
 
-  const onSelectPlan = async (plan) => {
-    console.log("Selected plan:", plan);
-
-    const res = await loadRazorpay();
-
-    if (!res) {
-      toast.error("Razorpay SDK failed to load. Are you online?");
-      return;
-    }
-
-    // 🔥 Call your API here
-    axios.post(`${ENDPOINTS.SUBSCRIPTION.CHANGE_PLAN}`, {
-      new_plan: plan,
-    })
-      .then((response) => {
-        // Handle response wrapped in data key if present
-        const apiData = response.data.data || response.data;
-
-        const {
-          razorpay_subscription_id,
-          plan: planDetails,
-          prefill
-        } = apiData;
-
-        if (!razorpay_subscription_id) {
-          toast.error("Failed to initiate subscription. Please try again.");
-          return;
-        }
-
-        const options = {
-          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
-          subscription_id: razorpay_subscription_id,
-          name: CONFIG.SITE_NAME,
-          description: `Upgrade to ${planDetails?.name || plan} Plan`,
-          image: "https://www.linkpeakk.com/linkpeakk-social.webp",
-          handler: function (response) {
-            toast.success("Plan changed successfully! Payment verified.");
-            setTimeout(() => {
-              window.location.href = '/dashboard/subscription';
-            }, 2000);
-          },
-          prefill: {
-            name: prefill?.name || user?.name,
-            email: prefill?.email || user?.email
-          },
-          theme: {
-            color: "#422AD5",
-          },
-        };
-
-        const razorpay = new window.Razorpay(options);
-        razorpay.open();
-      })
-      .catch((error) => {
-        console.error(error);
-        toast.error(error?.response?.data?.message || "Error changing plan!");
-      });
+  const onSelectPlan = (plan) => {
+    upgradePlan(plan, {
+      redirectUrl: '/dashboard'
+    });
+    setShowUpgradeModal(false);
   };
 
-  const onExtend = async () => {
-    const res = await loadRazorpay();
-
-    if (!res) {
-      toast.error("Razorpay SDK failed to load. Are you online?");
-      return;
-    }
-
-    if (!razorpay_subscription_id) {
-      toast.error("No active subscription ID found for renewal.");
-      return;
-    }
-
-    const options = {
-      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
-      subscription_id: razorpay_subscription_id,
-      name: CONFIG.SITE_NAME,
-      description: `Extend / Renew ${plan_name} Plan`,
-      image: "https://www.linkpeakk.com/linkpeakk-social.webp",
-      handler: function (response) {
-        /*setTimeout(() => {
-          window.location.reload();
-        }, 2000);*/
-        console.log('response ', response)
-        axios.post(`${ENDPOINTS.SUBSCRIPTION.VERIFY_PAYMENT}`, {
-          razorpay_payment_id: response.razorpay_payment_id,
-          razorpay_subscription_id: response.razorpay_subscription_id,
-          razorpay_signature: response.razorpay_signature
-        }).then((res) => {
-          updateCurrentSubscriptionSession(res.data.data.subscription);
-          toast.success("Subscription extended successfully!");
-        }).catch((error) => {
-          toast.error(error?.response?.data?.message || "Error extending subscription!");
-        });
-      },
-      prefill: {
-        name: currentSubscription?.prefill?.name,
-        email: currentSubscription?.prefill?.email,
-      },
-      theme: {
-        color: "#422AD5",
-      },
-    };
-
-    const razorpay = new window.Razorpay(options);
-    razorpay.open();
+  const onExtend = () => {
+    renewSubscription(razorpay_subscription_id);
   };
 
   return (
     <div
       className="alert shadow-lg border-2 border-warning bg-warning/20 text-warning-content w-full 
-                 flex flex-col sm:flex-row items-start sm:items-center gap-4 px-5 mb-6"
+                 flex flex-col md:grid md:grid-cols-[auto_1fr_auto] items-start md:items-center gap-4 px-5 mb-6"
       role="alert"
     >
       {/* Icon */}
-      <div className="flex-shrink-0">
+      <div className="flex-shrink-0 pt-1 md:pt-0 hidden md:block">
         <PiWarningCircle className="w-8 h-8 text-warning" />
       </div>
 
+      {/* Icon Mobile - Inline with title */}
+      <div className="flex items-center gap-3 w-full md:hidden">
+        <PiWarningCircle className="w-6 h-6 text-warning flex-shrink-0" />
+        <p className="font-bold uppercase text-warning text-sm">
+          {isFreePlan
+            ? "You are on Free Plan"
+            : `${plan_name} Trial Ending Soon`}
+        </p>
+      </div>
+
       {/* Message */}
-      <div className="flex-grow space-y-1 text-sm sm:text-base">
-        <p className="font-bold uppercase text-warning">
+      <div className="space-y-1 text-sm sm:text-base w-full">
+        <p className="font-bold uppercase text-warning hidden md:block">
           {isFreePlan
             ? "You are on Free Plan"
             : `${plan_name} Trial Ending Soon`}
@@ -177,11 +88,11 @@ export default function TrialExpiryBanner() {
           </>
         ) : (
           <>
-            <p>
+            <p className="leading-relaxed">
               Your trial for the <strong>{plan_name}</strong> plan will expire on{" "}
               <strong>{expiry_date}</strong>.
             </p>
-            <p className="text-base-content/70 text-sm">
+            <p className="text-base-content/70 text-sm leading-relaxed">
               If you choose to subscribe during the trial, payment will be charged automatically after the trial ends. Renew now to avoid any interruption in service.
             </p>
           </>
@@ -189,17 +100,17 @@ export default function TrialExpiryBanner() {
       </div>
 
       {/* Action */}
-      <div className="flex flex-col sm:flex-row gap-2 mt-2 sm:mt-0">
+      <div className="w-full md:w-auto mt-2 md:mt-0 flex justify-end">
         {isFreePlan ? (
           <button
-            className="btn btn-warning btn-sm sm:btn-md text-base-content font-semibold"
+            className="btn btn-warning btn-sm md:btn-md text-base-content font-semibold w-full md:w-auto whitespace-nowrap"
             onClick={onUpgradeContact}
           >
             Upgrade for more features
           </button>
         ) : (
           <button
-            className={`btn btn-warning btn-sm sm:btn-md text-base-content font-semibold ${!razorpay_subscription_id ? 'hidden' : ''}`}
+            className={`btn btn-warning btn-sm md:btn-md text-base-content font-semibold w-full md:w-auto whitespace-nowrap ${!razorpay_subscription_id ? 'hidden' : ''}`}
             onClick={onExtend}
           >
             Renew / Extend

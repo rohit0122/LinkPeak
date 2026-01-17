@@ -3,10 +3,7 @@ import { CONFIG } from "@/constants/config";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { RiPieChartLine, RiCheckLine } from "react-icons/ri";
 import UpgradePlanModal from "./Subscription/UpgradePlanModal";
-import { loadRazorpay } from "@/lib/razorpayClient";
-import axios from "@/lib/httpClient";
-import { ENDPOINTS } from "@/constants/endpoints";
-import { toast } from "react-hot-toast";
+import { useRazorpay } from "@/hooks/useRazorpay";
 
 export default function UsageMetrics() {
     const [showUpgradeModal, setShowUpgradeModal] = useState(false);
@@ -30,52 +27,15 @@ export default function UsageMetrics() {
         }
     ];
 
-    const onSelectPlan = async (plan) => {
-        const res = await loadRazorpay();
-        if (!res) {
-            toast.error("Razorpay SDK failed to load. Are you online?");
-            return;
-        }
+    const { upgradePlan } = useRazorpay();
 
-        const toastId = toast.loading(`Initiating ${plan} upgrade...`);
-
-        axios.post(`${ENDPOINTS.SUBSCRIPTION.CHANGE_PLAN}`, {
-            new_plan: plan,
-        })
-            .then((response) => {
-                const apiData = response.data.data || response.data;
-                const { razorpay_subscription_id, plan: planDetails, prefill } = apiData;
-
-                if (!razorpay_subscription_id) {
-                    toast.error("Failed to initiate subscription.", { id: toastId });
-                    return;
-                }
-
-                const options = {
-                    key: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
-                    subscription_id: razorpay_subscription_id,
-                    name: CONFIG.SITE_NAME,
-                    description: `Upgrade to ${planDetails?.name || plan} Plan`,
-                    image: "/linkpeakk-social.webp",
-                    handler: function (response) {
-                        toast.success("Upgrade successful!", { id: toastId });
-                        setTimeout(() => window.location.reload(), 1500);
-                    },
-                    prefill: {
-                        name: prefill?.name || currentUser?.name,
-                        email: prefill?.email || currentUser?.email
-                    },
-                    theme: { color: "#422AD5" },
-                };
-
-                const razorpay = new window.Razorpay(options);
-                razorpay.open();
-                setShowUpgradeModal(false);
-                toast.dismiss(toastId);
-            })
-            .catch((error) => {
-                toast.error(error?.response?.data?.message || "Error changing plan!", { id: toastId });
-            });
+    const onSelectPlan = (plan) => {
+        upgradePlan(plan, {
+            onSuccess: () => {
+                setTimeout(() => window.location.reload(), 1500);
+            }
+        });
+        setShowUpgradeModal(false);
     };
 
     return (
