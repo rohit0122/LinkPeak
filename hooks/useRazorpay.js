@@ -94,7 +94,7 @@ export function useRazorpay() {
 
         } catch (error) {
             console.error("Upgrade error:", error);
-            toast.error(error?.response?.data?.message || "Error changing plan!", { id: toastId });
+            toast.error(error?.data?.message || "Error changing plan!", { id: toastId });
             setIsProcessing(false);
         }
     }, [currentUser]);
