@@ -14,6 +14,7 @@ import {
     RiTimeLine
 } from "react-icons/ri";
 import Pagination from "@/components/shared/Pagination";
+import { formatDate } from "@/lib/dateUtils";
 
 export default function SubscriptionManagement() {
     const [subscriptions, setSubscriptions] = useState([]);
@@ -204,11 +205,11 @@ export default function SubscriptionManagement() {
                                         <div className="text-xs space-y-1">
                                             <div className="flex items-center gap-1 opacity-60">
                                                 <RiCalendarLine className="text-xs" />
-                                                <span>Start: {subscription.current_period_start || 'N/A'}</span>
+                                                <span>Start: {formatDate(subscription.current_period_start)}</span>
                                             </div>
                                             <div className="flex items-center gap-1 opacity-60">
                                                 <RiCalendarLine className="text-xs" />
-                                                <span>End: {subscription.current_period_end || 'N/A'}</span>
+                                                <span>End: {formatDate(subscription.current_period_end)}</span>
                                             </div>
                                         </div>
                                     </td>

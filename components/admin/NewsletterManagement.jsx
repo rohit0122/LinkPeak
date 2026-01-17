@@ -12,6 +12,7 @@ import {
     RiTimeLine
 } from "react-icons/ri";
 import ConfirmationModal from "../shared/ConfirmationModal";
+import { formatDateTime } from "@/lib/dateUtils";
 
 export default function NewsletterManagement() {
     const [subscribers, setSubscribers] = useState([]);
@@ -132,7 +133,7 @@ export default function NewsletterManagement() {
                                     <td>
                                         <div className="flex items-center gap-2 text-xs opacity-60">
                                             <RiTimeLine />
-                                            {subscriber.created_at}
+                                            {formatDateTime(subscriber.created_at)}
                                         </div>
                                     </td>
                                     <td className="text-right px-8">

@@ -1,5 +1,6 @@
 import { useAuthStore } from "@/stores/useAuthStore";
 import { RiSparklingLine } from "react-icons/ri";
+import { formatDate } from "@/lib/dateUtils";
 
 export default function SubscriptionDetails() {
     const { currentSubscription } = useAuthStore(
@@ -54,7 +55,7 @@ export default function SubscriptionDetails() {
                                 Renews / Expires On
                             </div>
                             <div className="text-lg font-bold opacity-80">
-                                {currentSubscription?.expiry_date || "N/A"}
+                                {formatDate(currentSubscription?.expiry_date)}
                             </div>
                         </div>}
                     </div>
@@ -67,7 +68,7 @@ export default function SubscriptionDetails() {
                         <p className="text-sm leading-relaxed">
                             Your trial access is active until{" "}
                             <span className="font-semibold">
-                                {currentSubscription?.expiry_date || "N/A"}
+                                {formatDate(currentSubscription?.expiry_date)}
                             </span>.
                             {" "}
                         </p>
@@ -83,7 +84,7 @@ export default function SubscriptionDetails() {
                         <p className="text-sm leading-relaxed">
                             Your plan is active until{" "}
                             <span className="font-semibold">
-                                {currentSubscription?.expiry_date || "N/A"}
+                                {formatDate(currentSubscription?.expiry_date)}
                             </span>.
                             {" "}
                         </p>
@@ -98,7 +99,7 @@ export default function SubscriptionDetails() {
                         <p className="text-sm leading-relaxed">
                             Your plan is active but payment is pending, and will expire automatically post {" "}
                             <span className="font-semibold">
-                                {currentSubscription?.expiry_date || "N/A"}
+                                {formatDate(currentSubscription?.expiry_date)}
                             </span>.
                             {" "}
                         </p>

@@ -4,6 +4,7 @@ import UpgradePlanModal from "./UpgradePlanModal";
 import { useState } from "react";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useRazorpay } from "@/hooks/useRazorpay";
+import { formatDate } from "@/lib/dateUtils";
 
 export default function TrialExpiryBanner() {
 
@@ -90,7 +91,7 @@ export default function TrialExpiryBanner() {
           <>
             <p className="leading-relaxed">
               Your trial for the <strong>{plan_name}</strong> plan will expire on{" "}
-              <strong>{expiry_date}</strong>.
+              <strong>{formatDate(expiry_date)}</strong>.
             </p>
             <p className="text-base-content/70 text-sm leading-relaxed">
               If you choose to subscribe during the trial, payment will be charged automatically after the trial ends. Renew now to avoid any interruption in service.

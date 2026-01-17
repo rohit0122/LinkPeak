@@ -37,6 +37,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import PlanManagement from "@/components/admin/PlanManagement";
 import NewsletterManagement from "@/components/admin/NewsletterManagement";
 import SubscriptionManagement from "@/components/admin/SubscriptionManagement";
+import { formatDate } from "@/lib/dateUtils";
 
 // useSupportStore removed
 
@@ -501,7 +502,7 @@ export default function AdminDashboard() {
                             </div>
                             {user.active_subscription.current_period_end && (
                               <div className="text-[10px] opacity-40 font-medium">
-                                Renew: {user.active_subscription.current_period_end}
+                                Renew: {formatDate(user.active_subscription.current_period_end)}
                               </div>
                             )}
                           </div>

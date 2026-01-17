@@ -16,6 +16,7 @@ import { ENDPOINTS } from "@/constants/endpoints";
 import axios from "@/lib/httpClient";
 import { toast } from "react-hot-toast";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { formatDateTime } from "@/lib/dateUtils";
 
 export default function SupportView({
   tickets: propTickets,
@@ -231,7 +232,7 @@ export default function SupportView({
                 </div>
                 <div className="chat-header opacity-50 text-xs mb-1">
                   {isMyTicket ? "You" : "Support Team"} •{" "}
-                  {selectedTicket.created_at}
+                  {formatDateTime(selectedTicket.created_at)}
                 </div>
                 <div
                   className={`chat-bubble whitespace-pre-wrap ${isMyTicket ? "chat-bubble-primary" : "chat-bubble-neutral"
@@ -269,7 +270,7 @@ export default function SupportView({
                     <span className="text-primary font-bold">(Admin)</span>
                   )}
                   <time className="text-[10px] opacity-70 ml-1">
-                    {new Date(reply.createdAt).toLocaleTimeString()}
+                    {formatDateTime(reply.createdAt)}
                   </time>
                 </div>
                 <div
@@ -459,7 +460,7 @@ export default function SupportView({
                         </td>
                       )}
                       <td className="text-xs opacity-60">
-                        {ticket.updated_at}
+                        {formatDateTime(ticket.updated_at)}
                       </td>
                       <td>
                         <button

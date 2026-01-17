@@ -15,6 +15,7 @@ import {
     RiCheckLine,
     RiSecurePaymentLine
 } from "react-icons/ri";
+import { formatDateTime } from "@/lib/dateUtils";
 
 export default function SubscriptionStatusDiv({
     currentUser,
@@ -62,7 +63,7 @@ export default function SubscriptionStatusDiv({
 
             return () => clearTimeout(t);
         }
-    }, [subscriptionData, loading, redirectOnExpire, router, pathname]);
+    }, [subscriptionData, loading, redirectOnExpire, router, pathname, currentUser?.plan]);
 
     const fetchSubscriptionStatus = async () => {
         try {
@@ -156,7 +157,7 @@ export default function SubscriptionStatusDiv({
                                 </div>
                                 <div className="text-xs ">
                                     Full access until{" "}
-                                    {new Date(trial?.endsAt).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                                    {formatDateTime(trial?.endsAt)}
                                 </div>
                             </div>
                         </div>

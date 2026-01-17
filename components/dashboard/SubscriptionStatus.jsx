@@ -15,6 +15,7 @@ import {
     RiCheckLine,
     RiSecurePaymentLine
 } from "react-icons/ri";
+import { formatDate } from "@/lib/dateUtils";
 
 export default function SubscriptionStatus({ currentUser, initialData, redirectOnExpire = false }) {
     const router = useRouter();
@@ -158,7 +159,7 @@ export default function SubscriptionStatus({ currentUser, initialData, redirectO
                         <div className="flex-1">
                             <div className="font-bold text-sm">Trial Access Active</div>
                             <div className="text-xs opacity-80">
-                                Your full feature access expires on {new Date(trial.endsAt).toLocaleDateString()}
+                                Your full feature access expires on {formatDate(trial.endsAt)}
                             </div>
                         </div>
                     </div>

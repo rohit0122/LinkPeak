@@ -37,6 +37,7 @@ import { toast } from "react-hot-toast";
 import axios from "@/lib/httpClient";
 import ConfirmationModal from "../shared/ConfirmationModal";
 import { ENDPOINTS } from "@/constants/endpoints";
+import { formatDateTime } from "@/lib/dateUtils";
 
 function SortableItem({ link, onEdit, onDelete, onToggle }) {
   const {
@@ -145,10 +146,10 @@ function SortableItem({ link, onEdit, onDelete, onToggle }) {
         <div className="flex items-center gap-2 sm:gap-4">
           <div
             className="flex items-center tooltip tooltip-top gap-1.5 text-[10px] uppercase tracking-widest font-bold text-base-content/40"
-            data-tip="Last Update"
+            data-tip="Local Time"
           >
             <RiCalendarLine className="text-secondary text-sm" />
-            <span className="">Last Updated: {link.updated_at}</span>
+            <span className="">Last Updated: {formatDateTime(link.updated_at)}</span>
           </div>
 
           {!link.is_active && (
