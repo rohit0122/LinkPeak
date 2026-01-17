@@ -42,9 +42,11 @@ export function useRazorpay() {
                 new_plan: planName,
             });
 
-            const apiData = response.data.data || response.data;
-            const { razorpay_subscription_id, plan: planDetails, prefill } = apiData;
-
+            const apiData = response.data.data.subscription || response.data.subscription;
+            const { razorpay_subscription_id, plan_name, prefill } = apiData;
+            if (apiData) {
+                updateCurrentSubscriptionSession(apiData);
+            }
             if (!razorpay_subscription_id) {
                 toast.error("Failed to initiate subscription.", { id: toastId });
                 setIsProcessing(false);
@@ -56,7 +58,7 @@ export function useRazorpay() {
                 key: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
                 subscription_id: razorpay_subscription_id,
                 name: CONFIG.SITE_NAME,
-                description: `Upgrade to ${planDetails?.name || planName} Plan`,
+                description: `Upgrade to ${plan_name} Plan`,
                 image: `${CONFIG.SITE_URL}/linkpeakk-logo.webp`,
                 handler: function (paymentResponse) {
                     toast.success("Plan changed successfully! Payment verified.", { id: toastId });
