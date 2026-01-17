@@ -8,7 +8,7 @@ export default function SubscriptionDetails() {
     const isFreePlan = currentSubscription?.plan_name === "FREE";
     const isPaidTrialPlan = currentSubscription?.plan_name != "FREE" && (currentSubscription?.is_trial || currentSubscription?.status === "trialing");
     const isActivePaidPlan = currentSubscription?.plan_name != "FREE" && !currentSubscription?.is_trial && currentSubscription?.status === "active";
-    const isSubscribedButPendingPayment = currentSubscription?.plan_name != "FREE" && !currentSubscription?.is_trial && currentSubscription?.status !== "trialing";
+    const isSubscribedButPendingPayment = currentSubscription?.plan_name != "FREE" && !currentSubscription?.is_trial && currentSubscription?.status !== "trialing" && currentSubscription?.status !== "active";
 
     return (
         <div className="card bg-base-100 shadow-sm border border-base-300">
