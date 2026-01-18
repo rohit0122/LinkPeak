@@ -4,8 +4,10 @@ import { useState } from "react";
 import Link from "next/link";
 import { CONFIG } from "@/constants/config";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { useLoaderStore } from "@/stores/loaderStore";
+import { useEffect } from "react";
 
 export default function LoginPage() {
 
@@ -15,6 +17,17 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const login = useAuthStore((s) => s.login);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const hideLoader = useLoaderStore((state) => state.hideLoader);
+
+  useEffect(() => {
+    hideLoader();
+
+    if (searchParams.get("logged_out") === "true") {
+      toast.success("Logged out successfully.", { id: "logout-toast" });
+      router.replace("/login");
+    }
+  }, [hideLoader, searchParams, router]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -136,7 +149,7 @@ export default function LoginPage() {
           </form>
 
           <p className="text-center mt-4 text-sm">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <Link
               href="/register"
               title="registeration"

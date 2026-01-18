@@ -5,6 +5,7 @@ import { persist, devtools, createJSONStorage } from "zustand/middleware";
 import axios from "@/lib/httpClient";
 import { ENDPOINTS } from "@/constants/endpoints";
 import { toast } from "react-hot-toast";
+import { useLoaderStore } from "@/stores/loaderStore";
 
 export const useAuthStore = create(
   devtools(
@@ -56,9 +57,13 @@ export const useAuthStore = create(
                 "auth/loginSuccess"
               );
 
-              toast.success("Welcome back!");
-              if (router)
-                router.push(user.role === "admin" ? "/admin" : "/dashboard");
+              // Show global loader until dashboard mounts
+              useLoaderStore.getState().showLoader();
+
+              if (router) {
+                const targetPath = user.role === "admin" ? "/admin" : "/dashboard";
+                router.push(`${targetPath}?welcome=true`);
+              }
 
               return { success: true };
             }
@@ -114,6 +119,7 @@ export const useAuthStore = create(
         logout: async (router) => {
           try {
             await axios.post(ENDPOINTS.AUTH.LOGOUT);
+            useLoaderStore.getState().showLoader(); // Show loader during logout redirect
           } catch (error) {
             console.error("Logout error:", error);
           } finally {
@@ -131,6 +137,7 @@ export const useAuthStore = create(
               false,
               "auth/logout"
             );
+            if (router) router.push("/login?logged_out=true"); // Ensure redirect happens after state clear
           }
         },
 

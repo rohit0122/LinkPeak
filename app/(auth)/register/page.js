@@ -21,6 +21,7 @@ import {
   RiInformationLine,
 } from "react-icons/ri";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { useLoaderStore } from "@/stores/loaderStore";
 
 function RegisterForm() {
   const [formData, setFormData] = useState({
@@ -42,6 +43,11 @@ function RegisterForm() {
   const [selectedPlan, setSelectedPlan] = useState(
     searchParams.get("plan") || "FREE"
   );
+  const hideLoader = useLoaderStore((state) => state.hideLoader);
+
+  useEffect(() => {
+    hideLoader();
+  }, [hideLoader]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
