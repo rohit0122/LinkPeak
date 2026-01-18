@@ -5,9 +5,26 @@ import NavbarClient from "./NavbarClient";
 import { ErrorBoundary } from "@/components/shared/ErrorBoundary";
 import TrialExpiryBanner from "@/components/dashboard/Subscription/TrialExpiryBanner";
 import { useLoaderStore } from "@/stores/loaderStore";
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { toast } from "react-hot-toast";
+
+function WelcomeToast() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    // Check for welcome message
+    if (searchParams.get("welcome") === "true") {
+      toast.success("Welcome back!", { id: "welcome-toast" });
+      // Clean URL without refresh, keeping user on the same page (e.g. /admin)
+      router.replace(pathname);
+    }
+  }, [searchParams, router, pathname]);
+
+  return null;
+}
 
 export default function DashboardLayout({
   children,
@@ -17,24 +34,17 @@ export default function DashboardLayout({
   onCreatePage,
 }) {
   const hideLoader = useLoaderStore((state) => state.hideLoader);
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const pathname = usePathname();
 
   useEffect(() => {
     // Ensure loader is hidden when dashboard is mounted
     hideLoader();
-
-    // Check for welcome message
-    if (searchParams.get("welcome") === "true") {
-      toast.success("Welcome back!", { id: "welcome-toast" });
-      // Clean URL without refresh, keeping user on the same page (e.g. /admin)
-      router.replace(pathname);
-    }
-  }, [hideLoader, searchParams, router, pathname]);
+  }, [hideLoader]);
 
   return (
     <ErrorBoundary>
+      <Suspense fallback={null}>
+        <WelcomeToast />
+      </Suspense>
       <div className="min-h-screen bg-base-200 flex flex-col">
         <TrialExpiryBanner />
         {/* Unified Navbar */}

@@ -7,7 +7,21 @@ import toast from "react-hot-toast";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useLoaderStore } from "@/stores/loaderStore";
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
+
+function LogoutToast() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (searchParams.get("logged_out") === "true") {
+      toast.success("Logged out successfully.", { id: "logout-toast" });
+      router.replace("/login");
+    }
+  }, [searchParams, router]);
+
+  return null;
+}
 
 export default function LoginPage() {
 
@@ -17,17 +31,11 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const login = useAuthStore((s) => s.login);
   const router = useRouter();
-  const searchParams = useSearchParams();
   const hideLoader = useLoaderStore((state) => state.hideLoader);
 
   useEffect(() => {
     hideLoader();
-
-    if (searchParams.get("logged_out") === "true") {
-      toast.success("Logged out successfully.", { id: "logout-toast" });
-      router.replace("/login");
-    }
-  }, [hideLoader, searchParams, router]);
+  }, [hideLoader]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -89,6 +97,9 @@ export default function LoginPage() {
 
   return (
     <div className="flex justify-center items-center min-h-screen px-4">
+      <Suspense fallback={null}>
+        <LogoutToast />
+      </Suspense>
       <div className="card w-full max-w-sm bg-base-200">
         <div className="h-2 bg-primary w-full"></div>
         <div className="card-body">
