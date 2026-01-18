@@ -71,10 +71,7 @@ export const ENDPOINTS = {
   SUBSCRIPTION: {
     CHANGE_PLAN: `/subscriptions/change-plan`,
     VERIFY_PAYMENT: `/subscriptions/verify-payment`,
-  },
-  SUBSCRIPTION: {
-    CHANGE_PLAN: `/subscriptions/change-plan`,
-    VERIFY_PAYMENT: `/subscriptions/verify-payment`,
+    RETRY_INIT: `/subscriptions/retry-init`,
   },
 };
 
@@ -151,5 +148,6 @@ export const BACKEND_ENDPOINTS = {
     CHANGE_PLAN: `${BACKEND_URL}/api/v1/subscriptions/select-plan`,
     VERIFY_PAYMENT: `${BACKEND_URL}/api/v1/subscriptions/verify`,
     WEBHOOK: `${BACKEND_URL}/api/v1/payment/callback`,
+    RETRY_INIT: `${BACKEND_URL}/api/v1/subscriptions/retry-init`,
   }
 };

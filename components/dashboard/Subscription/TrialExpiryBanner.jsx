@@ -5,11 +5,14 @@ import { useState } from "react";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useRazorpay } from "@/hooks/useRazorpay";
 import { formatDate } from "@/lib/dateUtils";
+import axios from "@/lib/httpClient";
+import { ENDPOINTS } from "@/constants/endpoints";
+import toast from "react-hot-toast";
 
 export default function TrialExpiryBanner() {
 
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
-  const { currentSubscription } = useAuthStore();
+  const { currentSubscription, updateCurrentSubscriptionSession } = useAuthStore();
   const { upgradePlan, renewSubscription, isProcessing } = useRazorpay();
 
   if (!currentSubscription) return null;
@@ -29,8 +32,10 @@ export default function TrialExpiryBanner() {
     (is_trial === true || status === "trialing") &&
     (plan_name === "PRO" || plan_name === "AGENCY");
 
+  const brokenPaidTrial = !isFreePlan && status === 'pending' && !razorpay_subscription_id
+
   // ❌ Do not render banner if not FREE and not trialing paid plan
-  if (!isFreePlan && !isPaidTrial) return null;
+  if (!isFreePlan && !isPaidTrial && !brokenPaidTrial) return null;
 
 
   const onUpgradeContact = () => {
@@ -47,6 +52,17 @@ export default function TrialExpiryBanner() {
   const onExtend = () => {
     renewSubscription(razorpay_subscription_id);
   };
+
+  const onRetryInit = async () => {
+    const response = await axios.post(ENDPOINTS.SUBSCRIPTION.RETRY_INIT);
+    console.log(response);
+    if (!response.data.success) {
+      toast.error(response.data.message);
+      return;
+    }
+    updateCurrentSubscriptionSession(response.data.data.subscription);
+    toast.success(response.data.message);
+  }
 
   return (
     <div
@@ -77,7 +93,7 @@ export default function TrialExpiryBanner() {
             : `${plan_name} Trial Ending Soon`}
         </p>
 
-        {isFreePlan ? (
+        {isFreePlan && (
           <>
             <p>
               You are currently using the <strong>FREE</strong> plan with limited
@@ -87,7 +103,8 @@ export default function TrialExpiryBanner() {
               Upgrade to PRO or AGENCY to unlock advanced features and analytics.
             </p>
           </>
-        ) : (
+        )}
+        {isPaidTrial && (
           <>
             <p className="leading-relaxed">
               Your trial for the <strong>{plan_name}</strong> plan will expire on{" "}
@@ -98,23 +115,43 @@ export default function TrialExpiryBanner() {
             </p>
           </>
         )}
+
+        {brokenPaidTrial && (<>
+          <p className="leading-relaxed">
+            Your trial for the <strong>{plan_name}</strong> plan will expire on{" "}
+            <strong>{formatDate(expiry_date)}</strong>.
+          </p>
+          <p className="text-base-content/70 text-sm leading-relaxed">
+            It looks like your subscription setup was interrupted, due to some technical error. Please try again.
+          </p>
+        </>
+        )}
       </div>
 
       {/* Action */}
       <div className="w-full md:w-auto mt-2 md:mt-0 flex justify-end">
-        {isFreePlan ? (
+        {isFreePlan && (
           <button
             className="btn btn-warning btn-sm md:btn-md text-base-content font-semibold w-full md:w-auto whitespace-nowrap"
             onClick={onUpgradeContact}
           >
             Upgrade for more features
           </button>
-        ) : (
+        )}
+        {isPaidTrial && (
           <button
             className={`btn btn-warning btn-sm md:btn-md text-base-content font-semibold w-full md:w-auto whitespace-nowrap ${!razorpay_subscription_id ? 'hidden' : ''}`}
             onClick={onExtend}
           >
             Renew / Extend
+          </button>
+        )}
+        {brokenPaidTrial && (
+          <button
+            className="btn btn-warning btn-sm md:btn-md text-base-content font-semibold w-full md:w-auto whitespace-nowrap"
+            onClick={onRetryInit}
+          >
+            Complete Setup
           </button>
         )}
       </div>
