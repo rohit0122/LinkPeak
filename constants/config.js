@@ -4,6 +4,7 @@ export const CONFIG = {
     SITE_NAME: siteName,
     SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || "https://www.linkpeakk.com",
     SUPPORT_EMAIL: "connect@linkpeakk.com",
+    SITE_SCREENSHOT: `${process.env.NEXT_PUBLIC_SITE_URL}/linkpeakk-home.webp`,
 
     METATAGS: {
         title: `${siteName} | Premium Link in Bio Platform for Creators, Brands & Professionals`,

@@ -35,7 +35,7 @@ export async function generateMetadata({ params }) {
 
   // Use page profile image or default
   const ogImage =
-    page.profile_image || `${CONFIG.SITE_URL}/linkpeakk-home.webp`;
+    page.profile_image || `${CONFIG.SITE_SCREENSHOT}`;
 
   return {
     title: page.seo?.title || `${page.title} | ${CONFIG.SITE_NAME}`,
@@ -45,6 +45,20 @@ export async function generateMetadata({ params }) {
       `Check out ${page.title}'s links on ${CONFIG.SITE_NAME}.`,
     keywords:
       page.seo?.keywords || "link in bio, creator, social links, linkpeak",
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+    alternates: {
+      canonical: `${CONFIG.SITE_URL}/${slug}`,
+    },
     openGraph: {
       type: "profile",
       url: `${CONFIG.SITE_URL}/${slug}`,
@@ -77,5 +91,26 @@ export default async function Page({ params }) {
     return <BioNotFound />;
   }
 
-  return <PublicBioNew page={rawPage} />;
+  // JSON-LD structured data for Person/ProfilePage
+  const personSchema = {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    "mainEntity": {
+      "@type": "Person",
+      "name": rawPage.title,
+      "description": rawPage.bio || `${rawPage.title}'s bio page`,
+      "image": rawPage.profile_image || `${CONFIG.SITE_SCREENSHOT}`,
+      "url": `${CONFIG.SITE_URL}/${slug}`,
+    },
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
+      />
+      <PublicBioNew page={rawPage} />
+    </>
+  );
 }

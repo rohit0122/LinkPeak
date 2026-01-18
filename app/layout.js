@@ -51,10 +51,24 @@ const fredoka = Fredoka({
 
 
 export const metadata = {
+  metadataBase: new URL(CONFIG.SITE_URL),
   title: CONFIG.METATAGS.title,
   description: CONFIG.METATAGS.description,
   keywords: CONFIG.METATAGS.keywords,
-
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  alternates: {
+    canonical: CONFIG.SITE_URL,
+  },
   openGraph: {
     type: 'website',
     locale: 'en_US',
@@ -65,7 +79,7 @@ export const metadata = {
     keywords: CONFIG.METATAGS.keywords,
     images: [
       {
-        url: `${CONFIG.SITE_URL}/linkpeakk-home.webp`,
+        url: `${CONFIG.SITE_SCREENSHOT}`,
         width: 1200,
         height: 630,
         alt: `${CONFIG.SITE_NAME} - Link in Bio Tool`,
@@ -78,14 +92,33 @@ export const metadata = {
     creator: '@linkpeak',
     title: CONFIG.METATAGS.title,
     description: CONFIG.METATAGS.description,
-    images: [`${CONFIG.SITE_URL}/linkpeakk-home.webp`],
+    images: [`${CONFIG.SITE_SCREENSHOT}`],
     keywords: CONFIG.METATAGS.keywords,
   },
 };
 
 export default function RootLayout({ children }) {
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": CONFIG.SITE_NAME,
+    "url": CONFIG.SITE_URL,
+    "logo": `${CONFIG.SITE_URL}/linkpeakk-logo.webp`,
+    "description": CONFIG.METATAGS.description,
+    "email": CONFIG.SUPPORT_EMAIL,
+    "sameAs": [
+      "https://twitter.com/linkpeak",
+    ],
+  };
+
   return (
     <html lang="en" data-theme="linkpeak">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+      </head>
       <body
         className={`${outfit.variable} ${jakarta.variable} ${spaceGrotesk.variable} ${playfair.variable} ${mono.variable} ${fredoka.variable} antialiased`}
         suppressHydrationWarning
