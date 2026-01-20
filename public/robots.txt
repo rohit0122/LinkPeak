@@ -1,15 +1,35 @@
 # robots.txt for LinkPeakK.
-# Allow all search engines to crawl the site
+# Allow all major search engines to crawl and index
 
+# Google
+User-agent: Googlebot
+Allow: /
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /api/
+
+# Bing
+User-agent: Bingbot
+Allow: /
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /api/
+
+# Yahoo
+User-agent: Slurp
+Allow: /
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /api/
+
+# All other bots
 User-agent: *
 Allow: /
-
-# Disallow admin and API routes
+Disallow: /dashboard
+Disallow: /admin
 Disallow: /api/
-Disallow: /dashboard/
-Disallow: /admin/
-
-# Disallow auth pages (login, register)
+Disallow: /mock-payment
+Disallow: /payment/callback
 Disallow: /login
 Disallow: /register
 Disallow: /forgot-password

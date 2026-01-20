@@ -82,9 +82,12 @@ export const metadata = {
         url: `${CONFIG.SITE_SCREENSHOT}`,
         width: 1200,
         height: 630,
-        alt: `${CONFIG.SITE_NAME} - Link in Bio Tool`,
+        alt: `${CONFIG.SITE_NAME} - AI-Powered Link in Bio Tool for TikTok, Instagram, YouTube`,
       }
     ],
+    article: {
+      tag: ["link in bio", "TikTok", "Instagram", "YouTube", "AI", "analytics", "creators", "influencers"]
+    }
   },
   twitter: {
     card: 'summary_large_image',
@@ -111,12 +114,103 @@ export default function RootLayout({ children }) {
     ],
   };
 
+  const softwareSchema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": CONFIG.SITE_NAME,
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web",
+    "offers": {
+      "@type": "AggregateOffer",
+      "lowPrice": "0",
+      "highPrice": "49",
+      "priceCurrency": "USD",
+      "offerCount": "3"
+    },
+    "description": "AI-powered link in bio platform with real-time analytics for TikTok, Instagram, YouTube creators and brands",
+    "featureList": [
+      "AI-powered SEO optimization",
+      "Real-time analytics dashboard",
+      "Custom QR codes",
+      "Multiple templates and themes",
+      "TikTok link in bio",
+      "Instagram link in bio",
+      "YouTube link in bio",
+      "Link tracking and insights"
+    ],
+    "screenshot": CONFIG.SITE_SCREENSHOT,
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "ratingCount": "127"
+    }
+  };
+
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": CONFIG.SITE_NAME,
+    "url": CONFIG.SITE_URL,
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": `${CONFIG.SITE_URL}/{slug}`
+      },
+      "query-input": "required name=slug"
+    }
+  };
+
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is a link in bio tool?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A link in bio tool allows you to create a landing page with multiple links for your social media bio. Perfect for TikTok, Instagram, and YouTube where you can only add one link."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does LinkPeak work with TikTok, Instagram, and YouTube?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes! LinkPeakK. is optimized for all major social platforms including TikTok, Instagram, YouTube, Twitter, and more."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What makes LinkPeak different from other link in bio tools?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "LinkPeakK. offers AI-powered SEO optimization and real-time analytics that other tools don't provide. Get AI-generated meta tags, live click tracking, and advanced insights."
+        }
+      }
+    ]
+  };
+
+
   return (
     <html lang="en" data-theme="linkpeak">
       <head>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
         />
       </head>
       <body

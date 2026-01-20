@@ -101,7 +101,14 @@ export default async function Page({ params }) {
       "description": rawPage.bio || `${rawPage.title}'s bio page`,
       "image": rawPage.profile_image || `${CONFIG.SITE_SCREENSHOT}`,
       "url": `${CONFIG.SITE_URL}/${slug}`,
+      "sameAs": rawPage.links?.filter(link => link.is_active)
+        .map(link => link.url) || []
     },
+    "about": {
+      "@type": "Thing",
+      "name": "Link in bio page",
+      "description": "Social media bio page for TikTok, Instagram, YouTube, and other platforms"
+    }
   };
 
   return (

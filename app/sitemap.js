@@ -8,8 +8,14 @@ export default async function sitemap() {
         {
             url: baseUrl,
             lastModified: new Date(),
-            changeFrequency: "weekly",
+            changeFrequency: "daily",
             priority: 1.0,
+        },
+        {
+            url: `${baseUrl}/#pricing`,
+            lastModified: new Date(),
+            changeFrequency: "weekly",
+            priority: 0.9,
         },
         {
             url: `${baseUrl}/contact-us`,

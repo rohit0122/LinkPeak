@@ -8,9 +8,36 @@ export const CONFIG = {
 
     METATAGS: {
         title: `${siteName} | Premium Link in Bio Platform for Creators, Brands & Professionals`,
-        description: `Create a high-converting, fully customizable link-in-bio page with ${siteName} Designed for creators, entrepreneurs, and brands to showcase links, products, and profiles with one powerful link.`,
+        description: `Create a high-converting, AI-powered link-in-bio page with ${siteName}. Perfect for TikTok, Instagram, YouTube creators & brands. Get real-time analytics, AI-optimized SEO, and customizable templates - all in one powerful link.`,
         keywords: [
-            "Link in bio", "Link in bio tool", "Link in bio platform", "Link in bio for creators", "Link in bio for brands", "Link in bio for professionals", "Link in bio for entrepreneurs", "Link in bio for influencers", "Link in bio for businesses", "Link in bio for marketing",
+            // Core link in bio keywords
+            "link in bio", "link in bio tool", "link in bio platform",
+
+            // Platform-specific (what competitors rank for)
+            "link in bio for TikTok", "link in bio for Instagram",
+            "link in bio for YouTube", "link in bio for Twitter",
+            "TikTok link in bio", "Instagram link in bio",
+            "YouTube link in bio", "Twitter link in bio",
+
+            // AI-powered (YOUR USP)
+            "AI link in bio", "AI-powered link in bio",
+            "link in bio with AI", "smart link in bio",
+            "AI SEO link in bio", "AI bio page generator",
+
+            // Analytics-focused (YOUR USP)
+            "link in bio with analytics", "link in bio analytics",
+            "link in bio tracking", "real-time link analytics",
+            "link in bio insights", "bio page analytics",
+
+            // Target audience
+            "link in bio for creators", "link in bio for influencers",
+            "link in bio for brands", "link in bio for businesses",
+            "link in bio for entrepreneurs", "link in bio for professionals",
+
+            // Feature-based
+            "customizable link in bio", "free link in bio",
+            "link in bio with QR code", "branded link in bio",
+            "link in bio templates", "link in bio themes"
         ],
     },
     // Pricing Configuration (Monthly)
