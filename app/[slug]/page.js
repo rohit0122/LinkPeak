@@ -5,46 +5,31 @@ import PublicBioNew from "./PublicBioNew";
 import BioNotFound from "@/components/templates/BioNotFound";
 import { CONFIG } from "@/constants/config";
 
-// Revalidate every 60 seconds (ISR)
-export const revalidate = 60;
+// Force dynamic rendering (No ISR) for blinking fast freshness
+export const dynamic = "force-dynamic";
 
-// Memoize the data fetch
+// Deduplicate API calls for Metadata & Parsing
 const getBioPage = cache(async (slug) => {
   try {
-    //console.log('slug =>>>>>>>>>>>>>>>>>>>', slug);
-    const response = await restClient.get(
-      BACKEND_ENDPOINTS.PUBLIC.GET_PAGE(slug)
-    );
-    //console.log('slug data =>>>>>>>>>>>>>>>>>>>', response.data);
-    if (response.data?.success) {
-      return response.data.data.page;
-    }
+    const { data } = await restClient.get(BACKEND_ENDPOINTS.PUBLIC.GET_PAGE(slug));
+    return data?.success ? data.data.page : null;
   } catch (error) {
-    console.error("Failed to fetch bio page", error);
+    return null;
   }
-  return null;
 });
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const rawPage = await getBioPage(slug);
+  const page = await getBioPage(slug);
 
-  if (!rawPage) return { title: "Page Not Found" };
+  if (!page) return { title: "Page Not Found" };
 
-  const page = rawPage;
-
-  // Use page profile image or default
-  const ogImage =
-    page.profile_image || `${CONFIG.SITE_SCREENSHOT}`;
+  const ogImage = page.profile_image || `${CONFIG.SITE_SCREENSHOT}`;
 
   return {
     title: page.seo?.title || `${page.title} | ${CONFIG.SITE_NAME}`,
-    description:
-      page.seo?.description ||
-      page.bio ||
-      `Check out ${page.title}'s links on ${CONFIG.SITE_NAME}.`,
-    keywords:
-      page.seo?.keywords || "link in bio, creator, social links, linkpeak",
+    description: page.seo?.description || page.bio || `Check out ${page.title}'s links on ${CONFIG.SITE_NAME}.`,
+    keywords: page.seo?.keywords || "link in bio, creator, social links, linkpeak",
     robots: {
       index: true,
       follow: true,
@@ -85,9 +70,9 @@ export async function generateMetadata({ params }) {
 
 export default async function Page({ params }) {
   const { slug } = await params;
-  const rawPage = await getBioPage(slug);
+  const page = await getBioPage(slug);
 
-  if (!rawPage) {
+  if (!page) {
     return <BioNotFound />;
   }
 
@@ -97,11 +82,11 @@ export default async function Page({ params }) {
     "@type": "ProfilePage",
     "mainEntity": {
       "@type": "Person",
-      "name": rawPage.title,
-      "description": rawPage.bio || `${rawPage.title}'s bio page`,
-      "image": rawPage.profile_image || `${CONFIG.SITE_SCREENSHOT}`,
+      "name": page.title,
+      "description": page.bio || `${page.title}'s bio page`,
+      "image": page.profile_image || `${CONFIG.SITE_SCREENSHOT}`,
       "url": `${CONFIG.SITE_URL}/${slug}`,
-      "sameAs": rawPage.links?.filter(link => link.is_active)
+      "sameAs": page.links?.filter(link => link.is_active)
         .map(link => link.url) || []
     },
     "about": {
@@ -117,7 +102,7 @@ export default async function Page({ params }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
       />
-      <PublicBioNew page={rawPage} />
+      <PublicBioNew page={page} />
     </>
   );
 }

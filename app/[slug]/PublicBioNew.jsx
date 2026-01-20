@@ -110,14 +110,14 @@ export default function PublicBioNew({ page, isDemo = false }) {
     }
   };
 
-  // Analytics & Like Logic
+  // Analytics & Interaction Logic (No polling for normal bio page)
   useEffect(() => {
     if (isDemo || !page?.id) return;
 
     // 1. Initial Local State Logic
-    if (localStorage.getItem(`liked_${page.id}`)) {
-      setIsLiked(true);
-    }
+    const isCurrentlyLiked = !!localStorage.getItem(`liked_${page.id}`);
+    // Defer to next tick to avoid synchronous setState warning in effect
+    setTimeout(() => setIsLiked(isCurrentlyLiked), 0);
 
     // 2. Views Tracking (Delayed)
     const checkUnique = (key) => {
@@ -133,13 +133,14 @@ export default function PublicBioNew({ page, isDemo = false }) {
         axios.post(ENDPOINTS.TRACK.VIEW, { pageId: page.id }, { skipLoader: true })
           .then(() => {
             localStorage.setItem(viewedKey, new Date().getTime().toString());
+            // Update local view count once for the visitor
             setTotalViews(prev => prev + 1);
           })
           .catch(console.error);
       }, 3000);
       return () => clearTimeout(timer);
     }
-  }, [page?.id, isDemo]);
+  }, [page?.id, isDemo, setIsLiked]);
 
   const handleLike = async () => {
     if (isLiked) return;
