@@ -3,16 +3,13 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: '**',
-      },
-      {
         protocol: 'http',
         hostname: 'linkpeakk.localhost.com',
       },
       {
         protocol: 'https',
         hostname: 'upcdn.duckdns.org',
+        pathname: '/**',
       },
     ],
     formats: ['image/avif', 'image/webp'],

@@ -70,6 +70,7 @@ export default function DashboardPage() {
     allBioPages,
     currentBioPage,
     updateCurrentBioPageSession,
+    updateAllBioPagesSession,
     updateTempBioPageConfigSession,
     dirtyFields,
     tempBioPageConfig,
@@ -289,6 +290,17 @@ export default function DashboardPage() {
           ...currentBioPage,
           ...tempBioPageConfig,
         });
+        // want to check if there is any change in slug value.. then need to update the new 
+        // slug to the allBioPages
+        if (currentBioPage.slug !== tempBioPageConfig.slug) {
+          const updatedBioPages = allBioPages.map((bioPage) => {
+            if (bioPage.id === currentBioPage.id) {
+              return { ...bioPage, slug: tempBioPageConfig.slug };
+            }
+            return bioPage;
+          });
+          updateAllBioPagesSession(updatedBioPages);
+        }
         toast.success("Changes saved!");
         clearTempBioPage();
         return true;
@@ -353,7 +365,8 @@ export default function DashboardPage() {
       });
       if (data.success) {
         toast.success("New bio page created successfully! 🚀");
-        useAuthStore.setState({ allBioPages: [...allBioPages, data.data] });
+        const newBioPage = { id: data.data.id, slug: data.data.slug };
+        useAuthStore.setState({ allBioPages: [...allBioPages, newBioPage] });
         performPageSwitch(data.data.id);
       }
     } catch (error) {
