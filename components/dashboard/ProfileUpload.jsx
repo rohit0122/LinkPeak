@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { RiUploadCloud2Line, RiUser3Line, RiRefreshLine } from "react-icons/ri";
 import axios from "@/lib/httpClient";
 import { toast } from "react-hot-toast";
@@ -10,6 +10,11 @@ import Image from "next/image";
 export default function ProfileUpload({ currentImage, onUpload, userId }) {
     const [uploading, setUploading] = useState(false);
     const [preview, setPreview] = useState(currentImage);
+
+    // Sync preview when prop changes (e.g., page switch)
+    useEffect(() => {
+        setPreview(currentImage);
+    }, [currentImage]);
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];

@@ -1,8 +1,6 @@
 "use client";
 
 import ProfileUpload from "./ProfileUpload";
-import BrandingEditor from "./BrandingEditor";
-import DangerZone from "./DangerZone";
 import {
   RiUserLine,
   RiLinksLine,
@@ -17,8 +15,6 @@ import {
   RiMagicLine,
   RiLockLine,
 } from "react-icons/ri";
-import SubscriptionDetails from "@/components/dashboard/Subscription/SubscriptionDetails";
-import { useAuthStore } from "@/stores/useAuthStore";
 
 export default function SettingsTab({
   currentBioPage,
@@ -30,7 +26,6 @@ export default function SettingsTab({
   CONFIG,
   onImageUpload,
 }) {
-  const currentSubscription = useAuthStore((state) => state.currentSubscription);
 
   const mergedBioPage = {
     ...currentBioPage,
