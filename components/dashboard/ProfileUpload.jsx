@@ -5,6 +5,7 @@ import { RiUploadCloud2Line, RiUser3Line, RiRefreshLine } from "react-icons/ri";
 import axios from "@/lib/httpClient";
 import { toast } from "react-hot-toast";
 import imageCompression from "browser-image-compression";
+import Image from "next/image";
 
 export default function ProfileUpload({ currentImage, onUpload, userId }) {
     const [uploading, setUploading] = useState(false);
@@ -42,7 +43,13 @@ export default function ProfileUpload({ currentImage, onUpload, userId }) {
                 <div className="avatar">
                     <div className="w-32 h-32 ring ring-primary ring-offset-base-100 ring-offset-4 overflow-hidden shadow-2xl transition-transform active:scale-95">
                         {preview ? (
-                            <img src={preview} alt="Profile" className="object-cover" />
+                            <Image
+                                src={preview}
+                                alt="Profile"
+                                className="object-cover"
+                                width={128}
+                                height={128}
+                            />
                         ) : (
                             <div className="bg-primary/10 w-full h-full flex items-center justify-center text-primary">
                                 <RiUser3Line className="text-5xl" />
