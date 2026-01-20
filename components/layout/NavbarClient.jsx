@@ -105,7 +105,11 @@ export default function NavbarClient({
                   {pages.map((p) => (
                     <li key={p.id}>
                       <button
-                        onClick={() => onSelectPage && onSelectPage(p.id)}
+                        onClick={() => {
+                          onSelectPage && onSelectPage(p.id);
+                          // Close dropdown by removing focus
+                          document.activeElement?.blur();
+                        }}
                         className={`flex items-center justify-between py-2.5 px-3 ${currentPage?.id === p.id
                           ? "bg-primary/10 text-primary font-bold my-1"
                           : ""
@@ -135,7 +139,11 @@ export default function NavbarClient({
                         <div className="divider my-1 opacity-10"></div>
                         <li>
                           <button
-                            onClick={onCreatePage}
+                            onClick={() => {
+                              onCreatePage();
+                              // Close dropdown by removing focus
+                              document.activeElement?.blur();
+                            }}
                             className="flex items-center gap-3 py-2.5 px-3 text-primary font-bold hover:bg-primary/5 text-xs"
                           >
                             <RiAddCircleLine className="text-base flex-shrink-0" />

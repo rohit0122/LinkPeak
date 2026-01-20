@@ -136,6 +136,7 @@ export default function DashboardPage() {
       const response = await axios.get(`${ENDPOINTS.PAGES_BY_ID(pageId)}`);
       updateCurrentBioPageSession(response.data.data);
       resetNavigation();
+      toast.success(`Now editing /${response.data.data.slug}`);
     } catch (error) {
       toast.error(`Error fetching page data: ${error}`);
     }
