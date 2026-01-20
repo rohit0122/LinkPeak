@@ -11,6 +11,11 @@ const nextConfig = {
         hostname: 'upcdn.duckdns.org',
         pathname: '/**',
       },
+      {
+        protocol: 'http',
+        hostname: '43.205.71.207',
+        pathname: '/**',
+      },
     ],
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200],
