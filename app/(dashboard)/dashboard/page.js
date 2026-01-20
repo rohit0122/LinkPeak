@@ -293,7 +293,7 @@ export default function DashboardPage() {
         });
         // want to check if there is any change in slug value.. then need to update the new 
         // slug to the allBioPages
-        if (currentBioPage.slug !== tempBioPageConfig.slug) {
+        if (tempBioPageConfig?.slug && currentBioPage.slug !== tempBioPageConfig.slug) {
           const updatedBioPages = allBioPages.map((bioPage) => {
             if (bioPage.id === currentBioPage.id) {
               return { ...bioPage, slug: tempBioPageConfig.slug };
