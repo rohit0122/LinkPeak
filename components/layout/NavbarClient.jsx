@@ -76,7 +76,6 @@ export default function NavbarClient({
     router.push("/login");
   };
 
-  // console.log(" isAuthenticated ", isAuthenticated);
   return (
     <nav className="sticky top-0 z-50 bg-base-100/90 backdrop-blur border-b">
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -104,7 +103,7 @@ export default function NavbarClient({
                   className="dropdown-content z-[60] menu p-2 shadow-2xl bg-base-100 w-64 mt-2 border border-base-200 rounded-box"
                 >
                   <li className="menu-title px-4 py-2 my-1">
-                    <span className="text-[10px] font-black uppercase tracking-widest opacity-40">
+                    <span className="text-[10px] font-bold uppercase tracking-widest opacity-40">
                       My Bio Projects
                     </span>
                   </li>

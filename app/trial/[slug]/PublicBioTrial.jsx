@@ -2,8 +2,9 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { RiQrCodeLine } from "react-icons/ri";
+import { RiQrCodeLine, RiShieldCheckLine } from "react-icons/ri";
+import Link from "next/link";
+import { motion } from "framer-motion";
 import axios from "@/lib/httpClient";
 import { ENDPOINTS } from "@/constants/endpoints";
 
@@ -211,9 +212,41 @@ export default function PublicBioTrial({ page, isDemo = false }) {
     };
 
     return (
-        <div className="min-h-screen bg-base-200 flex flex-col items-center justify-center" data-theme={activeTheme}>
-            <div className="transform-gpu w-full h-full">
-                <div
+        <div className="min-h-screen bg-base-200 flex flex-col items-center justify-center relative" data-theme={activeTheme}>
+            {/* Premium Trial Banner */}
+            <motion.div
+                initial={{ y: -50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                className="fixed top-0 left-0 right-0 z-[100] bg-primary/95 backdrop-blur text-primary-content py-2.5 px-6 flex items-center justify-between shadow-xl border-b border-primary-content/10"
+            >
+                <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-primary-content/20 flex items-center justify-center animate-pulse">
+                        <RiShieldCheckLine className="text-lg" />
+                    </div>
+                    <div>
+                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] leading-none opacity-80 mb-0.5">Live Preview</p>
+                        <h4 className="text-sm font-bold tracking-tight leading-none">TRIAL MODE ACTIVE</h4>
+                    </div>
+                </div>
+                <div className="flex items-center gap-4">
+                    <div className="hidden md:flex flex-col items-end border-r border-primary-content/20 pr-4 mr-1">
+                        <span className="text-[8px] font-bold opacity-60 uppercase tracking-widest">Real-time Polling</span>
+                        <span className="text-[10px] font-bold flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-success animate-ping"></span>
+                            ACTIVE
+                        </span>
+                    </div>
+                    <Link href="/register" className="btn btn-sm bg-base-100 text-base-content hover:bg-base-200 border-none font-bold text-[10px] uppercase tracking-wide rounded-full px-5 h-9 min-h-[auto]">
+                        Claim This Username
+                    </Link>
+                </div>
+            </motion.div>
+
+            <div className="transform-gpu w-full h-full pt-14">
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.8 }}
                     className="overflow-y-auto no-scrollbar pt-12 pb-8 flex flex-col items-center w-full min-h-screen relative bg-base-100"
                 >
                     {/* Share / QR Button */}
@@ -226,16 +259,31 @@ export default function PublicBioTrial({ page, isDemo = false }) {
                     </button>
 
                     {/* MAIN TEMPLATE RENDER */}
-                    <div className="w-full flex-1">
+                    <motion.div
+                        initial={{ y: 20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.2 }}
+                        className="w-full flex-1"
+                    >
                         {renderTemplate()}
-                    </div>
+                    </motion.div>
 
                     {/* MODULAR FOOTERS */}
-                    <div className="w-full max-w-3xl px-6">
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.4 }}
+                        className="w-full max-w-3xl px-6"
+                    >
                         <SocialFooter socialLinks={page.social_links} />
                         <BrandingFooter branding={page.branding} />
+                    </motion.div>
+
+                    {/* Live Stats A11y Regions */}
+                    <div className="sr-only" aria-live="polite">
+                        Total views: {totalViews}, Total likes: {likes}
                     </div>
-                </div>
+                </motion.div>
             </div>
 
             {/* Floating Like Button */}

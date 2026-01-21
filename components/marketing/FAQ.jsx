@@ -58,7 +58,7 @@ export default function FAQ() {
                     transition={{ duration: 0.5 }}
                 >
                     <RiQuestionLine className="text-6xl text-primary mx-auto mb-4 animate-pulse" aria-hidden="true" />
-                    <h2 className="text-4xl md:text-5xl font-medium tracking-tighter mb-4">Common Questions</h2>
+                    <h2 className="text-4xl md:text-5xl font-medium tracking-tight mb-4">Common Questions</h2>
                     <p className="text-xl opacity-60">Everything you need to know about {CONFIG.SITE_NAME}.</p>
                 </motion.div>
 

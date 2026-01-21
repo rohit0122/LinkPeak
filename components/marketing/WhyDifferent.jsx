@@ -132,7 +132,7 @@ export default function WhyDifferent() {
                             The Future of Link in Bio
                         </div>
 
-                        <h1 className="text-5xl md:text-7xl lg:text-8xl font-medium tracking-tighter leading-[0.95] text-base-content mb-8">
+                        <h1 className="text-5xl md:text-7xl lg:text-8xl font-medium tracking-tight leading-[0.95] text-base-content mb-8">
                             Not just another{" "}
                             <span className="text-primary italic">link in bio.</span>
                             <br />
@@ -167,7 +167,7 @@ export default function WhyDifferent() {
             <section className="py-24 bg-base-200/50" id="features">
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="text-center mb-20">
-                        <h2 className="text-4xl md:text-6xl font-medium tracking-tighter mb-6">
+                        <h2 className="text-4xl md:text-6xl font-medium tracking-tight mb-6">
                             What makes us <span className="text-primary italic">different?</span>
                         </h2>
                         <p className="text-xl md:text-2xl text-base-content/60 max-w-3xl mx-auto">
@@ -212,7 +212,7 @@ export default function WhyDifferent() {
             <section className="py-24 bg-base-100">
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="text-center mb-20">
-                        <h2 className="text-4xl md:text-6xl font-medium tracking-tighter mb-6">
+                        <h2 className="text-4xl md:text-6xl font-medium tracking-tight mb-6">
                             Built for <span className="text-primary italic">serious creators</span>
                         </h2>
                         <p className="text-xl md:text-2xl text-base-content/60 max-w-3xl mx-auto">
@@ -261,7 +261,7 @@ export default function WhyDifferent() {
             <section className="py-24 bg-base-200/50" id="comparison">
                 <div className="max-w-5xl mx-auto px-6">
                     <div className="text-center mb-16">
-                        <h2 className="text-4xl md:text-6xl font-medium tracking-tighter mb-6">
+                        <h2 className="text-4xl md:text-6xl font-medium tracking-tight mb-6">
                             The honest <span className="text-primary italic">comparison</span>
                         </h2>
                         <p className="text-xl md:text-2xl text-base-content/60">
@@ -341,7 +341,7 @@ export default function WhyDifferent() {
             <section className="py-24 bg-base-100">
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="text-center mb-16">
-                        <h2 className="text-4xl md:text-6xl font-medium tracking-tighter mb-6">
+                        <h2 className="text-4xl md:text-6xl font-medium tracking-tight mb-6">
                             Loved by <span className="text-primary italic">creators</span>
                         </h2>
                         <p className="text-xl md:text-2xl text-base-content/60">
@@ -398,7 +398,7 @@ export default function WhyDifferent() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                     >
-                        <h2 className="text-4xl md:text-6xl lg:text-7xl font-medium tracking-tighter mb-8 leading-tight">
+                        <h2 className="text-4xl md:text-6xl lg:text-7xl font-medium tracking-tight mb-8 leading-tight">
                             Ready to grow faster than ever?
                         </h2>
 

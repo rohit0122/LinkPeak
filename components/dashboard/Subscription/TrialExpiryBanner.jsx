@@ -55,7 +55,6 @@ export default function TrialExpiryBanner() {
 
   const onRetryInit = async () => {
     const response = await axios.post(ENDPOINTS.SUBSCRIPTION.RETRY_INIT);
-    console.log(response);
     if (!response.data.success) {
       toast.error(response.data.message);
       return;

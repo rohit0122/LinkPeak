@@ -9,7 +9,6 @@ export default function ThemeSelector({ currentTheme, plan, onSelect }) {
     const allowedThemes = CONFIG.PLAN_LIMITS[plan || 'FREE'].allowedThemes;
     const isAllUnlocked = allowedThemes === "ALL";
 
-    //console.log(' allowedThemes', allowedThemes);
 
     return (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-base-100 p-2 overflow-hidden">

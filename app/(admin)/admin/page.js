@@ -50,7 +50,7 @@ function StatCard({ title, value, icon: Icon, colorClass, trend }) {
             <p className="text-[10px] font-medium uppercase tracking-[0.2em] opacity-40">
               {title}
             </p>
-            <h3 className="text-4xl font-medium tracking-tighter">{value}</h3>
+            <h3 className="text-4xl font-medium tracking-tight">{value}</h3>
             {trend && (
               <div className="flex items-center gap-1 text-success text-xs font-bold pt-2">
                 <RiArrowUpSLine className="text-sm" />
@@ -201,7 +201,7 @@ export default function AdminDashboard() {
               <RiShieldUserLine className="text-xl md:text-2xl" />
             </div>
             <div>
-              <h1 className="text-lg md:text-2xl font-medium tracking-tighter">
+              <h1 className="text-lg md:text-2xl font-medium tracking-tight">
                 Control Center
               </h1>
               <p className="text-[10px] font-bold uppercase tracking-widest opacity-40">
@@ -564,7 +564,7 @@ export default function AdminDashboard() {
                 <p className="text-xs font-medium uppercase opacity-40">
                   Open Tickets
                 </p>
-                <p className="text-4xl font-medium tracking-tighter mt-2">
+                <p className="text-4xl font-medium tracking-tight mt-2">
                   {Array.isArray(tickets) ? tickets.filter((t = {}) => String(t.status).toLowerCase() === "open").length : 0}
                 </p>
               </div>
@@ -572,7 +572,7 @@ export default function AdminDashboard() {
                 <p className="text-xs font-medium uppercase opacity-40">
                   Total Resolved
                 </p>
-                <p className="text-4xl font-medium tracking-tighter mt-2">
+                <p className="text-4xl font-medium tracking-tight mt-2">
                   {Array.isArray(tickets) ? tickets.filter((t = {}) => String(t.status).toLowerCase() === "resolved").length : 0}
                 </p>
               </div>
@@ -580,7 +580,7 @@ export default function AdminDashboard() {
                 <p className="text-xs font-medium uppercase opacity-40">
                   Avg Priority
                 </p>
-                <p className="text-4xl font-medium tracking-tighter mt-2">
+                <p className="text-4xl font-medium tracking-tight mt-2">
                   MEDIUM
                 </p>
               </div>

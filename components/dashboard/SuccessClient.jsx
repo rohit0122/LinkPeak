@@ -64,7 +64,7 @@ export default function SuccessClient() {
                 </div>
 
                 <div className="space-y-4">
-                    <h1 className="text-5xl font-medium tracking-tighter uppercase">
+                    <h1 className="text-5xl font-medium tracking-tight uppercase">
                         {loading ? "Processing..." : "You're Elite!"}
                     </h1>
                     <p className="text-base-content/40 font-medium">

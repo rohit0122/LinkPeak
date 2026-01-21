@@ -2,98 +2,122 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { RiArrowLeftLine, RiHomeLine, RiSearchLine, RiLinkM } from "react-icons/ri";
+import { RiArrowLeftLine, RiHomeLine, RiSearchLine, RiGhostLine } from "react-icons/ri";
 import { CONFIG } from "@/constants/config";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function NotFound() {
     const router = useRouter();
 
     return (
-        <div className="min-h-screen bg-base-200 flex items-center justify-center p-4 relative overflow-hidden">
-            {/* Background Decor */}
+        <div className="min-h-screen bg-base-200/50 flex items-center justify-center p-6 relative overflow-hidden">
+            {/* Ambient Background Elements */}
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] -mr-40 -mt-40"></div>
             <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-secondary/5 rounded-full blur-[100px] -ml-40 -mb-40"></div>
 
-            <div className="max-w-2xl w-full relative z-10">
-                <div className="card bg-base-100 shadow-2xl">
-                    <div className="card-body items-center text-center p-8 md:p-12">
-                        {/* 404 Icon */}
-                        <div className="relative mb-8">
-                            <div className="absolute inset-0 bg-primary/20 rounded-full blur-3xl"></div>
-                            <div className="relative w-32 h-32 rounded-full bg-primary/10 flex items-center justify-center">
-                                <RiLinkM className="text-6xl text-primary animate-pulse" />
+            <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                className="max-w-md w-full relative z-10"
+            >
+                <div className="card bg-base-100 shadow-2xl border border-base-200 overflow-hidden rounded-3xl">
+                    <div className="h-2 bg-primary w-full"></div>
+                    <div className="card-body p-8 sm:p-12 items-center text-center">
+                        {/* 404 Icon Section */}
+                        <motion.div
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.2 }}
+                            className="relative mb-6"
+                        >
+                            <div className="absolute inset-0 bg-primary/20 rounded-full blur-2xl animate-pulse"></div>
+                            <div className="relative w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
+                                <RiGhostLine className="text-5xl text-primary" />
                             </div>
-                        </div>
+                        </motion.div>
 
-                        {/* 404 Text */}
-                        <div className="mb-6">
-                            <h1 className="text-8xl md:text-9xl font-bold text-primary/20 tracking-tighter leading-none mb-2">
+                        {/* Title Section */}
+                        <div className="space-y-2 mb-8">
+                            <motion.h1
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.3 }}
+                                className="text-7xl font-bold text-primary/30"
+                            >
                                 404
-                            </h1>
-                            <h2 className="text-3xl md:text-4xl font-bold text-base-content mb-4">
-                                Page Not Found
-                            </h2>
+                            </motion.h1>
+                            <motion.h2
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.4 }}
+                                className="text-3xl font-bold"
+                            >
+                                Lost in Space?
+                            </motion.h2>
+                            <motion.p
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.5 }}
+                                className="text-sm opacity-50 font-medium max-w-[280px] mx-auto leading-relaxed"
+                            >
+                                The page you&apos;re looking for has moved to a new universe or never existed.
+                            </motion.p>
                         </div>
 
-                        {/* Description */}
-                        <div className="max-w-md mb-8 space-y-3">
-                            <p className="text-lg text-base-content/70">
-                                Oops! This link seems to be broken or doesn&apos;t exist yet.
-                            </p>
-                            <div className="divider my-4">OR</div>
-                            <p className="text-base text-base-content/60">
-                                You may have accidentally landed on the wrong page. This URL might be a placeholder we haven&apos;t created yet.
-                            </p>
-                        </div>
-
-                        {/* Suggestions */}
-                        <div className="alert alert-info mb-8 text-left">
-                            <RiSearchLine className="text-2xl flex-shrink-0" />
-                            <div className="text-sm">
-                                <p className="font-bold mb-1">Looking for a bio page?</p>
-                                <p className="opacity-80">Make sure you have the correct username or slug in the URL.</p>
+                        {/* Search Hint / Bio Info */}
+                        <motion.div
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.6 }}
+                            className="w-full bg-base-200/50 rounded-2xl p-4 flex items-center gap-4 text-left border border-base-300/50 mb-8"
+                        >
+                            <div className="w-10 h-10 rounded-xl bg-base-100 flex items-center justify-center shadow-sm">
+                                <RiSearchLine className="text-lg opacity-40" />
                             </div>
-                        </div>
+                            <div>
+                                <h4 className="text-[10px] font-bold uppercase tracking-widest opacity-40 mb-0.5">Quick Tip</h4>
+                                <p className="text-xs font-bold leading-tight">Double check the username or link URL</p>
+                            </div>
+                        </motion.div>
 
                         {/* Action Buttons */}
-                        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                        <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.7 }}
+                            className="flex flex-col gap-3 w-full"
+                        >
+                            <Link
+                                href="/"
+                                className="btn btn-primary w-full shadow-lg shadow-primary/20 font-bold h-12 rounded-2xl"
+                            >
+                                <RiHomeLine className="text-xl" />
+                                Return Home
+                            </Link>
                             <button
                                 onClick={() => router.back()}
-                                className="btn btn-outline btn-primary gap-2"
+                                className="btn btn-ghost w-full font-bold opacity-60 hover:opacity-100 transition-all"
                             >
                                 <RiArrowLeftLine className="text-xl" />
                                 Go Back
                             </button>
-                            <Link
-                                href="/"
-                                className="btn btn-primary gap-2"
-                            >
-                                <RiHomeLine className="text-xl" />
-                                Back to Home
-                            </Link>
-                        </div>
+                        </motion.div>
 
-                        {/* Footer Note */}
-                        <div className="mt-8 pt-6 border-t border-base-300 w-full">
-                            <p className="text-xs text-base-content/40">
-                                Need help? Visit our{" "}
-                                <Link href="/" className="link link-primary font-semibold">
-                                    homepage
-                                </Link>{" "}
-                                or create your own bio page with {CONFIG.SITE_NAME}
+                        {/* Footer Branding */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.8 }}
+                            className="mt-10 pt-6 border-t border-base-200 w-full"
+                        >
+                            <p className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-30">
+                                {CONFIG.SITE_NAME}
                             </p>
-                        </div>
+                        </motion.div>
                     </div>
                 </div>
-
-                {/* Floating Elements */}
-                <div className="hidden md:block absolute -left-20 top-20 opacity-20">
-                    <div className="w-16 h-16 rounded-full bg-primary animate-bounce" style={{ animationDuration: '3s' }}></div>
-                </div>
-                <div className="hidden md:block absolute -right-16 bottom-20 opacity-20">
-                    <div className="w-12 h-12 rounded-full bg-secondary animate-bounce" style={{ animationDuration: '2.5s', animationDelay: '0.5s' }}></div>
-                </div>
-            </div>
+            </motion.div>
         </div>
     );
 }

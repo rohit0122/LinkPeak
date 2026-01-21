@@ -55,9 +55,7 @@ export default function SubscriptionStatus({ currentUser, initialData, redirectO
                 duration: 3000,
                 icon: "⏳"
             });
-            console.log('I am here dfdfdfdf')
             const timer = setTimeout(() => {
-                console.log('I am here')
                 router.replace("/suspended");
             }, 3000);
 

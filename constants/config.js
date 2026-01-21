@@ -137,6 +137,9 @@ export const CONFIG = {
     AI_ENDPOINTS: {
         GEMINI: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent",
         MISTRAL: "https://api.mistral.ai/v1/chat/completions"
+    },
+    STATS: {
+        CREATORS: "500+"
     }
 };
 
@@ -144,13 +147,13 @@ export const CONFIG = {
 export const pricingPlans = [
     {
         name: "Free",
-        price: 0,
+        price: CONFIG.PRICING.FREE.price,
         description:
-            "Absolutely Free — create your first bio page, share links, and start tracking basic click stats — no payment needed, perfect for getting started right away.",
+            `Absolutely Free — create your first bio page, share links, and start tracking basic click stats — no payment needed, perfect for getting started right away.`,
         popular: false,
         features: [
             { name: `${CONFIG.PLAN_LIMITS.FREE.pages} Bio Page`, included: true },
-            { name: "1 Template (Classic Only)", included: true },
+            { name: `${CONFIG.PLAN_LIMITS.FREE.allowedTemplates.length} Template (Classic)`, included: true },
             { name: `${CONFIG.PLAN_LIMITS.FREE.links} Links`, included: true },
             { name: `${CONFIG.PLAN_LIMITS.FREE.analyticsDays} Days Analytics`, included: true },
             { name: "Basic QR Code", included: true },
@@ -161,17 +164,17 @@ export const pricingPlans = [
     },
     {
         name: "Pro",
-        price: 9,
+        price: CONFIG.PRICING.PRO.price,
         description:
-            "Just $9/month — get custom SEO titles, analytics, AI suggestions, and unlock more clicks & higher engagement.",
+            `Just ${CONFIG.PRICING.PRO.currency}${CONFIG.PRICING.PRO.price}/month — get custom SEO titles, analytics, AI suggestions, and unlock more clicks & higher engagement.`,
         popular: true,
         features: [
             { name: `${CONFIG.PLAN_LIMITS.PRO.pages} Bio Page`, included: true },
-            { name: "8 Designer Templates (Bento, Hero, Glass...)", included: true },
+            { name: `${CONFIG.PLAN_LIMITS.PRO.allowedTemplates.length} Designer Templates`, included: true },
             { name: "Unlimited Links", included: true },
             { name: `${CONFIG.PLAN_LIMITS.PRO.analyticsDays} Days Analytics`, included: true },
             { name: "Custom QR Code (Logo, Color)", included: true },
-            { name: "8+ Curated Identity Themes", included: true },
+            { name: `${CONFIG.PLAN_LIMITS.PRO.allowedThemes.length}+ Identity Themes`, included: true },
             { name: "AI Link Title Suggestions", included: true },
             { name: "AI SEO Optimization", included: true },
             { name: "Enjoy a generous 7-day free trial — no credit card required.", included: true },
@@ -179,17 +182,17 @@ export const pricingPlans = [
     },
     {
         name: "Agency",
-        price: 49,
+        price: CONFIG.PRICING.AGENCY.price,
         description:
-            "Just $49/month — get 10 branded bio pages, lifetime analytics, white-labeling, AI-optimized SEO & titles, custom QR codes, and manage multiple clients effortlessly with one dashboard.",
+            `Just ${CONFIG.PRICING.AGENCY.currency}${CONFIG.PRICING.AGENCY.price}/month — get ${CONFIG.PLAN_LIMITS.AGENCY.pages} branded bio pages, lifetime analytics, white-labeling, AI-optimized SEO & titles, custom QR codes, and manage multiple clients effortlessly with one dashboard.`,
         popular: false,
         features: [
             { name: `${CONFIG.PLAN_LIMITS.AGENCY.pages} Bio Pages`, included: true },
-            { name: "All 14+ Templates (NeoPop, Cyber...)", included: true },
+            { name: "All Premium Templates", included: true },
             { name: "Unlimited Links", included: true },
             { name: "Lifetime Analytics", included: true },
             { name: "Custom QR Code (Logo, Color)", included: true },
-            { name: "All 10+ Premium Themes", included: true },
+            { name: "All 12+ Premium Themes", included: true },
             { name: "AI Enhanced Bio Page SEO & Titles", included: true },
             { name: "White Labeling", included: true },
             { name: "Enjoy a generous 7-day free trial — no credit card required.", included: true },

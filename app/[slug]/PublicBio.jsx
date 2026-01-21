@@ -57,13 +57,17 @@ const iconMap = {
 
 export default function PublicBio({ page, links, isDemo = false }) {
   const [likes, setLikes] = useState(page.likes || 0);
-  const [isLiked, setIsLiked] = useState(false);
+  const [isLiked, setIsLiked] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem(`liked_${page.id}`) === "true";
+    }
+    return false;
+  });
+
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
 
   const searchParams = useSearchParams();
   const themeParam = searchParams.get("theme");
-
-  console.log("Page ", page);
 
   // In demo mode, prioritize URL theme param. Otherwise use page theme or default to light.
   const activeTheme = isDemo && themeParam ? themeParam : page.theme || "light";
@@ -93,10 +97,6 @@ export default function PublicBio({ page, links, isDemo = false }) {
       }, 3000); // 3s genuine view
 
       return () => clearTimeout(timer);
-    }
-
-    if (localStorage.getItem(`liked_${page.id}`)) {
-      setIsLiked(true);
     }
   }, [page?.id, isDemo]);
 
@@ -252,7 +252,7 @@ export default function PublicBio({ page, links, isDemo = false }) {
                 <span className="text-[10px] font-bold tracking-widest uppercase opacity-30">
                   Powered by
                 </span>
-                <span className="text-xs font-medium tracking-tighter opacity-70">
+                <span className="text-xs font-medium tracking-tight opacity-70">
                   <Link
                     href={CONFIG.SITE_URL}
                     target="_blank"
@@ -274,12 +274,12 @@ export default function PublicBio({ page, links, isDemo = false }) {
                       href={page.branding.customUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs font-medium tracking-tighter opacity-70 hover:text-primary hover:opacity-100 transition-all"
+                      className="text-xs font-medium tracking-tight opacity-70 hover:text-primary hover:opacity-100 transition-all"
                     >
                       {page.branding.customText}
                     </a>
                   ) : (
-                    <span className="text-xs font-medium tracking-tighter opacity-70">
+                    <span className="text-xs font-medium tracking-tight opacity-70">
                       {page.branding.customText}
                     </span>
                   )}

@@ -51,7 +51,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div className="md:col-span-1">
-            <h3 className="text-3xl font-medium tracking-tighter mb-6">
+            <h3 className="text-3xl font-medium tracking-tight mb-6">
               <Logo />
             </h3>
             <p className="opacity-70 font-medium leading-relaxed mb-8">
@@ -178,7 +178,7 @@ export default function Footer() {
         </div>
 
         <div className="pt-8 border-t border-base-300 text-center text-sm font-bold opacity-70">
-          <div className="">© 2025 {CONFIG.SITE_NAME} All rights reserved.</div>
+          <div className="">© 2026 {CONFIG.SITE_NAME} All rights reserved.</div>
         </div>
       </div>
     </footer>

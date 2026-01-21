@@ -104,7 +104,7 @@ export default function SubscriptionManagement() {
                     <p className="text-xs font-medium uppercase opacity-40 flex items-center gap-2">
                         <RiMoneyDollarCircleLine className="text-primary" /> Total Subscriptions
                     </p>
-                    <p className="text-4xl font-medium tracking-tighter mt-2">
+                    <p className="text-4xl font-medium tracking-tight mt-2">
                         {pagination.total}
                     </p>
                 </div>
@@ -112,7 +112,7 @@ export default function SubscriptionManagement() {
                     <p className="text-xs font-medium uppercase opacity-40 flex items-center gap-2">
                         <RiCheckboxCircleLine className="text-success" /> Active
                     </p>
-                    <p className="text-4xl font-medium tracking-tighter mt-2">
+                    <p className="text-4xl font-medium tracking-tight mt-2">
                         {subscriptions.filter(s => s.status === 'active').length}
                     </p>
                 </div>
@@ -120,7 +120,7 @@ export default function SubscriptionManagement() {
                     <p className="text-xs font-medium uppercase opacity-40 flex items-center gap-2">
                         <RiTimeLine className="text-info" /> Trialing
                     </p>
-                    <p className="text-4xl font-medium tracking-tighter mt-2">
+                    <p className="text-4xl font-medium tracking-tight mt-2">
                         {subscriptions.filter(s => s.status === 'trialing').length}
                     </p>
                 </div>

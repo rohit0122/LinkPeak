@@ -206,7 +206,7 @@ export default function PlanManagement() {
                                 <td>
                                     <div className="flex items-center gap-1 font-medium">
                                         <span className="text-xs opacity-50">{plan.currency}</span>
-                                        <span className="text-lg tracking-tighter">${plan.price}</span>
+                                        <span className="text-lg tracking-tight">${plan.price}</span>
                                         <span className="text-[10px] opacity-30 mt-1">/{plan.billing_interval}</span>
                                     </div>
                                 </td>
@@ -241,7 +241,7 @@ export default function PlanManagement() {
                     <div className="modal-box max-w-2xl p-0 overflow-hidden bg-base-100 rounded-none border border-base-300">
                         <form onSubmit={handleSubmit}>
                             <div className="p-6 border-b border-base-200 bg-base-200/20 flex justify-between items-center">
-                                <h3 className="text-xl font-bold tracking-tighter flex items-center gap-2">
+                                <h3 className="text-xl font-bold tracking-tight flex items-center gap-2">
                                     <RiSettings4Line className="text-primary" />
                                     {editingPlan ? 'Edit Plan' : 'Create New Plan'}
                                 </h3>

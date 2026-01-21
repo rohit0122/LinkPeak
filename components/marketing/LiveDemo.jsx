@@ -35,7 +35,7 @@ export default function LiveDemo() {
               <RiMagicLine /> Interactive Demo
             </div>
 
-            <h2 className="text-5xl font-medium tracking-tighter mb-8 leading-none">
+            <h2 className="text-5xl font-medium tracking-tight mb-8 leading-none">
               Style your identity{" "}
               <span className="text-primary italic">instantly.</span>
             </h2>

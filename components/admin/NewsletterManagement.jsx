@@ -84,7 +84,7 @@ export default function NewsletterManagement() {
                     <p className="text-xs font-medium uppercase opacity-40 flex items-center gap-2">
                         <RiUserFollowLine className="text-primary" /> Total Subscribers
                     </p>
-                    <p className="text-4xl font-medium tracking-tighter mt-2">
+                    <p className="text-4xl font-medium tracking-tight mt-2">
                         {subscribers.length}
                     </p>
                 </div>

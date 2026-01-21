@@ -18,12 +18,12 @@ export default function BrandingFooter({ branding }) {
                             href={branding.customUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-xs font-medium tracking-tighter opacity-70 hover:text-primary hover:opacity-100 transition-all"
+                            className="text-xs font-medium tracking-tight opacity-70 hover:text-primary hover:opacity-100 transition-all"
                         >
                             {branding.customText}
                         </a>
                     ) : (
-                        <span className="text-xs font-medium tracking-tighter opacity-70">
+                        <span className="text-xs font-medium tracking-tight opacity-70">
                             {branding.customText}
                         </span>
                     )}
@@ -40,7 +40,7 @@ export default function BrandingFooter({ branding }) {
             <span className="text-[10px] font-bold tracking-widest uppercase opacity-30">
                 Powered by
             </span>
-            <span className="text-xs font-medium tracking-tighter opacity-70">
+            <span className="text-xs font-medium tracking-tight opacity-70">
                 <Link
                     href={CONFIG.SITE_URL || "#"}
                     target="_blank"

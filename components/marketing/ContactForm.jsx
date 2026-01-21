@@ -59,16 +59,18 @@ export default function ContactForm() {
         );
     }
     return (
-        <div className="card bg-base-100/80 backdrop-blur-xl border border-base-200 shadow-2xl p-8 md:p-10">
-            <form onSubmit={handleSubmit} className="space-y-8">
-                <div className="space-y-6">
+        <div className="card bg-base-100 shadow-2xl border border-base-200 p-8 md:p-10 rounded-3xl overflow-hidden">
+            <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="space-y-4">
                     <div className="form-control">
-                        <label htmlFor="contact-name" className="label uppercase tracking-widest text-[10px] font-bold">Full Name</label>
+                        <label htmlFor="contact-name" className="label py-1">
+                            <span className="label-text font-bold text-xs opacity-50 uppercase tracking-widest">Full Name</span>
+                        </label>
                         <input
                             id="contact-name"
                             type="text"
                             placeholder="John Doe"
-                            className="input input-lg bg-base-200/50 focus:bg-base-100 border-none w-full transition-all font-medium"
+                            className="input input-bordered focus:input-primary transition-all w-full bg-base-200/50 border-base-300 font-medium h-12"
                             value={formData.name}
                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                             required
@@ -76,12 +78,14 @@ export default function ContactForm() {
                     </div>
 
                     <div className="form-control">
-                        <label htmlFor="contact-email" className="label uppercase tracking-widest text-[10px] font-bold">Email Address</label>
+                        <label htmlFor="contact-email" className="label py-1">
+                            <span className="label-text font-bold text-xs opacity-50 uppercase tracking-widest">Email Address</span>
+                        </label>
                         <input
                             id="contact-email"
                             type="email"
                             placeholder="john@example.com"
-                            className="input input-lg bg-base-200/50 focus:bg-base-100 border-none w-full transition-all font-medium"
+                            className="input input-bordered focus:input-primary transition-all w-full bg-base-200/50 border-base-300 font-medium h-12"
                             value={formData.email}
                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                             required
@@ -89,10 +93,12 @@ export default function ContactForm() {
                     </div>
 
                     <div className="form-control">
-                        <label htmlFor="contact-subject" className="label uppercase tracking-widest text-[10px] font-bold">What can we help with?</label>
+                        <label htmlFor="contact-subject" className="label py-1">
+                            <span className="label-text font-bold text-xs opacity-50 uppercase tracking-widest">What can we help with?</span>
+                        </label>
                         <select
                             id="contact-subject"
-                            className="select select-lg bg-base-200 focus:bg-base-100 border-none w-full transition-all font-medium"
+                            className="select select-bordered focus:select-primary transition-all w-full bg-base-200 border-base-300 font-medium h-12"
                             value={formData.subject}
                             onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                         >
@@ -105,10 +111,12 @@ export default function ContactForm() {
                     </div>
 
                     <div className="form-control">
-                        <label htmlFor="contact-message" className="label uppercase tracking-widest text-[10px] font-bold">Message Details</label>
+                        <label htmlFor="contact-message" className="label py-1">
+                            <span className="label-text font-bold text-xs opacity-50 uppercase tracking-widest">Message Details</span>
+                        </label>
                         <textarea
                             id="contact-message"
-                            className="textarea textarea-lg bg-base-200/50 focus:bg-base-100 border-none h-40 w-full transition-all font-medium"
+                            className="textarea textarea-bordered focus:textarea-primary transition-all w-full bg-base-200/50 border-base-300 font-medium h-32"
                             placeholder="Tell us more about your request..."
                             value={formData.message}
                             onChange={(e) => setFormData({ ...formData, message: e.target.value })}
@@ -119,15 +127,15 @@ export default function ContactForm() {
 
                 <button
                     type="submit"
-                    className="btn btn-primary btn-lg w-full font-bold text-lg gap-3 h-16 shadow-lg shadow-primary/20"
+                    className="btn btn-primary w-full font-bold h-12 shadow-lg shadow-primary/20"
                     disabled={loading}
                 >
                     {loading ? (
-                        <RiLoader4Line className="animate-spin text-2xl" />
+                        <RiLoader4Line className="animate-spin text-xl" />
                     ) : (
                         <>
                             Send Message
-                            <RiSendPlaneFill className="text-xl" />
+                            <RiSendPlaneFill className="text-lg" />
                         </>
                     )}
                 </button>

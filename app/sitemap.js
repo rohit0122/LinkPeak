@@ -12,16 +12,16 @@ export default async function sitemap() {
             priority: 1.0,
         },
         {
-            url: `${baseUrl}/#pricing`,
+            url: `${baseUrl}/why-different`,
             lastModified: new Date(),
             changeFrequency: "weekly",
-            priority: 0.9,
+            priority: 0.8,
         },
         {
             url: `${baseUrl}/contact-us`,
             lastModified: new Date(),
             changeFrequency: "monthly",
-            priority: 0.5,
+            priority: 0.7,
         },
         {
             url: `${baseUrl}/privacy-policy`,
@@ -30,10 +30,28 @@ export default async function sitemap() {
             priority: 0.3,
         },
         {
-            url: `${baseUrl}/terms-of-service`,
+            url: `${baseUrl}/terms-and-conditions`,
             lastModified: new Date(),
             changeFrequency: "monthly",
             priority: 0.3,
+        },
+        {
+            url: `${baseUrl}/cookies-policy`,
+            lastModified: new Date(),
+            changeFrequency: "monthly",
+            priority: 0.3,
+        },
+        {
+            url: `${baseUrl}/login`,
+            lastModified: new Date(),
+            changeFrequency: "monthly",
+            priority: 0.4,
+        },
+        {
+            url: `${baseUrl}/register`,
+            lastModified: new Date(),
+            changeFrequency: "monthly",
+            priority: 0.4,
         },
     ];
 

@@ -1,8 +1,6 @@
 import {
   Outfit,
-  Plus_Jakarta_Sans,
-  Playfair_Display,
-  JetBrains_Mono
+  Plus_Jakarta_Sans
 } from "next/font/google";
 import "./globals.css";
 import { CONFIG } from "@/constants/config";
@@ -22,17 +20,6 @@ const jakarta = Plus_Jakarta_Sans({
   display: "swap",
 });
 
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-serif",
-  display: "swap",
-});
-
-const mono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-  display: "swap",
-});
 
 
 
@@ -200,7 +187,7 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body
-        className={`${outfit.variable} ${jakarta.variable} ${playfair.variable} ${mono.variable} antialiased`}
+        className={`${outfit.variable} ${jakarta.variable} antialiased`}
         suppressHydrationWarning
       >
         <ClientProvider>

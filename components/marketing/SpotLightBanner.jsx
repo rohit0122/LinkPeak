@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { RiArrowRightLine } from "react-icons/ri";
 import { motion } from "framer-motion";
+import { CONFIG } from "@/constants/config";
 
 export default function SpotLightBanner() {
     return (
@@ -22,11 +23,11 @@ export default function SpotLightBanner() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
             >
-                <h2 className="text-5xl md:text-7xl font-medium tracking-tighter mb-8 leading-none">
+                <h2 className="text-5xl md:text-7xl font-medium tracking-tight mb-8 leading-none">
                     Ready to claim <br />your spotlight?
                 </h2>
                 <p className="text-xl md:text-2xl opacity-80 mb-12 font-medium">
-                    Join thousands of creators who are taking their digital identity to the next level.
+                    Join {CONFIG.STATS.CREATORS} creators who are taking their digital identity to the next level.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-6 justify-center">
                     <Link href="/register" className="btn btn-lg bg-base-100 text-primary border-none hover:bg-base-200 shadow-2xl px-12 text-2xl font-medium">
