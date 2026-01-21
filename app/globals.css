@@ -61,7 +61,7 @@ h6 {
 }
 
 /* Target Tailwind rounded utilities - but ONLY for platform UI (exclude templates/previews and avatars) */
-[data-theme="linkpeak"] :where(.rounded, .rounded-sm, .rounded-md, .rounded-lg, .rounded-xl, .rounded-2xl, .rounded-3xl, .rounded-full):not([data-theme]:not([data-theme="linkpeak"]) *):not(.avatar, .avatar *) {
+[data-theme="linkpeak"] :where(.rounded, .rounded-sm, .rounded-md, .rounded-lg, .rounded-xl, .rounded-2xl, .rounded-3xl):not([data-theme]:not([data-theme="linkpeak"]) *):not(.avatar, .avatar *) {
   border-radius: 0px !important;
 }
 
