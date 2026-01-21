@@ -102,7 +102,7 @@ export default function PreviewTemplate({ demoData = {}, isDemo = false }) {
             <LikeButton
                 likes={mergedBioPage.likes || 0}
                 isLiked={false}
-                onLike={() => { toast.success("Live Engagement: In your actual bio profile, 'Liking' instantly updates your stats in real-time.") }}
+                onLike={() => { toast("Live Engagement: In your actual bio profile, 'Liking' instantly updates your stats in real-time.", { icon: "ℹ️" }) }}
                 className="absolute bottom-6 right-6"
             />
 

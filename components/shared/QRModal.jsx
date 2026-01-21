@@ -5,6 +5,7 @@ import { QRCodeCanvas } from "qrcode.react";
 import { RiDownloadLine, RiCloseLine, RiQrCodeLine, RiShareLine } from "react-icons/ri";
 import { toast } from "react-hot-toast";
 import { CONFIG } from "@/constants/config";
+import Image from "next/image";
 
 export default function QRModal({ slug, isOpen, onClose, plan = "FREE" }) {
     const [centerIcon, setCenterIcon] = useState("LinkPeakk");
@@ -78,7 +79,7 @@ export default function QRModal({ slug, isOpen, onClose, plan = "FREE" }) {
                                         className={`w-10 h-10 flex items-center justify-center border-2 transition-all overflow-hidden ${centerIcon === icon.name ? "border-primary bg-primary/5 p-1" : "border-base-200 hover:border-primary/30 p-2"
                                             }`}
                                     >
-                                        {icon.url ? <img src={icon.url} alt={icon.name} className="w-8 h-8" /> : <span className="text-[9px] font-bold tracking-widest uppercase opacity-40">{icon.name}</span>}
+                                        {icon.url ? <Image width={40} height={40} src={icon.url} alt={icon.name} className="w-8 h-8" /> : <span className="text-[9px] font-bold tracking-widest uppercase opacity-40">{icon.name}</span>}
                                     </button>
                                 ))}
                             </div>

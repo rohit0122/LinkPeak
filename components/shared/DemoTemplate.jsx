@@ -27,7 +27,7 @@ export default function DemoTemplate({ demoData = {}, className = "", isPreviewD
         <MobileMock className={className} theme={theme} isPreviewDisable={isPreviewDisable}>
             {/* 1. FIXED UI LAYER */}
             <button className="absolute top-6 right-6 btn btn-circle btn-ghost btn-sm bg-base-100/50 backdrop-blur shadow-sm z-30 opacity-50 cursor-default"
-                onClick={() => toast.success("Preview Mode: On live profiles, this opens custom QR codes and share options for your audience.")}
+                onClick={() => toast("Preview Mode: On live profiles, this opens custom QR codes and share options for your audience.", { icon: "ℹ️" })}
             >
                 <RiQrCodeLine className="text-lg" />
             </button>
@@ -36,7 +36,7 @@ export default function DemoTemplate({ demoData = {}, className = "", isPreviewD
             <LikeButton
                 likes={likes}
                 isLiked={false}
-                onLike={() => toast.success("Preview Mode: Real-time engagement features like 'Liking' are fully functional on live bio pages.")}
+                onLike={() => toast("Live Engagement: In your actual bio profile, 'Liking' instantly updates your stats in real-time.", { icon: "ℹ️" })}
                 className="absolute bottom-6 right-6"
             />
 

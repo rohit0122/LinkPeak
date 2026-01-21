@@ -6,6 +6,7 @@ import { CONFIG } from "@/constants/config";
 import { toast } from "react-hot-toast";
 
 import { useState } from "react";
+import Image from "next/image";
 
 export default function QRGenerator({ slug, plan }) {
     const [fgColor, setFgColor] = useState("#000000");
@@ -76,7 +77,7 @@ export default function QRGenerator({ slug, plan }) {
                                     onClick={() => setLogo(l)}
                                     className={`h-12 px-4  border-2 transition-all flex items-center gap-2 ${logo.id === l.id ? 'border-primary bg-primary/5 font-medium text-primary' : 'border-base-200 hover:border-base-content/20'}`}
                                 >
-                                    {l.url && <img src={l.url} className="w-5 h-5" alt={l.name} crossOrigin="anonymous" />}
+                                    {l.url && <Image width={40} height={40} src={l.url} className="w-5 h-5" alt={l.name} crossOrigin="anonymous" />}
                                     <span className="text-[10px] uppercase tracking-wider">{l.name}</span>
                                 </button>
                             ))}
