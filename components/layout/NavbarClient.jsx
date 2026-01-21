@@ -32,6 +32,12 @@ const publicLinks = [
     color: "text-primary",
   },
   {
+    name: "Why Different",
+    href: "/why-different",
+    icon: <RiSparklingLine size={24} />,
+    color: "text-secondary",
+  },
+  {
     name: "Demo",
     href: "/#demo",
     icon: <RiPlayCircleLine size={24} />,
