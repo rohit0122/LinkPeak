@@ -145,9 +145,9 @@ export default function Footer() {
             <h4 className="font-medium uppercase tracking-widest text-xs opacity-60 mb-6">
               Newsletter
             </h4>
-            <p className="text-sm opacity-70 mb-6 font-medium">
+            <label htmlFor="newsletter-email" className="text-sm opacity-70 mb-6 font-medium block">
               Get the latest tips on growing your digital presence.
-            </p>
+            </label>
             <div className="join w-full max-w-sm">
               <input
                 type="email"

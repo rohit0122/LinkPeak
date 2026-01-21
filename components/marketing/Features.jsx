@@ -1,5 +1,8 @@
+"use client";
+
 import { CONFIG } from "@/constants/config";
 import { RiBarChartBoxLine, RiHeartFill, RiPaletteLine } from "react-icons/ri";
+import { motion } from "framer-motion";
 
 const features = [
     {
@@ -18,7 +21,7 @@ const features = [
     },
     {
         title: "Custom Branding",
-        description: "8+ high-end color themes and 5 pro templates. Your bio page should look as unique as your content.",
+        description: `${CONFIG.DAISY_THEMES.length}+ high-end color themes and ${CONFIG.PLAN_LIMITS.PRO.allowedTemplates.length} pro templates. Your bio page should look as unique as your content.`,
         icon: RiPaletteLine,
         color: "text-purple-500",
         bg: "bg-purple-50"
@@ -34,20 +37,29 @@ export default function Features() {
                     <p className="text-xl opacity-60">The only platform built for high-performance engagement.</p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-12" role="list">
                     {features.map((f, i) => (
-                        <div key={i} className="group flex flex-col items-center text-center">
+                        <motion.article
+                            key={i}
+                            className="group flex flex-col items-center text-center"
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: i * 0.1, duration: 0.5 }}
+                            role="listitem"
+                        >
                             <div className={`w-20 h-20  ${f.bg} flex items-center justify-center mb-8 transition-transform group-hover:rotate-6 group-hover:scale-110 duration-300 shadow-sm border border-base-200`}>
-                                <f.icon className={`text-4xl ${f.color}`} />
+                                <f.icon className={`text-4xl ${f.color}`} aria-hidden="true" />
                             </div>
                             <h3 className="text-2xl font-medium mb-4 tracking-tight">{f.title}</h3>
                             <p className="text-base-content/70 leading-relaxed font-medium">
                                 {f.description}
                             </p>
-                        </div>
+                        </motion.article>
                     ))}
                 </div>
             </div>
         </section>
     );
 }
+

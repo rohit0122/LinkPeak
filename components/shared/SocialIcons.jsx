@@ -12,6 +12,7 @@ export const SocialIcons = () => {
                text-[#FF0000]
                hover:bg-[#FF0000] hover:text-white
                transition-all duration-300"
+                aria-label="Follow us on YouTube"
             >
                 <RiYoutubeFill />
             </a>
@@ -29,6 +30,7 @@ export const SocialIcons = () => {
                hover:via-[#FD1D1D]
                hover:to-[#FCAF45]
                transition-all duration-300"
+                aria-label="Follow us on Instagram"
             >
                 <RiInstagramFill />
             </a>
@@ -42,6 +44,7 @@ export const SocialIcons = () => {
                text-[#1877F2]
                hover:bg-[#1877F2] hover:text-white
                transition-all duration-300"
+                aria-label="Follow us on Facebook"
             >
                 <RiFacebookBoxFill />
             </a>

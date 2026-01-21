@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { RiQuestionLine } from "react-icons/ri";
+import { motion } from "framer-motion";
 // constants/faq.js
 import { CONFIG } from "@/constants/config";
 const faqs = [
@@ -19,7 +20,7 @@ const faqs = [
     },
     {
         q: "Can I preview themes before saving them?",
-        a: "Absolutely. Our Dashboard features a live mobile mockup. You can experiment with all 8+ color themes and 5 layout templates in 'Draft Mode' before publishing them to your live profile."
+        a: `Absolutely. Our Dashboard features a live mobile mockup. You can experiment with all ${CONFIG.DAISY_THEMES.length}+ color themes and ${CONFIG.PLAN_LIMITS.PRO.allowedTemplates.length} layout templates in 'Draft Mode' before publishing them to your live profile.`
     },
     {
         q: "How do I get my custom QR code?",
@@ -42,33 +43,6 @@ const faqs = [
         a: "Currently, we provide high-authority vanity URLs (e.g., linkpeak.com/yourname). Full custom domain mapping (yourname.com) is currently in development and is scheduled for release sooner."
     }
 ];
-/*
-const faqs = [
-    {
-        q: "How does the 'Fan Love' system work?",
-        a: "It's simple! Every bio page comes with a floating heart button. Visitors can show their support with a single tap, and we track the total count for you in your dashboard. It's the ultimate engagement booster."
-    },
-    {
-        q: "Can I use my own domain?",
-        a: "Currently, our 'Pro' and 'Agency' plans support custom vanity slugs (e.g., linkpeak.com/yourname). Full custom domain support is coming in Early 2026."
-    },
-    {
-        q: "Is it really 100% free?",
-        a: "Yes! Our 'Free' plan includes 5 links, social icons, and 7-day analytics. We only charge for premium themes, advanced data retention, and business tools."
-    },
-    {
-        q: "How do I download my QR code?",
-        a: "Once you sign up, your dashboard will automatically generate a dynamic QR code for your bio. You can download it as a high-resolution PNG for your print marketing."
-    },
-    {
-        q: "Is there any trial period for PRO & AGENCY plans?",
-        a: "Yes! we do offer 24 hours of trial period for our 'Pro' and 'Agency' plans. If you feel great you can pay for the plan via dashboard itself."
-    },
-    {
-        q: "Is there any money back gurantee?",
-        a: "Well! above question says it all. So, we are not offering any money back gurantee."
-    }
-];*/
 
 export default function FAQ() {
     const [openIndex, setOpenIndex] = useState(0);
@@ -76,20 +50,34 @@ export default function FAQ() {
     return (
         <section id="faq" className="py-24 bg-base-100">
             <div className="max-w-3xl mx-auto px-6">
-                <div className="text-center mb-16">
-                    <RiQuestionLine className="text-6xl text-primary mx-auto mb-4 animate-pulse" />
+                <motion.div
+                    className="text-center mb-16"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5 }}
+                >
+                    <RiQuestionLine className="text-6xl text-primary mx-auto mb-4 animate-pulse" aria-hidden="true" />
                     <h2 className="text-4xl md:text-5xl font-medium tracking-tighter mb-4">Common Questions</h2>
                     <p className="text-xl opacity-60">Everything you need to know about {CONFIG.SITE_NAME}.</p>
-                </div>
+                </motion.div>
 
                 <div className="space-y-4">
                     {faqs.map((faq, i) => (
-                        <div key={i} className="collapse collapse-plus bg-base-200/50  border border-base-300">
+                        <motion.div
+                            key={i}
+                            className="collapse collapse-plus bg-base-200/50  border border-base-300"
+                            initial={{ opacity: 0, y: 10 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: i * 0.05, duration: 0.3 }}
+                        >
                             <input
                                 type="checkbox"
                                 name="my-accordion-3"
                                 checked={openIndex === i}
                                 onChange={() => setOpenIndex(openIndex === i ? null : i)}
+                                aria-label={`Toggle ${faq.q}`}
                             />
                             <div className="collapse-title text-xl font-bold p-6">
                                 {faq.q}
@@ -97,10 +85,11 @@ export default function FAQ() {
                             <div className="collapse-content px-6 pb-6 text-base-content/70 font-medium">
                                 <p>{faq.a}</p>
                             </div>
-                        </div>
+                        </motion.div>
                     ))}
                 </div>
             </div>
         </section>
     );
 }
+

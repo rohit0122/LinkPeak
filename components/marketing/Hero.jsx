@@ -1,28 +1,33 @@
+"use client";
+
 import {
   RiArrowRightLine,
   RiCheckFill,
   RiHeartFill,
   RiPlayCircleLine,
 } from "react-icons/ri";
-import PreviewPhoneNew from "@/components/shared/PreviewTemplate";
 import Link from "next/link";
+import Image from "next/image";
 import Avatar from "@/components/shared/Avatar";
-import { elizaDemoProfile, getDemoProfile } from "@/constants/demoProfile";
-import LightWeightPhoneMock from "../shared/DemoTemplate";
-import PhonePreviewMock from "../shared/MobileMock";
-import PhonePreviewDemoMock from "../shared/DemoTemplate";
+import { getDemoProfile } from "@/constants/demoProfile";
 import DemoTemplate from "../shared/DemoTemplate";
+import { motion } from "framer-motion";
 
 export default function Hero() {
   return (
     <header className="relative min-h-screen pt-16 md:pt-12 pb-20 overflow-hidden bg-base-100">
       {/* Background Decor */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] -mr-40 -mt-40"></div>
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-secondary/10 rounded-full blur-[100px] -ml-40 -mb-40"></div>
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] -mr-40 -mt-40" aria-hidden="true"></div>
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-secondary/10 rounded-full blur-[100px] -ml-40 -mb-40" aria-hidden="true"></div>
 
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-20 md:gap-2 items-center">
         {/* Text Content */}
-        <div className="relative z-10 flex flex-col items-center md:items-start text-center md:text-left md:col-span-2">
+        <motion.div
+          className="relative z-10 flex flex-col items-center md:items-start text-center md:text-left md:col-span-2"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
           <div className="badge badge-primary badge-outline gap-2 p-4 font-bold tracking-widest uppercase mb-8 text-[10px] sm:text-xs h-auto py-2 text-center">
             <span className="relative flex h-2 w-2 flex-shrink-0">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
@@ -87,9 +92,9 @@ export default function Hero() {
               </div>
             </div>
 
-            <div className="h-8 w-px bg-base-300 hidden sm:block"></div>
+            <div className="h-8 w-px bg-base-300 hidden sm:block" aria-hidden="true"></div>
 
-            <div className="flex gap-6 grayscale opacity-40">
+            <div className="flex gap-6 grayscale opacity-40" aria-label="Supported platforms">
               <span className="font-medium text-xl tracking-tighter">
                 TIKTOK
               </span>
@@ -99,14 +104,19 @@ export default function Hero() {
               <span className="font-medium text-xl tracking-tighter">X</span>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Mockup Side */}
-        <div className="relative flex justify-center md:justify-end animate-in fade-in slide-in-from-right-10 duration-1000">
+        <motion.div
+          className="relative flex justify-center md:justify-end"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
           <div className="relative w-full max-w-md">
             {/* Phone Shadow */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
-                    w-[80%] h-[80%] bg-primary/20 rounded-full blur-[80px]" />
+                    w-[80%] h-[80%] bg-primary/20 rounded-full blur-[80px]" aria-hidden="true" />
 
             {/* WIDTH OWNER (important) */}
             <div className="w-full">
@@ -121,7 +131,25 @@ export default function Hero() {
             </div>
 
             {/* Float Cards */}
-            <div className="absolute -left-20 top-40 bg-base-100 p-4 shadow-2xl border border-base-200 animate-bounce duration-[3000ms]">
+            <motion.div
+              className="absolute -left-20 top-40 bg-base-100 p-4 shadow-2xl border border-base-200"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{
+                opacity: 1,
+                x: 0,
+                y: [0, -15, 0]
+              }}
+              transition={{
+                opacity: { duration: 0.6, delay: 0.8 },
+                x: { duration: 0.6, delay: 0.8 },
+                y: {
+                  repeat: Infinity,
+                  duration: 1,
+                  ease: "easeInOut",
+                  delay: 1.4
+                }
+              }}
+            >
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-success/10 text-success flex items-center justify-center">
                   <RiCheckFill className="text-2xl" />
@@ -131,9 +159,27 @@ export default function Hero() {
                   <p className="font-medium">+240 Views</p>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
-            <div className="absolute -right-10 bottom-20 bg-base-100 p-4 shadow-2xl border border-base-200 animate-bounce duration-[2500ms]">
+            <motion.div
+              className="absolute -right-10 bottom-20 bg-base-100 p-4 shadow-2xl border border-base-200"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{
+                opacity: 1,
+                x: 0,
+                y: [0, -12, 0]
+              }}
+              transition={{
+                opacity: { duration: 0.6, delay: 1 },
+                x: { duration: 0.6, delay: 1 },
+                y: {
+                  repeat: Infinity,
+                  duration: 0.9,
+                  ease: "easeInOut",
+                  delay: 1.6
+                }
+              }}
+            >
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-pink-100 text-pink-500 flex items-center justify-center">
                   <RiHeartFill className="text-xl" />
@@ -143,11 +189,12 @@ export default function Hero() {
                   <p className="font-medium">+42 Likes</p>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
 
       </div>
     </header>
   );
 }
+

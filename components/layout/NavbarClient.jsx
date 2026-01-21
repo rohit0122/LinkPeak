@@ -231,6 +231,8 @@ export default function NavbarClient({
               <button
                 className="md:hidden btn btn-ghost btn-square"
                 onClick={() => setMobileOpen(!mobileOpen)}
+                aria-label={mobileOpen ? "Close menu" : "Open menu"}
+                aria-expanded={mobileOpen}
               >
                 {mobileOpen ? (
                   <RiCloseLine size={24} />
@@ -307,6 +309,9 @@ function ProfileDropdown({ currentUser, page, onLogout }) {
       <button
         className="transition-transform hover:scale-105 focus:outline-none"
         onClick={() => setOpen(!open)}
+        aria-label="Toggle user profile dropdown"
+        aria-expanded={open}
+        aria-haspopup="true"
       >
         <Avatar
           src={page?.profile_image}

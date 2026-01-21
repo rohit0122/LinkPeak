@@ -1,6 +1,9 @@
+"use client";
+
 import { RiCheckFill, RiCloseFill } from "react-icons/ri";
 import { CONFIG, pricingPlans } from "@/constants/config";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 
 export default function Pricing() {
@@ -19,16 +22,23 @@ export default function Pricing() {
 
                 {/* Cards */}
                 <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-3">
-                    {pricingPlans.map((plan) => (
-                        <div
+                    {pricingPlans.map((plan, index) => (
+                        <motion.article
                             key={plan.name}
                             className={`relative card transition-all duration-300 border
                 ${plan.popular ? "border-primary shadow-xl scale-[1.02]" : "border-base-300 hover:shadow-lg"}
               `}
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            whileInView={{ opacity: 1, scale: plan.popular ? 1.02 : 1 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: index * 0.15, duration: 0.5 }}
                         >
                             {/* Popular badge */}
                             {plan.popular && (
-                                <span className="badge badge-primary absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-3 font-semibold z-10">
+                                <span
+                                    className="badge badge-primary absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-3 font-semibold z-10"
+                                    aria-label="Most popular plan"
+                                >
                                     MOST POPULAR
                                 </span>
                             )}
@@ -52,7 +62,7 @@ export default function Pricing() {
                                 </p>
 
                                 {/* Features */}
-                                <div className="flex-1 space-y-3 mb-6">
+                                <div className="flex-1 space-y-3 mb-6" role="list">
                                     {plan.features.map((feature, i) => {
                                         const isTrial = feature.name.includes("7-day free trial");
                                         return (
@@ -60,13 +70,15 @@ export default function Pricing() {
                                                 key={i}
                                                 className={`flex items-start gap-3 text-sm ${feature.included ? "opacity-100" : "opacity-40"
                                                     } ${isTrial ? "bg-primary/10  p-2 font-medium text-primary" : ""}`}
+                                                role="listitem"
                                             >
                                                 {feature.included ? (
                                                     <RiCheckFill
                                                         className={`text-success text-lg mt-[2px] ${isTrial ? "text-primary" : ""}`}
+                                                        aria-hidden="true"
                                                     />
                                                 ) : (
-                                                    <RiCloseFill className="text-base-content text-lg mt-[2px]" />
+                                                    <RiCloseFill className="text-base-content text-lg mt-[2px]" aria-hidden="true" />
                                                 )}
                                                 <span className="leading-snug">{feature.name}</span>
                                             </div>
@@ -84,10 +96,11 @@ export default function Pricing() {
                                     {plan.name === "Free" ? "Get Started" : "Upgrade Now"}
                                 </Link>
                             </div>
-                        </div>
+                        </motion.article>
                     ))}
                 </div>
             </div>
         </section>
     );
 }
+

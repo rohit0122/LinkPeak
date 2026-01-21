@@ -50,6 +50,7 @@ export default function ContactForm() {
                     <button
                         className="btn btn-primary btn-wide font-bold"
                         onClick={() => setSuccess(false)}
+                        aria-label="Send another message"
                     >
                         Send Another Message
                     </button>
@@ -62,8 +63,9 @@ export default function ContactForm() {
             <form onSubmit={handleSubmit} className="space-y-8">
                 <div className="space-y-6">
                     <div className="form-control">
-                        <label className="label uppercase tracking-widest text-[10px] font-bold">Full Name</label>
+                        <label htmlFor="contact-name" className="label uppercase tracking-widest text-[10px] font-bold">Full Name</label>
                         <input
+                            id="contact-name"
                             type="text"
                             placeholder="John Doe"
                             className="input input-lg bg-base-200/50 focus:bg-base-100 border-none w-full transition-all font-medium"
@@ -74,8 +76,9 @@ export default function ContactForm() {
                     </div>
 
                     <div className="form-control">
-                        <label className="label uppercase tracking-widest text-[10px] font-bold">Email Address</label>
+                        <label htmlFor="contact-email" className="label uppercase tracking-widest text-[10px] font-bold">Email Address</label>
                         <input
+                            id="contact-email"
                             type="email"
                             placeholder="john@example.com"
                             className="input input-lg bg-base-200/50 focus:bg-base-100 border-none w-full transition-all font-medium"
@@ -86,8 +89,9 @@ export default function ContactForm() {
                     </div>
 
                     <div className="form-control">
-                        <label className="label uppercase tracking-widest text-[10px] font-bold">What can we help with?</label>
+                        <label htmlFor="contact-subject" className="label uppercase tracking-widest text-[10px] font-bold">What can we help with?</label>
                         <select
+                            id="contact-subject"
                             className="select select-lg bg-base-200 focus:bg-base-100 border-none w-full transition-all font-medium"
                             value={formData.subject}
                             onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
@@ -101,8 +105,9 @@ export default function ContactForm() {
                     </div>
 
                     <div className="form-control">
-                        <label className="label uppercase tracking-widest text-[10px] font-bold">Message Details</label>
+                        <label htmlFor="contact-message" className="label uppercase tracking-widest text-[10px] font-bold">Message Details</label>
                         <textarea
+                            id="contact-message"
                             className="textarea textarea-lg bg-base-200/50 focus:bg-base-100 border-none h-40 w-full transition-all font-medium"
                             placeholder="Tell us more about your request..."
                             value={formData.message}
