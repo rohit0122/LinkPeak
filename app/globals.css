@@ -65,6 +65,14 @@ h6 {
   border-radius: 0px !important;
 }
 
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
 /* Midnight Noir - USP: Shadow Elegance for Tech/Devs */
 @plugin "daisyui/theme" {
   name: "midnight";

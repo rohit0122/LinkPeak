@@ -3,9 +3,9 @@
 import { motion } from "framer-motion";
 import { RiHeartFill, RiHeartLine } from "react-icons/ri";
 
-export default function LikeButton({ likes, onLike, isLiked }) {
+export default function LikeButton({ likes, onLike, isLiked, className = "fixed bottom-10 right-10" }) {
     return (
-        <div className="fixed bottom-10 right-10 z-[40]">
+        <div className={`${className} z-[40]`}>
             <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}

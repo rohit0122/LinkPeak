@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import PreviewPhoneNew from "@/components/shared/PreviewPhoneNew";
+import PreviewPhoneNew from "@/components/shared/PreviewTemplate";
 import ThemeSelector from "@/components/dashboard/ThemeSelector";
 import { RiPaletteLine, RiMagicLine, RiArrowRightUpLine } from "react-icons/ri";
 import Link from "next/link";
-import { ecoDemoProfile } from "@/constants/demoProfile";
+import { ecoDemoProfile, getDemoProfile } from "@/constants/demoProfile";
+import DemoProfile from "../shared/DemoTemplate";
 
 export default function LiveDemo() {
   const [theme, setTheme] = useState("bumblebee");
@@ -20,9 +21,8 @@ export default function LiveDemo() {
             <div className="w-full max-w-md">
               {/* TRANSFORM LAYER */}
               <div className="scale-90 lg:scale-110 origin-center transition-transform">
-                <PreviewPhoneNew
-                  demoData={ecoDemoProfile(theme)}
-                  isDemo={true}
+                <DemoProfile
+                  demoData={getDemoProfile('eco-wanderer', theme)}
                   key={theme}
                 />
               </div>

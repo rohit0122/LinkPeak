@@ -1,10 +1,8 @@
 import {
   Outfit,
   Plus_Jakarta_Sans,
-  Space_Grotesk,
   Playfair_Display,
-  JetBrains_Mono,
-  Fredoka
+  JetBrains_Mono
 } from "next/font/google";
 import "./globals.css";
 import { CONFIG } from "@/constants/config";
@@ -24,12 +22,6 @@ const jakarta = Plus_Jakarta_Sans({
   display: "swap",
 });
 
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  variable: "--font-cyber",
-  display: "swap",
-});
-
 const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-serif",
@@ -39,12 +31,6 @@ const playfair = Playfair_Display({
 const mono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
-  display: "swap",
-});
-
-const fredoka = Fredoka({
-  subsets: ["latin"],
-  variable: "--font-pop",
   display: "swap",
 });
 
@@ -214,7 +200,7 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body
-        className={`${outfit.variable} ${jakarta.variable} ${spaceGrotesk.variable} ${playfair.variable} ${mono.variable} ${fredoka.variable} antialiased`}
+        className={`${outfit.variable} ${jakarta.variable} ${playfair.variable} ${mono.variable} antialiased`}
         suppressHydrationWarning
       >
         <ClientProvider>

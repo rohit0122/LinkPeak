@@ -1,7 +1,5 @@
-import PublicBioNew from "@/app/[slug]/PublicBioNew";
 import { notFound } from "next/navigation";
 import { CONFIG } from "@/constants/config";
-import { ecoDemoProfile, elizaDemoProfile } from "@/constants/demoProfile";
 
 export async function generateMetadata({ params }) {
   const { username } = await params;
@@ -20,19 +18,26 @@ export async function generateMetadata({ params }) {
   };
 }
 
+export async function generateStaticParams() {
+  return [
+    { username: 'eliza-miller' },
+    { username: 'eco-wanderer' },
+  ];
+}
+
+import { Suspense } from "react";
+import DemoClient from "./DemoClient";
+
 export default async function DemoBioPage({ params }) {
   const { username } = await params;
 
-  // Select Data
-  let pageData = null;
+  if (!username) return notFound();
 
-  if (username === "eliza-miller") {
-    pageData = elizaDemoProfile;
-  } else if (username === "eco-wanderer") {
-    pageData = ecoDemoProfile();
-  } else {
-    return notFound();
-  }
-
-  return <PublicBioNew page={pageData} isDemo={true} />;
+  return (
+    <Suspense fallback={<div className="flex justify-center items-center h-screen bg-base-100">
+      <span className="loading loading-spinner loading-lg text-primary"></span>
+    </div>}>
+      <DemoClient username={username} />
+    </Suspense>
+  );
 }

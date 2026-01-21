@@ -4,10 +4,14 @@ import {
   RiHeartFill,
   RiPlayCircleLine,
 } from "react-icons/ri";
-import PreviewPhoneNew from "@/components/shared/PreviewPhoneNew";
+import PreviewPhoneNew from "@/components/shared/PreviewTemplate";
 import Link from "next/link";
 import Avatar from "@/components/shared/Avatar";
-import { elizaDemoProfile } from "@/constants/demoProfile";
+import { elizaDemoProfile, getDemoProfile } from "@/constants/demoProfile";
+import LightWeightPhoneMock from "../shared/DemoTemplate";
+import PhonePreviewMock from "../shared/MobileMock";
+import PhonePreviewDemoMock from "../shared/DemoTemplate";
+import DemoTemplate from "../shared/DemoTemplate";
 
 export default function Hero() {
   return (
@@ -108,10 +112,10 @@ export default function Hero() {
             <div className="w-full">
               {/* TRANSFORM LAYER */}
               <div className="hover:rotate-3 transition-transform duration-700 origin-center">
-                <PreviewPhoneNew
-                  demoData={elizaDemoProfile}
-                  isDemo={true}
-                  className="w-full"
+                <DemoTemplate
+                  demoData={getDemoProfile()}
+                  className="h-screen max-w-sm"
+
                 />
               </div>
             </div>
