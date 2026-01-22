@@ -252,7 +252,7 @@ export default function PrivacyPage() {
               <h2 className="text-3xl font-bold mb-6">7. Cookies and Tracking</h2>
               <p>We use a combination of persistent and session-based storage to provide a secure experience. We prioritize modern technologies like localStorage over traditional cookies.</p>
               <ul>
-                <li><strong>Authentication:</strong> Keeping you logged in securely (using lpkSiteToken and lpk-auth-store).</li>
+                <li><strong>Authentication:</strong> Keeping you logged in securely (using lpkSiteToken and lpkAuthStorage).</li>
                 <li><strong>Performance:</strong> Maintaining session state for faster loading.</li>
                 <li><strong>Analytics:</strong> Tracking bio page views and link clicks privately (viewed_*, click_*).</li>
                 <li><strong>Engagement:</strong> Tracking likes to prevent duplicates (liked_*).</li>

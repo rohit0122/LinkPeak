@@ -36,7 +36,7 @@ export default function Pricing() {
                             {/* Popular badge */}
                             {plan.popular && (
                                 <span
-                                    className="badge badge-primary absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-3 font-semibold z-10"
+                                    className="badge badge-primary badge-md xl:badge-xl absolute -top-3 left-1/2 -translate-x-1/2 font-semibold z-10"
                                     aria-label="Most popular plan"
                                 >
                                     MOST POPULAR

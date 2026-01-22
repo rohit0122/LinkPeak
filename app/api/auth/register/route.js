@@ -7,10 +7,6 @@ export async function POST(req) {
     const body = await req.json();
 
     // 1. Call Laravel Backend
-    console.log("sdasfsdf ", {
-      ...body,
-      password_confirmation: body.password,
-    });
     const response = await restClient.post(BACKEND_ENDPOINTS.AUTH.REGISTER, {
       ...body,
       password_confirmation: body.password,

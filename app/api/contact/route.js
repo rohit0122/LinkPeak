@@ -16,7 +16,6 @@ export async function POST(req) {
         }
 
         const { name, email, subject = "", message } = body ?? {};
-        console.log('bodybody ', body)
         // 2️⃣ Strong validation
         if (
             typeof name !== "string" ||
@@ -40,14 +39,12 @@ export async function POST(req) {
             );
         }
 
-        console.log('URL ', BACKEND_ENDPOINTS.PUBLIC.CONTACT_US)
         // 4️⃣ Call backend (single responsibility)
         const response = await restClient.post(
             BACKEND_ENDPOINTS.PUBLIC.CONTACT_US,
             { name, email, subject, message },
             { timeout: 8000 } // prevents hanging requests
         );
-        console.log('response ', response.data)
         return NextResponse.json(
             { ...response.data },
             { status: response.status }

@@ -34,7 +34,6 @@ export default function SupportView({
   });
 
   const { currentUser } = useAuthStore();
-  console.log("currentUser ", currentUser);
   const isAdmin = currentUser?.role === "admin";
   const messagesEndRef = useRef(null);
 
@@ -206,19 +205,19 @@ export default function SupportView({
           {/* Original Issue */}
           {(() => {
             // Debug: Check currentUser object structure
-            console.log("Full currentUser object:", currentUser);
+            /*console.log("Full currentUser object:", currentUser);
             console.log(
               "User keys:",
               currentUser ? Object.keys(currentUser) : "currentUser is null"
-            );
+            );*/
 
             // Check if current user created this ticket
             const isMyTicket = selectedTicket?.user_id === currentUser?.id;
-            console.log("Original Ticket Check:", {
-              ticketuser_id: selectedTicket?.user_id,
-              currentuser_id: currentUser?.id,
-              isMyTicket,
-            });
+            /* console.log("Original Ticket Check:", {
+               ticketuser_id: selectedTicket?.user_id,
+               currentuser_id: currentUser?.id,
+               isMyTicket,
+             });*/
             return (
               <div className={`chat ${isMyTicket ? "chat-end" : "chat-start"}`}>
                 <div className="chat-image avatar placeholder">

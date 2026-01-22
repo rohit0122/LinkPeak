@@ -246,7 +246,6 @@ export default function LinkEditor({
   };
 
   const handleAiTitle = async () => {
-    console.log("planplanplanplan ", plan);
     if (!formData.url) {
       toast.error("Please enter a URL first");
       return;

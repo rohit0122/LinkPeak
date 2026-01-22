@@ -41,7 +41,7 @@ export default function LiveDemo() {
             </h2>
 
             <p className="text-xl opacity-60 mb-12 font-medium leading-relaxed">
-              Why settle for generic? Switch between 8+ color themes and watch
+              Why settle for generic? Switch between 10+ color themes and watch
               your bio page transform in real-time. No code, no design skills
               needed.
             </p>

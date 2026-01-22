@@ -98,7 +98,7 @@ export default function CookiesPage() {
                                         </tr>
                                         <tr>
                                             <td>LocalStorage</td>
-                                            <td className="font-mono text-sm">lpk-auth-store</td>
+                                            <td className="font-mono text-sm">lpkAuthStorage</td>
                                             <td>Maintains session state and user profile</td>
                                             <td>Persistent</td>
                                         </tr>

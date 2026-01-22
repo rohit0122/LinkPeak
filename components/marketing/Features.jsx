@@ -21,7 +21,7 @@ const features = [
     },
     {
         title: "Custom Branding",
-        description: `${CONFIG.DAISY_THEMES.length}+ high-end color themes and ${CONFIG.PLAN_LIMITS.PRO.allowedTemplates.length} pro templates. Your bio page should look as unique as your content.`,
+        description: `10+ high-end color themes and 14+ bio templates. Your bio page should look as unique as your content.`,
         icon: RiPaletteLine,
         color: "text-purple-500",
         bg: "bg-purple-50"

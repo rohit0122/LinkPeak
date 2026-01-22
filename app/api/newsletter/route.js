@@ -15,12 +15,9 @@ export async function GET(req) {
 }
 
 export async function POST(req) {
-    console.log("Newsletter POST hit");
     try {
         const body = await req.json();
-        console.log("Payload:", body);
         const response = await restClient.post(BACKEND_ENDPOINTS.PUBLIC.NEWSLETTER_SUBSCRIBE, body);
-        console.log("Backend response status:", response.status);
         return NextResponse.json(response.data, { status: response.status });
     } catch (error) {
         return NextResponse.json(

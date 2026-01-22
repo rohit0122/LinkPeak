@@ -318,15 +318,16 @@ export default function DashboardPage() {
   const handleSeoAiMagic = async () => {
     setIsSeoAiLoading(true);
     try {
+      const mergedBio = { ...currentBioPage, ...tempBioPageConfig };
       const { data } = await axios.post(ENDPOINTS.AI.GENERATE_SEO, {
-        title: currentBioPage.title,
-        bio: currentBioPage.bio,
-        slug: currentBioPage.slug,
+        title: mergedBio.title,
+        bio: mergedBio.bio,
+        slug: mergedBio.slug,
       });
       if (data.success) {
         const seoUpdates = {
           seo: {
-            ...currentBioPage.seo,
+            ...mergedBio.seo,
             ...data.data,
           },
         };

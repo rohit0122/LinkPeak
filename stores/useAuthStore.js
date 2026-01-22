@@ -219,7 +219,7 @@ export const useAuthStore = create(
       }),
 
       {
-        name: "lpk-auth-storage",
+        name: "lpkAuthStorage",
         storage: createJSONStorage(() => localStorage),
         partialize: (state) => ({
           currentUser: state.currentUser,
