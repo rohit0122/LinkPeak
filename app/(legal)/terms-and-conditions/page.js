@@ -122,7 +122,7 @@ export default function TermsPage() {
                             </p>
                             <h3 className="text-xl font-bold mb-4 mt-8">4.3 Cancellation and Refunds</h3>
                             <p>
-                                We want you to buy with confidence, which is why we offer a 24-hour full-access trial for PRO and AGENCY plans to evaluate the platform.
+                                We want you to buy with confidence, which is why we offer a 7 days full-access trial for PRO and AGENCY plans to evaluate the platform.
                                 You may cancel your subscription or delete your account at any time through your dashboard.
                             </p>
                             <p className="bg-base-200 p-6 rounded-2xl border border-base-300 font-medium">

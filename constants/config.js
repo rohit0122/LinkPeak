@@ -124,7 +124,7 @@ export const CONFIG = {
 
     TRIAL_MESSAGES: {
         TITLE: (hours) => `${hours} Hours of Peak Access Remaining`,
-        SUBTEXT: "Your trial is active! Secure your analytics and keep your bio live beyond the next 24 hours.",
+        SUBTEXT: "Your trial is active! Secure your analytics and keep your bio live beyond the next 7 days.",
         CTA: "Secure My Pro Access"
     },
     SUBSCRIPTION_MESSAGES: {

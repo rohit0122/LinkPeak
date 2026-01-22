@@ -154,7 +154,7 @@ export default function WhyDifferent() {
                             </Link>
                             <Link
                                 href="#comparison"
-                                className="btn btn-ghost btn-lg px-8 text-xl font-bold"
+                                className="btn btn-neutral btn-outline btn-lg px-8 text-xl font-bold"
                             >
                                 See the Difference
                             </Link>

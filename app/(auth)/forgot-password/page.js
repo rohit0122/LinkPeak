@@ -67,7 +67,7 @@ export default function ForgotPasswordPage() {
                                         setSuccess(false);
                                         setEmail("");
                                     }}
-                                    className="btn btn-neutral btn-sm btn-ghost opacity-60 hover:opacity-100 font-bold"
+                                    className="btn btn-neutral btn-sm opacity-60 hover:opacity-100 font-bold"
                                 >
                                     Try a different email
                                 </button>

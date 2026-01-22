@@ -139,7 +139,7 @@ export default function NewsletterManagement() {
                                     <td className="text-right px-8">
                                         <button
                                             onClick={() => handleDeleteClick(subscriber)}
-                                            className="btn btn-ghost btn-sm btn-circle hover:bg-error/10 hover:text-error"
+                                            className="btn btn-neutral btn-outline btn-sm btn-circle hover:bg-error/10 hover:text-error"
                                             title="Remove Subscriber"
                                         >
                                             <RiDeleteBin6Line className="text-lg" />

@@ -97,7 +97,7 @@ export default function NotFound() {
                             </Link>
                             <button
                                 onClick={() => router.back()}
-                                className="btn btn-ghost w-full font-bold opacity-60 hover:opacity-100 transition-all"
+                                className="btn btn-neutral btn-outline w-full font-bold opacity-60 hover:opacity-100 transition-all"
                             >
                                 <RiArrowLeftLine className="text-xl" />
                                 Go Back

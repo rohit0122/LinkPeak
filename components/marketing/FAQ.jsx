@@ -36,7 +36,7 @@ const faqs = [
     },
     {
         q: "What is your refund policy?",
-        a: "Because we offer a 24-hour full-access trial, we do not provide refunds once a paid subscription begins. We encourage everyone to use the trial period to ensure the platform meets their needs."
+        a: "Because we offer a 7 days full-access trial, we do not provide refunds once a paid subscription begins. We encourage everyone to use the trial period to ensure the platform meets their needs."
     },
     {
         q: "Can I use my own domain name?",

@@ -49,7 +49,7 @@ export default function SuspendedPage() {
                                 <RiCustomerService2Line className="text-xl" />
                                 Support Center
                             </Link>
-                            <Link href="/" className="btn btn-ghost w-full sm:flex-1 h-12 rounded-2xl font-bold gap-2 opacity-60 hover:opacity-100">
+                            <Link href="/" className="btn btn-neutral btn-outline w-full sm:flex-1 h-12 rounded-2xl font-bold gap-2 opacity-60 hover:opacity-100">
                                 Back to Home
                                 <RiArrowRightSLine className="text-xl" />
                             </Link>

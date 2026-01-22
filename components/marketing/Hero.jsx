@@ -57,7 +57,7 @@ export default function Hero() {
               </Link>
               <Link
                 href="/why-different"
-                className="btn btn-ghost btn-lg px-8 text-xl font-bold flex items-center gap-2"
+                className="btn btn-neutral btn-outline btn-lg px-8 text-xl font-bold flex items-center gap-2"
               >
                 <RiPlayCircleLine className="text-2xl" /> See How it Works
               </Link>
