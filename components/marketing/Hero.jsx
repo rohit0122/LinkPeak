@@ -16,15 +16,15 @@ import { CONFIG } from "@/constants/config";
 export default function Hero() {
   return (
     <LazyMotion features={domAnimation}>
-      <header className="relative min-h-screen pt-16 md:pt-12 pb-20 overflow-hidden bg-base-100">
+      <header className="relative min-h-screen pt-16 xl:pt-12 pb-20 overflow-hidden bg-base-100">
         {/* Background Decor */}
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] -mr-40 -mt-40" aria-hidden="true"></div>
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-secondary/10 rounded-full blur-[100px] -ml-40 -mb-40" aria-hidden="true"></div>
 
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-20 md:gap-2 items-center">
+        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 xl:grid-cols-3 gap-20 xl:gap-2 items-center">
           {/* Text Content */}
           <m.div
-            className="relative z-10 flex flex-col items-center md:items-start text-center md:text-left md:col-span-2"
+            className="relative z-10 flex flex-col items-center xl:items-start text-center xl:text-left xl:col-span-2"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -37,12 +37,12 @@ export default function Hero() {
               Optimize with AI Intelligence.
             </div>
 
-            <h1 className="text-6xl md:text-8xl font-medium tracking-tight leading-[0.9] text-base-content mb-8">
+            <h1 className="text-6xl xl:text-8xl font-medium tracking-tight leading-[0.9] text-base-content mb-8">
               The peak of your{" "}
               <span className="text-primary italic">digital identity.</span>
             </h1>
 
-            <p className="text-xl md:text-2xl font-medium text-base-content/60 max-w-xl mb-12 leading-relaxed">
+            <p className="text-xl xl:text-2xl font-medium text-base-content/60 max-w-xl mb-12 leading-relaxed">
               Beautiful, data-driven bio pages designed for high engagement. Free
               forever, premium by design.
             </p>
@@ -63,7 +63,7 @@ export default function Hero() {
               </Link>
             </div>
 
-            <div className="mt-16 pt-8 border-t border-base-300 w-full flex flex-col sm:flex-row items-center gap-8 md:justify-start justify-center">
+            <div className="mt-16 pt-8 border-t border-base-300 w-full flex flex-col sm:flex-row items-center gap-8 xl:justify-start justify-center">
               <div className="flex items-center gap-4">
                 <div className="avatar-group -space-x-3 rtl:space-x-reverse p-2">
                   <Avatar
@@ -110,7 +110,7 @@ export default function Hero() {
 
           {/* Mockup Side */}
           <m.div
-            className="relative flex justify-center md:justify-end"
+            className="relative flex justify-center xl:justify-end mt-10 xl:mt-0"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -126,7 +126,7 @@ export default function Hero() {
                 <div className="hover:rotate-3 transition-transform duration-700 origin-center">
                   <DemoTemplate
                     demoData={getDemoProfile()}
-                    className="h-screen max-w-sm"
+                    className="max-w-sm"
                     isLCP={true}
                   />
                 </div>
