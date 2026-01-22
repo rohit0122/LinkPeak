@@ -5,6 +5,12 @@ const nextConfig = {
       {
         protocol: 'http',
         hostname: 'linkpeakk.localhost.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'http',
+        hostname: '127.0.0.1',
+        pathname: '/**',
       },
       {
         protocol: 'https',
