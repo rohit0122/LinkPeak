@@ -193,9 +193,9 @@ export default function LoginPage() {
             </div>
           </form>
 
-          <div className="divider opacity-30 my-8 uppercase text-[10px] font-bold tracking-tight">OR</div>
+          <div className="divider opacity-50 my-4 uppercase text-[10px] font-bold tracking-tight">OR</div>
 
-          <p className="text-center mt-6 text-xs font-medium opacity-60">
+          <p className="text-center text-xs font-medium opacity-80">
             New to {CONFIG.SITE_NAME}?{" "}
             <Link
               href="/register"

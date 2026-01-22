@@ -16,6 +16,8 @@ import {
   RiArrowDownSLine,
   RiCheckLine,
   RiAddCircleLine,
+  RiStackLine,
+  RiFlashlightLine,
 } from "react-icons/ri";
 import { toast } from "react-hot-toast";
 import { CONFIG } from "@/constants/config";
@@ -28,13 +30,13 @@ const publicLinks = [
   {
     name: "Features",
     href: "/#features",
-    icon: <RiSparklingLine size={24} />,
+    icon: <RiStackLine size={24} />,
     color: "text-primary",
   },
   {
     name: "Why Different",
     href: "/why-different",
-    icon: <RiSparklingLine size={24} />,
+    icon: <RiFlashlightLine size={24} />,
     color: "text-secondary",
   },
   {
@@ -263,12 +265,14 @@ export default function NavbarClient({
             <Link
               href="/login"
               className="btn btn-neutral btn-outline font-medium w-full"
+              onClick={() => setMobileOpen(false)}
             >
               Login
             </Link>
             <Link
               href="/register"
               className="btn btn-primary btn-outline font-medium w-full"
+              onClick={() => setMobileOpen(false)}
             >
               Get Started
             </Link>

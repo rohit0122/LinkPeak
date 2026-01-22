@@ -92,7 +92,7 @@ export default function PreviewTemplate({ demoData = {}, isDemo = false }) {
     };
 
     return (
-        <MobileMock theme={theme} className="min-w-[322px] min-h-[660px] h-screen">
+        <MobileMock theme={theme} className="min-w-[322px] h-screen max-h-[720px]">
             {/* 1. FIXED UI LAYER */}
             <button className="absolute top-6 right-6 btn btn-circle btn-ghost btn-sm bg-base-100/50 backdrop-blur shadow-sm z-30 opacity-50 cursor-default">
                 <RiQrCodeLine className="text-lg" />

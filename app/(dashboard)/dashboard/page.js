@@ -538,8 +538,8 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="w-full lg:w-[400px] mt-20 lg:mt-0">
-          <div className="lg:sticky top-8 transform-gpu scale-[0.8] sm:scale-95 lg:scale-90 lg:translate-x-4 origin-top flex justify-center lg:block">
+        <div className="w-full lg:w-[400px] mt-4 lg:mt-0">
+          <div className="lg:sticky top-8 origin-top flex justify-center lg:block">
             <PreviewTemplate
               key={`${currentBioPage?.id}-${currentBioPage?.links
                 .map((l) => l.id + l.is_active)

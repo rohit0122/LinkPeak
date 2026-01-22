@@ -82,6 +82,7 @@ function RegisterForm() {
 
       if (result.success) {
         setIsSuccess(true);
+        window.scrollTo({ top: 0, behavior: "smooth" });
         setFormData({ name: "", email: "", password: "", confirmPassword: "" });
         setAgreed(false);
       } else {
