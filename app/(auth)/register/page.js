@@ -216,7 +216,7 @@ function RegisterForm() {
                               <span className="text-xs opacity-40 font-bold">/MO</span>
                             </div>
                             {plan.trial && (
-                              <span className={`text-[10px] font-black text-${plan.color} animate-pulse bg-${plan.color}/10 px-2 py-0.5 rounded-full mt-1 uppercase`}>
+                              <span className={`text-[10px] font-extrabold text-${plan.color} animate-pulse bg-${plan.color}/10 px-2 py-0.5 rounded-full mt-1 uppercase`}>
                                 {plan.trial}
                               </span>
                             )}
@@ -380,7 +380,7 @@ function RegisterForm() {
                     <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 border border-primary/20">
                       <RiFileTextFill className="text-3xl text-primary" />
                     </div>
-                    <h3 className="font-black text-3xl sm:text-4xl text-center">
+                    <h3 className="font-extrabold text-3xl sm:text-4xl text-center">
                       Terms & Privacy
                     </h3>
                     <p className="text-xs opacity-40 font-bold uppercase tracking-widest mt-2">Legal Information Centre</p>
@@ -392,7 +392,7 @@ function RegisterForm() {
                         <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
                           <RiFileListLine className="text-xl" />
                         </div>
-                        <h4 className="font-black text-sm uppercase">1. Acceptance</h4>
+                        <h4 className="font-extrabold text-sm uppercase">1. Acceptance</h4>
                       </div>
                       <p className="text-xs text-base-content/70 font-medium leading-relaxed">
                         By registering, you agree to comply with <strong>{CONFIG.SITE_NAME}&apos;s</strong> Terms of Service. You are responsible for maintaining your account security.
@@ -404,7 +404,7 @@ function RegisterForm() {
                         <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
                           <RiUserLine className="text-xl" />
                         </div>
-                        <h4 className="font-black text-sm uppercase">2. Use of Service</h4>
+                        <h4 className="font-extrabold text-sm uppercase">2. Use of Service</h4>
                       </div>
                       <p className="text-xs text-base-content/70 font-medium leading-relaxed">
                         You retain ownership of your content but grant us a license to host and display it. No illegal or unauthorized use of our platform is permitted.
@@ -416,7 +416,7 @@ function RegisterForm() {
                         <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
                           <RiMoneyDollarCircleLine className="text-xl" />
                         </div>
-                        <h4 className="font-black text-sm uppercase">3. Billing</h4>
+                        <h4 className="font-extrabold text-sm uppercase">3. Billing</h4>
                       </div>
                       <p className="text-xs text-base-content/70 font-medium leading-relaxed">
                         Paid subscriptions are billed in advance. You can cancel anytime through your dashboard settings. No refunds for partial months.
@@ -428,7 +428,7 @@ function RegisterForm() {
                         <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
                           <RiShieldCheckLine className="text-xl" />
                         </div>
-                        <h4 className="font-black text-sm uppercase">4. Privacy</h4>
+                        <h4 className="font-extrabold text-sm uppercase">4. Privacy</h4>
                       </div>
                       <p className="text-xs text-base-content/70 font-medium leading-relaxed">
                         We prioritize your data security. We do <strong>not</strong> sell your personal information. We use minimal tracking for service optimization.

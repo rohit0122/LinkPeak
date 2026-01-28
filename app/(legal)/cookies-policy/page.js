@@ -25,7 +25,7 @@ export default function CookiesPage() {
                 <aside className="lg:w-64 shrink-0 lg:sticky lg:top-24 h-fit hidden lg:block">
                     <div className="flex items-center gap-2 mb-6 px-2">
                         <RiShieldLine className="text-xl text-primary" />
-                        <span className="font-black uppercase tracking-widest text-xs opacity-50">Cookie Navigation</span>
+                        <span className="font-extrabold uppercase tracking-widest text-xs opacity-50">Cookie Navigation</span>
                     </div>
                     <nav className="space-y-1">
                         {sections.map((section) => (
@@ -47,7 +47,7 @@ export default function CookiesPage() {
                         <motion.h1
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="text-5xl md:text-6xl font-black mb-4"
+                            className="text-5xl md:text-6xl font-extrabold mb-4"
                         >
                             Cookie Policy
                         </motion.h1>
@@ -57,9 +57,9 @@ export default function CookiesPage() {
                     </header>
 
                     {/* Content */}
-                    <div className="prose prose-neutral prose-lg max-w-none prose-headings:font-black prose-p:text-base-content/80 prose-li:text-base-content/80 prose-strong:text-base-content prose-th:bg-base-200 prose-th:p-4 prose-td:p-4">
+                    <div className="prose prose-neutral prose-lg max-w-none prose-headings:font-extrabold prose-p:text-base-content/80 prose-li:text-base-content/80 prose-strong:text-base-content prose-th:bg-base-200 prose-th:p-4 prose-td:p-4">
                         <section id="what" className="mb-12 scroll-mt-24">
-                            <h2 className="text-3xl font-black mb-6">1. What Are Cookies?</h2>
+                            <h2 className="text-3xl font-extrabold mb-6">1. What Are Cookies?</h2>
                             <p>
                                 Cookies are small text files stored on your device when you visit a website. They help websites
                                 remember your preferences and improve your experience.
@@ -72,7 +72,7 @@ export default function CookiesPage() {
                         </section>
 
                         <section id="how" className="mb-12 scroll-mt-24">
-                            <h2 className="text-3xl font-black mb-6">2. How We Use Cookies and Local Storage</h2>
+                            <h2 className="text-3xl font-extrabold mb-6">2. How We Use Cookies and Local Storage</h2>
                             <p>We use browser storage technologies for the following purposes:</p>
                         </section>
 
@@ -151,7 +151,7 @@ export default function CookiesPage() {
                         </section>
 
                         <section id="thirdparty" className="mb-12 scroll-mt-24">
-                            <h2 className="text-3xl font-black mb-6">3. Third-Party Cookies</h2>
+                            <h2 className="text-3xl font-extrabold mb-6">3. Third-Party Cookies</h2>
                             <p>
                                 We use minimal third-party services that may set their own cookies:
                             </p>
@@ -170,7 +170,7 @@ export default function CookiesPage() {
                         </section>
 
                         <section id="managing" className="mb-12 scroll-mt-24">
-                            <h2 className="text-3xl font-black mb-6">4. Managing Cookies and Local Storage</h2>
+                            <h2 className="text-3xl font-extrabold mb-6">4. Managing Cookies and Local Storage</h2>
                             <h3 className="text-xl font-bold mb-4 mt-8">4.1 Browser Settings</h3>
                             <p>
                                 You can control and delete cookies and localStorage through your browser settings:
@@ -195,20 +195,20 @@ export default function CookiesPage() {
                         </section>
 
                         <section id="updates" className="mb-12 scroll-mt-24">
-                            <h2 className="text-3xl font-black mb-6">5. Updates to This Policy</h2>
+                            <h2 className="text-3xl font-extrabold mb-6">5. Updates to This Policy</h2>
                             <p>
                                 We may update this Cookie Policy from time to time. The &quot;Last Updated&quot; date at the top indicates when changes were made.
                             </p>
                         </section>
 
                         <section id="contact" className="mb-24 scroll-mt-24">
-                            <h2 className="text-3xl font-black mb-6">6. Contact Us</h2>
+                            <h2 className="text-3xl font-extrabold mb-6">6. Contact Us</h2>
                             <p>
                                 If you have questions about our use of cookies and localStorage, contact us:
                             </p>
                             <p className="mt-4 flex items-baseline gap-2">
                                 <span className="font-bold">Email:</span>
-                                <a href={`mailto:${CONFIG.SUPPORT_EMAIL}`} className="text-primary hover:underline font-black underline-offset-4 decoration-2">
+                                <a href={`mailto:${CONFIG.SUPPORT_EMAIL}`} className="text-primary hover:underline font-extrabold underline-offset-4 decoration-2">
                                     {CONFIG.SUPPORT_EMAIL}
                                 </a>
                             </p>

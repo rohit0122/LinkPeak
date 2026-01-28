@@ -221,7 +221,7 @@ export default function SubscriptionStatus({ currentUser, initialData, redirectO
                                 <div className="flex justify-between items-start mb-4">
                                     <div>
                                         <h4 className="font-bold text-lg">PRO Plan</h4>
-                                        <p className="text-2xl font-black text-primary">{PLAN_DETAILS.PRO.price}</p>
+                                        <p className="text-2xl font-extrabold text-primary">{PLAN_DETAILS.PRO.price}</p>
                                     </div>
                                     {currentPlan === "PRO" && (
                                         <span className="badge badge-primary font-bold text-[10px] uppercase">My Plan</span>
@@ -249,7 +249,7 @@ export default function SubscriptionStatus({ currentUser, initialData, redirectO
                             <div className="flex justify-between items-start mb-4">
                                 <div>
                                     <h4 className="font-bold text-lg">AGENCY Plan</h4>
-                                    <p className="text-2xl font-black text-secondary">{PLAN_DETAILS.AGENCY.price}</p>
+                                    <p className="text-2xl font-extrabold text-secondary">{PLAN_DETAILS.AGENCY.price}</p>
                                 </div>
                                 {currentPlan === "AGENCY" && (
                                     <span className="badge badge-secondary font-bold text-[10px] uppercase">My Plan</span>

@@ -274,7 +274,7 @@ function PlanCard({ plan, active, onClick, loading }) {
             <div className="flex justify-between mb-3">
                 <div>
                     <h4 className="font-bold">{plan.id}</h4>
-                    <p className={`text-xl font-black text-${plan.color}`}>
+                    <p className={`text-xl font-extrabold text-${plan.color}`}>
                         {plan.price}
                     </p>
                 </div>
