@@ -5,9 +5,33 @@ import { RiCheckboxCircleFill, RiErrorWarningFill, RiInformationFill, RiLoader4L
 import { Toaster } from "react-hot-toast";
 import CookieConsent from "@/components/shared/CookieConsent";
 import GlobalLoading from "@/components/shared/GlobalLoading";
+import { usePathname } from "next/navigation";
 
 export default function ClientProvider({ children }) {
     const { loading } = useLoaderStore();
+    const pathname = usePathname();
+
+    const knownStaticPaths = [
+        "/",
+        "/why-different",
+        "/contact-us",
+        "/account-deleted",
+        "/suspended",
+        "/email",
+        "/privacy-policy",
+        "/terms-and-conditions",
+        "/cookies-policy"
+    ];
+
+    const isAuthPage = pathname.startsWith("/login") || pathname.startsWith("/register") || pathname.startsWith("/forgot-password") || pathname.startsWith("/reset-password") || pathname.startsWith("/verify-email") || pathname.startsWith("/setup-profile");
+    const isDashboardPage = pathname.startsWith("/dashboard");
+    const isAdminPage = pathname.startsWith("/admin");
+    const isDemoPage = pathname.startsWith("/demo") || pathname.startsWith("/trial");
+    const isPaymentPage = pathname.startsWith("/payment");
+
+    const isStaticPath = knownStaticPaths.includes(pathname);
+    const isSlugPage = !isStaticPath && !isAuthPage && !isDashboardPage && !isAdminPage && !isDemoPage && !isPaymentPage && pathname.split("/").filter(Boolean).length === 1;
+
     return (
         <>
             {children}
@@ -36,7 +60,7 @@ export default function ClientProvider({ children }) {
                     }
                 }}
             />
-            <CookieConsent />
+            {!isSlugPage && <CookieConsent />}
             <GlobalLoading show={loading} />
         </>
     );

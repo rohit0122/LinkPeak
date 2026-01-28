@@ -5,7 +5,7 @@ import {
 import "./globals.css";
 import { CONFIG } from "@/constants/config";
 import ClientProvider from "@/components/providers/ClientProvider";
-import { GoogleAnalytics } from "@next/third-parties/google";
+import ConditionalGoogleAnalytics from "@/components/shared/ConditionalGoogleAnalytics";
 import "@/lib/axiosClientInterceptors";
 
 const outfit = Outfit({
@@ -194,7 +194,7 @@ export default function RootLayout({ children }) {
           {children}
         </ClientProvider>
       </body>
-      <GoogleAnalytics gaId="G-YQLKK9K593" />
+      <ConditionalGoogleAnalytics gaId="G-YQLKK9K593" />
     </html >
   );
 }
