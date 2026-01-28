@@ -85,7 +85,7 @@ export default function WhyDifferent() {
         { feature: "Professional Templates", linkpeak: "14+", others: "1-2" },
         { feature: "Custom QR Codes", linkpeak: true, others: "Paid" },
         { feature: "Search Engine Visibility", linkpeak: "Optimized", others: "Basic" },
-        { feature: "Mobile Performance", linkpeak: "85/100 avg", others: "Variable" },
+        { feature: "Mobile Performance", linkpeak: "90/100 avg", others: "Variable" },
         { feature: "Free Forever Plan", linkpeak: true, others: "Limited" }
     ];
 
