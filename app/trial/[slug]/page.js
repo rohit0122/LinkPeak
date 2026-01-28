@@ -25,11 +25,17 @@ export async function generateMetadata({ params }) {
     if (!page) return { title: "Page Not Found" };
 
     const ogImage = page.profile_image || `${CONFIG.SITE_URL}${CONFIG.DEFAULT_PROFILE_IMAGE}`;
+    const siteIcon = `${CONFIG.SITE_URL}${CONFIG.DEFAULT_PROFILE_IMAGE}`;
 
     return {
         title: page.seo?.title || `${page.title} | ${CONFIG.SITE_NAME}`,
         description: page.seo?.description || page.bio || `Check out ${page.title}'s links on ${CONFIG.SITE_NAME}.`,
         keywords: page.seo?.keywords || "link in bio, creator, social links, linkpeak",
+        icons: {
+            icon: siteIcon,
+            shortcut: siteIcon,
+            apple: siteIcon,
+        },
         robots: {
             index: false, // Prevent indexing of trial pages
             follow: false,
