@@ -71,7 +71,7 @@ export default function HeroTemplate({ page, links, handleLinkClick }) {
 
                         <div className="space-y-2 mt-4">
                             <div className="text-4xl mb-2">{heroLink.icon || "⭐"}</div>
-                            <h2 className="text-3xl font-black leading-tight max-w-lg">
+                            <h2 className="text-3xl font-extrabold leading-tight max-w-lg">
                                 {heroLink.title}
                             </h2>
                             <div className="inline-flex items-center gap-2 text-sm font-medium opacity-80 group-hover:gap-4 transition-all">

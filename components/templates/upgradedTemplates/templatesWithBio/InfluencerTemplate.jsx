@@ -60,7 +60,7 @@ export default function InfluencerTemplate({ page, links, handleLinkClick }) {
 
                     {/* Name & Verified Badge */}
                     <div className="flex items-center gap-1.5 mb-1">
-                        <h1 className="text-2xl font-black text-base-content tracking-tight">{page.title}</h1>
+                        <h1 className="text-2xl font-extrabold text-base-content tracking-tight">{page.title}</h1>
                         <RiVerifiedBadgeFill className="text-primary text-xl" />
                     </div>
 

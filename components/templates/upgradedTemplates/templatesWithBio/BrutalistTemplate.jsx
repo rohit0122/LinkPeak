@@ -38,7 +38,7 @@ export default function BrutalistTemplate({ page, links, handleLinkClick }) {
                         className="border-4 border-base-content"
                     />
                     <div className="flex-1 text-center md:text-left w-full">
-                        <h1 className="text-4xl font-black uppercase tracking-tighter leading-none mb-3 break-words">{page.title}</h1>
+                        <h1 className="text-4xl font-extrabold uppercase tracking-tighter leading-none mb-3 break-words">{page.title}</h1>
                         <p className="text-sm font-bold uppercase border-t-4 border-base-content pt-3 mb-3 tracking-wide">{page.bio}</p>
                         <div className="inline-flex items-center gap-2 bg-primary text-primary-content px-3 py-1 text-xs font-bold uppercase border-2 border-base-content">
                             <RiEyeLine /> {page.total_views || 0} VIEWS
@@ -68,7 +68,7 @@ export default function BrutalistTemplate({ page, links, handleLinkClick }) {
                     aria-label={link.title}
                 >
                     <div className="flex flex-col gap-1 min-w-0">
-                        <span className="text-lg font-black uppercase tracking-widest break-all">
+                        <span className="text-lg font-extrabold uppercase tracking-widest break-all">
                             {link.title}
                         </span>
                         <span className="text-xs opacity-80 truncate font-sans font-medium">
@@ -83,7 +83,7 @@ export default function BrutalistTemplate({ page, links, handleLinkClick }) {
             ))}
 
             {safeLinks.length === 0 && (
-                <div className="text-center p-8 border-4 border-base-content uppercase font-black text-xl tracking-widest bg-base-200">
+                <div className="text-center p-8 border-4 border-base-content uppercase font-extrabold text-xl tracking-widest bg-base-200">
                     NO DATA FOUND
                 </div>
             )}

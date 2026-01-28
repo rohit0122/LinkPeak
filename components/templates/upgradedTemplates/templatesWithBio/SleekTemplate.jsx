@@ -46,7 +46,7 @@ export default function SleekTemplate({ page, links, handleLinkClick, isLCP = fa
                         </div>
                     </div>
                 </div>
-                <h1 className="text-3xl font-black tracking-tight text-base-content mb-2">{page.title}</h1>
+                <h1 className="text-3xl font-extrabold tracking-tight text-base-content mb-2">{page.title}</h1>
                 <p className="text-base font-medium text-base-content/60 max-w-lg text-center leading-relaxed">{page.bio}</p>
             </header>
 

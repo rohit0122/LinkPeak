@@ -41,7 +41,7 @@ export default function GradientMeshTemplate({ page, links, handleLinkClick }) {
                             className="border-4 border-base-100"
                         />
                     </div>
-                    <h1 className="text-3xl font-black bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent mb-2 inline-block tracking-tight">{page.title}</h1>
+                    <h1 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent mb-2 inline-block tracking-tight">{page.title}</h1>
                     <p className="text-sm font-medium text-base-content/80 mb-6 max-w-xs mx-auto leading-relaxed">{page.bio}</p>
 
                     <div className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-primary border border-primary/20 px-4 py-1.5 rounded-full bg-primary/5">
@@ -88,7 +88,7 @@ export default function GradientMeshTemplate({ page, links, handleLinkClick }) {
             ))}
 
             {safeLinks.length === 0 && (
-                <div className="text-center opacity-30 py-10 font-black text-3xl tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-base-content to-transparent">
+                <div className="text-center opacity-30 py-10 font-extrabold text-3xl tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-base-content to-transparent">
                     NULL
                 </div>
             )}

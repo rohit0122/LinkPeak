@@ -38,7 +38,7 @@ export default function BentoTemplate({ page, links, handleLinkClick, isLCP = fa
                     className="shadow-sm bg-base-200"
                 />
                 <div className="mb-1 flex-1 min-w-0">
-                    <h1 className="text-2xl font-black text-base-content leading-none mb-1">{page.title}</h1>
+                    <h1 className="text-2xl font-extrabold text-base-content leading-none mb-1">{page.title}</h1>
                     <div className="flex items-center gap-2 text-xs font-bold text-base-content/50 mb-2">
                         <RiEyeFill />
                         <span>{page.views} Views</span>
