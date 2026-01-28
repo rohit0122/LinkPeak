@@ -25,11 +25,20 @@ export async function generateMetadata({ params }) {
   if (!page) return { title: "Page Not Found" };
 
   const ogImage = page.profile_image || `${CONFIG.SITE_SCREENSHOT}`;
+  const siteIcon = page.profile_image || "/favicon.ico";
+
+  const userKeywords = page.seo?.keywords ? `${page.seo.keywords}, ` : "";
+  const platformKeywords = `link in bio, creator, social links, ${CONFIG.SITE_NAME}, bio page, ${slug}, ${page.title}`;
 
   return {
     title: page.seo?.title || `${page.title} | ${CONFIG.SITE_NAME}`,
     description: page.seo?.description || page.bio || `Check out ${page.title}'s links on ${CONFIG.SITE_NAME}.`,
-    keywords: page.seo?.keywords || "link in bio, creator, social links, linkpeak",
+    keywords: `${userKeywords}${platformKeywords}`,
+    icons: {
+      icon: siteIcon,
+      shortcut: siteIcon,
+      apple: siteIcon,
+    },
     robots: {
       index: true,
       follow: true,
@@ -76,32 +85,62 @@ export default async function Page({ params }) {
     return <BioNotFound />;
   }
 
-  // JSON-LD structured data for Person/ProfilePage
-  const personSchema = {
-    "@context": "https://schema.org",
-    "@type": "ProfilePage",
-    "mainEntity": {
-      "@type": "Person",
-      "name": page.title,
-      "description": page.bio || `${page.title}'s bio page`,
-      "image": page.profile_image || `${CONFIG.SITE_SCREENSHOT}`,
-      "url": `${CONFIG.SITE_URL}/${slug}`,
-      "sameAs": page.links?.filter(link => link.is_active)
-        .map(link => link.url) || []
+  const activeLinks = (page.links || []).filter(link => link.is_active);
+
+  // Expanded JSON-LD for 100% SEO Compliance
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfilePage",
+      "mainEntity": {
+        "@type": "Person",
+        "name": page.title,
+        "description": page.bio || `${page.title}'s bio page`,
+        "image": page.profile_image || `${CONFIG.SITE_SCREENSHOT}`,
+        "url": `${CONFIG.SITE_URL}/${slug}`,
+        "sameAs": activeLinks.map(link => link.url)
+      },
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": CONFIG.SITE_NAME,
+            "item": CONFIG.SITE_URL
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": page.title,
+            "item": `${CONFIG.SITE_URL}/${slug}`
+          }
+        ]
+      }
     },
-    "about": {
-      "@type": "Thing",
-      "name": "Link in bio page",
-      "description": "Social media bio page for TikTok, Instagram, YouTube, and other platforms"
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": `${page.title}'s Social Links`,
+      "description": `List of all important links for ${page.title}`,
+      "itemListElement": activeLinks.map((link, index) => ({
+        "@type": "ListItem",
+        "position": index + 1,
+        "url": link.url,
+        "name": link.title
+      }))
     }
-  };
+  ];
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
-      />
+      {jsonLd.map((schema, i) => (
+        <script
+          key={i}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
+      ))}
       <PublicBioNew page={page} />
     </>
   );

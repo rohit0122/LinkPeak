@@ -37,6 +37,7 @@ export default function SocialFooter({ socialLinks }) {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-2xl hover:text-primary transition-colors"
+                        aria-label={`Follow on ${key}`}
                     >
                         <Icon />
                     </a>
