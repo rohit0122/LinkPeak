@@ -24,7 +24,7 @@ export async function generateMetadata({ params }) {
 
     if (!page) return { title: "Page Not Found" };
 
-    const ogImage = page.profile_image || `${CONFIG.SITE_SCREENSHOT}`;
+    const ogImage = page.profile_image || `${CONFIG.SITE_URL}${CONFIG.DEFAULT_PROFILE_IMAGE}`;
 
     return {
         title: page.seo?.title || `${page.title} | ${CONFIG.SITE_NAME}`,

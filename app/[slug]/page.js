@@ -24,8 +24,8 @@ export async function generateMetadata({ params }) {
 
   if (!page) return { title: "Page Not Found" };
 
-  const ogImage = page.profile_image || `${CONFIG.SITE_SCREENSHOT}`;
-  const siteIcon = page.profile_image || "/favicon.ico";
+  const ogImage = page.profile_image || `${CONFIG.SITE_URL}${CONFIG.DEFAULT_PROFILE_IMAGE}`;
+  const siteIcon = page.profile_image || CONFIG.DEFAULT_PROFILE_IMAGE;
 
   const userKeywords = page.seo?.keywords ? `${page.seo.keywords}, ` : "";
   const platformKeywords = `link in bio, creator, social links, ${CONFIG.SITE_NAME}, bio page, ${slug}, ${page.title}`;
@@ -96,7 +96,7 @@ export default async function Page({ params }) {
         "@type": "Person",
         "name": page.title,
         "description": page.bio || `${page.title}'s bio page`,
-        "image": page.profile_image || `${CONFIG.SITE_SCREENSHOT}`,
+        "image": page.profile_image || `${CONFIG.SITE_URL}${CONFIG.DEFAULT_PROFILE_IMAGE}`,
         "url": `${CONFIG.SITE_URL}/${slug}`,
         "sameAs": activeLinks.map(link => link.url)
       },
