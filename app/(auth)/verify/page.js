@@ -1,135 +1,27 @@
-"use client";
+import VerifyForm from "@/components/auth/VerifyForm";
+import { CONFIG } from "@/constants/config";
+import { Suspense } from "react";
 
-import { useEffect, useState, Suspense } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
-import axios from "@/lib/httpClient";
-import Link from "next/link";
-import { ENDPOINTS } from "@/constants/endpoints";
-
-function VerifyContent() {
-  const searchParams = useSearchParams();
-  const lpkVerifyToken = searchParams.get("lpkVerifyToken");
-  const router = useRouter();
-  const [status, setStatus] = useState(lpkVerifyToken ? "verifying" : "error"); // verifying, success, error
-  const [message, setMessage] = useState(
-    lpkVerifyToken
-      ? "Please wait while we verify your email..."
-      : "Invalid verification link. No lpkVerifyToken provided."
-  );
-
-  useEffect(() => {
-    if (!lpkVerifyToken) return;
-
-    const verifyEmail = async () => {
-      try {
-        const { data } = await axios.post(`${ENDPOINTS.AUTH.VERIFY}`, {
-          lpkVerifyToken: lpkVerifyToken,
-        });
-        if (data.success) {
-          setStatus("success");
-          setMessage(data.message);
-        }
-      } catch (err) {
-        setStatus("error");
-        setMessage(
-          err.response?.data?.error ||
-          "Verification failed. The link may be expired."
-        );
-      }
-    };
-
-    verifyEmail();
-  }, [lpkVerifyToken]);
-
-  return (
-    <div className="card w-full max-w-sm bg-base-200">
-      <div className="card-body items-center text-center">
-        <h2 className="card-title text-2xl font-bold mb-4">
-          Email Verification
-        </h2>
-
-        {status === "verifying" && (
-          <div className="flex flex-col items-center">
-            <span className="loading loading-spinner loading-lg text-primary mb-4"></span>
-            <p>{message}</p>
-          </div>
-        )}
-
-        {status === "success" && (
-          <div className="flex flex-col items-center">
-            <div className="bg-success text-success-content p-4 rounded-full mb-4">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-12 w-12"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
-            </div>
-            <p className="mb-6">{message}</p>
-            <Link
-              href="/login"
-              title="back login"
-              className="btn btn-primary w-full"
-            >
-              Go to Login
-            </Link>
-          </div>
-        )}
-
-        {status === "error" && (
-          <div className="flex flex-col items-center">
-            <div className="bg-error text-error-content p-4 rounded-full mb-4">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-12 w-12"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </div>
-            <p className="mb-6">{message}</p>
-            <Link
-              href="/register"
-              title="back register"
-              className="btn btn-outline w-full"
-            >
-              Back to Registration
-            </Link>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
+export const metadata = {
+  title: `Verify Email | ${CONFIG.SITE_NAME}`,
+  description: `Complete your ${CONFIG.SITE_NAME} registration by verifying your email address. Just one more step to start building your bio link profile.`,
+  alternates: {
+    canonical: `${CONFIG.SITE_URL}/verify`,
+  },
+};
 
 export default function VerifyPage() {
-
   return (
-    <div className="flex items-center justify-center min-h-screen bg-base-200 px-4 py-12">
-      <Suspense
-        fallback={
+    <Suspense
+      fallback={
+        <div className="flex justify-center items-center min-h-screen bg-base-200">
           <div className="card w-full max-w-sm bg-base-100 shadow-xl p-8 items-center">
             <span className="loading loading-spinner loading-lg text-primary"></span>
           </div>
-        }
-      >
-        <VerifyContent />
-      </Suspense>
-    </div>
+        </div>
+      }
+    >
+      <VerifyForm />
+    </Suspense>
   );
 }
