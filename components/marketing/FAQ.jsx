@@ -32,7 +32,7 @@ const faqs = [
     },
     {
         q: "Do you offer a trial for PRO & AGENCY plans?",
-        a: "We want you to be 100% confident. We offer a full 24-hour 'Test Drive' of all premium features. Explore the AI SEO tools, advanced templates, and deep analytics risk-free before your first payment."
+        a: "We want you to be 100% confident. We offer a full 7 days 'Test Drive' of all premium features. Explore the AI SEO tools, advanced templates, and deep analytics risk-free before your first payment."
     },
     {
         q: "What is your refund policy?",
@@ -40,7 +40,7 @@ const faqs = [
     },
     {
         q: "Can I use my own domain name?",
-        a: "Currently, we provide high-authority vanity URLs (e.g., linkpeak.com/yourname). Full custom domain mapping (yourname.com) is currently in development and is scheduled for release sooner."
+        a: "Currently, we provide high-authority vanity URLs (e.g., https://www.linkpeakk.com/yourname). Full custom domain mapping (yourname.com) is currently in development and is scheduled for release sooner."
     }
 ];
 

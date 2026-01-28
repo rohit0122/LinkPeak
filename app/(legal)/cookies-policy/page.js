@@ -52,7 +52,7 @@ export default function CookiesPage() {
                             Cookie Policy
                         </motion.h1>
                         <p className="text-sm font-bold opacity-40 uppercase tracking-widest">
-                            Last Updated: January 21, 2026
+                            Last Updated: January 31, 2026
                         </p>
                     </header>
 

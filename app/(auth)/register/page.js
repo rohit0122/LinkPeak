@@ -443,13 +443,13 @@ function RegisterForm() {
                     <div className="flex flex-wrap items-center justify-center gap-4 text-xs">
                       <Link href="/terms-and-conditions" target="_blank" className="link link-primary font-bold">Full Terms of Service</Link>
                       <span className="opacity-20">•</span>
-                      <Link href="/privacy" target="_blank" className="link link-primary font-bold">Full Privacy Policy</Link>
+                      <Link href="/privacy-policy" target="_blank" className="link link-primary font-bold">Full Privacy Policy</Link>
                     </div>
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-4">
                     <button
-                      className="btn btn-primary flex-1 shadow-lg shadow-primary/20 font-black h-14 rounded-2xl gap-2"
+                      className="btn btn-primary flex-1 shadow-lg shadow-primary/20 font-bold h-14 rounded-2xl gap-2"
                       onClick={() => {
                         setAgreed(true);
                         setShowTerms(false);
@@ -459,7 +459,7 @@ function RegisterForm() {
                       I Agree & Accept
                     </button>
                     <button
-                      className="btn btn-ghost flex-1 h-14 rounded-2xl font-bold opacity-60 hover:opacity-100"
+                      className="btn btn-neutral btn-outline flex-1 h-14 rounded-2xl font-bold"
                       onClick={() => setShowTerms(false)}
                     >
                       Close Window

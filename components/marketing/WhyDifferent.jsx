@@ -68,7 +68,7 @@ export default function WhyDifferent() {
         {
             icon: RiPaletteLine,
             title: "Premium Design System",
-            description: "Choose from 11+ professionally crafted themes and 5 stunning templates. Your brand deserves better than cookie-cutter designs.",
+            description: "Choose from 10+ professionally crafted themes and 14+ stunning templates. Your brand deserves better than cookie-cutter designs.",
             benefit: "Stand out, not blend in",
             color: "text-pink-500",
             bg: "bg-pink-50",
@@ -81,11 +81,11 @@ export default function WhyDifferent() {
         { feature: "Real-Time Analytics Dashboard", linkpeak: true, others: false },
         { feature: "Live Visitor Tracking", linkpeak: true, others: "Limited" },
         { feature: "Fan Engagement (Likes)", linkpeak: true, others: false },
-        { feature: "Premium Themes Included", linkpeak: "11+", others: "2-3" },
-        { feature: "Professional Templates", linkpeak: "5", others: "1-2" },
+        { feature: "Premium Themes Included", linkpeak: "10+", others: "2-3" },
+        { feature: "Professional Templates", linkpeak: "14+", others: "1-2" },
         { feature: "Custom QR Codes", linkpeak: true, others: "Paid" },
         { feature: "Search Engine Visibility", linkpeak: "Optimized", others: "Basic" },
-        { feature: "Mobile Performance", linkpeak: "100/100", others: "Variable" },
+        { feature: "Mobile Performance", linkpeak: "85/100 avg", others: "Variable" },
         { feature: "Free Forever Plan", linkpeak: true, others: "Limited" }
     ];
 

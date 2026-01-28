@@ -57,7 +57,7 @@ export default function TermsPage() {
                             Terms of Service
                         </motion.h1>
                         <p className="text-sm font-bold opacity-40 uppercase tracking-widest">
-                            Last Updated: December 31, 2024
+                            Last Updated: January 31, 2026
                         </p>
                     </header>
 
@@ -112,8 +112,8 @@ export default function TermsPage() {
                             <p>We offer the following subscription plans:</p>
                             <ul>
                                 <li><strong>FREE:</strong> Limited features, up to 5 links, 1 page, basic templates</li>
-                                <li><strong>PRO ($9/month):</strong> Up to 1000 links, advanced templates, 90-day analytics, custom QR codes</li>
-                                <li><strong>AGENCY ($49/month):</strong> Up to 10 pages, unlimited links, all templates, white-labeling, unlimited analytics</li>
+                                <li><strong>PRO ($9/month):</strong> Unlimited links (up to 1000 links), advanced templates, 90-day analytics, custom QR codes</li>
+                                <li><strong>AGENCY ($49/month):</strong> Up to 10 pages, unlimited links (up to 1000 links per bio page), all templates, white-labeling, unlimited analytics</li>
                             </ul>
                             <h3 className="text-xl font-bold mb-4 mt-8">4.2 Billing</h3>
                             <p>
