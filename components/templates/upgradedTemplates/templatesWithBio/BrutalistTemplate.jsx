@@ -29,18 +29,27 @@ export default function BrutalistTemplate({ page, links, handleLinkClick }) {
         >
             {/* Profile Header */}
             <header className="border-4 border-base-content p-6 bg-base-100 mb-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.2)]">
-                <div className="flex flex-col md:flex-row items-center gap-6">
+                {/* Title at the Top - Balanced Scale */}
+                {/* Title at the Top - Balanced Scale */}
+                <h1 className="text-2xl sm:text-4xl font-extrabold uppercase tracking-tight leading-none mb-6 break-words whitespace-normal text-center sm:text-left">
+                    {page.title}
+                </h1>
+
+                {/* Side-by-Side Avatar and Bio */}
+                <div className="flex flex-row items-start gap-4 sm:gap-6 border-t-4 border-base-content pt-6">
                     <Avatar
                         src={page.profile_image}
                         alt={page.title}
-                        size={100}
+                        size={80}
+                        smSize={100}
                         shape="square"
-                        className="border-4 border-base-content"
+                        className="border-4 border-base-content flex-shrink-0"
                     />
-                    <div className="flex-1 text-center md:text-left w-full">
-                        <h1 className="text-4xl font-extrabold uppercase tracking-tighter leading-none mb-3 break-words">{page.title}</h1>
-                        <p className="text-sm font-bold uppercase border-t-4 border-base-content pt-3 mb-3 tracking-wide">{page.bio}</p>
-                        <div className="inline-flex items-center gap-2 bg-primary text-primary-content px-3 py-1 text-xs font-bold uppercase border-2 border-base-content">
+                    <div className="flex-1 min-w-0 flex flex-col items-start text-left gap-3">
+                        <p className="text-xs sm:text-sm font-bold uppercase tracking-wide break-words opacity-80">
+                            {page.bio}
+                        </p>
+                        <div className="inline-flex items-center gap-2 bg-primary text-primary-content px-3 py-1 text-[10px] sm:text-xs font-bold uppercase border-2 border-base-content shadow-[2px_2px_0px_0px_currentColor]">
                             <RiEyeLine /> {page.total_views || 0} VIEWS
                         </div>
                     </div>

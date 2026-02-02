@@ -23,7 +23,7 @@ export default function MobileMock({ children, className = "", theme = "dark", i
                         </div>
 
                         {/* Relative container for children - allows absolute children to float while others scroll */}
-                        <div className="relative flex-1 flex flex-col min-h-0">
+                        <div className="relative flex-1 flex flex-col min-h-0 min-w-0">
                             {children}
                         </div>
                     </div>

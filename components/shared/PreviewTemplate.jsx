@@ -107,7 +107,7 @@ export default function PreviewTemplate({ demoData = {}, isDemo = false }) {
             />
 
             {/* 2. SCROLLABLE CONTENT LAYER */}
-            <div className="flex-1 overflow-y-auto no-scrollbar pt-12 pb-8 flex flex-col items-center w-full h-full relative rounded-[inherit]">
+            <div className="flex-1 overflow-y-auto overflow-x-hidden no-scrollbar pt-12 pb-8 flex flex-col items-center w-full h-full relative rounded-[inherit]">
                 {/* MAIN TEMPLATE RENDER */}
                 <div className="w-full flex-1">
                     {renderTemplate()}
