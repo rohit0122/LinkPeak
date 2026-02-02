@@ -381,7 +381,7 @@ group-hover:text-secondary"
                   value={mergedBioPage?.seo?.title || ""}
                   onChange={(e) => {
                     if (currentUser?.plan === "FREE") return;
-                    updateTempBioPageConfigSession({
+                    setTempPageData({
                       seo: { ...mergedBioPage.seo, title: e.target.value },
                     });
                   }}
@@ -401,7 +401,7 @@ group-hover:text-secondary"
                   value={mergedBioPage?.seo?.keywords || ""}
                   onChange={(e) => {
                     if (currentUser?.plan === "FREE") return;
-                    updateTempBioPageConfigSession({
+                    setTempPageData({
                       seo: { ...mergedBioPage.seo, keywords: e.target.value },
                     });
                   }}
@@ -421,7 +421,7 @@ group-hover:text-secondary"
                 value={mergedBioPage?.seo?.description || ""}
                 onChange={(e) => {
                   if (currentUser?.plan === "FREE") return;
-                  updateTempBioPageConfigSession({
+                  setTempPageData({
                     seo: { ...mergedBioPage.seo, description: e.target.value },
                   });
                 }}
