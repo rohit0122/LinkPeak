@@ -22,6 +22,11 @@ const nextConfig = {
         hostname: '43.205.71.207',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'cdn.linkpeakk.com',
+        pathname: '/**',
+      },
     ],
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200],
