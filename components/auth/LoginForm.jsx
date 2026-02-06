@@ -8,7 +8,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useLoaderStore } from "@/stores/loaderStore";
 import { useEffect, Suspense } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 function LogoutToast() {
     const searchParams = useSearchParams();
@@ -61,6 +61,7 @@ export default function LoginForm() {
             );
 
             if (!result?.success) {
+                console.log('result', result)
                 const errorMsg = result?.message || "Invalid credentials";
                 setError(errorMsg);
 
@@ -104,7 +105,7 @@ export default function LoginForm() {
             >
                 <div className="h-2 bg-primary w-full"></div>
                 <div className="card-body p-8 sm:p-10">
-                    <div className="mb-8">
+                    <div className="mb-4">
                         <h2 className="text-3xl font-bold mb-1">
                             Welcome Back
                         </h2>
@@ -113,19 +114,14 @@ export default function LoginForm() {
                         </p>
                     </div>
 
-                    <AnimatePresence mode="wait">
-                        {error && (
-                            <motion.div
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: "auto" }}
-                                exit={{ opacity: 0, height: 0 }}
-                                className="alert alert-error text-xs py-3 rounded-xl mb-6"
-                                role="alert"
-                            >
-                                <span>{error}</span>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
+                    {error && (
+                        <div
+                            className="alert alert-error mb-2"
+                            role="alert"
+                        >
+                            <span>{error}</span>
+                        </div>
+                    )}
 
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="form-control">

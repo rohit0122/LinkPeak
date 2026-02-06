@@ -73,6 +73,8 @@ export const ENDPOINTS = {
     CHANGE_PLAN: `/subscriptions/change-plan`,
     VERIFY_PAYMENT: `/subscriptions/verify-payment`,
     RETRY_INIT: `/subscriptions/retry-init`,
+    INVOICES: `/subscriptions/invoices`,
+    CANCEL: `/subscriptions/cancel`,
   },
 };
 
@@ -151,5 +153,7 @@ export const BACKEND_ENDPOINTS = {
     VERIFY_PAYMENT: `${BACKEND_URL}/api/v1/subscriptions/verify`,
     WEBHOOK: `${BACKEND_URL}/api/v1/payment/callback`,
     RETRY_INIT: `${BACKEND_URL}/api/v1/subscriptions/retry-init`,
+    INVOICES: `${BACKEND_URL}/api/v1/subscriptions/invoices`,
+    CANCEL: `${BACKEND_URL}/api/v1/subscriptions/cancel`,
   }
 };

@@ -76,7 +76,7 @@ export const useAuthStore = create(
             toast.error(message);
             set({ loading: false }, false, "auth/loginError");
 
-            return { success: false, error: message };
+            return { success: false, message };
           }
         },
 
@@ -109,7 +109,7 @@ export const useAuthStore = create(
             }
 
             toast.error(message);
-            return { success: false, error: message };
+            return { success: false, message };
           }
         },
 
