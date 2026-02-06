@@ -39,7 +39,7 @@ import ConfirmationModal from "../shared/ConfirmationModal";
 import { ENDPOINTS } from "@/constants/endpoints";
 import { formatDateTime } from "@/lib/dateUtils";
 
-function SortableItem({ link, onEdit, onDelete, onToggle }) {
+function SortableItem({ link, onEdit, onDelete, onToggle, isReadOnly }) {
   const {
     attributes,
     listeners,
@@ -98,9 +98,10 @@ function SortableItem({ link, onEdit, onDelete, onToggle }) {
 
         <div className="flex items-center gap-1 sm:gap-2">
           <button
-            onClick={() => onToggle(link.id, !link.is_active)}
+            onClick={() => !isReadOnly && onToggle(link.id, !link.is_active)}
+            disabled={isReadOnly}
             className={`btn btn-sm btn-ghost btn-circle ${link.is_active ? "text-success" : "text-base-content/20"
-              }`}
+              } ${isReadOnly ? "opacity-30 grayscale cursor-not-allowed" : ""}`}
             title={link.is_active ? "Deactivate" : "Activate"}
           >
             {link.is_active ? (
@@ -110,15 +111,17 @@ function SortableItem({ link, onEdit, onDelete, onToggle }) {
             )}
           </button>
           <button
-            onClick={() => onEdit(link)}
-            className="btn btn-sm btn-ghost btn-circle hover:bg-primary/10 hover:text-primary"
+            onClick={() => !isReadOnly && onEdit(link)}
+            disabled={isReadOnly}
+            className={`btn btn-sm btn-ghost btn-circle hover:bg-primary/10 hover:text-primary ${isReadOnly ? "opacity-30 grayscale cursor-not-allowed" : ""}`}
             title="Edit Link"
           >
             <RiEditLine className="text-lg sm:text-xl" />
           </button>
           <button
-            onClick={() => onDelete(link.id)}
-            className="btn btn-sm btn-ghost btn-circle hover:bg-error/10 hover:text-error"
+            onClick={() => !isReadOnly && onDelete(link.id)}
+            disabled={isReadOnly}
+            className={`btn btn-sm btn-ghost btn-circle hover:bg-error/10 hover:text-error ${isReadOnly ? "opacity-30 grayscale cursor-not-allowed" : ""}`}
             title="Delete Link"
           >
             <RiDeleteBin6Line className="text-lg sm:text-xl" />
@@ -170,6 +173,7 @@ export default function LinkEditor({
   onAdd,
   onUpdate,
   onDelete,
+  isReadOnly = false,
 }) {
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingLink, setEditingLink] = useState(null);
@@ -196,6 +200,8 @@ export default function LinkEditor({
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
+
+  const dragSensors = isReadOnly ? [] : sensors;
 
   const handleDragEnd = (event) => {
     const { active, over } = event;
@@ -321,11 +327,11 @@ export default function LinkEditor({
           {!isLimitReached && (
             <button
               onClick={handleAddClick}
-              disabled={isLimitReached}
-              className={`btn btn-primary btn-sm ${isLimitReached ? "grayscale cursor-not-allowed" : ""
+              disabled={isLimitReached || isReadOnly}
+              className={`btn btn-primary btn-sm ${(isLimitReached || isReadOnly) ? "grayscale cursor-not-allowed" : ""
                 }`}
             >
-              <RiAddLine className="text-lg" /> Add Bio Link
+              <RiAddLine className="text-lg" /> {isReadOnly ? "Read-Only" : "Add Bio Link"}
             </button>
           )}
         </div>
@@ -333,7 +339,7 @@ export default function LinkEditor({
 
       {/* DnD Sortable */}
       <DndContext
-        sensors={sensors}
+        sensors={dragSensors}
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}
       >
@@ -350,8 +356,9 @@ export default function LinkEditor({
                   onEdit={handleEditClick}
                   onDelete={handleDeleteRequest}
                   onToggle={(id, active) =>
-                    onUpdate({ id: id, is_active: active })
+                    !isReadOnly && onUpdate({ id: id, is_active: active })
                   }
+                  isReadOnly={isReadOnly}
                 />
               ))
             ) : (

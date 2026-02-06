@@ -15,6 +15,7 @@ export default function ThemeTab({
   tempBioPageConfig,
   currentUser,
   setTempPageData,
+  isReadOnly = false,
 }) {
   const mergedBioPage = {
     ...currentBioPage,
@@ -55,7 +56,7 @@ export default function ThemeTab({
               <TemplateSelector
                 currentTemplate={mergedBioPage?.template}
                 plan={currentUser?.plan}
-                onSelect={(t) => setTempPageData({ template: t })}
+                onSelect={(t) => !isReadOnly && setTempPageData({ template: t })}
               />
             </div>
           </div>
@@ -75,7 +76,7 @@ export default function ThemeTab({
               <ThemeSelector
                 currentTheme={mergedBioPage?.theme}
                 plan={currentUser?.plan}
-                onSelect={(theme) => setTempPageData({ theme })}
+                onSelect={(theme) => !isReadOnly && setTempPageData({ theme })}
               />
             </div>
           </div>

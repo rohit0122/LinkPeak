@@ -88,6 +88,8 @@ export default function DashboardPage() {
     totalLikes: 0,
   });
   const [isSeoAiLoading, setIsSeoAiLoading] = useState(false);
+  const { currentSubscription } = useAuthStore();
+  const isReadOnly = currentSubscription?.status === "expired";
 
   const resetNavigation = () => {
     setPendingTab(null);
@@ -281,6 +283,10 @@ export default function DashboardPage() {
 
   const handleGlobalSave = async () => {
     if (!currentBioPage) return false;
+    if (isReadOnly) {
+      toast.error("Account in read-only mode. Please renew your plan to save changes.");
+      return false;
+    }
     try {
       const { data } = await axios.put(
         ENDPOINTS.PAGES_BY_ID(currentBioPage.id),
@@ -483,6 +489,7 @@ export default function DashboardPage() {
                 onAdd={handleAddLink}
                 onUpdate={handleUpdateLink}
                 onDelete={handleDeleteLink}
+                isReadOnly={isReadOnly}
               />
             )}
 
@@ -512,6 +519,7 @@ export default function DashboardPage() {
                 tempBioPageConfig={tempBioPageConfig}
                 currentUser={currentUser}
                 setTempPageData={updateTempBioPageConfigSession}
+                isReadOnly={isReadOnly}
               />
             )}
 
@@ -525,6 +533,7 @@ export default function DashboardPage() {
                 isSeoAiLoading={isSeoAiLoading}
                 CONFIG={CONFIG}
                 onImageUpload={handleImageUpload}
+                isReadOnly={isReadOnly}
               />
             )}
 
@@ -558,10 +567,11 @@ export default function DashboardPage() {
       >
         <button
           onClick={handleGlobalSave}
-          className="btn btn-primary btn-lg shadow-2xl gap-3 pl-6 pr-8 border-4 border-base-100 animate-bounce-subtle"
+          disabled={isReadOnly}
+          className={`btn btn-primary btn-lg shadow-2xl gap-3 pl-6 pr-8 border-4 border-base-100 animate-bounce-subtle ${isReadOnly ? 'grayscale opacity-50' : ''}`}
         >
-          <div className="w-3 h-3 rounded-full bg-error animate-pulse shadow-[0_0_10px_theme(colors.error)]"></div>
-          Save Changes
+          <div className={`w-3 h-3 rounded-full animate-pulse shadow-[0_0_10px_theme(colors.error)] ${isReadOnly ? 'bg-base-content/20' : 'bg-error'}`}></div>
+          {isReadOnly ? "Read-Only Mode" : "Save Changes"}
         </button>
       </div>
     </DashboardLayout>

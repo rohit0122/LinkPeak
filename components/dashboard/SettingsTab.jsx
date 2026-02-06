@@ -25,6 +25,7 @@ export default function SettingsTab({
   isSeoAiLoading,
   CONFIG,
   onImageUpload,
+  isReadOnly = false,
 }) {
 
   const mergedBioPage = {
@@ -69,11 +70,12 @@ export default function SettingsTab({
                   </label>
                   <input
                     type="text"
+                    disabled={isReadOnly}
                     className="input input-bordered w-full"
                     placeholder="e.g. your name or brand"
                     value={mergedBioPage?.title || ""}
                     onChange={(e) => {
-                      setTempPageData({
+                      !isReadOnly && setTempPageData({
                         title: e.target.value,
                       });
                     }}
@@ -93,9 +95,10 @@ export default function SettingsTab({
                       type="text"
                       className="grow"
                       placeholder="your-slug"
+                      disabled={isReadOnly}
                       value={mergedBioPage?.slug || ""}
                       onChange={(e) => {
-                        setTempPageData({
+                        !isReadOnly && setTempPageData({
                           slug: e.target.value
                             .toLowerCase()
                             .replace(/\s+/g, "-"),
@@ -327,7 +330,7 @@ export default function SettingsTab({
               <button
                 onClick={onSeoAiMagic}
                 disabled={isSeoAiLoading}
-                className={`btn btn-sm md:btn-md border-0 shadow-2xl relative overflow-hidden group/btn ${isSeoAiLoading
+                className={`btn btn-sm md:btn-md border-0 shadow-2xl relative overflow-hidden group/btn ${isSeoAiLoading || isReadOnly
                   ? "bg-white/10 text-white cursor-wait"
                   : "bg-white text-slate-900 hover:scale-105 active:scale-95"
                   }`}
@@ -348,7 +351,7 @@ export default function SettingsTab({
 group-hover:scale-110 
 group-hover:text-secondary"
                       />
-                      Run AI Magic
+                      {isReadOnly ? "Read-Only" : "Run AI Magic"}
                     </>
                   )}
                 </span>

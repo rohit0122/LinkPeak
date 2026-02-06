@@ -45,6 +45,11 @@ export const ENDPOINTS = {
     NEWSLETTER_BY_ID: (id) => `/newsletter/${id}`,
     SUBSCRIPTION_LIST: "/admin/subscriptions",
     SUBSCRIPTION_SYNC: "/admin/subscriptions/sync",
+    AUDIT_LOGS: {
+      SUBSCRIPTIONS: "/admin/logs/subscriptions",
+      WEBHOOKS: "/admin/logs/webhooks",
+      WEBHOOK_BY_ID: (id) => `/admin/logs/webhooks/${id}`,
+    },
   },
   TRACK: {
     VIEW: "/track/view",
@@ -75,6 +80,8 @@ export const ENDPOINTS = {
     RETRY_INIT: `/subscriptions/retry-init`,
     INVOICES: `/subscriptions/invoices`,
     CANCEL: `/subscriptions/cancel`,
+    STATUS: `/subscriptions/status`,
+    SYNC_STATUS: `/subscriptions/sync-status`,
   },
 };
 
@@ -142,6 +149,11 @@ export const BACKEND_ENDPOINTS = {
     NEWSLETTER_BY_ID: (id) => `${BACKEND_URL}/api/v1/admin/newsletter/subscribers/${id}`,
     SUBSCRIPTION_LIST: `${BACKEND_URL}/api/v1/admin/subscriptions`,
     SUBSCRIPTION_SYNC: `${BACKEND_URL}/api/v1/admin/subscriptions/sync`,
+    AUDIT_LOGS: {
+      SUBSCRIPTIONS: `${BACKEND_URL}/api/v1/admin/logs/subscriptions`,
+      WEBHOOKS: `${BACKEND_URL}/api/v1/admin/logs/webhooks`,
+      WEBHOOK_BY_ID: (id) => `${BACKEND_URL}/api/v1/admin/logs/webhooks/${id}`,
+    },
   },
   SUPPORT: {
     BASE: `${BACKEND_URL}/api/v1/tickets`,
@@ -155,5 +167,7 @@ export const BACKEND_ENDPOINTS = {
     RETRY_INIT: `${BACKEND_URL}/api/v1/subscriptions/retry-init`,
     INVOICES: `${BACKEND_URL}/api/v1/subscriptions/invoices`,
     CANCEL: `${BACKEND_URL}/api/v1/subscriptions/cancel`,
+    STATUS: `${BACKEND_URL}/api/v1/subscriptions/status`,
+    SYNC_STATUS: `${BACKEND_URL}/api/v1/subscriptions/sync-status`,
   }
 };

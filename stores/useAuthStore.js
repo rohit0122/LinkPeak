@@ -216,6 +216,51 @@ export const useAuthStore = create(
             false,
             "auth/clearTempBioPage"
           ),
+
+        // ======================
+        // 💳 SUBSCRIPTION ACTIONS
+        // ======================
+        syncSubscriptionStatus: async () => {
+          try {
+            set({ loading: true });
+            const res = await axios.post(ENDPOINTS.SUBSCRIPTION.SYNC_STATUS);
+            if (res.data?.success) {
+              const subscription = res.data.data;
+              set(
+                { currentSubscription: subscription },
+                false,
+                "auth/syncSubscriptionSuccess"
+              );
+              toast.success("Subscription status synced");
+              return { success: true, data: subscription };
+            }
+          } catch (error) {
+            console.error("Sync subscription error:", error);
+            const message = error.response?.data?.message || "Failed to sync subscription status";
+            toast.error(message);
+            return { success: false, message };
+          } finally {
+            set({ loading: false });
+          }
+        },
+
+        fetchSubscriptionStatus: async () => {
+          try {
+            const res = await axios.get(ENDPOINTS.SUBSCRIPTION.STATUS);
+            if (res.data?.success) {
+              const subscription = res.data.data;
+              set(
+                { currentSubscription: subscription },
+                false,
+                "auth/fetchSubscriptionSuccess"
+              );
+              return { success: true, data: subscription };
+            }
+          } catch (error) {
+            console.error("Fetch subscription error:", error);
+            return { success: false };
+          }
+        },
       }),
 
       {

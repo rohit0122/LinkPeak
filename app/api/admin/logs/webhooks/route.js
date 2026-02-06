@@ -4,11 +4,12 @@ import { BACKEND_ENDPOINTS } from "@/constants/endpoints";
 
 export async function GET(req) {
     try {
-        const response = await restClient.get(BACKEND_ENDPOINTS.ADMIN.PLANS);
+        const { search } = new URL(req.url);
+        const response = await restClient.get(`${BACKEND_ENDPOINTS.ADMIN.AUDIT_LOGS.WEBHOOKS}${search}`);
         return NextResponse.json(response.data, { status: response.status });
     } catch (error) {
         return NextResponse.json(
-            { success: false, message: "Failed to fetch plans" },
+            { success: false, message: "Failed to fetch webhook logs" },
             { status: error.response?.status || 500 }
         );
     }
