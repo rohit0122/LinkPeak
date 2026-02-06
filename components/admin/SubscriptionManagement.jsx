@@ -86,7 +86,7 @@ export default function SubscriptionManagement() {
     const getStatusBadge = (status) => {
         const statusMap = {
             active: "badge-success",
-            trialing: "badge-info",
+            trial: "badge-info",
             past_due: "badge-warning",
             canceled: "badge-error",
             incomplete: "badge-warning",
@@ -118,10 +118,10 @@ export default function SubscriptionManagement() {
                 </div>
                 <div className="p-6 bg-base-100 border border-base-200 flex flex-col justify-between">
                     <p className="text-xs font-medium uppercase opacity-40 flex items-center gap-2">
-                        <RiTimeLine className="text-info" /> Trialing
+                        <RiTimeLine className="text-info" /> Trial
                     </p>
                     <p className="text-4xl font-medium tracking-tight mt-2">
-                        {subscriptions.filter(s => s.status === 'trialing').length}
+                        {subscriptions.filter(s => s.status === 'trial').length}
                     </p>
                 </div>
             </div>

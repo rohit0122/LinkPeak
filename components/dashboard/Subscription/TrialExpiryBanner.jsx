@@ -22,20 +22,25 @@ export default function TrialExpiryBanner() {
     is_trial,
     expiry_date,
     razorpay_subscription_id,
-    status
-
+    status: rawStatus
   } = currentSubscription;
 
-  const isFreePlan = plan_name === "FREE";
+  const status = (rawStatus || "free").toLowerCase();
+  const isFreePlan = plan_name === "FREE" || status === "free";
+  const isExpired = status === "expired";
+  const isCancelled = status === "cancelled";
 
   const isPaidTrial =
-    (is_trial === true || status === "trialing") &&
+    status === "trial" &&
     (plan_name === "PRO" || plan_name === "AGENCY");
 
-  const brokenPaidTrial = !isFreePlan && status === 'pending' && !razorpay_subscription_id
+  const isVerifiedTrial = status === "active" && is_trial === true;
 
-  // ❌ Do not render banner if not FREE and not trialing paid plan
-  if (!isFreePlan && !isPaidTrial && !brokenPaidTrial) return null;
+  const brokenPaidTrial = !isFreePlan && status === 'pending' && !razorpay_subscription_id;
+
+  // ❌ Do not render banner if active paid plan (and not cancelling/expired/verified_trial)
+  if (status === "active" && !isCancelled && !isVerifiedTrial) return null;
+  if (!isFreePlan && !isPaidTrial && !brokenPaidTrial && !isExpired && !isCancelled && !isVerifiedTrial) return null;
 
 
   const onUpgradeContact = () => {
@@ -80,7 +85,13 @@ export default function TrialExpiryBanner() {
         <p className="font-bold uppercase text-warning text-sm">
           {isFreePlan
             ? "You are on Free Plan"
-            : `${plan_name} Trial Ending Soon`}
+            : isExpired
+              ? "Plan Expired"
+              : isCancelled
+                ? "Subscription Ending"
+                : isVerifiedTrial
+                  ? "7 Days Free (Payment Verified)"
+                  : "7 Days Free (No card)"}
         </p>
       </div>
 
@@ -89,7 +100,13 @@ export default function TrialExpiryBanner() {
         <p className="font-bold uppercase text-warning hidden md:block">
           {isFreePlan
             ? "You are on Free Plan"
-            : `${plan_name} Trial Ending Soon`}
+            : isExpired
+              ? "Plan Expired"
+              : isCancelled
+                ? "Subscription Ending"
+                : isVerifiedTrial
+                  ? "7 Days Free (Payment Verified)"
+                  : "7 Days Free (No card)"}
         </p>
 
         {isFreePlan && (
@@ -106,11 +123,23 @@ export default function TrialExpiryBanner() {
         {isPaidTrial && (
           <>
             <p className="leading-relaxed">
-              Your trial for the <strong>{plan_name}</strong> plan will expire on{" "}
+              Your <strong>7-day free trial (No card)</strong> for the <strong>{plan_name}</strong> plan will expire on{" "}
               <strong>{formatDate(expiry_date)}</strong>.
             </p>
             <p className="text-base-content/70 text-sm leading-relaxed">
-              If you choose to subscribe during the trial, payment will be charged automatically after the trial ends. Renew now to avoid any interruption in service.
+              No credit card is required for this trial. Renew now to avoid any interruption in service after the trial ends.
+            </p>
+          </>
+        )}
+
+        {isVerifiedTrial && (
+          <>
+            <p className="leading-relaxed">
+              Your <strong>Free trial</strong> for the <strong>{plan_name}</strong> plan is active until{" "}
+              <strong>{formatDate(expiry_date)}</strong>.
+            </p>
+            <p className="text-base-content/70 text-sm leading-relaxed">
+              Payment verified. Automatic billing will start after your trial ends. You can manage your subscription from account section.
             </p>
           </>
         )}
@@ -124,6 +153,28 @@ export default function TrialExpiryBanner() {
             It looks like your subscription setup was interrupted, due to some technical error. Please try again.
           </p>
         </>
+        )}
+
+        {isExpired && (
+          <>
+            <p className="leading-relaxed">
+              Your <strong>{plan_name}</strong> plan has expired.
+            </p>
+            <p className="text-base-content/70 text-sm leading-relaxed">
+              Renew your plan to restore full access and keep your bio page live with premium features.
+            </p>
+          </>
+        )}
+
+        {isCancelled && (
+          <>
+            <p className="leading-relaxed">
+              Your bio access ends on <strong>{formatDate(expiry_date)}</strong>.
+            </p>
+            <p className="text-base-content/70 text-sm leading-relaxed">
+              Your subscription has been cancelled. Resume your plan to keep your bio live and maintain premium access.
+            </p>
+          </>
         )}
       </div>
 
@@ -151,6 +202,14 @@ export default function TrialExpiryBanner() {
             onClick={onRetryInit}
           >
             Complete Setup
+          </button>
+        )}
+        {(isExpired || isCancelled) && (
+          <button
+            className="btn btn-warning btn-sm md:btn-md text-base-content font-semibold w-full md:w-auto whitespace-nowrap"
+            onClick={() => window.location.href = '#account'}
+          >
+            {isExpired ? "Renew Plan" : "Resume Plan"}
           </button>
         )}
       </div>
