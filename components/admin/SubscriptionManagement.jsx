@@ -86,7 +86,7 @@ export default function SubscriptionManagement() {
     const getStatusBadge = (status) => {
         const statusMap = {
             active: "badge-success",
-            trialing: "badge-info",
+            trial: "badge-info",
             past_due: "badge-warning",
             canceled: "badge-error",
             incomplete: "badge-warning",
@@ -121,7 +121,7 @@ export default function SubscriptionManagement() {
                         <RiTimeLine className="text-info" /> Trialing
                     </p>
                     <p className="text-4xl font-medium tracking-tight mt-2">
-                        {subscriptions.filter(s => s.status === 'trialing').length}
+                        {subscriptions.filter(s => s.status === 'trial').length}
                     </p>
                 </div>
             </div>

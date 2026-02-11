@@ -7,9 +7,9 @@ export default function SubscriptionDetails() {
         (state) => state
     );
     const isFreePlan = currentSubscription?.plan_name === "FREE";
-    const isPaidTrialPlan = currentSubscription?.plan_name != "FREE" && (currentSubscription?.is_trial || currentSubscription?.status === "trialing");
+    const isPaidTrialPlan = currentSubscription?.plan_name != "FREE" && (currentSubscription?.is_trial || currentSubscription?.status === "trial");
     const isActivePaidPlan = currentSubscription?.plan_name != "FREE" && !currentSubscription?.is_trial && currentSubscription?.status === "active";
-    const isSubscribedButPendingPayment = currentSubscription?.plan_name != "FREE" && !currentSubscription?.is_trial && currentSubscription?.status !== "trialing" && currentSubscription?.status !== "active";
+    const isSubscribedButPendingPayment = currentSubscription?.plan_name != "FREE" && !currentSubscription?.is_trial && currentSubscription?.status !== "trial" && currentSubscription?.status !== "active";
 
     return (
         <div className="card bg-base-100 shadow-sm border border-base-300">
@@ -41,7 +41,7 @@ export default function SubscriptionDetails() {
                             <div className="text-xs uppercase font-bold tracking-wider opacity-60 mb-1">
                                 Status: Account(Payment)
                             </div>
-                            <div className={`text-lg font-bold ${currentSubscription?.formatted_status === "Active"
+                            <div className={`text-lg font-bold uppercase ${currentSubscription?.formatted_status === "Active"
                                 ? "text-success"
                                 : "text-warning"
                                 }`}>
@@ -72,12 +72,12 @@ export default function SubscriptionDetails() {
                             </span>.
                             {" "}
                         </p>
-                        {currentSubscription?.status === 'trialing' && <p className="font-bold italic badge badge-info badge-outline text-info-content badge-sm">If you choose to subscribe during the trial, payment will be charged automatically after the trial ends.</p>}
-                        {currentSubscription?.status != 'trialing' && (
+                        {currentSubscription?.status === 'trial' && <p className="font-bold italic border border-warning-content text-warning-content bg-warning/10 p-2 text-xs"><div>If you renew during the trial, your plan will start immediately and <span className="font-extrabold">30 days will be added to your remaining trial period</span>. There are no automatic charges.</div></p>}
+                        {/*currentSubscription?.status != 'trial' && (
                             <span className="badge badge-warning badge-sm italic w-fit">
                                 Automatic billing starts after your trial ends
                             </span>
-                        )}
+                        )*/}
                     </div>}
                     {(isActivePaidPlan) && <div className="flex-1 space-y-1">
                         <p className="font-bold"> {currentSubscription?.plan_name} Active</p>
@@ -88,9 +88,9 @@ export default function SubscriptionDetails() {
                             </span>.
                             {" "}
                         </p>
-                        {currentSubscription?.status != 'trialing' && (
+                        {currentSubscription?.status != 'trial' && (
                             <span className="badge badge-warning badge-sm italic w-fit">
-                                Automatic billing enabled.
+                                No Automatic billing enabled. you have to pay manually to continue using the service, at the end of your current plan expiry date.
                             </span>
                         )}
                     </div>}

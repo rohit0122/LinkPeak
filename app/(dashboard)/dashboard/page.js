@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
 import dynamic from "next/dynamic";
 import axios from "@/lib/httpClient";
 import DashboardLayout from "@/components/layout/DashboardLayout";
@@ -29,8 +30,7 @@ import {
 } from "react-icons/ri";
 import { CONFIG } from "@/constants/config";
 import { ENDPOINTS } from "@/constants/endpoints";
-import { useRouter } from "next/navigation";
-import SubscriptionStatusDiv from "@/components/dashboard/SubscriptionStatusDiv";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import SubscriptionDetails from "@/components/dashboard/Subscription/SubscriptionDetails";
 import DangerZone from "@/components/dashboard/DangerZone";
@@ -97,6 +97,14 @@ export default function DashboardPage() {
 
   const unsavedChanges = Object.keys(dirtyFields).length > 0;
   const router = useRouter();
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    const paymentStatus = searchParams.get('payment');
+    if (paymentStatus !== null) {
+      const queryString = searchParams.toString();
+      router.replace(`/dashboard/success?${queryString}`);
+    }
+  }, [searchParams, router]);
 
   /* useEffect(() => {
      if (currentBioPage?.id) {

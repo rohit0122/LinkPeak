@@ -1,11 +1,13 @@
 import { RiFlashlightFill, RiStarFill, RiCheckLine } from "react-icons/ri";
 import { pricingPlans } from "@/constants/config";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 export default function UpgradePlanModal({
     isOpen,
     onClose,
     onSelectPlan,
 }) {
+    const currentPlan = useAuthStore((state) => state.currentSubscription.plan_name);
     if (!isOpen) return null;
 
     // Filter for upgradeable plans (exclude Free)
@@ -47,34 +49,39 @@ export default function UpgradePlanModal({
                         const color = getPlanColor(name);
 
                         return (
-                            <button
-                                key={plan.name}
-                                onClick={() => onSelectPlan(name)}
-                                className={`group border rounded-xl p-5 text-left transition-all
+                            <div className="indicator" key={plan.name}>
+                                {currentPlan === name && (
+                                    <span className="indicator-item indicator-top indicator-center badge badge-xs badge-info font-bold uppercase">Current Plan</span>
+                                )}
+                                <button
+
+                                    onClick={() => onSelectPlan(name)}
+                                    className={`group border rounded-xl p-5 text-left transition-all
                                     hover:border-${color} hover:bg-${color}/5 hover:scale-[1.02] active:scale-95`}
-                            >
-                                <div className="flex items-center gap-2 mb-2">
-                                    {getPlanIcon(name)}
-                                    <h4 className="font-semibold text-lg">{plan.name}</h4>
-                                </div>
+                                >
+                                    <div className="flex items-center gap-2 mb-2">
+                                        {getPlanIcon(name)}
+                                        <h4 className="font-semibold text-lg uppercase">{plan.name}</h4>
+                                    </div>
 
-                                <div className="text-xs text-base-content/70 mb-4 space-y-1.5 min-h-[60px]">
-                                    {plan.features.slice(0, 3).map((feature, idx) => (
-                                        <div key={idx} className="flex items-start gap-1">
-                                            <RiCheckLine className={`text-${color} shrink-0 mt-0.5`} />
-                                            <span className="line-clamp-2">{feature.name}</span>
-                                        </div>
-                                    ))}
-                                </div>
+                                    <div className="text-xs text-base-content/70 mb-4 space-y-1.5 min-h-[60px]">
+                                        {plan.features.slice(0, 5).map((feature, idx) => (
+                                            <div key={idx} className="flex items-start gap-1">
+                                                <RiCheckLine className={`text-${color} shrink-0 mt-0.5`} />
+                                                <span className="line-clamp-2">{feature.name}</span>
+                                            </div>
+                                        ))}
+                                    </div>
 
-                                <div className="font-bold text-2xl">${plan.price}/month</div>
+                                    <div className="font-bold text-2xl">${plan.price}/month</div>
 
-                                <div className="mt-4">
-                                    <span className={`btn btn-${color} btn-sm w-full`}>
-                                        Choose {plan.name}
-                                    </span>
-                                </div>
-                            </button>
+                                    <div className="mt-4">
+                                        <span className={`btn btn-${color} btn-sm w-full`}>
+                                            Choose {plan.name}
+                                        </span>
+                                    </div>
+                                </button>
+                            </div>
                         );
                     })}
                 </div>

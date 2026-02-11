@@ -12,36 +12,40 @@ import {
 import axios from "@/lib/httpClient";
 import { toast } from "react-hot-toast";
 import { ENDPOINTS } from "@/constants/endpoints";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 export default function SuccessClient() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const plan = searchParams.get("plan") || "PRO";
+    const paymentStatus = searchParams.get("payment");
     const [loading, setLoading] = useState(true);
+    const { updateCurrentSubscriptionSession } = useAuthStore();
 
     useEffect(() => {
         const finalizeUpgrade = async () => {
             try {
                 await new Promise((r) => setTimeout(r, 3000));
-
-                await axios.patch(ENDPOINTS.ADMIN.USERS, {
-                    userId: "ME",
-                    updates: { plan: plan.toUpperCase() },
-                });
-
-                toast.success(`Success! You've been upgraded to ${plan}`, {
+                const response = await axios.get(ENDPOINTS.PAYMENT.GET_STATUS);
+                if (!response.data.success) {
+                    throw new Error(response.data.message || "Failed to finalize upgrade");
+                }
+                updateCurrentSubscriptionSession(response.data.data.subscription);
+                toast.success(`Success! You've been upgraded to Paid Plan`, {
                     duration: 5000,
                     icon: "🔥",
                 });
             } catch (error) {
-                console.error("Finalization failed:", error);
+                toast.error(`Error! ${error.message}`, {
+                    duration: 5000,
+                    icon: "🔥",
+                });
             } finally {
                 setLoading(false);
             }
         };
 
-        finalizeUpgrade();
-    }, [plan]);
+        if (paymentStatus !== null) finalizeUpgrade();
+    }, [paymentStatus, updateCurrentSubscriptionSession]);
 
     return (
         <div className="min-h-[80vh] flex flex-col items-center justify-center p-4">
@@ -70,7 +74,7 @@ export default function SuccessClient() {
                     <p className="text-base-content/40 font-medium">
                         {loading
                             ? "We're securing your new features..."
-                            : `Welcome to the ${plan} Tier.`}
+                            : `Welcome to the Paid Plan.`}
                     </p>
                 </div>
 

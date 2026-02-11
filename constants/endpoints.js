@@ -74,6 +74,11 @@ export const ENDPOINTS = {
     VERIFY_PAYMENT: `/subscriptions/verify-payment`,
     RETRY_INIT: `/subscriptions/retry-init`,
   },
+  PAYMENT: {
+    GET_PAYMENT_URL: `/payment/get-payment-url`,
+    GET_STATUS: `/payment/status`,
+    WEBHOOK: `/payment/callback`,
+  },
 };
 
 // 2. Backend Endpoints (Next.js API Proxy -> Laravel API)
@@ -151,5 +156,10 @@ export const BACKEND_ENDPOINTS = {
     VERIFY_PAYMENT: `${BACKEND_URL}/api/v1/subscriptions/verify`,
     WEBHOOK: `${BACKEND_URL}/api/v1/payment/callback`,
     RETRY_INIT: `${BACKEND_URL}/api/v1/subscriptions/retry-init`,
-  }
+  },
+  PAYMENT: {
+    GET_PAYMENT_URL: `${BACKEND_URL}/api/v1/payments/create-link`,
+    GET_STATUS: `${BACKEND_URL}/api/v1/payments/status`,
+    WEBHOOK: `${BACKEND_URL}/api/v1/payment/callback`,
+  },
 };

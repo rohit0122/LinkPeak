@@ -56,7 +56,8 @@ export const CONFIG = {
             allowedTemplates: ["classic"],
             allowedThemes: "ALL",
             analyticsDays: 7,
-            customQR: false
+            customQR: false,
+            planIdInDb: 1,
         },
         FREE: {
             links: 5,
@@ -64,7 +65,8 @@ export const CONFIG = {
             allowedTemplates: ["classic"],
             allowedThemes: ["light", "dark"],
             analyticsDays: 7,
-            customQR: false
+            customQR: false,
+            planIdInDb: 2,
         },
         PRO: {
             links: 1000,
@@ -72,7 +74,8 @@ export const CONFIG = {
             allowedTemplates: ["classic", "bento", "hero", "influencer", "sleek", "minimalist", "glassmorphism", "stack"],
             allowedThemes: ["light", "dark", "midnight", "aurora", "cyberglow", "hyperpop", "zenstone", "matcha", "nebula"],
             analyticsDays: 90,
-            customQR: true
+            customQR: true,
+            planIdInDb: 3,
         },
         AGENCY: {
             links: 1000,
@@ -80,7 +83,8 @@ export const CONFIG = {
             allowedTemplates: "ALL",
             allowedThemes: "ALL", // includes Velvet Gold and Royal Amethyst
             analyticsDays: 9999,
-            customQR: true
+            customQR: true,
+            planIdInDb: 4,
         }
     },
     // UI Settings
@@ -200,3 +204,8 @@ export const pricingPlans = [
         ],
     },
 ];
+
+
+export const getPlanIdByName = (name) => {
+    return CONFIG.PLAN_LIMITS[name]?.planIdInDb || 2; // FREE plan default
+}

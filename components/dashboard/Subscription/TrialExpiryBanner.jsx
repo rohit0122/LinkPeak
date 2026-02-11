@@ -3,8 +3,7 @@ import { PiWarningCircle } from "react-icons/pi";
 import UpgradePlanModal from "./UpgradePlanModal";
 import { useState } from "react";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { useRazorpay } from "@/hooks/useRazorpay";
-import { formatDate } from "@/lib/dateUtils";
+import { calculateTimeLeft, formatDate } from "@/lib/dateUtils";
 import axios from "@/lib/httpClient";
 import { ENDPOINTS } from "@/constants/endpoints";
 import toast from "react-hot-toast";
@@ -12,8 +11,7 @@ import toast from "react-hot-toast";
 export default function TrialExpiryBanner() {
 
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
-  const { currentSubscription, updateCurrentSubscriptionSession } = useAuthStore();
-  const { upgradePlan, renewSubscription, isProcessing } = useRazorpay();
+  const { currentSubscription } = useAuthStore();
 
   if (!currentSubscription) return null;
 
@@ -21,7 +19,6 @@ export default function TrialExpiryBanner() {
     plan_name,
     is_trial,
     expiry_date,
-    razorpay_subscription_id,
     status
 
   } = currentSubscription;
@@ -29,11 +26,10 @@ export default function TrialExpiryBanner() {
   const isFreePlan = plan_name === "FREE";
 
   const isPaidTrial =
-    (is_trial === true || status === "trialing") &&
+    (is_trial === true || status === "trial") &&
     (plan_name === "PRO" || plan_name === "AGENCY");
 
-  const brokenPaidTrial = !isFreePlan && status === 'pending' && !razorpay_subscription_id
-
+  const brokenPaidTrial = !isFreePlan && status === 'pending';
   // ❌ Do not render banner if not FREE and not trialing paid plan
   if (!isFreePlan && !isPaidTrial && !brokenPaidTrial) return null;
 
@@ -42,25 +38,35 @@ export default function TrialExpiryBanner() {
     setShowUpgradeModal(true);
   };
 
-  const onSelectPlan = (plan) => {
+  /*const onSelectPlan = (plan) => {
     upgradePlan(plan, {
       redirectUrl: '/dashboard'
     });
     setShowUpgradeModal(false);
+  };*/
+
+  const onSelectPlan = async (plan) => {
+    console.log('plan ==== ', plan, getPlanIdByName(plan));
+    console.log('planId ==== ', ENDPOINTS.PAYMENT.GET_PAYMENT_URL);
+    const response = await axios.post(ENDPOINTS.PAYMENT.GET_PAYMENT_URL, {
+      planId: getPlanIdByName(plan)
+    });
+    console.log('response ==== ', response);
+    if (response.data.success) {
+      window.open(response.data.data.payment_url, '_blank');
+    } else {
+      toast.error(response.data.message);
+    }
+    setShowUpgradeModal(false);
   };
 
   const onExtend = () => {
-    renewSubscription(razorpay_subscription_id);
+    setShowUpgradeModal(true);
+
   };
 
   const onRetryInit = async () => {
-    const response = await axios.post(ENDPOINTS.SUBSCRIPTION.RETRY_INIT);
-    if (!response.data.success) {
-      toast.error(response.data.message);
-      return;
-    }
-    updateCurrentSubscriptionSession(response.data.data.subscription);
-    toast.success(response.data.message);
+    setShowUpgradeModal(true);
   }
 
   return (
@@ -110,7 +116,8 @@ export default function TrialExpiryBanner() {
               <strong>{formatDate(expiry_date)}</strong>.
             </p>
             <p className="text-base-content/70 text-sm leading-relaxed">
-              If you choose to subscribe during the trial, payment will be charged automatically after the trial ends. Renew now to avoid any interruption in service.
+              If you renew before your current plan expires, your new 30 days will be <strong>added to your remaining days</strong>.<br />
+              This ensures uninterrupted access to all features.
             </p>
           </>
         )}
@@ -125,34 +132,67 @@ export default function TrialExpiryBanner() {
           </p>
         </>
         )}
+
+        {/* Renewal Window */}
+        {currentSubscription?.is_renewal_window_open && (
+          <>
+            <p className="leading-relaxed">
+              Your {currentSubscription?.plan_name} is going to end in{" "}
+              <strong>{calculateTimeLeft(expiry_date)}</strong>.
+            </p>
+            <p className="text-base-content/70 text-sm leading-relaxed">
+              Renew now to avoid service interruption.
+            </p>
+
+            {/*<div className="alert alert-warning shadow-sm mb-4">
+              <RiAlertLine className="text-xl" />
+              <div className="flex-1">
+                <div className="font-bold text-sm">Plan Expiring Soon</div>
+                <div className="text-xs opacity-80">
+                  Your plan is going to expire in {calculateTimeLeft(currentSubscription?.expiry_date)}.
+                </div>
+              </div>
+            </div>*/}
+          </>
+        )}
       </div>
 
       {/* Action */}
       <div className="w-full md:w-auto mt-2 md:mt-0 flex justify-end">
-        {isFreePlan && (
+        <button
+          className="btn btn-warning btn-sm md:btn-md text-base-content font-semibold w-full md:w-auto whitespace-nowrap"
+          onClick={() => setShowUpgradeModal(true)}
+        >
+          {isFreePlan && "Upgrade for more features"}
+          {isPaidTrial && "Extend"}
+          {brokenPaidTrial && "Complete Setup"}
+          {!isFreePlan && !isPaidTrial && !brokenPaidTrial && currentSubscription?.is_renewal_window_open && "Renew Your Plan"}
+        </button>
+
+        {/*isFreePlan && (
           <button
             className="btn btn-warning btn-sm md:btn-md text-base-content font-semibold w-full md:w-auto whitespace-nowrap"
             onClick={onUpgradeContact}
           >
             Upgrade for more features
           </button>
-        )}
-        {isPaidTrial && (
+        )*/}
+        {/*isPaidTrial && (
           <button
-            className={`btn btn-warning btn-sm md:btn-md text-base-content font-semibold w-full md:w-auto whitespace-nowrap ${!razorpay_subscription_id ? 'hidden' : ''}`}
+            className={`btn btn-warning btn-sm md:btn-md text-base-content font-semibold w-full md:w-auto whitespace-nowrap`}
             onClick={onExtend}
           >
-            Renew / Extend
+            Extend
           </button>
-        )}
-        {brokenPaidTrial && (
+        )}*/}
+        {/*brokenPaidTrial && (
           <button
             className="btn btn-warning btn-sm md:btn-md text-base-content font-semibold w-full md:w-auto whitespace-nowrap"
             onClick={onRetryInit}
           >
             Complete Setup
           </button>
-        )}
+        )}*/}
       </div>
       <UpgradePlanModal
         isOpen={showUpgradeModal}

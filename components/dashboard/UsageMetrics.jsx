@@ -1,15 +1,17 @@
 import { useState } from "react";
-import { CONFIG } from "@/constants/config";
+import { CONFIG, getPlanIdByName } from "@/constants/config";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { RiPieChartLine, RiCheckLine } from "react-icons/ri";
 import UpgradePlanModal from "./Subscription/UpgradePlanModal";
 import { useRazorpay } from "@/hooks/useRazorpay";
+import axios from "@/lib/httpClient";
+import { ENDPOINTS } from "@/constants/endpoints";
 
 export default function UsageMetrics() {
     const [showUpgradeModal, setShowUpgradeModal] = useState(false);
-    const { currentUser, currentBioPage, allBioPages } = useAuthStore();
+    const { currentUser, currentBioPage, allBioPages, currentSubscription } = useAuthStore();
     const planLimits = CONFIG.PLAN_LIMITS[currentUser?.plan] || CONFIG.PLAN_LIMITS.FREE;
-
+    const isShowUpgradeButton = (currentUser?.plan === 'FREE' || currentSubscription?.status === 'trial');
     const metrics = [
         {
             label: "Links",
@@ -27,14 +29,18 @@ export default function UsageMetrics() {
         }
     ];
 
-    const { upgradePlan } = useRazorpay();
-
-    const onSelectPlan = (plan) => {
-        upgradePlan(plan, {
-            onSuccess: () => {
-                setTimeout(() => window.location.reload(), 1500);
-            }
+    const onSelectPlan = async (plan) => {
+        console.log('plan ==== ', plan, getPlanIdByName(plan));
+        console.log('planId ==== ', ENDPOINTS.PAYMENT.GET_PAYMENT_URL);
+        const response = await axios.post(ENDPOINTS.PAYMENT.GET_PAYMENT_URL, {
+            planId: getPlanIdByName(plan)
         });
+        console.log('response ==== ', response);
+        if (response.data.success) {
+            window.open(response.data.data.payment_url, '_blank');
+        } else {
+            toast.error(response.data.message);
+        }
         setShowUpgradeModal(false);
     };
 
@@ -86,7 +92,7 @@ export default function UsageMetrics() {
                     })}
                 </div>
 
-                {currentUser?.plan === 'FREE' && (
+                {(isShowUpgradeButton) && (
                     <div className="mt-4 p-3 bg-primary/5 rounded-lg border border-primary/20">
                         <p className="text-xs font-semibold text-primary mb-2">
                             🚀 Upgrade to unlock more

@@ -8,6 +8,11 @@ const nextConfig = {
         pathname: '/**',
       },
       {
+        protocol: 'https',
+        hostname: 'paravail-tucker-uninferrable.ngrok-free.dev',
+        pathname: '/**',
+      },
+      {
         protocol: 'http',
         hostname: '127.0.0.1',
         pathname: '/**',
