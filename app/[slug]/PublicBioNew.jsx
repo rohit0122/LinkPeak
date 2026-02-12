@@ -120,26 +120,16 @@ export default function PublicBioNew({ page, isDemo = false }) {
     setTimeout(() => setIsLiked(isCurrentlyLiked), 0);
 
     // 2. Views Tracking (Delayed)
-    const checkUnique = (key) => {
-      const lastTracked = localStorage.getItem(key);
-      if (!lastTracked) return true;
-      const hoursSince = (new Date().getTime() - parseInt(lastTracked)) / (1000 * 60 * 60);
-      return hoursSince > 24;
-    };
+    const timer = setTimeout(async () => {
+      await axios.post(ENDPOINTS.TRACK.VIEW, { pageId: page.id }, { skipLoader: true })
+        .then(() => {
+          // Update local view count once for the visitor
+          setTotalViews(prev => prev + 1);
+        })
+        .catch(console.error);
+    }, 3000);
+    return () => clearTimeout(timer);
 
-    const viewedKey = `viewed_${page.id}`;
-    if (checkUnique(viewedKey)) {
-      const timer = setTimeout(() => {
-        axios.post(ENDPOINTS.TRACK.VIEW, { pageId: page.id }, { skipLoader: true })
-          .then(() => {
-            localStorage.setItem(viewedKey, new Date().getTime().toString());
-            // Update local view count once for the visitor
-            setTotalViews(prev => prev + 1);
-          })
-          .catch(console.error);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
   }, [page?.id, isDemo, setIsLiked]);
 
   const handleLike = async () => {
@@ -149,7 +139,7 @@ export default function PublicBioNew({ page, isDemo = false }) {
     if (isDemo) return;
     try {
       localStorage.setItem(`liked_${page.id}`, "true");
-      axios.post(ENDPOINTS.TRACK.LIKE, { pageId: page.id }, { skipLoader: true });
+      await axios.post(ENDPOINTS.TRACK.LIKE, { pageId: page.id }, { skipLoader: true });
     } catch (error) {
       console.error("Like failed", error);
     }
@@ -157,19 +147,10 @@ export default function PublicBioNew({ page, isDemo = false }) {
 
   const handleLinkClick = async (linkId) => {
     if (isDemo) return;
-    const clickKey = `clicked_${linkId}`;
-    const lastClicked = localStorage.getItem(clickKey);
-    const hoursSince = lastClicked
-      ? (new Date().getTime() - parseInt(lastClicked)) / (1000 * 60 * 60)
-      : 999;
-
-    if (hoursSince > 24) {
-      try {
-        localStorage.setItem(clickKey, new Date().getTime().toString());
-        axios.post(ENDPOINTS.TRACK.CLICK, { linkId, pageId: page.id }, { skipLoader: true });
-      } catch (error) {
-        console.error("Click tracking failed", error);
-      }
+    try {
+      await axios.post(ENDPOINTS.TRACK.CLICK, { linkId, pageId: page.id }, { skipLoader: true });
+    } catch (error) {
+      console.error("Click tracking failed", error);
     }
   };
 

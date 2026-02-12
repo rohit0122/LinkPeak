@@ -33,11 +33,12 @@ export default function SuccessClient() {
                 toast.success(`Success! You've been upgraded to Paid Plan`, {
                     duration: 5000,
                     icon: "🔥",
-                });
+                },);
             } catch (error) {
                 toast.error(`Error! ${error.message}`, {
                     duration: 5000,
                     icon: "🔥",
+                    toasterId: 'success-payment'
                 });
             } finally {
                 setLoading(false);

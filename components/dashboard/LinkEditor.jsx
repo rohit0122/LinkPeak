@@ -132,7 +132,7 @@ function SortableItem({ link, onEdit, onDelete, onToggle }) {
             data-tip="Total Clicks"
           >
             <RiBarChartLine className="text-primary text-sm" />
-            <span>{link.clicks || 0} Total</span>
+            <span>{link.total_clicks || 0} Total</span>
           </div>
           <div
             className="flex tooltip tooltip-top items-center gap-1.5 text-[10px] uppercase tracking-widest font-bold text-base-content/40"

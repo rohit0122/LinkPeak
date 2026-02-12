@@ -149,12 +149,6 @@ export default function LoginForm() {
                                 <label htmlFor="login-password" className="label py-1">
                                     <span className="label-text font-bold text-xs opacity-50 uppercase tracking-widest">Password</span>
                                 </label>
-                                <Link
-                                    href="/forgot-password"
-                                    className="text-xs link link-hover opacity-40 hover:opacity-100 hover:text-primary font-bold"
-                                >
-                                    Forgot password?
-                                </Link>
                             </div>
                             <input
                                 id="login-password"
@@ -168,7 +162,7 @@ export default function LoginForm() {
                             />
                         </div>
 
-                        <div className="form-control mt-8">
+                        <div className="form-control">
                             <button
                                 className="btn btn-primary w-full shadow-lg shadow-primary/20 font-bold h-12"
                                 disabled={loading}
@@ -183,6 +177,14 @@ export default function LoginForm() {
                                     "Login"
                                 )}
                             </button>
+                            <div className="text-right">
+                                <Link
+                                    href="/forgot-password"
+                                    className="text-xs link link-hover opacity-40 hover:opacity-100 hover:text-primary font-bold"
+                                >
+                                    Forgot password?
+                                </Link>
+                            </div>
                         </div>
                     </form>
 
