@@ -63,7 +63,11 @@ const SupportView = dynamic(
 
 // No more useDashboardStore import
 
-export default function DashboardPage() {
+import { Suspense } from "react";
+
+// ... existing imports ...
+
+function DashboardContent() {
   const {
     currentUser,
     loading,
@@ -106,11 +110,7 @@ export default function DashboardPage() {
     }
   }, [searchParams, router]);
 
-  /* useEffect(() => {
-     if (currentBioPage?.id) {
-       fetchPageData(currentBioPage.id);
-     }
-   }, [currentBioPage?.id]);*/
+  // ... rest of the component logic ...
 
   const fetchPageData = async (pageId) => {
     try {
@@ -573,5 +573,13 @@ export default function DashboardPage() {
         </button>
       </div>
     </DashboardLayout>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<SkeletonDashboard />}>
+      <DashboardContent />
+    </Suspense>
   );
 }
