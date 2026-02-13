@@ -30,7 +30,7 @@ export default function PrivacyPage() {
   return (
     <LegalPageClient
       title="Privacy Policy"
-      lastUpdated="January 31, 2026"
+      lastUpdated="February 14, 2026"
       sections={sections}
     >
       <section id="introduction" className="mb-12 scroll-mt-24">
@@ -104,7 +104,7 @@ export default function PrivacyPage() {
         <p>We use your information to:</p>
         <ul>
           <li>Provide and maintain the Service</li>
-          <li>Process your subscription and payments</li>
+          <li>Process your plan access and payments</li>
           <li>Display your bio page and links to visitors</li>
           <li>Provide analytics about your bio page performance</li>
           <li>Send service-related notifications and updates</li>
@@ -161,7 +161,7 @@ export default function PrivacyPage() {
         <p>We share data with:</p>
         <ul>
           <li>
-            <strong>Payment Processors:</strong> Razorpay (for subscription
+            <strong>Payment Processors:</strong> Razorpay (for plan
             payments)
           </li>
           <li>

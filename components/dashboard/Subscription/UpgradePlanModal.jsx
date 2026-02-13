@@ -73,7 +73,13 @@ export default function UpgradePlanModal({
                                         ))}
                                     </div>
 
-                                    <div className="font-bold text-2xl">${plan.price}/month</div>
+                                    <div className="flex items-baseline gap-1">
+                                        <div className="font-bold text-2xl">${plan.price}</div>
+                                        <div className="text-xs opacity-50 font-medium">/ 30 days</div>
+                                    </div>
+                                    <div className="text-[10px] text-primary font-bold mt-1 opacity-80 uppercase tracking-tighter">
+                                        *Days stack if renewed early
+                                    </div>
 
                                     <div className="mt-4">
                                         <span className={`btn btn-${color} btn-sm w-full`}>

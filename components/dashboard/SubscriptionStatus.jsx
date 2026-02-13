@@ -123,7 +123,7 @@ export default function SubscriptionStatus({ currentUser, initialData, redirectO
                 "Custom QR Code Generator",
                 "Premium Page Templates"
             ],
-            price: `${CONFIG.PRICING.PRO.currency}${CONFIG.PRICING.PRO.price}/mo`
+            price: `${CONFIG.PRICING.PRO.currency}${CONFIG.PRICING.PRO.price} Prepaid (30 Days)`
         },
         AGENCY: {
             id: "AGENCY",
@@ -134,7 +134,7 @@ export default function SubscriptionStatus({ currentUser, initialData, redirectO
                 "All Premium Themes Unlocked",
                 "Priority Support Access"
             ],
-            price: `${CONFIG.PRICING.AGENCY.currency}${CONFIG.PRICING.AGENCY.price}/mo`
+            price: `${CONFIG.PRICING.AGENCY.currency}${CONFIG.PRICING.AGENCY.price} Prepaid (30 Days)`
         }
     };
 
@@ -142,7 +142,7 @@ export default function SubscriptionStatus({ currentUser, initialData, redirectO
         <div className="hidden card bg-base-100 border border-base-200 shadow-sm mb-2">
             <div className="card-body p-4 md:p-6">
                 <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-sm font-bold uppercase tracking-widest opacity-50">Subscription Status</h3>
+                    <h3 className="text-sm font-bold uppercase tracking-widest opacity-50">Plan Status</h3>
                     {subscription?.status === "active" && (
                         <div className="badge badge-success badge-sm font-bold gap-1 px-3 py-2">
                             <RiCheckboxCircleLine /> {subscription.planId} ACTIVE
@@ -278,7 +278,7 @@ export default function SubscriptionStatus({ currentUser, initialData, redirectO
                     <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest">
                         <RiSecurePaymentLine className="text-lg" /> 256-Bit SSL Secure
                     </div>
-                    <div className="text-[10px] font-medium italic">Cancel or switch anytime</div>
+                    <div className="text-[10px] font-medium italic">Manually renew or switch anytime</div>
                 </div>
             </div>
         </div>

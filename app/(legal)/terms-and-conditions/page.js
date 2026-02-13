@@ -29,7 +29,7 @@ export default function TermsPage() {
     return (
         <LegalPageClient
             title="Terms of Service"
-            lastUpdated="January 31, 2026"
+            lastUpdated="February 14, 2026"
             sections={sections}
         >
             <section id="acceptance" className="mb-12 scroll-mt-24">
@@ -52,7 +52,7 @@ export default function TermsPage() {
                     <li>Analytics and performance tracking</li>
                     <li>Profile customization (images, themes, branding)</li>
                     <li>QR code generation</li>
-                    <li>Multiple subscription tiers (FREE, PRO, AGENCY)</li>
+                    <li>Multiple plan tiers (FREE, PRO, AGENCY)</li>
                 </ul>
             </section>
 
@@ -76,26 +76,27 @@ export default function TermsPage() {
             </section>
 
             <section id="billing" className="mb-12 scroll-mt-24">
-                <h2 className="text-3xl font-bold mb-6">4. Subscription Plans and Billing</h2>
+                <h2 className="text-3xl font-bold mb-6">4. Payment Plans and Billing</h2>
                 <h3 className="text-xl font-bold mb-4 mt-8">4.1 Plan Tiers</h3>
-                <p>We offer the following subscription plans:</p>
+                <p>We offer the following Paid Access plans:</p>
                 <ul>
                     <li><strong>FREE:</strong> Limited features, up to 5 links, 1 page, basic templates</li>
-                    <li><strong>PRO ($9/month):</strong> Unlimited links (up to 1000 links), advanced templates, 90-day analytics, custom QR codes</li>
-                    <li><strong>AGENCY ($49/month):</strong> Up to 10 pages, unlimited links (up to 1000 links per bio page), all templates, white-labeling, unlimited analytics</li>
+                    <li><strong>PRO ($9 / 30 Days):</strong> Unlimited links (up to 1000 links), advanced templates, 90-day analytics, custom QR codes</li>
+                    <li><strong>AGENCY ($49 / 30 Days):</strong> Up to 10 pages, unlimited links (up to 1000 links per bio page), all templates, white-labeling, unlimited analytics</li>
                 </ul>
                 <h3 className="text-xl font-bold mb-4 mt-8">4.2 Billing</h3>
                 <p>
-                    Paid subscriptions are billed monthly in advance. You authorize us to charge your payment method
-                    for recurring subscription fees. Prices are subject to change with 30 days notice.
+                    Payments are processed as one-time transactions for the selected period (typically 30 days).
+                    There are no automatic recurring charges. You must manually renew your plan to maintain
+                    continuous access to premium features. Prices are subject to change with 30 days notice.
                 </p>
                 <h3 className="text-xl font-bold mb-4 mt-8">4.3 Cancellation and Refunds</h3>
                 <p>
                     We want you to buy with confidence, which is why we offer a 7 days full-access trial for PRO and AGENCY plans to evaluate the platform.
-                    You may cancel your subscription or delete your account at any time through your dashboard.
+                    You may manage your plan or delete your account at any time through your dashboard.
                 </p>
                 <p className="bg-base-200 p-6 rounded-2xl border border-base-300 font-medium">
-                    Cancellations take effect at the end of the current billing period. Due to the access provided during the trial period, we do not offer refunds on cancellations or account deletions. No refunds or cancellation refunds are applicable once a paid subscription begins.
+                    Plan access takes effect immediately upon successful payment. Due to the digital nature of the services and the trial provided, we do not offer refunds once a paid term has started.
                 </p>
                 <h3 className="text-xl font-bold mb-4 mt-8">4.4 Data Retention after Expiration</h3>
                 <p>

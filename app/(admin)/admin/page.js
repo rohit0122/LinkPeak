@@ -36,7 +36,7 @@ import {
 import { useAuthStore } from "@/stores/useAuthStore";
 import PlanManagement from "@/components/admin/PlanManagement";
 import NewsletterManagement from "@/components/admin/NewsletterManagement";
-import SubscriptionManagement from "@/components/admin/SubscriptionManagement";
+import PaymentManagement from "@/components/admin/PaymentManagement";
 import { formatDate } from "@/lib/dateUtils";
 
 // useSupportStore removed
@@ -169,20 +169,20 @@ export default function AdminDashboard() {
     fetchUsers(newPage, search);
   };
 
-  const handleUserUpdate = async (userId, updates) => {
+  const handleUserUpdate = async (userId, suspend) => {
     try {
-      const { data } = await axios.patch(ENDPOINTS.ADMIN.USERS, {
+      const { data } = await axios.post(ENDPOINTS.ADMIN.SUSPEND_USER, {
         userId,
-        updates,
+        suspend,
       });
       if (data.success) {
-        setUsers(users.map((u) => (u.id === userId ? data.data : u)));
-        toast.success("User account updated successfully! ✅");
+        setUsers(users.map((u) => (u.id === userId ? { ...u, is_active: !suspend } : u)));
+        toast.success(data.message || "User status updated successfully! ✅");
       }
     } catch (error) {
       toast.error(
-        error.response?.data?.error ||
-        "Could not update currentUser. Please try again."
+        error.response?.data?.message ||
+        "Could not update user status. Please try again."
       );
     }
   };
@@ -211,7 +211,7 @@ export default function AdminDashboard() {
           </div>
 
           <div className="flex flex-wrap gap-2 w-full">
-            {["OVERVIEW", "USERS", "SUPPORT", "PLANS", "SUBSCRIPTIONS", "NEWSLETTER"].map((tab) => (
+            {["OVERVIEW", "USERS", "SUPPORT", "PLANS", "PAYMENTS", "NEWSLETTER"].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -526,9 +526,7 @@ export default function AdminDashboard() {
                         {user.role !== "admin" ? (
                           <button
                             onClick={() =>
-                              handleUserUpdate(user.id, {
-                                is_active: !user.is_active,
-                              })
+                              handleUserUpdate(user.id, user.is_active)
                             }
                             className={`btn btn-xs font-medium ${user.is_active
                               ? "btn-error"
@@ -599,7 +597,7 @@ export default function AdminDashboard() {
 
         {activeTab === "PLANS" && <PlanManagement />}
 
-        {activeTab === "SUBSCRIPTIONS" && <SubscriptionManagement />}
+        {activeTab === "PAYMENTS" && <PaymentManagement />}
 
         {activeTab === "NEWSLETTER" && <NewsletterManagement />}
       </div>

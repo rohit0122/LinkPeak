@@ -53,7 +53,7 @@ export default function TrialExpiryBanner() {
     });
     console.log('response ==== ', response);
     if (response.data.success) {
-      window.open(response.data.data.payment_url, '_blank');
+      window.location.href = response.data.data.payment_url;
     } else {
       toast.error(response.data.message);
     }

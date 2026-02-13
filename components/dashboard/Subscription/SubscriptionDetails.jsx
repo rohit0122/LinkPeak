@@ -72,7 +72,7 @@ export default function SubscriptionDetails() {
                             </span>.
                             {" "}
                         </p>
-                        {currentSubscription?.status === 'trial' && <p className="font-bold italic border border-warning-content text-warning-content bg-warning/10 p-2 text-xs"><div>If you renew during the trial, your plan will start immediately and <span className="font-extrabold">30 days will be added to your remaining trial period</span>. There are no automatic charges.</div></p>}
+                        {currentSubscription?.status === 'trial' && <p className="font-bold italic border border-warning-content text-warning-content bg-warning/10 p-2 text-xs"><div>If you upgrade during the trial, your new 30 days will be <span className="font-extrabold text-lg">added to your remaining trial days</span>. You keep your full trial period + your new 30 days. No automatic charges ever.</div></p>}
                         {/*currentSubscription?.status != 'trial' && (
                             <span className="badge badge-warning badge-sm italic w-fit">
                                 Automatic billing starts after your trial ends
@@ -90,18 +90,14 @@ export default function SubscriptionDetails() {
                         </p>
                         {currentSubscription?.status != 'trial' && (
                             <span className="badge badge-warning badge-sm italic w-fit">
-                                No Automatic billing enabled. you have to pay manually to continue using the service, at the end of your current plan expiry date.
+                                Note: This is a manual one-time payment plan. There are no automatic charges. Simply renew whenever you need to extend your access.
                             </span>
                         )}
                     </div>}
                     {isSubscribedButPendingPayment && <div className="flex-1 space-y-1">
                         <p className="font-bold">Pending Payment: {currentSubscription?.plan_name}</p>
                         <p className="text-sm leading-relaxed">
-                            Your subscription remains active while payment is currently pending. If you have an active recurring subscription, the charge will be processed automatically after {" "}
-                            <span className="font-semibold">
-                                {formatDate(currentSubscription?.expiry_date)}
-                            </span>.
-                            {" "}
+                            Your subscription remains active while payment is currently pending. Please ensure you complete the payment manually to maintain uninterrupted service.
                         </p>
                     </div>}
 

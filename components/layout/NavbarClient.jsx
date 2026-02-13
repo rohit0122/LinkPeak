@@ -46,7 +46,7 @@ const publicLinks = [
     color: "text-info",
   },
   {
-    name: "Pricing",
+    name: "Fair Pricing",
     href: "/#pricing",
     icon: <RiPriceTag3Line size={24} />,
     color: "text-warning",

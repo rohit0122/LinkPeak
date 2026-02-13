@@ -3,7 +3,6 @@ import { CONFIG, getPlanIdByName } from "@/constants/config";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { RiPieChartLine, RiCheckLine } from "react-icons/ri";
 import UpgradePlanModal from "./Subscription/UpgradePlanModal";
-import { useRazorpay } from "@/hooks/useRazorpay";
 import axios from "@/lib/httpClient";
 import { ENDPOINTS } from "@/constants/endpoints";
 
@@ -11,7 +10,12 @@ export default function UsageMetrics() {
     const [showUpgradeModal, setShowUpgradeModal] = useState(false);
     const { currentUser, currentBioPage, allBioPages, currentSubscription } = useAuthStore();
     const planLimits = CONFIG.PLAN_LIMITS[currentUser?.plan] || CONFIG.PLAN_LIMITS.FREE;
-    const isShowUpgradeButton = (currentUser?.plan === 'FREE' || currentSubscription?.status === 'trial');
+    const isShowUpgradeButton = (
+        currentUser?.plan === 'FREE' ||
+        currentSubscription?.status === 'trial' ||
+        currentSubscription?.status === 'expired' ||
+        currentSubscription?.is_renewal_window_open
+    );
     const metrics = [
         {
             label: "Links",
@@ -37,7 +41,7 @@ export default function UsageMetrics() {
         });
         console.log('response ==== ', response);
         if (response.data.success) {
-            window.open(response.data.data.payment_url, '_blank');
+            window.location.href = response.data.data.payment_url;
         } else {
             toast.error(response.data.message);
         }

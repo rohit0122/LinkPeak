@@ -132,10 +132,10 @@ export const CONFIG = {
         SUBTEXT: "Your trial is active! Secure your analytics and keep your bio live beyond the next 7 days.",
         CTA: "Secure My Pro Access"
     },
-    SUBSCRIPTION_MESSAGES: {
-        TITLE: (days) => days > 0 ? `${days} Days Remaining in Plan` : `Last Day of Subscription`,
-        SUBTEXT: "To ensure your bio page stays live for your fans, please renew your plan.",
-        CTA: "Renew Subscription"
+    PLAN_MESSAGES: {
+        TITLE: (days) => days > 0 ? `${days} Days Remaining in Plan` : `Last Day of Access`,
+        SUBTEXT: "To ensure your bio page stays live for your fans, please renew your plan. Days are added to your current balance.",
+        CTA: "Renew Plan"
     },
 
     // AI API Endpoints
@@ -154,7 +154,7 @@ export const pricingPlans = [
         name: "Free",
         price: CONFIG.PRICING.FREE.price,
         description:
-            `Absolutely Free — create your first bio page, share links, and start tracking basic click stats — no payment needed, perfect for getting started right away.`,
+            `Forever Free — Your baseline bio page is always active. Start sharing and tracking clicks with zero commitment. Reverts here automatically if a paid plan expires.`,
         popular: false,
         features: [
             { name: `${CONFIG.PLAN_LIMITS.FREE.pages} Bio Page`, included: true },
@@ -171,7 +171,7 @@ export const pricingPlans = [
         name: "Pro",
         price: CONFIG.PRICING.PRO.price,
         description:
-            `Just ${CONFIG.PRICING.PRO.currency}${CONFIG.PRICING.PRO.price}/month — get custom SEO titles, analytics, AI suggestions, and unlock more clicks & higher engagement.`,
+            `Just ${CONFIG.PRICING.PRO.currency}${CONFIG.PRICING.PRO.price} for 30 days — get custom SEO titles, analytics, AI suggestions, and unlock more clicks & higher engagement. No auto-renewal.`,
         popular: true,
         features: [
             { name: `${CONFIG.PLAN_LIMITS.PRO.pages} Bio Page`, included: true },
@@ -182,14 +182,14 @@ export const pricingPlans = [
             { name: `${CONFIG.PLAN_LIMITS.PRO.allowedThemes.length}+ Identity Themes`, included: true },
             { name: "AI Link Title Suggestions", included: true },
             { name: "AI SEO Optimization", included: true },
-            { name: "Enjoy a generous 7-day free trial — no credit card required.", included: true },
+            { name: "Enjoy a generous one-time 7-day free trial — no credit card required.", included: true },
         ],
     },
     {
         name: "Agency",
         price: CONFIG.PRICING.AGENCY.price,
         description:
-            `Just ${CONFIG.PRICING.AGENCY.currency}${CONFIG.PRICING.AGENCY.price}/month — get ${CONFIG.PLAN_LIMITS.AGENCY.pages} branded bio pages, lifetime analytics, white-labeling, AI-optimized SEO & titles, custom QR codes, and manage multiple clients effortlessly with one dashboard.`,
+            `Just ${CONFIG.PRICING.AGENCY.currency}${CONFIG.PRICING.AGENCY.price} for 30 days — get ${CONFIG.PLAN_LIMITS.AGENCY.pages} branded bio pages, lifetime analytics, white-labeling, AI-optimized SEO & titles, custom QR codes. No auto-renewal.`,
         popular: false,
         features: [
             { name: `${CONFIG.PLAN_LIMITS.AGENCY.pages} Bio Pages`, included: true },
@@ -200,11 +200,50 @@ export const pricingPlans = [
             { name: "All 12+ Premium Themes", included: true },
             { name: "AI Enhanced Bio Page SEO & Titles", included: true },
             { name: "White Labeling", included: true },
-            { name: "Enjoy a generous 7-day free trial — no credit card required.", included: true },
+            { name: "Enjoy a generous one-time 7-day free trial — no credit card required.", included: true },
         ],
     },
 ];
 
+
+export const pricingUSPs = [
+    {
+        icon: "🚀",
+        title: "Pay Only When Active",
+        description: "Use premium for 30 days. Plan expires manually. We never charge without permission.",
+        color: "bg-primary/10"
+    },
+    {
+        icon: "🔒",
+        title: "Your Bio is Forever",
+        description: "If you don't renew, your page simply reverts to Free tier. You never lose your data.",
+        color: "bg-success/10"
+    },
+    {
+        icon: "🧘",
+        title: "Peace of Mind",
+        description: "No auto-pay means absolute control. We never charge without your explicit permission.",
+        color: "bg-warning/10"
+    },
+    {
+        icon: "📧",
+        title: "Gentle Reminders",
+        description: "We'll notify you 7 days before your term ends. No sudden cut-offs, just a heads-up.",
+        color: "bg-info/10"
+    },
+    {
+        icon: "📚",
+        title: "Early Renewals",
+        description: "Renew anytime and your days are simply added. You never lose a single day.",
+        color: "bg-secondary/10"
+    },
+    {
+        icon: "🛠️",
+        title: "Safety Net",
+        description: "Expired plans simply shift to Free tier. No data loss. Your page stays live forever.",
+        color: "bg-error/10"
+    }
+];
 
 export const getPlanIdByName = (name) => {
     return CONFIG.PLAN_LIMITS[name]?.planIdInDb || 2; // FREE plan default

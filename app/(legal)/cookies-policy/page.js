@@ -24,7 +24,7 @@ export default function CookiesPage() {
     return (
         <LegalPageClient
             title="Cookie Policy"
-            lastUpdated="January 31, 2026"
+            lastUpdated="February 14, 2026"
             sections={sections}
         >
             <section id="what" className="mb-12 scroll-mt-24">

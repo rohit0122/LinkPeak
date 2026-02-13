@@ -14,3 +14,16 @@ export async function GET(req) {
         );
     }
 }
+
+export async function PATCH(req) {
+    try {
+        const body = await req.json();
+        const response = await restClient.patch(BACKEND_ENDPOINTS.ADMIN.USERS, body);
+        return NextResponse.json(response.data, { status: response.status });
+    } catch (error) {
+        return NextResponse.json(
+            { success: false, message: error.response?.data?.message || "Failed to update user" },
+            { status: error.response?.status || 500 }
+        );
+    }
+}

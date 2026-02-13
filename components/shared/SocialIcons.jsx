@@ -19,7 +19,7 @@ export const SocialIcons = () => {
 
             {/* Instagram */}
             <a
-                href="https://www.instagram.com/linkpeakk"
+                href="https://www.facebook.com/LinkPeakK"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-square btn-ghost text-xl

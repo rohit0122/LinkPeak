@@ -23,29 +23,49 @@ export default function SuccessClient() {
 
     useEffect(() => {
         const finalizeUpgrade = async () => {
-            try {
-                await new Promise((r) => setTimeout(r, 3000));
-                const response = await axios.get(ENDPOINTS.PAYMENT.GET_STATUS);
-                if (!response.data.success) {
-                    throw new Error(response.data.message || "Failed to finalize upgrade");
+            let attempts = 0;
+            const maxAttempts = 5;
+            const delay = 3000;
+
+            const checkStatus = async () => {
+                try {
+                    await new Promise((r) => setTimeout(r, delay));
+                    const response = await axios.get(ENDPOINTS.PAYMENT.GET_STATUS);
+
+                    if (response.data.success && response.data.data.subscription.status === 'active') {
+                        updateCurrentSubscriptionSession(response.data.data.subscription);
+                        toast.success(`Success! Your plan is now active`, {
+                            duration: 5000,
+                            icon: "🔥",
+                        });
+                        setLoading(false);
+                        return true;
+                    }
+                    return false;
+                } catch (error) {
+                    console.error("Status check attempt failed:", error);
+                    return false;
                 }
-                updateCurrentSubscriptionSession(response.data.data.subscription);
-                toast.success(`Success! You've been upgraded to Paid Plan`, {
-                    duration: 5000,
-                    icon: "🔥",
-                },);
-            } catch (error) {
-                toast.error(`Error! ${error.message}`, {
-                    duration: 5000,
-                    icon: "🔥",
-                    toasterId: 'success-payment'
-                });
-            } finally {
-                setLoading(false);
+            };
+
+            while (attempts < maxAttempts) {
+                const isSuccess = await checkStatus();
+                if (isSuccess) return;
+                attempts++;
             }
+
+            toast.error("Status update is taking longer than expected. Please refresh the dashboard in a few moments.", {
+                duration: 7000,
+                icon: "⏳",
+            });
+            setLoading(false);
         };
 
-        if (paymentStatus !== null) finalizeUpgrade();
+        if (paymentStatus === "success") finalizeUpgrade();
+        else if (paymentStatus === "failed") {
+            toast.error("Payment failed. Please try again.");
+            setLoading(false);
+        }
     }, [paymentStatus, updateCurrentSubscriptionSession]);
 
     return (

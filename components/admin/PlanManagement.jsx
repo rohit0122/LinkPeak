@@ -16,10 +16,8 @@ export default function PlanManagement() {
     const [formData, setFormData] = useState({
         name: "",
         slug: "",
-        razorpay_plan_id: "",
         price: 0,
         currency: "USD",
-        billing_interval: "month",
         trial_days: 0,
         is_active: true,
         features: {
@@ -155,8 +153,8 @@ export default function PlanManagement() {
             {/* Header */}
             <div className="flex items-center justify-between bg-base-100 p-4 border border-base-200">
                 <div>
-                    <h2 className="text-lg font-medium">Subscription Plans</h2>
-                    <p className="text-xs opacity-50">Manage tiers, pricing, and feature limits</p>
+                    <h2 className="text-lg font-medium">Payment Plans</h2>
+                    <p className="text-xs opacity-50">Manage one-time payment tiers and feature limits</p>
                 </div>
                 <button
                     onClick={() => {
@@ -164,10 +162,8 @@ export default function PlanManagement() {
                         setFormData({
                             name: "",
                             slug: "",
-                            razorpay_plan_id: "",
                             price: 0,
                             currency: "USD",
-                            billing_interval: "month",
                             trial_days: 0,
                             is_active: true,
                             features: { links: 5, pages: 1, analyticsDays: 7 }
@@ -200,14 +196,13 @@ export default function PlanManagement() {
                                     <div className="flex flex-col">
                                         <span className="font-bold text-sm">{plan.name}</span>
                                         <span className="text-[10px] opacity-40 font-mono uppercase">{plan.slug || '—'}</span>
-                                        <span className="text-[10px] opacity-30">RP_ID: {plan.razorpay_plan_id || 'N/A'}</span>
                                     </div>
                                 </td>
                                 <td>
                                     <div className="flex items-center gap-1 font-medium">
                                         <span className="text-xs opacity-50">{plan.currency}</span>
                                         <span className="text-lg tracking-tight">${plan.price}</span>
-                                        <span className="text-[10px] opacity-30 mt-1">/{plan.billing_interval}</span>
+                                        <span className="text-[10px] opacity-30 mt-1 uppercase">/ One-Time</span>
                                     </div>
                                 </td>
                                 <td>
@@ -272,16 +267,6 @@ export default function PlanManagement() {
                                             placeholder="e.g. pro"
                                         />
                                     </div>
-                                    <div className="form-control">
-                                        <label className="label py-1"><span className="label-text text-xs font-bold uppercase tracking-widest opacity-40">Razorpay Plan ID</span></label>
-                                        <input
-                                            type="text"
-                                            value={formData.razorpay_plan_id}
-                                            onChange={(e) => setFormData({ ...formData, razorpay_plan_id: e.target.value })}
-                                            className="input input-bordered w-full rounded-none font-medium"
-                                            placeholder="plan_K9..."
-                                        />
-                                    </div>
                                 </div>
 
                                 {/* Pricing Info */}
@@ -310,17 +295,6 @@ export default function PlanManagement() {
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-2 gap-4">
-                                        <div className="form-control">
-                                            <label className="label py-1"><span className="label-text text-xs font-bold uppercase tracking-widest opacity-40">Billing Interval</span></label>
-                                            <select
-                                                value={formData.billing_interval}
-                                                onChange={(e) => setFormData({ ...formData, billing_interval: e.target.value })}
-                                                className="select select-bordered w-full rounded-none font-medium"
-                                            >
-                                                <option value="month">Monthly</option>
-                                                <option value="year">Yearly</option>
-                                            </select>
-                                        </div>
                                         <div className="form-control">
                                             <label className="label py-1"><span className="label-text text-xs font-bold uppercase tracking-widest opacity-40">Trial Days</span></label>
                                             <input

@@ -117,7 +117,7 @@ export default function SubscriptionStatusDiv({
                 "Custom QR Code Generator",
                 "Premium Page Templates"
             ],
-            price: `${CONFIG.PRICING.PRO.currency}${CONFIG.PRICING.PRO.price}/mo`
+            price: `${CONFIG.PRICING.PRO.currency}${CONFIG.PRICING.PRO.price} (30 Days)`
         },
         AGENCY: {
             id: "AGENCY",
@@ -128,7 +128,7 @@ export default function SubscriptionStatusDiv({
                 "All Premium Themes",
                 "Priority Support"
             ],
-            price: `${CONFIG.PRICING.AGENCY.currency}${CONFIG.PRICING.AGENCY.price}/mo`
+            price: `${CONFIG.PRICING.AGENCY.currency}${CONFIG.PRICING.AGENCY.price} (30 Days)`
         }
     };
     return (
@@ -139,7 +139,7 @@ export default function SubscriptionStatusDiv({
                     {/* ───────── Header ───────── */}
                     <div className="flex items-center justify-between">
                         <h3 className="text-xs font-bold uppercase tracking-widest opacity-60">
-                            Subscription Status
+                            Plan Status
                         </h3>
                         <span className={`badge badge-${currentUser?.plan !== "FREE" && subscription?.status === "active" ? "success" : "warning"} badge-sm gap-1`}>
                             <RiCheckboxCircleLine /> {subscription?.planId || currentUser?.plan} PLAN
@@ -221,7 +221,7 @@ export default function SubscriptionStatusDiv({
                         <div className="collapse collapse-arrow border border-base-200 rounded-lg my-1">
                             <input type="checkbox" />
                             <div className="collapse-title text-sm font-bold">
-                                Upgrade / Renew Subscription
+                                Upgrade / Extend Plan Access
                             </div>
 
                             <div className="collapse-content">
