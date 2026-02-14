@@ -100,7 +100,7 @@ function DashboardContent() {
   };
 
   const unsavedChanges = Object.keys(dirtyFields).length > 0;
-  const router = useRouter();
+  /*const router = useRouter();
   const searchParams = useSearchParams();
   useEffect(() => {
     const paymentStatus = searchParams.get('payment');
@@ -108,7 +108,7 @@ function DashboardContent() {
       const queryString = searchParams.toString();
       router.replace(`/dashboard/success?${queryString}`);
     }
-  }, [searchParams, router]);
+  }, [searchParams, router]);*/
 
   // ... rest of the component logic ...
 

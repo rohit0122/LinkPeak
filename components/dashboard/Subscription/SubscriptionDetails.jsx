@@ -89,9 +89,9 @@ export default function SubscriptionDetails() {
                             {" "}
                         </p>
                         {currentSubscription?.status != 'trial' && (
-                            <span className="badge badge-warning badge-sm italic w-fit">
+                            <div className="alert alert-warning text-xs font-semibold italic">
                                 Note: This is a manual one-time payment plan. There are no automatic charges. Simply renew whenever you need to extend your access.
-                            </span>
+                            </div>
                         )}
                     </div>}
                     {isSubscribedButPendingPayment && <div className="flex-1 space-y-1">
