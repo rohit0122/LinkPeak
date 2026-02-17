@@ -36,15 +36,19 @@ export default function LinkPerformanceChart({ plan, linkChart, onRangeChange, c
                 <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70">
                     Unlock Per-Link Analytics
                 </h2>
-                <p className="text-white/60 max-w-sm mb-8 leading-relaxed">
-                    Upgrade to Pro to see exactly which links your fans are clicking most with detailed 7-day, 15-day, 30-day, 90-day, and lifetime performance data.
-                </p>
-                <button
-                    onClick={() => window.location.href = '/#pricing'}
-                    className="btn btn-primary btn-wide font-bold shadow-2xl shadow-primary/20 hover:scale-105 transition-all"
-                >
-                    Upgrade to Pro
-                </button>
+                <div className="space-y-4 mb-2">
+                    <p className="text-white/60 max-w-sm leading-relaxed">
+                        See exactly which links your fans are clicking most with detailed 7-day, 15-day, 30-day, 90-day, and lifetime performance data.
+                    </p>
+                    <div className="bg-primary/10 border border-primary/20 rounded-xl p-4">
+                        <p className="text-primary font-bold text-sm">
+                            Available on Pro & Agency Plans
+                        </p>
+                        <p className="text-white/40 text-xs mt-1">
+                            To unlock these analytics, please upgrade from your <span className="text-white font-bold underline">Account Section</span>.
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>);
 

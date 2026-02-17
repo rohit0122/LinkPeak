@@ -90,7 +90,7 @@ export default function Pricing() {
                                     <div className="flex items-baseline gap-2 mt-2">
                                         <span className="text-4xl sm:text-5xl font-extrabold tracking-tighter">${plan.price}</span>
                                         <div className="flex flex-col">
-                                            <span className={`text-[10px] font-black uppercase tracking-widest ${plan.name === "Free" ? "text-success" : "text-primary"}`}>
+                                            <span className={`text-[10px] font-bold uppercase tracking-widest ${plan.name === "Free" ? "text-success" : "text-primary"}`}>
                                                 {plan.name === "Free" ? "Free Forever" : "One-Time"}
                                             </span>
                                             <span className="text-[10px] font-bold opacity-40 uppercase tracking-widest">
