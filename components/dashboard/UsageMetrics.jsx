@@ -1,8 +1,11 @@
+import { useState } from "react";
 import { CONFIG, getPlanIdByName } from "@/constants/config";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { RiPieChartLine, RiCheckLine, RiInformationLine } from "react-icons/ri";
+import UpgradePlanModal from "./UpgradePlanModal";
 
 export default function UsageMetrics() {
+    const [showUpgradeModal, setShowUpgradeModal] = useState(false);
     const { currentUser, currentBioPage, allBioPages, currentSubscription } = useAuthStore();
     const planLimits = currentUser?.plan ? (CONFIG.PLAN_LIMITS[currentUser.plan] || CONFIG.PLAN_LIMITS.FREE) : CONFIG.PLAN_LIMITS.FREE;
     const isShowUpgradeInfo = (
@@ -48,7 +51,7 @@ export default function UsageMetrics() {
                                         <span>{metric.icon}</span>
                                         {metric.label}
                                     </span>
-                                    <span className={`text-xs font-black ${isAtLimit ? 'text-error' : isNearLimit ? 'text-warning' : 'opacity-50'}`}>
+                                    <span className={`text-xs font-bold ${isAtLimit ? 'text-error' : isNearLimit ? 'text-warning' : 'opacity-50'}`}>
                                         {metric.current} / {metric.max > 999 ? 'Unlimited' : metric.max}
                                     </span>
                                 </div>
@@ -90,12 +93,20 @@ export default function UsageMetrics() {
                             <li className="flex items-center gap-2"><RiCheckLine className="text-primary shrink-0" /> Premium themes & branding</li>
                         </ul>
                         <div className="mt-4 pt-4 border-t border-primary/10">
-                            <p className="text-[10px] text-center opacity-50 font-bold uppercase tracking-[0.1em]">
-                                Visit the <span className="text-primary underline">Account Section</span> to upgrade
-                            </p>
+                            <button
+                                onClick={() => setShowUpgradeModal(true)}
+                                className="btn btn-sm btn-primary w-full font-bold shadow-lg shadow-primary/20"
+                            >
+                                View Upgrade Plans
+                            </button>
                         </div>
                     </div>
                 )}
+
+                <UpgradePlanModal
+                    isOpen={showUpgradeModal}
+                    onClose={() => setShowUpgradeModal(false)}
+                />
             </div>
         </div>
     );
