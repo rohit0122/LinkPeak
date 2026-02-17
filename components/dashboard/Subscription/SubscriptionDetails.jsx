@@ -59,6 +59,18 @@ export default function SubscriptionDetails() {
                             </div>
                         </div>}
                     </div>
+
+                    {currentSubscription?.pending_plan && (
+                        <div className="alert alert-warning border-2 border-warning/50 bg-warning/5 animate-pulse">
+                            <RiSparklingLine className="text-xl shrink-0 text-warning" />
+                            <div>
+                                <h3 className="font-bold text-sm uppercase tracking-wide">Plan Change Scheduled</h3>
+                                <div className="text-xs opacity-90">
+                                    Your <span className="font-extrabold underline">{currentSubscription.pending_plan.name}</span> plan will start automatically after <strong>{formatDate(currentSubscription.expiry_date)}</strong>, once your current {currentSubscription.plan_name} access ends.
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
                 <div className="alert alert-info flex flex-col sm:flex-row gap-3 items-start sm:items-center">
                     <RiSparklingLine className="text-2xl shrink-0" />
@@ -72,7 +84,11 @@ export default function SubscriptionDetails() {
                             </span>.
                             {" "}
                         </p>
-                        {currentSubscription?.status === 'trial' && <p className="font-bold italic border border-warning-content text-warning-content bg-warning/10 p-2 text-xs"><div>If you upgrade during the trial, your new 30 days will be <span className="font-extrabold text-lg">added to your remaining trial days</span>. You keep your full trial period + your new 30 days. No automatic charges ever.</div></p>}
+                        {currentSubscription?.status === 'trial' && !currentSubscription?.pending_plan && (
+                            <p className="font-bold italic border border-warning-content text-warning-content bg-warning/10 p-2 text-xs">
+                                <div>If you upgrade during the trial, your new 30 days will be <span className="font-extrabold text-lg">added to your remaining trial days</span>. You keep your full trial period + your new 30 days. No automatic charges ever.</div>
+                            </p>
+                        )}
                         {/*currentSubscription?.status != 'trial' && (
                             <span className="badge badge-warning badge-sm italic w-fit">
                                 Automatic billing starts after your trial ends
@@ -94,14 +110,14 @@ export default function SubscriptionDetails() {
                             </div>
                         )}
                     </div>}
-                    {isSubscribedButPendingPayment && <div className="flex-1 space-y-1">
+                    {isSubscribedButPendingPayment && !currentSubscription?.pending_plan && <div className="flex-1 space-y-1">
                         <p className="font-bold">Pending Payment: {currentSubscription?.plan_name}</p>
                         <p className="text-sm leading-relaxed">
                             Your subscription remains active while payment is currently pending. Please ensure you complete the payment manually to maintain uninterrupted service.
                         </p>
                     </div>}
 
-                    {(isFreePlan && <div className="flex-1 space-y-1">
+                    {(isFreePlan && !currentSubscription?.pending_plan && <div className="flex-1 space-y-1">
                         <p className="font-bold">Free plan activated 🎉</p>
 
                         <p className="text-sm leading-relaxed">

@@ -84,21 +84,25 @@ export default function TrialExpiryBanner() {
       <div className="flex items-center gap-3 w-full md:hidden">
         <PiWarningCircle className="w-6 h-6 text-warning flex-shrink-0" />
         <p className="font-bold uppercase text-warning text-sm">
-          {isFreePlan
-            ? "You are on Free Plan"
-            : `${plan_name} Trial Ending Soon`}
+          {currentSubscription?.pending_plan
+            ? "Plan Change Scheduled"
+            : isFreePlan
+              ? "You are on Free Plan"
+              : `${plan_name} Trial Ending Soon`}
         </p>
       </div>
 
       {/* Message */}
       <div className="space-y-1 text-sm sm:text-base w-full">
         <p className="font-bold uppercase text-warning hidden md:block">
-          {isFreePlan
-            ? "You are on Free Plan"
-            : `${plan_name} Trial Ending Soon`}
+          {currentSubscription?.pending_plan
+            ? "Plan Change Scheduled"
+            : isFreePlan
+              ? "You are on Free Plan"
+              : `${plan_name} Trial Ending Soon`}
         </p>
 
-        {isFreePlan && (
+        {isFreePlan && !currentSubscription?.pending_plan && (
           <>
             <p>
               You are currently using the <strong>FREE</strong> plan with limited
@@ -115,14 +119,16 @@ export default function TrialExpiryBanner() {
               Your trial for the <strong>{plan_name}</strong> plan will expire on{" "}
               <strong>{formatDate(expiry_date)}</strong>.
             </p>
-            <p className="text-base-content/70 text-sm leading-relaxed">
-              If you renew before your current plan expires, your new 30 days will be <strong>added to your remaining days</strong>.<br />
-              This ensures uninterrupted access to all features.
-            </p>
+            {!currentSubscription?.pending_plan && (
+              <p className="text-base-content/70 text-sm leading-relaxed">
+                If you renew before your current plan expires, your new 30 days will be <strong>added to your remaining days</strong>.<br />
+                This ensures uninterrupted access to all features.
+              </p>
+            )}
           </>
         )}
 
-        {brokenPaidTrial && (<>
+        {brokenPaidTrial && !currentSubscription?.pending_plan && (<>
           <p className="leading-relaxed">
             Your trial for the <strong>{plan_name}</strong> plan will expire on{" "}
             <strong>{formatDate(expiry_date)}</strong>.
@@ -134,7 +140,7 @@ export default function TrialExpiryBanner() {
         )}
 
         {/* Renewal Window */}
-        {currentSubscription?.is_renewal_window_open && (
+        {currentSubscription?.is_renewal_window_open && !currentSubscription?.pending_plan && (
           <>
             <p className="leading-relaxed">
               Your {currentSubscription?.plan_name} is going to end in{" "}
@@ -155,19 +161,30 @@ export default function TrialExpiryBanner() {
             </div>*/}
           </>
         )}
+
+        {currentSubscription?.pending_plan && (
+          <div className="p-3 bg-warning/10 border border-warning/20 rounded-lg my-2">
+            <p className="font-bold text-xs uppercase opacity-70 mb-1">Plan Change Scheduled</p>
+            <p className="text-sm">
+              Your {currentSubscription.pending_plan.name} plan will start automatically after <strong> {formatDate(expiry_date)}</strong>, once your current {currentSubscription.plan_name} access ends.
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Action */}
       <div className="w-full md:w-auto mt-2 md:mt-0 flex justify-end">
-        <button
-          className="btn btn-warning btn-sm md:btn-md text-base-content font-semibold w-full md:w-auto whitespace-nowrap"
-          onClick={() => setShowUpgradeModal(true)}
-        >
-          {isFreePlan && "Upgrade for more features"}
-          {isPaidTrial && "Extend"}
-          {brokenPaidTrial && "Complete Setup"}
-          {!isFreePlan && !isPaidTrial && !brokenPaidTrial && currentSubscription?.is_renewal_window_open && "Renew Your Plan"}
-        </button>
+        {!currentSubscription?.pending_plan && (
+          <button
+            className="btn btn-warning btn-sm md:btn-md text-base-content font-semibold w-full md:w-auto whitespace-nowrap"
+            onClick={() => setShowUpgradeModal(true)}
+          >
+            {isFreePlan && "Upgrade for more features"}
+            {isPaidTrial && "Extend"}
+            {brokenPaidTrial && "Complete Setup"}
+            {!isFreePlan && !isPaidTrial && !brokenPaidTrial && currentSubscription?.is_renewal_window_open && "Renew Your Plan"}
+          </button>
+        )}
 
         {/*isFreePlan && (
           <button
