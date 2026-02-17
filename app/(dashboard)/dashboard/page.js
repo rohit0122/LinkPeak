@@ -365,6 +365,9 @@ function DashboardContent() {
     }
   };
 
+  if (!currentUser) {
+    return <SkeletonDashboard />;
+  }
   const handleCreatePage = async () => {
     try {
       const newSlug = `page-${Math.floor(Math.random() * 10000)}`;
