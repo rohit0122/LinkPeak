@@ -6,7 +6,7 @@ import { getPlanIdByName } from "@/constants/config";
 export async function POST(req) {
     try {
         const body = await req.json();
-        const realPlanId = 33333;//await getPlanIdByName(body.planId);
+        const realPlanId = await getPlanIdByName(body.planId);
         // Proxy to Backend Verify
         const response = await restClient.post(BACKEND_ENDPOINTS.PAYMENT.GET_PAYMENT_URL, { plan_id: realPlanId });
         return NextResponse.json(response.data, { status: 200 });
