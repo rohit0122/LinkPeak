@@ -19,7 +19,7 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'upcdn.duckdns.org',
+        hostname: 'oncdn.linkpeakk.com',
         pathname: '/**',
       },
       {
