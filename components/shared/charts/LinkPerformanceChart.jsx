@@ -7,6 +7,8 @@ import {
     CartesianGrid,
     Tooltip,
     Legend,
+    LineChart,
+    Line,
 } from "recharts";
 import { useState } from "react";
 import ChartRangeSelector from "@/components/shared/charts/ChartRangeSelector";
@@ -23,6 +25,7 @@ import { RiBarChartGroupedLine } from "react-icons/ri";
  */
 
 export default function LinkPerformanceChart({ plan, linkChart, onRangeChange, currentRange }) {
+    console.log('linkChart ', linkChart)
     const [metric, setMetric] = useState("total_clicks"); // "total_clicks" or "unique_clicks"
 
     if (plan === "FREE") return (
@@ -63,14 +66,14 @@ export default function LinkPerformanceChart({ plan, linkChart, onRangeChange, c
     }) || [];
 
     const hasLinkData = transformedData.length > 0 && transformedData.some(row =>
-        Object.values(row).some(v => typeof v === "number" && v > 0)
+        Object.values(row).some(v => typeof v === "number" && v >= 0)
     );
 
     // Derive link keys and filter out links with zero clicks
     const linkKeys = transformedData.length
         ? Object.keys(transformedData[0])
             .filter((key) => key !== "label")
-            .filter((key) => transformedData.some((row) => row[key] > 0))
+            .filter((key) => transformedData.some((row) => row[key] >= 0))
         : [];
 
     // Sort links by total clicks
@@ -116,7 +119,7 @@ export default function LinkPerformanceChart({ plan, linkChart, onRangeChange, c
                         hasLinkData ? (
                             <div className="w-full h-[360px]">
                                 <ResponsiveContainer width="100%" height={360}>
-                                    <BarChart
+                                    <LineChart
                                         data={transformedData}
                                         margin={{ top: 20, right: 30, left: 10, bottom: 40 }}
                                     >
@@ -144,15 +147,15 @@ export default function LinkPerformanceChart({ plan, linkChart, onRangeChange, c
                                         <Legend />
 
                                         {linkKeys.map((key, index) => (
-                                            <Bar
+                                            <Line
                                                 key={key}
                                                 dataKey={key}
                                                 name={key}
-                                                fill={COLORS[index % COLORS.length]}
-                                                radius={[6, 6, 0, 0]}
+                                                stroke={COLORS[index % COLORS.length]}
+                                                strokeWidth={2}
                                             />
                                         ))}
-                                    </BarChart>
+                                    </LineChart>
                                 </ResponsiveContainer>
                             </div>) : (
                             <div className="h-[200px] flex items-center justify-center text-center opacity-40">
